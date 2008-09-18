@@ -19,7 +19,12 @@
 			<version>4.0</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+			<groupId>jetty</groupId>
+			<artifactId>org.mortbay.jetty</artifactId>
+            <version>4.2.27</version>
+        </dependency>
+    </dependencies>
 	<build>
 		<plugins>
 			<plugin>
