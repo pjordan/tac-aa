@@ -82,10 +82,8 @@ public class ViewerPanel extends ViewerConnection {
     this.serverName = serverName;
     this.userName = userName;
 
-    // Should not be hardcoded but setup depending on simulation type. FIX THIS!!! \TODO
-
     // TODO: use the tasim_viewer.conf file
-    String configFile = "tac06scm_viewer.conf";
+    String configFile = "tasim_viewer.conf";
     URL configURL = ViewerPanel.class.getResource("/config/" + configFile);
     config = new ConfigManager();
     try {
@@ -103,9 +101,19 @@ public class ViewerPanel extends ViewerConnection {
     // Should not be hardcoded but setup depending on simulation type. FIX THIS!!! \TODO
 
 
-    // TODO: use reflection to load the view class
-    viewer = null;//new se.sics.tasim.tacscm.viewer.TACSCMViewer();
-      
+    viewer = null;
+
+    try {
+      String simulationViewerClass = config.getProperty("simulationViewer");
+      viewer = (SimulationViewer)  Class.forName(simulationViewerClass).newInstance();
+    } catch (InstantiationException e) {
+      log.severe("Could not instantiate the simulation viewer");
+    } catch (IllegalAccessException e) {
+      log.severe("Could not instantiate the simulation viewer");
+    } catch (ClassNotFoundException e) {
+      log.severe("Could not find the simulation viewer class");
+    }
+
     viewer.init(this);
     viewerPanel = viewer.getComponent();
 

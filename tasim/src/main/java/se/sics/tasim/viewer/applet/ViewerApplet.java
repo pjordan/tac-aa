@@ -31,6 +31,7 @@ import javax.swing.JApplet;
 
 import se.sics.tasim.viewer.ChatListener;
 import se.sics.tasim.viewer.ViewerPanel;
+import se.sics.isl.transport.ContextFactory;
 
 public class ViewerApplet extends JApplet implements ChatListener {
 
@@ -42,6 +43,7 @@ public class ViewerApplet extends JApplet implements ChatListener {
   private String serverName;
   private int serverPort = 4042;
   private String userName;
+  private ContextFactory contextFactory;
   private ViewerPanel mainPanel;
 
   private AppletConnection connection;
@@ -63,7 +65,8 @@ public class ViewerApplet extends JApplet implements ChatListener {
     String[][] info = {
       {"user",		"name",		"the user name"},
       {"port",		"int",		"the viewer connection port"},
-      {"serverName",	"name",		"the server name"}
+      {"serverName",	"name",		"the server name"},
+      {"contextFactory",	"name",		"the context factory class"}
     };
     return info;
   }
@@ -78,6 +81,7 @@ public class ViewerApplet extends JApplet implements ChatListener {
     if (userName == null) {
       throw new IllegalArgumentException("no user name specified");
     }
+
     String portDesc = getParameter("port");
     if (portDesc != null) {
       try {
@@ -86,6 +90,22 @@ public class ViewerApplet extends JApplet implements ChatListener {
 	log.log(Level.SEVERE, "could not parse server port '" + portDesc
 		+ '\'', e);
       }
+    }
+
+    String contextFactoryClassName =  getParameter("contextFactory");
+
+    try {
+       contextFactory = (ContextFactory)Class.forName(contextFactoryClassName).newInstance();
+    } catch (ClassNotFoundException e) {
+      log.severe("unable to load context factory: Class not found");
+    } catch (InstantiationException e) {
+      log.severe("unable to load context factory: Class cannot be instantiated");
+    } catch (IllegalAccessException e) {
+      log.severe("unable to load context factory: Illegal access exception");
+    }
+
+    if (contextFactory == null) {
+      throw new IllegalArgumentException("no context factory specified");
     }
 
     mainPanel = new ViewerPanel(userName, serverName);
@@ -123,9 +143,11 @@ public class ViewerApplet extends JApplet implements ChatListener {
     return userName;
   }
 
+  public ContextFactory getContextFactory() {
+    return contextFactory;
+  }
 
-
-  // -------------------------------------------------------------------
+    // -------------------------------------------------------------------
   // Chat handling
   // -------------------------------------------------------------------
 

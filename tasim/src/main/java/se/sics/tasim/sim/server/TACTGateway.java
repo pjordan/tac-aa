@@ -34,11 +34,11 @@ import com.botbox.util.ArrayUtils;
 import com.botbox.util.ThreadPool;
 import se.sics.isl.inet.InetServer;
 import se.sics.isl.transport.Context;
+import se.sics.isl.transport.ContextFactory;
 import se.sics.isl.util.AMonitor;
 import se.sics.isl.util.AdminMonitor;
 import se.sics.isl.util.ConfigManager;
 import se.sics.tasim.props.AdminContent;
-import se.sics.tasim.props.SCMInfo;
 import se.sics.tasim.sim.Gateway;
 
 public class TACTGateway extends Gateway implements AMonitor
@@ -62,7 +62,27 @@ public class TACTGateway extends Gateway implements AMonitor
   
   protected void initGateway()
   {
-    transportContext = SCMInfo.createContext(AdminContent.createContext());
+    transportContext = AdminContent.createContext();
+
+      /*
+       * Reflectively loading the context factory
+       */
+    ConfigManager config = getConfig();
+
+    String name = getName();
+
+    String contextFactoryClassName =  config.getProperty(CONF + name + ".contextFactory", config.getProperty("server.contextFactory"));
+
+    try {
+      ContextFactory contextFactory = (ContextFactory)Class.forName(contextFactoryClassName).newInstance();
+      transportContext = contextFactory.createContext(transportContext);
+    } catch (ClassNotFoundException e) {
+      log.severe("server " + getName() + " unable to load context factory: Class not found");
+    } catch (InstantiationException e) {
+      log.severe("server " + getName() + " unable to load context factory: Class cannot be instantiated");
+    } catch (IllegalAccessException e) {
+      log.severe("server " + getName() + " unable to load context factory: Illegal access exception");  
+    }
   }
   
   protected void startGateway() throws IOException

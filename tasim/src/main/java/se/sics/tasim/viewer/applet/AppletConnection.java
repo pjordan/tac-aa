@@ -36,7 +36,6 @@ import java.util.logging.Logger;
 import se.sics.isl.transport.BinaryTransportReader;
 import se.sics.isl.transport.BinaryTransportWriter;
 import se.sics.isl.transport.Transportable;
-import se.sics.tasim.props.SCMInfo;
 import se.sics.tasim.viewer.ViewerConnection;
 
 public class AppletConnection implements Runnable {
@@ -77,6 +76,7 @@ public class AppletConnection implements Runnable {
       URL url = applet.getCodeBase();
       String serverName = applet.getServerName();
       String userName = applet.getUserName();
+
       int serverPort = applet.getServerPort();
       serverHost = url.getHost();
 
@@ -87,7 +87,7 @@ public class AppletConnection implements Runnable {
 
       transportWriter = new BinaryTransportWriter();
       transportReader = new BinaryTransportReader();
-      transportReader.setContext(SCMInfo.createContext());
+      transportReader.setContext(applet.getContextFactory().createContext());
 
       socket = new Socket(serverHost, serverPort);
       in = new DataInputStream(socket.getInputStream());
