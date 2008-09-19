@@ -65,7 +65,7 @@ public class LogManager
       os = null;
     }
     StringBuffer sb = new StringBuffer();
-    sb.append("SCMLogManager/" + VERSION);
+    sb.append("SIMLogManager/" + VERSION);
     if (os != null)
     {
       sb.append(" (");
@@ -98,7 +98,7 @@ public class LogManager
     
     // setup logging
     setLogging(config);
-    log.info("TAC SCM Log Tool " + VERSION);
+    log.info("TAC SIM Log Tool " + VERSION);
     
     // Find out if anything should be done immediately
     String dataFileName = config.getProperty("file");

@@ -53,7 +53,7 @@ public class ViewerApplet extends JApplet implements ChatListener {
    * Applet info.
    */
   public String getAppletInfo() {
-    return "TAC SCM Game Viewer v" + VERSION + ", by SICS";
+    return "TAC SIM Game Viewer v" + VERSION + ", by SICS";
   }
 
   /**

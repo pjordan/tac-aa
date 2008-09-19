@@ -484,7 +484,7 @@ public abstract class AgentView extends JComponent {
    * supports the day notion).
    *
    * @param serverTime the current server time
-   * @param date the current simulation date
+   * @param timeUnit the current simulation date
    */
   protected void nextTimeUnit(long serverTime, int timeUnit) {
   }

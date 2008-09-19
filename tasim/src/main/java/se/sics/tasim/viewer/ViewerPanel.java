@@ -45,7 +45,6 @@ import javax.swing.SwingUtilities;
 import com.botbox.util.ArrayUtils;
 import se.sics.isl.transport.Transportable;
 import se.sics.isl.util.ConfigManager;
-import se.sics.tasim.tacscm.TACSCMConstants;
 
 public class ViewerPanel extends ViewerConnection {
 
@@ -84,6 +83,8 @@ public class ViewerPanel extends ViewerConnection {
     this.userName = userName;
 
     // Should not be hardcoded but setup depending on simulation type. FIX THIS!!! \TODO
+
+    // TODO: use the tasim_viewer.conf file
     String configFile = "tac06scm_viewer.conf";
     URL configURL = ViewerPanel.class.getResource("/config/" + configFile);
     config = new ConfigManager();
@@ -100,7 +101,11 @@ public class ViewerPanel extends ViewerConnection {
     }
 
     // Should not be hardcoded but setup depending on simulation type. FIX THIS!!! \TODO
-    viewer = new se.sics.tasim.tacscm.viewer.TACSCMViewer();
+
+
+    // TODO: use reflection to load the view class
+    viewer = null;//new se.sics.tasim.tacscm.viewer.TACSCMViewer();
+      
     viewer.init(this);
     viewerPanel = viewer.getComponent();
 
@@ -335,15 +340,12 @@ public class ViewerPanel extends ViewerConnection {
       System.out.println("**** CACHE IS NULL????");
       return;
     }
-    if (type == TACSCMConstants.DU_BANK_ACCOUNT) { // \TODO this should probably not be hard coded in
-      for (int i = 0, n = cache.length; i < n; i++) {
-	dataUpdated(agent, type, (long) cache[i]);
-      }
-    } else {
-      for (int i = 0, n = cache.length; i < n; i++) {
-	dataUpdated(agent, type, cache[i]);
-      }
+
+
+    for (int i = 0, n = cache.length; i < n; i++) {
+	    dataUpdated(agent, type, (long)cache[i]);
     }
+
   }
 
   /*********************************************************************
