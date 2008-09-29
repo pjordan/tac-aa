@@ -36,7 +36,18 @@
       <url>http://ai.eecs.umich.edu/people/wellman</url>
       <organization>University of Michigan AI Laboratory</organization>
       <timezone>-5</timezone>
-	</developer>         
+	</developer>
+     <developer>
+      <id>asleep</id>
+      <name>Lee Callender</name>
+      <email>asleep [at] umich.edu</email>
+      <roles>
+        <role>Psuedo Research Scientist</role>
+      </roles>
+      <url>http://www.eecs.umich.edu/~asleep</url>
+      <organization>University of Michigan AI Laboratory</organization>
+      <timezone>-5</timezone>
+    </developer>             
   </developers>	
   <modules>
 	<module>tasim</module>
