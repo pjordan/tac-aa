@@ -18,6 +18,11 @@
 			<version>4.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>tasim</groupId>
+			<artifactId>tasim</artifactId>
+			<version>0.8.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
