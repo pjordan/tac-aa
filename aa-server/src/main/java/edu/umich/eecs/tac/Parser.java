@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.Transportable;
+import se.sics.isl.transport.ContextFactory;
 import se.sics.tasim.logtool.LogReader;
 import se.sics.tasim.logtool.ParticipantInfo;
 import edu.umich.eecs.tac.props.AAInfo;
@@ -49,7 +50,8 @@ public abstract class Parser implements TACAAConstants {
 
   protected Parser(LogReader logReader) {
     this.logReader = logReader;
-    this.logReader.setContext(AAInfo.createContext());
+    ContextFactory aaInfo = new AAInfo();    //Make sure this works
+    this.logReader.setContext(aaInfo.createContext());
   }
 
   /**

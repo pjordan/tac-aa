@@ -1,6 +1,7 @@
 package edu.umich.eecs.tac.props;
 
 import se.sics.isl.transport.Context;
+import se.sics.isl.transport.ContextFactory;
 import se.sics.tasim.props.*;
 
 /**
@@ -10,17 +11,21 @@ import se.sics.tasim.props.*;
  * Time: 12:32:06 AM
  * To change this template use File | Settings | File Templates.
  */
-public class AAInfo {
+public class AAInfo implements ContextFactory{
     public static final String CONTEXT_NAME = "aacontext";
 
     /** Cache of the last created context (since contexts should be constants) */
     private static Context lastContext;
 
-    public static Context createContext() {
+        // Prevent instances of this class
+    public AAInfo() {
+    }
+
+    public Context createContext() {
       return createContext(null);
     }
 
-    public static Context createContext(Context parentContext) {
+    public Context createContext(Context parentContext) {
       Context context = lastContext;
       if (context != null && context.getParent() == parentContext) {
         return context;
@@ -52,10 +57,6 @@ public class AAInfo {
       // Cache the last context
       lastContext = context;
       return context;
-    }
-
-    // Prevent instances of this class
-    private AAInfo() {
     }
 
   } // AAInfo

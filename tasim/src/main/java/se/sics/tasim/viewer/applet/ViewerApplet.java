@@ -92,6 +92,7 @@ public class ViewerApplet extends JApplet implements ChatListener {
       }
     }
 
+    //TODO-contextFactory must be passed in, should be the same as in TACTGateway
     String contextFactoryClassName =  getParameter("contextFactory");
 
     try {
