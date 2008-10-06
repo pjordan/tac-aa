@@ -69,43 +69,14 @@ public abstract class Simulation
   protected final static int RECOVERY_IMMEDIATELY = 1;
   protected final static int RECOVERY_AFTER_NEXT_TICK = 2;
   
-  // Create seeds.
-  // WE WOULD LIKE TO READ IN THESE VALUES.
-  private int numSuppliers = 8;// TEMP!!!
-  private int numProdLines = 2;// TEMP!!!
-  private int numSegments = 3;
-  private int numProducts = 16;
-  
-  private long customerSetupSeed;
-  private long tieBreakerSeed;
-  private long[] segRfqsSeed = new long[numSegments];
-  private long[] prodRfqsSeed = new long[numSegments];
-  private long[] rfqInfoSeed = new long[numSegments];
-  private long bankSeed;
-  private long storageSeed;
-  private long[] nominalCapacitySeed = new long[numSuppliers];
-  private long[][] dailyCapacitySeed = new long[numSuppliers][numProdLines];
-  
-  // Read seeds from file.
-  // long[][] seedData;
-  private long[] seedData;
-  
+
   // Keep track of games run since server began
   private static int GAMECOUNT = 0;
   private int NUMSEEDSETS = 1;
   
   private Random random;
-  private Random customerSetupRandom;
-  private Random tieBreakerRandom;
-  private Random[] segRfqsRandom; // RFQ Walk (seg)
-  private Random[] prodRfqsRandom; // RFQ Walk (prod)
-  private Random[] rfqInfoRandom; // RFQ info (qty, due, RP, pen)
-  private Random bankRandom; // interest rates
-  private Random storageRandom; // storage rate
-  private Random[] nominalCapacityRandom;
-  private Random[][] dailyCapacityRandom;
-  
-  private Admin admin;
+
+    private Admin admin;
   private ConfigManager config;
   private SimulationInfo info;
   private EventWriter rootEventWriter;
@@ -159,92 +130,6 @@ public abstract class Simulation
       this.config = admin.getConfig();
     }
     
-    // System.out.println("logFileName="+logFileName);
-    String serverName = admin.getServerName();
-    int simID = info.getSimulationID();
-    
-    String seedsConfiguredDirName = "logs/control/seedsConfigured/";
-    String seedsUsedDirName = "logs/control/seedsUsed/";
-    
-    File seedsConfiguredDir = new File(seedsConfiguredDirName);
-    File seedsUsedDir = new File(seedsUsedDirName);
-    
-    if (!seedsConfiguredDir.exists())
-    {
-      if (!seedsConfiguredDir.mkdirs())
-      {
-        log.log(Level.WARNING, "Could not mkdirs for '" + seedsConfiguredDirName +"'");
-      }
-    }
-    if (!seedsUsedDir.exists())
-    {
-      if (!seedsUsedDir.mkdirs())
-      {
-        log.log(Level.WARNING, "Could not mkdirs for '" + seedsUsedDir +"'");
-      }
-    }
-    String gameString = serverName + "_SIM_" + simID + ".dat";
-    String seedsConfiguredFilename = new String(seedsConfiguredDirName + gameString);
-    String seedsUsedFilename = new String(seedsUsedDirName + gameString);
-    String seedFileName;
-    int seedNum = 1;
-    
-    // Get number of seed sets we'll be rotating through this game.
-    // (Necessary for paired means performance evaluations).
-    String numSeedsFilename = new String("numSeedSets.dat");
-    try
-    {
-      // read in this data (our getRawData function puts entire file into an
-      // array)
-      long[] numSeedsData = getRawData(numSeedsFilename);
-      NUMSEEDSETS = (int) (numSeedsData[0]);
-    }
-    catch (Exception e)
-    {
-      log
-          .log(Level.SEVERE, "ERROR: couldn't read seedFile "
-              + numSeedsFilename);
-      NUMSEEDSETS = 1;
-      // TODO: SHOULD WE RECOVER BY RUNNING A RANDOM GAME,
-      // OR WILL THIS DISGUISE THE FACT THAT THERE WAS AN ERROR?
-    }
-    
-    // Provide option to read in from different seedsets each game.
-    // if (NUMSEEDSETS == 1) {
-    // seedFileName = new String("seedData.dat");
-    // }
-    // else {
-    seedNum = (GAMECOUNT % NUMSEEDSETS) + 1;
-    seedFileName = new String("seedData" + seedNum + ".dat");
-    // }
-    
-    try
-    {
-      // put all seed data into a single array
-      seedData = getRawData(seedFileName);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.SEVERE, "Exception when trying to read seedFile "
-          + seedFileName);
-      seedData = null; // TODO: SHOULD WE RUN A RANDOM GAME INSTEAD?
-    }
-    
-    // Split large array into specific arrays for better readability of the code
-    // (i.e. specific array names explain what each random seed is for)
-    splitSeedArray();
-    
-    // LOG THESE SEEDS AS THOSE USED FOR CONFIGURATION
-    try
-    {
-      saveSeedData(seedsConfiguredFilename, seedData);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.SEVERE,
-          "Exception when trying to save seedsConfigured file.");
-      log.log(Level.SEVERE, e.getMessage());
-    }
     
     // Randomly set seeds for any random walks.
     // We should still give specific seed for two reasons:
@@ -254,100 +139,8 @@ public abstract class Simulation
     // same
     // random numbers.
     random = new Random();
-    if (customerSetupSeed == 0)
-      customerSetupSeed = random.nextLong();
-    if (tieBreakerSeed == 0)
-      tieBreakerSeed = random.nextLong();
+
     
-    if (bankSeed == 0)
-      bankSeed = random.nextLong();
-    if (storageSeed == 0)
-      storageSeed = random.nextLong();
-    
-    for (int i = 0; i < numSuppliers; i++)
-    {
-      if (nominalCapacitySeed[i] == 0)
-        nominalCapacitySeed[i] = random.nextLong();
-    }
-    
-    for (int i = 0; i < numSuppliers; i++)
-    {
-      for (int j = 0; j < numProdLines; j++)
-      {
-        if (dailyCapacitySeed[i][j] == 0)
-          dailyCapacitySeed[i][j] = random.nextLong();
-      }
-    }
-    
-    for (int i = 0; i < numSegments; i++)
-    {
-      if (segRfqsSeed[i] == 0)
-        segRfqsSeed[i] = random.nextLong();
-      if (prodRfqsSeed[i] == 0)
-        prodRfqsSeed[i] = random.nextLong();
-      if (rfqInfoSeed[i] == 0)
-        rfqInfoSeed[i] = random.nextLong();
-    }
-    
-    // Now that all seeds have been set,
-    // Create random variables.
-    customerSetupRandom = new Random(customerSetupSeed);
-    tieBreakerRandom = new Random(tieBreakerSeed);
-    
-    bankRandom = new Random(bankSeed); // interest rates
-    storageRandom = new Random(storageSeed); // storage rate
-    
-    nominalCapacityRandom = new Random[numSuppliers];
-    dailyCapacityRandom = new Random[numSuppliers][numProdLines];
-    segRfqsRandom = new Random[numSegments];
-    prodRfqsRandom = new Random[numSegments];
-    rfqInfoRandom = new Random[numSegments];
-    
-    for (int i = 0; i < numSuppliers; i++)
-    {
-      System.out.println("Nominal Capacity: Idx=" + i);
-      nominalCapacityRandom[i] = new Random(nominalCapacitySeed[i]);
-    }
-    for (int i = 0; i < numSuppliers; i++)
-    {
-      for (int j = 0; j < numProdLines; j++)
-      {
-        System.out.println("Daily Capacity: i=" + i + "  j=" + j);
-        dailyCapacityRandom[i][j] = new Random(dailyCapacitySeed[i][j]);
-      }
-    }
-    
-    for (int i = 0; i < numSegments; i++)
-    {
-      segRfqsRandom[i] = new Random(segRfqsSeed[i]); // RFQ Walk (seg)
-    }
-    
-    for (int i = 0; i < numSegments; i++)
-    {
-      prodRfqsRandom[i] = new Random(prodRfqsSeed[i]); // RFQ Walk (prod)
-    }
-    
-    for (int i = 0; i < numSegments; i++)
-    {
-      rfqInfoRandom[i] = new Random(rfqInfoSeed[i]); // RFQ info (qty, due, RP,
-                                                      // pen)
-    }
-    
-    joinSeedArrays(); // put everything back into single array.
-    
-    // Log seeds that have been used during this game (even random ones).
-    try
-    {
-      saveSeedData(seedsUsedFilename, seedData);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.SEVERE, "Exception when trying to save seedsUsed file.");
-      log.log(Level.SEVERE, e.getMessage());
-    }
-    
-    // increase gamecount for the next seedData.dat file
-    GAMECOUNT++;
     
     this.dispatcher = new MessageDispatcher(admin, this, "sim"
         + info.getSimulationID());
@@ -386,13 +179,7 @@ public abstract class Simulation
         writer.attr("startTime", info.getStartTime()).attr("length",
             info.getSimulationLength() / 1000).attr("serverName",
             admin.getServerName()).attr("version", Admin.SERVER_VERSION);
-        
-        // MLB 20080404 added
-        // Log information about this simulation to the simulation log
-        for (int i = 0; i < seedData.length; i++)
-        {
-          writer.attr("seed" + i, seedData[i]);
-        }
+                
         
         SimulationAgent[] agents = getAgents();
         if (agents != null)
@@ -725,52 +512,7 @@ public abstract class Simulation
   // public Random getRandom(int val) {
   // walkRandom;
   // }
-  
-  public Random getCustomerSetupRandom()
-  {
-    return customerSetupRandom;
-  }
-  
-  public Random getTieBreakerRandom()
-  {
-    return tieBreakerRandom;
-  }
-  
-  public Random getBankRandom()
-  {
-    return bankRandom;
-  }
-  
-  public Random getStorageRandom()
-  {
-    return storageRandom;
-  }
-  
-  public Random getDailyCapacityRandom(int supIdx, int prodLineIdx)
-  {
-    return dailyCapacityRandom[supIdx - 1][prodLineIdx];
-  }
-  
-  public Random getNominalCapacityRandom(int supIdx)
-  {
-    return nominalCapacityRandom[supIdx - 1];
-  }
-  
-  public Random getSegRfqsRandom(int segIdx)
-  {
-    return segRfqsRandom[segIdx];
-  }
-  
-  public Random getProdRfqsRandom(int segIdx)
-  {
-    return prodRfqsRandom[segIdx];
-  }
-  
-  public Random getRfqInfoRandom(int segIdx)
-  {
-    return rfqInfoRandom[segIdx];
-  }
-  
+
   public ThreadPool getSimulationThreadPool()
   {
     return simulationThreadPool;
@@ -1206,7 +948,7 @@ public abstract class Simulation
    * Sends the specified message from the simulation coordinator to the agent
    * specified as the receiver in the message.
    * 
-   * @param message
+   * @param receiver
    *          the message to send
    */
   protected void sendMessage(String receiver, Transportable content)
@@ -1499,177 +1241,5 @@ public abstract class Simulation
     }
     super.finalize();
   }
-  
-  public void saveSeedData(String filename, long[] seedArray)
-      throws IOException
-  {
-    FileWriter fstream = new FileWriter(filename);
-    BufferedWriter out = new BufferedWriter(fstream);
-    
-    long currentSeed;
-    
-    for (int i = 0; i < seedArray.length; i++)
-    {
-      currentSeed = seedArray[i];
-      out.write(String.valueOf(currentSeed) + "\n");
-    }
-    
-    out.close();
-  }
-  
-  public static long[] getRawData(String filename) throws IOException
-  {
-    
-    ArrayList line = new ArrayList();
-    FileReader fstream = new FileReader(filename);
-    BufferedReader in = new BufferedReader(fstream);
-    String s = null;
-    long seed;
-    
-    while ((s = in.readLine()) != null)
-      line.add(s);
-    
-    long[] data = new long[line.size()];
-    
-    for (int i = 0; i < data.length; i++)
-    {
-      s = (String) line.get(i);
-      seed = Long.parseLong(s.trim());
-      data[i] = seed;
-    }
-    
-    return data;
-  }
-  
-  //Break up seed data into specific arrays
-  public void splitSeedArray()
-  {
-    int seedIdx = 0;
-    bankSeed = seedData[seedIdx];
-    seedIdx++;
-    
-    storageSeed = seedData[seedIdx];
-    seedIdx++;
-    
-    for (int i = 0; i < numSuppliers; i++)
-    {
-      nominalCapacitySeed[i] = seedData[seedIdx];
-      seedIdx++;
-    }
-    
-    for (int i = 0; i < numSuppliers; i++)
-    {
-      for (int j = 0; j < numProdLines; j++)
-      {
-        dailyCapacitySeed[i][j] = seedData[seedIdx];
-        seedIdx++;
-      }
-    }
-    
-    customerSetupSeed = seedData[seedIdx];
-    seedIdx++;
-    
-    for (int i = 0; i < numSegments; i++)
-    {
-      segRfqsSeed[i] = seedData[seedIdx];
-      seedIdx++;
-    }
-    
-    for (int i = 0; i < numSegments; i++)
-    {
-      prodRfqsSeed[i] = seedData[seedIdx];
-      seedIdx++;
-    }
-    
-    //for(int i=0; i<numProducts; i++) {
-    //  for(int i=0; i<
-    for (int i = 0; i < numSegments; i++)
-    { //change this to prods?
-      rfqInfoSeed[i] = seedData[seedIdx];
-      seedIdx++;
-    }
-    
-    tieBreakerSeed = seedData[seedIdx];
-    seedIdx++;
-  }
-  
-  //Merge seed data into one general array
-  public void joinSeedArrays()
-  {
-    int seedIdx = 0;
-    seedData[seedIdx] = bankSeed;
-    seedIdx++;
-    
-    seedData[seedIdx] = storageSeed;
-    seedIdx++;
-    
-    for (int i = 0; i < numSuppliers; i++)
-    {
-      seedData[seedIdx] = nominalCapacitySeed[i];
-      seedIdx++;
-    }
-    
-    for (int i = 0; i < numSuppliers; i++)
-    {
-      for (int j = 0; j < numProdLines; j++)
-      {
-        seedData[seedIdx] = dailyCapacitySeed[i][j];
-        seedIdx++;
-      }
-    }
-    
-    seedData[seedIdx] = customerSetupSeed;
-    seedIdx++;
-    
-    for (int i = 0; i < numSegments; i++)
-    {
-      seedData[seedIdx] = segRfqsSeed[i];
-      seedIdx++;
-    }
-    
-    for (int i = 0; i < numSegments; i++)
-    {
-      seedData[seedIdx] = prodRfqsSeed[i];
-      seedIdx++;
-    }
-    
-    for (int i = 0; i < numSegments; i++)
-    { //change this to prods?
-      seedData[seedIdx] = rfqInfoSeed[i];
-      seedIdx++;
-    }
-    
-    seedData[seedIdx] = tieBreakerSeed;
-    seedIdx++;
-  }
-  
-  //Takes a file of double values and reads them into a 2d array
-  public static long[][] getRawData(File f) throws IOException
-  {
-    // Taken and modified from rkippen at forum.java.sun.com 
-    
-    ArrayList line = new ArrayList();
-    BufferedReader br = new BufferedReader(new FileReader(f));
-    String s = null;
-    
-    while ((s = br.readLine()) != null)
-      line.add(s);
-    
-    long[][] map = new long[line.size()][];
-    
-    for (int i = 0; i < map.length; i++)
-    {
-      s = (String) line.get(i);
-      
-      StringTokenizer st = new StringTokenizer(s, " ");
-      long[] arr = new long[st.countTokens()];
-      
-      for (int j = 0; j < arr.length; j++)
-        arr[j] = Long.parseLong(st.nextToken());
-      
-      map[i] = arr;
-    }
-    return map;
-  }
-  
+
 } // Simulation
