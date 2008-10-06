@@ -1,5 +1,4 @@
 package edu.umich.eecs.tac.props;
-
 import java.io.Serializable;
 import java.text.ParseException;
 
@@ -7,36 +6,30 @@ import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
 import se.sics.isl.transport.Transportable;
 
-public class BankStatus implements Transportable, Serializable {
 
-	/**If BankStatus is updated, update the ID
+public class KeywordReport implements Serializable, Transportable {
+
+	/**Update when this file is updated.
 	 * 
 	 */
-	private static final long serialVersionUID = -6576269032652384128L;
-	
-	float balance;
+	private static final long serialVersionUID = -4366560152538990286L;
 
-	public BankStatus(float b){
-		balance = b;
-	}
-	
-	public double getAccountBalance(){
-		return balance;
-	}
-	
 	@Override
 	public String getTransportName() {
-		return "bankStatus";
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public void read(TransportReader reader) throws ParseException {
-		balance = reader.getAttributeAsFloat("balance", 0.00F);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void write(TransportWriter writer) {
-		writer.attr("balance", balance);
+		// TODO Auto-generated method stub
+
 	}
 
 }
