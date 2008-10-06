@@ -14,19 +14,16 @@ public class KeywordReport implements Serializable, Transportable {
 	 */
 	private static final long serialVersionUID = -4366560152538990286L;
 
-	@Override
 	public String getTransportName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public void read(TransportReader reader) throws ParseException {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void write(TransportWriter writer) {
 		// TODO Auto-generated method stub
 

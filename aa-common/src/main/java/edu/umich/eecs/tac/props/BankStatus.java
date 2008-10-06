@@ -24,17 +24,14 @@ public class BankStatus implements Transportable, Serializable {
 		return balance;
 	}
 	
-	@Override
 	public String getTransportName() {
 		return "bankStatus";
 	}
 
-	@Override
 	public void read(TransportReader reader) throws ParseException {
 		balance = reader.getAttributeAsFloat("balance", 0.00F);
 	}
 
-	@Override
 	public void write(TransportWriter writer) {
 		writer.attr("balance", balance);
 	}
