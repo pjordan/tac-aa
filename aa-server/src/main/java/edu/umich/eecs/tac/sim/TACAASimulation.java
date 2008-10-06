@@ -15,6 +15,8 @@ import se.sics.tasim.sim.Simulation;
 import se.sics.tasim.sim.SimulationAgent;
 import se.sics.tasim.aw.Message;
 
+//TODO-MODIFY THIS CLASS *AND* SIMULATION.JAVA
+
 public class TACAASimulation extends Simulation {
 
     public TACAASimulation(ConfigManager config){

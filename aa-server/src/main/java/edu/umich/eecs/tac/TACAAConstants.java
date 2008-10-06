@@ -13,7 +13,6 @@ package edu.umich.eecs.tac;
  * the TAC AA Simulations.  
  */
 
-
 public interface TACAAConstants {
 
     public static final String[] SUPPORTED_TYPES = {
