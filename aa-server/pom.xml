@@ -28,6 +28,11 @@
             <artifactId>aa-common</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+        </dependency>
     </dependencies>
 	<build>
 		<plugins>
