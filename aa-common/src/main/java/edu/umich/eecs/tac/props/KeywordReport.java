@@ -16,19 +16,61 @@ public class KeywordReport implements Serializable, Transportable {
 	private static final long serialVersionUID = -4366560152538990286L;
 
 	LinkedList<QueryReport> yesterdaysReport = new LinkedList<QueryReport>();
+	private boolean isLocked = false;
+	
+	public KeywordReport(){}
+	
+	public boolean isLocked() {
+		return isLocked;
+	}
+
+	public void lock() {
+		isLocked = true;
+	}
 	
 	public String getTransportName() {
 		return "keywordreport";
 	}
 
 	public void read(TransportReader reader) throws ParseException {
-		// TODO Auto-generated method stub
-
+	    if (isLocked) {
+	        throw new IllegalStateException("locked");
+	    }
+		boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
+		while (reader.nextNode("keywordreport", false)) {
+			QueryReport temp = new QueryReport();
+			temp.setQueryString(reader.getAttribute("queryString"));
+			temp.setImpressions(reader.getAttributeAsInt("impressions"));
+			temp.setClicks(reader.getAttributeAsInt("clicks"));
+			temp.setConversions(reader.getAttributeAsInt("conversions"));
+			temp.setPosition(reader.getAttributeAsInt("position"));
+			temp.setCost(reader.getAttributeAsFloat("cost"));
+			temp.setRevenue(reader.getAttributeAsFloat("revenue"));
+			yesterdaysReport.add(temp);
+		}
+	    if(lock){
+	        lock();
+	    }
 	}
 
 	public void write(TransportWriter writer) {
-		// TODO Auto-generated method stub
-
+		if (isLocked) {
+			writer.attr("lock", 1);
+	    }
+		int i;
+		QueryReport temp;
+		for(i = 0; i < yesterdaysReport.size(); i++){
+			temp = yesterdaysReport.get(i);
+			writer.node("keywordreport");
+			writer.attr("queryString", temp.getQueryString());
+			writer.attr("impressions", temp.getImpressions());
+			writer.attr("clicks", temp.getClicks());
+			writer.attr("conversions", temp.getConversions());
+			writer.attr("position", temp.getPosition());
+			writer.attr("cost", temp.getCost());
+			writer.attr("revenue", temp.getRevenue());
+			writer.endNode("keywordreport");
+		}
 	}
 
 }
@@ -43,12 +85,18 @@ class QueryReport {
 	private float cost;
 	private float revenue;
 	
+	public QueryReport(){}
+	
 	public QueryReport(String s){
 		queryString = s;
 	}
 	
 	public String getQueryString() {
 		return queryString;
+	}
+	
+	public void setQueryString(String q) {
+		queryString = q;
 	}
 	
 	public int getImpressions() {

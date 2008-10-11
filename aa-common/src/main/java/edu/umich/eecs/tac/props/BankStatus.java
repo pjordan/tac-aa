@@ -16,6 +16,10 @@ public class BankStatus implements Transportable, Serializable {
 	
 	float balance;
 
+	public BankStatus(){
+		balance = 0;
+	}
+	
 	public BankStatus(float b){
 		balance = b;
 	}
