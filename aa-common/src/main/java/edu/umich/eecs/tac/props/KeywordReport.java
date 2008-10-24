@@ -32,6 +32,24 @@ public class KeywordReport implements Serializable, Transportable {
 		return "keywordreport";
 	}
 
+	public String toString(){
+		String r = new String();
+		int i;
+		QueryReport temp = new QueryReport();
+		for(i = 0; i < yesterdaysReport.size(); i++){
+			temp = yesterdaysReport.get(i);
+			r += "Query: " + temp.getQueryString() + " ";
+			r += "Position: " + temp.getPosition() + " ";
+			r += "Impressions: " + temp.getImpressions() + " ";
+			r += "Clicks: " + temp.getClicks() + " ";
+			r += "Conversions: " + temp.getConversions() + " ";
+			r += "Cost: " + temp.getCost() + " ";
+			r += "Revenue: " + temp.getRevenue();
+			r += "\n";
+		}
+		return r;
+	}
+	
 	public void read(TransportReader reader) throws ParseException {
 	    if (isLocked) {
 	        throw new IllegalStateException("locked");
@@ -89,6 +107,16 @@ class QueryReport {
 	
 	public QueryReport(String s){
 		queryString = s;
+	}
+	
+	public QueryReport(String s, int cli, int con, float cos, int imp, int pos, float rev){
+		queryString = s;
+		clicks = cli;
+		conversions = con;
+		cost = cos;
+		impressions = imp;
+		position = pos;
+		revenue = rev;
 	}
 	
 	public String getQueryString() {
