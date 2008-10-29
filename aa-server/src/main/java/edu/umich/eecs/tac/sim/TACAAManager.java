@@ -26,14 +26,14 @@ public class TACAAManager extends SimulationManager {
   private final static Logger log = Logger.getLogger(TACAAManager.class.getName());
 
   /** The default simulation length if not specified in configuration file */
-  private final static int DEFAULT_SIM_LENGTH = 58 * 60;
+  private final static int DEFAULT_SIM_LENGTH = 10 * 60;  //Set to 10 minutes
 
   /** Default number of participants in a TACSCM simulation if not
    * specified in configuration file
    */
   final static int NUMBER_OF_ADVERTISERS = 6;
 
-  private static Hashtable configTable = new Hashtable();
+  private static Hashtable<String, Config> configTable = new Hashtable<String, Config>();
 
   public TACAAManager() {
   }
@@ -65,8 +65,7 @@ public class TACAAManager extends SimulationManager {
           simConfig.simulationLength =
             config.getPropertyAsInt("game.length", DEFAULT_SIM_LENGTH) * 1000;
           simConfig.numberOfAdvertisers =
-            config.getPropertyAsInt("game.numberOfAdvertisers",
-                    NUMBER_OF_ADVERTISERS);
+            config.getPropertyAsInt("game.numberOfAdvertisers", NUMBER_OF_ADVERTISERS);
         }
         return simConfig.simulationConfig;
       }

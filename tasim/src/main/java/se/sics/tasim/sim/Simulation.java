@@ -68,15 +68,10 @@ public abstract class Simulation
   protected final static int RECOVERY_NONE = 0;
   protected final static int RECOVERY_IMMEDIATELY = 1;
   protected final static int RECOVERY_AFTER_NEXT_TICK = 2;
-  
 
-  // Keep track of games run since server began
-  private static int GAMECOUNT = 0;
-  private int NUMSEEDSETS = 1;
-  
-  private Random random;
+  private Random random = new Random();
 
-    private Admin admin;
+  private Admin admin;
   private ConfigManager config;
   private SimulationInfo info;
   private EventWriter rootEventWriter;
@@ -129,19 +124,7 @@ public abstract class Simulation
     {
       this.config = admin.getConfig();
     }
-    
-    
-    // Randomly set seeds for any random walks.
-    // We should still give specific seed for two reasons:
-    // 1. In case the user wants to control this walk in the future
-    // 2. new Random() uses current clock time to choose seed, so creating
-    // consecutive instances of Random could cause multiple walks to use the
-    // same
-    // random numbers.
-    random = new Random();
-
-    
-    
+        
     this.dispatcher = new MessageDispatcher(admin, this, "sim"
         + info.getSimulationID());
   }
