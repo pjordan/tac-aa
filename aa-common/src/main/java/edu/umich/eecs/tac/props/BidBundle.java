@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.props;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.LinkedList;
+import java.util.List;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
@@ -10,13 +11,17 @@ import se.sics.isl.transport.Transportable;
 
 public class BidBundle implements Transportable, Serializable {
 	
-	/**Generate when finalized.
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 0L;
-
+	private static final long serialVersionUID = 5057969669832603679L;
+	
 	private boolean isLocked = false;
-	private LinkedList<BidPair> bundle = new LinkedList<BidPair>();
+	private List<BidPair> bundle;
+	
+	public BidBundle(){
+		bundle = new LinkedList<BidPair>();
+	}
 
 	public void addBidPair(String search, double bid){
 	    if(isLocked){
@@ -89,7 +94,10 @@ public class BidBundle implements Transportable, Serializable {
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
-	    //TODO FINISH
+	    boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
+	    while(reader.nextNode("bidbundle", false)){
+	    	
+	    }
 	}
 
 	public void write(TransportWriter writer) {
@@ -97,32 +105,32 @@ public class BidBundle implements Transportable, Serializable {
 
 	}
 
-}
+	private static class BidPair{
 
-class BidPair{
+		private String searchString = new String();
+		private double bidAmount;
+		
+		public BidPair(String s, double b){
+			searchString = s.toLowerCase();
+			bidAmount = b;
+		}
 
-	private String searchString = new String();
-	private double bidAmount;
-	
-	public BidPair(String s, double b){
-		searchString = s.toLowerCase();
-		bidAmount = b;
-	}
-
-	public void setBidAmount(double b){
-		bidAmount = b;
-	}
-	
-	public void setSearchString(String s){
-		searchString = s.toLowerCase();
-	}
-	
-	public String getSearchString(){
-		return searchString;
-	}
-	
-	public double getBidAmount(){
-		return bidAmount;
+		public void setBidAmount(double b){
+			bidAmount = b;
+		}
+		
+		public void setSearchString(String s){
+			searchString = s.toLowerCase();
+		}
+		
+		public String getSearchString(){
+			return searchString;
+		}
+		
+		public double getBidAmount(){
+			return bidAmount;
+		}
+		
 	}
 	
 }

@@ -2,6 +2,7 @@ package edu.umich.eecs.tac.props;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.LinkedList;
+import java.util.List;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
@@ -15,10 +16,12 @@ public class KeywordReport implements Serializable, Transportable {
 	 */
 	private static final long serialVersionUID = -4366560152538990286L;
 
-	LinkedList<QueryReport> yesterdaysReport = new LinkedList<QueryReport>();
+	private List<QueryReport> yesterdaysReport;
 	private boolean isLocked = false;
 	
-	public KeywordReport(){}
+	public KeywordReport(){
+		yesterdaysReport = new LinkedList<QueryReport>();
+	}
 	
 	public boolean isLocked() {
 		return isLocked;
@@ -91,77 +94,77 @@ public class KeywordReport implements Serializable, Transportable {
 		}
 	}
 
-}
+	private static class QueryReport {
 
-class QueryReport {
-
-	private String queryString = new String();
-	private int impressions;
-	private int clicks;
-	private int conversions;
-	private int position;
-	private float cost;
-	private float revenue;
-	
-	public QueryReport(){}
-	
-	public QueryReport(String s){
-		queryString = s;
-	}
-	
-	public QueryReport(String s, int cli, int con, float cos, int imp, int pos, float rev){
-		queryString = s;
-		clicks = cli;
-		conversions = con;
-		cost = cos;
-		impressions = imp;
-		position = pos;
-		revenue = rev;
-	}
-	
-	public String getQueryString() {
-		return queryString;
-	}
-	
-	public void setQueryString(String q) {
-		queryString = q;
-	}
-	
-	public int getImpressions() {
-		return impressions;
-	}
-	public void setImpressions(int impressions) {
-		this.impressions = impressions;
-	}
-	public int getClicks() {
-		return clicks;
-	}
-	public void setClicks(int clicks) {
-		this.clicks = clicks;
-	}
-	public int getConversions() {
-		return conversions;
-	}
-	public void setConversions(int conversions) {
-		this.conversions = conversions;
-	}
-	public int getPosition() {
-		return position;
-	}
-	public void setPosition(int position) {
-		this.position = position;
-	}
-	public float getCost() {
-		return cost;
-	}
-	public void setCost(float cost) {
-		this.cost = cost;
-	}
-	public float getRevenue() {
-		return revenue;
-	}
-	public void setRevenue(float revenue) {
-		this.revenue = revenue;
+		private String queryString = new String();
+		private int impressions;
+		private int clicks;
+		private int conversions;
+		private int position;
+		private float cost;
+		private float revenue;
+		
+		public QueryReport(){}
+		
+		public QueryReport(String s){
+			queryString = s;
+		}
+		
+		public QueryReport(String s, int cli, int con, float cos, int imp, int pos, float rev){
+			queryString = s;
+			clicks = cli;
+			conversions = con;
+			cost = cos;
+			impressions = imp;
+			position = pos;
+			revenue = rev;
+		}
+		
+		public String getQueryString() {
+			return queryString;
+		}
+		
+		public void setQueryString(String q) {
+			queryString = q;
+		}
+		
+		public int getImpressions() {
+			return impressions;
+		}
+		public void setImpressions(int impressions) {
+			this.impressions = impressions;
+		}
+		public int getClicks() {
+			return clicks;
+		}
+		public void setClicks(int clicks) {
+			this.clicks = clicks;
+		}
+		public int getConversions() {
+			return conversions;
+		}
+		public void setConversions(int conversions) {
+			this.conversions = conversions;
+		}
+		public int getPosition() {
+			return position;
+		}
+		public void setPosition(int position) {
+			this.position = position;
+		}
+		public float getCost() {
+			return cost;
+		}
+		public void setCost(float cost) {
+			this.cost = cost;
+		}
+		public float getRevenue() {
+			return revenue;
+		}
+		public void setRevenue(float revenue) {
+			this.revenue = revenue;
+		}
+		
 	}
 	
 }
