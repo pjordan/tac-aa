@@ -8,7 +8,7 @@ import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
 import se.sics.isl.transport.Transportable;
 
-
+//STILL IN PROGRESS
 public class KeywordReport implements Serializable, Transportable {
 
 	/**Update when this file is updated.
@@ -17,11 +17,29 @@ public class KeywordReport implements Serializable, Transportable {
 	private static final long serialVersionUID = -4366560152538990286L;
 
 	private List<QueryReport> yesterdaysReport;
+	
 	private boolean isLocked = false;
 	
 	public KeywordReport(){
 		yesterdaysReport = new LinkedList<QueryReport>();
 	}
+	
+	public void addQueryReport(){
+		QueryReport temp = new QueryReport();
+		yesterdaysReport.add(temp);
+	}
+	
+	public void addQuery(String query){
+		QueryReport temp = new QueryReport(query);
+		yesterdaysReport.add(temp);
+	}
+	
+	public void addQuery(String query, int clicknum, double avgcpc, int imp, double pos){
+		QueryReport temp = new QueryReport(query, clicknum, avgcpc, imp, pos);
+		yesterdaysReport.add(temp);
+	}
+	
+	//TODO: ADD GETTERS AND SETTERS FOR THIS LEVEL OF ACCESS
 	
 	public boolean isLocked() {
 		return isLocked;
@@ -41,14 +59,11 @@ public class KeywordReport implements Serializable, Transportable {
 		QueryReport temp = new QueryReport();
 		for(i = 0; i < yesterdaysReport.size(); i++){
 			temp = yesterdaysReport.get(i);
-			r += "Query: " + temp.getQueryString() + " ";
-			r += "Position: " + temp.getPosition() + " ";
+			r += "Query: " + temp.getQuery() + " ";
+			r += "Avergae Position: " + temp.getAvgPosition() + " ";
 			r += "Impressions: " + temp.getImpressions() + " ";
 			r += "Clicks: " + temp.getClicks() + " ";
-			r += "Conversions: " + temp.getConversions() + " ";
-			r += "Cost: " + temp.getCost() + " ";
-			r += "Revenue: " + temp.getRevenue();
-			r += "\n";
+			r += "Average Cost Per Click: " + temp.getAvgCPC() + "\n";
 		}
 		return r;
 	}
@@ -60,13 +75,11 @@ public class KeywordReport implements Serializable, Transportable {
 		boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
 		while (reader.nextNode("keywordreport", false)) {
 			QueryReport temp = new QueryReport();
-			temp.setQueryString(reader.getAttribute("queryString"));
+			temp.setQuery(reader.getAttribute("query"));
 			temp.setImpressions(reader.getAttributeAsInt("impressions"));
 			temp.setClicks(reader.getAttributeAsInt("clicks"));
-			temp.setConversions(reader.getAttributeAsInt("conversions"));
-			temp.setPosition(reader.getAttributeAsInt("position"));
-			temp.setCost(reader.getAttributeAsFloat("cost"));
-			temp.setRevenue(reader.getAttributeAsFloat("revenue"));
+			temp.setAvgPosition(reader.getAttributeAsInt("position"));
+			temp.setAvgCPC(reader.getAttributeAsDouble("costperclick"));
 			yesterdaysReport.add(temp);
 		}
 	    if(lock){
@@ -83,88 +96,77 @@ public class KeywordReport implements Serializable, Transportable {
 		for(i = 0; i < yesterdaysReport.size(); i++){
 			temp = yesterdaysReport.get(i);
 			writer.node("keywordreport");
-			writer.attr("queryString", temp.getQueryString());
+			writer.attr("queryString", temp.getQuery());
 			writer.attr("impressions", temp.getImpressions());
 			writer.attr("clicks", temp.getClicks());
-			writer.attr("conversions", temp.getConversions());
-			writer.attr("position", temp.getPosition());
-			writer.attr("cost", temp.getCost());
-			writer.attr("revenue", temp.getRevenue());
+			writer.attr("position", temp.getAvgPosition());
+			writer.attr("costperclick", temp.getAvgCPC());
 			writer.endNode("keywordreport");
 		}
 	}
 
 	private static class QueryReport {
 
-		private String queryString = new String();
+		private String query = new String();
 		private int impressions;
 		private int clicks;
-		private int conversions;
-		private int position;
-		private float cost;
-		private float revenue;
+		private double avgPosition;
+		private double avgCPC;
 		
 		public QueryReport(){}
 		
-		public QueryReport(String s){
-			queryString = s;
+		public QueryReport(String q){
+			query = q;
 		}
 		
-		public QueryReport(String s, int cli, int con, float cos, int imp, int pos, float rev){
-			queryString = s;
-			clicks = cli;
-			conversions = con;
-			cost = cos;
+		public QueryReport(String q, int clicknum, double cost, int imp, double pos){
+			query = q;
+			clicks = clicknum;
+			avgCPC = cost;
 			impressions = imp;
-			position = pos;
-			revenue = rev;
+			avgPosition = pos;
 		}
-		
-		public String getQueryString() {
-			return queryString;
+
+		public String getQuery() {
+			return query;
 		}
-		
-		public void setQueryString(String q) {
-			queryString = q;
+
+		public void setQuery(String query) {
+			this.query = query;
 		}
-		
+
 		public int getImpressions() {
 			return impressions;
 		}
+
 		public void setImpressions(int impressions) {
 			this.impressions = impressions;
 		}
+
 		public int getClicks() {
 			return clicks;
 		}
+
 		public void setClicks(int clicks) {
 			this.clicks = clicks;
 		}
-		public int getConversions() {
-			return conversions;
+
+		public double getAvgPosition() {
+			return avgPosition;
 		}
-		public void setConversions(int conversions) {
-			this.conversions = conversions;
+
+		public void setAvgPosition(double avgPosition) {
+			this.avgPosition = avgPosition;
 		}
-		public int getPosition() {
-			return position;
+
+		public double getAvgCPC() {
+			return avgCPC;
 		}
-		public void setPosition(int position) {
-			this.position = position;
+
+		public void setAvgCPC(double avgCPC) {
+			this.avgCPC = avgCPC;
 		}
-		public float getCost() {
-			return cost;
-		}
-		public void setCost(float cost) {
-			this.cost = cost;
-		}
-		public float getRevenue() {
-			return revenue;
-		}
-		public void setRevenue(float revenue) {
-			this.revenue = revenue;
-		}
-		
+
 	}
 	
 }
