@@ -33,6 +33,9 @@
  * n [and the rest as N - but without the end-tag since n is a complete node]
  * \n - ends nodes and tables
  *
+ * MODIFIED BY: Lee Callender
+ * Date: 10/29/2008
+ *
  */
 package se.sics.isl.transport;
 
@@ -69,6 +72,7 @@ public class BinaryTransportWriter extends TransportWriter implements BinaryTran
   private int[][] currentRow = new int[2][DEF_SIZE * 2]; // Type-Name pairs
   private long[][] currentIValues = new long[2][DEF_SIZE];
   private float[][] currentFValues = new float[2][DEF_SIZE];
+  private double[][] currentDValues = new double[2][DEF_SIZE]; //Modified by Lee Callender
   private Object[][] currentOValues = new Object[2][DEF_SIZE];
   private int attrCount[] = new int[2];
   private int nodeName[] = new int[2];
@@ -288,7 +292,18 @@ public class BinaryTransportWriter extends TransportWriter implements BinaryTran
     currentFValues[currentPos][index] = value;
     return this;
   }
-  
+
+  //Modified by Lee Callender
+  public TransportWriter attr(String name, double value)
+  {
+    if(!inNode)
+      throw new IllegalArgumentException("Can not output attributes outside of nodes");
+    int nid = createConstantID(name);
+    int index = setType(DOUBLE, nid);
+    currentDValues[currentPos][index] = value;
+    return this;
+  }
+
   public TransportWriter attr(String name, String value)
   {
     if (!inNode)

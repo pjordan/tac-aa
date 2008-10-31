@@ -25,6 +25,9 @@
  *           $Revision: 3766 $
  * Purpose :
  *
+ * MODIFIED BY: Lee Callender
+ * Date: 10/29/08
+ *
  */
 package se.sics.isl.transport;
 
@@ -206,6 +209,35 @@ public abstract class TransportReader
       try
       {
         return Float.parseFloat(value);
+      }
+      catch (Exception e)
+      {
+        // Ignore because default will be returned
+      }
+    }
+    return defaultValue;
+  }
+
+  //Added double parsing - Lee Callender
+  public double getAttributeAsDouble(String name) throws ParseException
+  {
+    return getAttributeAsDouble(name, 0.0d, true);
+  }
+
+  public double getAttributeAsDouble(String name, double defaultValue) throws ParseException
+  {
+    return getAttributeAsDouble(name, 0.0d, false);
+  }
+
+  public double getAttributeAsDouble(String name, double defaultValue, boolean isRequired)
+      throws ParseException
+  {
+    String value = getAttribute(name, null, isRequired);
+    if (value != null)
+    {
+      try
+      {
+        return Double.parseDouble(value);
       }
       catch (Exception e)
       {

@@ -1,3 +1,6 @@
+
+//@author- Ben Cassell, Lee Callender
+
 package edu.umich.eecs.tac.props;
 
 import java.io.Serializable;
@@ -13,31 +16,49 @@ public class BankStatus implements Transportable, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6576269032652384128L;
-	
-	float balance;
+
+  private double balance;
 
 	public BankStatus(){
-		balance = 0;
+		balance = 0.0d;
 	}
 	
-	public BankStatus(float b){
+	public BankStatus(double b){
 		balance = b;
 	}
 	
 	public double getAccountBalance(){
 		return balance;
 	}
-	
-	public String getTransportName() {
+
+  public void setAccountBalance(double b){
+    balance = b;
+  }
+
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append(getTransportName()).append('[')
+      .append(balance).append(']');
+
+    return sb.toString();
+  }
+
+  // -------------------------------------------------------------------
+  //  Transportable (externalization support)
+  // -------------------------------------------------------------------
+
+
+  //Returns transport name used for externalization
+  public String getTransportName() {
 		return "bankStatus";
 	}
 
 	public void read(TransportReader reader) throws ParseException {
-		balance = reader.getAttributeAsFloat("balance", 0.00F);
+		balance = reader.getAttributeAsDouble("balance", 0.0d);
 	}
 
 	public void write(TransportWriter writer) {
-		writer.attr("balance", balance);
+		writer.attr("balance", balance);       //If (balance != 0)? See TAC-SCM version
 	}
 
 }

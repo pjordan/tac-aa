@@ -23,13 +23,13 @@ import se.sics.tasim.sim.Simulation;
 import se.sics.tasim.sim.SimulationAgent;
 import se.sics.tasim.aw.Message;
 
-
 import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.BankStatus;
 
 //TODO-MODIFY THIS CLASS *AND* SIMULATION.JAVA
 
 public class TACAASimulation extends Simulation implements TACAAConstants {
-  //private Bank bank;
+  private Bank bank;
   private String timeUnitName = "Day";
   private int currentTimeUnit = 0;
   private int secondsPerDay = 10;
@@ -113,6 +113,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
 	     + " is setting up...");
       
     //Initialize in-game agents, bank etc.
+    bank = new Bank(this, numberOfAdvertisers);
 
     // Create proxy agents for all participants
     for(int i = 0, n = info.getParticipantCount(); i < n; i++){
@@ -126,8 +127,24 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         createDummies("dummy.advertiser", ADVERTISER,
                 numberOfAdvertisers - info.getParticipantCount());
     }
-      
-    
+
+    //Initialize advertisers..
+    SimulationAgent[] advertisers = getAgents(ADVERTISER);
+    if (advertisers != null) {
+      for (int i = 0, n = advertisers.length; i < n; i++) {
+	      SimulationAgent agent = advertisers[i];
+	      String agentAddress = agent.getAddress();
+	      /*String factoryName = "factory" + (i + 1);
+	      Factory factory = new Factory(this, agent, factoryCapacity,
+				      daysPerYear, storageCost,
+				      this.bomBundle, this.componentCatalog);
+	      factoryTable.put(agentAddress, factory);
+	      registerAgent(factory, factoryName, FACTORY, -1); */
+
+	      // Create bank account for the advertiser
+	      bank.addAccount(agentAddress);
+      }
+    }  
  }
 
   protected String getTimeUnitName() {
@@ -202,6 +219,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
     // No longer any need to recover agents
     recoverAgents = false;
     // The bank needs to send its final account statuses
+    bank.sendBankStatusToAll();
 
     // Send the final simulation status
     int millisConsumed = (int)
@@ -238,10 +256,9 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
     if (timeUnit >= numberOfDays) {
       // Time to stop the simulation
       requestStopSimulation();
-    } // else {
+    } else {
       // Let the bank send their first messages
-      //bank.addInterests(timeUnit);
-      //bank.sendBankStatusToAll();
+      bank.sendBankStatusToAll();
 
       // Send market reports
       //if (timeUnit >= nextMarketReport && marketReportInterval > 0) {
@@ -249,7 +266,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
  	       //sendToRole(MANUFACTURER, marketReport.createMarketReport());
 	       //marketReport = new SimMarketReport(timeUnit, nextMarketReport - 1);
       //}
-    //}
+    }
   }
 
   /**
@@ -527,7 +544,34 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
     return agent != null ? agent.getName() : agentAddress;
   }
 
-//    final void transaction(String supplier, String customer, int orderID, long amount)
+  final void transaction(String supplier, String customer, int orderID, long amount){
+    log.finer("Transacted " + amount + " from " + customer + " to " + supplier);
+
+    SimulationAgent supplierAgent = getAgent(supplier);
+    SimulationAgent customerAgent = getAgent(customer);
+
+    if (supplierAgent != null && supplierAgent.getRole() == ADVERTISER) {
+      bank.deposit(supplier, amount);
+    }
+    if (customerAgent != null && customerAgent.getRole() == ADVERTISER) {
+      bank.withdraw(customer, amount);
+    }
+
+    int supplierIndex = supplierAgent != null
+      ? supplierAgent.getIndex()
+      : COORDINATOR_INDEX;
+    int customerIndex = customerAgent != null
+      ? customerAgent.getIndex()
+      : COORDINATOR_INDEX;
+    LogWriter writer = getLogWriter();
+    synchronized (writer) {
+      writer.node("transaction").attr("supplier", supplierIndex)
+        .attr("customer", customerIndex)
+	      .attr("orderID", orderID)
+	      .attr("amount", amount)
+	      .endNode("transaction");
+    }
+  }
 
 /*    // Customers are responsible for reporting demand
     final void addDemandInfo(int productID,
@@ -654,6 +698,14 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
       }
       return false;
     }*/
+  
+  // -------------------------------------------------------------------
+  //  API to Bank to allow it to send bank statuses
+  // -------------------------------------------------------------------
+
+  final void sendBankStatus(String agentName, BankStatus status) {
+    sendMessage(agentName, status);
+  }
 
 
 }

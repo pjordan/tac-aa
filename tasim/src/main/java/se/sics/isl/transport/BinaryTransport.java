@@ -23,6 +23,9 @@
  * Created : Wed Jan 15 17:29:32 2003
  * Updated : $Date: 2008-02-24 11:37:48 -0600 (Sun, 24 Feb 2008) $
  *           $Revision: 3766 $
+ *
+ * Modified by: Lee Callender
+ * Date: 10/29/08
  */
 package se.sics.isl.transport;
 
@@ -36,6 +39,7 @@ public interface BinaryTransport
   public static final byte INT = 'i';
   public static final byte LONG = 'l';
   public static final byte FLOAT = 'f';
+  public static final byte DOUBLE = 'd'; //Modified by Lee Callender
   public static final byte STRING = 's';
   public static final byte CONSTANT_STRING = 'S';
   

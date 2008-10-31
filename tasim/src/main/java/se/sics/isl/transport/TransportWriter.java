@@ -23,6 +23,9 @@
  * Created : Tue Dec 17 16:50:16 2002
  * Updated : $Date: 2008-02-24 11:37:48 -0600 (Sun, 24 Feb 2008) $
  *           $Revision: 3766 $
+ *
+ * MODIFIED BY: Lee Callender
+ * Date: 10/29/08
  */
 package se.sics.isl.transport;
 
@@ -60,7 +63,13 @@ public abstract class TransportWriter
   {
     return attr(name, Float.toString(value));
   }
-  
+
+  //Added by Lee Callender
+  public TransportWriter attr(String name, double value)
+  {
+    return attr(name, Double.toString(value));
+  }
+
   public TransportWriter attr(String name, int[] value)
   {
     // This stuff can not be parsed yet...
