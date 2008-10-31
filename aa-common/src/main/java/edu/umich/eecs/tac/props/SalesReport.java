@@ -114,8 +114,7 @@ public class SalesReport implements Transportable, Serializable{
 		}
 		return r;
 	}
-	
-	@Override
+
 	public void read(TransportReader reader) throws ParseException {
 	    if (isLocked) {
 	        throw new IllegalStateException("locked");
@@ -133,7 +132,6 @@ public class SalesReport implements Transportable, Serializable{
 	    }
 	}
 
-	@Override
 	public void write(TransportWriter writer) {
 		if (isLocked) {
 			writer.attr("lock", 1);
