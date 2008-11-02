@@ -8,13 +8,9 @@ import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
 import se.sics.isl.transport.Transportable;
 
-//STILL IN PROGRESS
 public class KeywordReport implements Serializable, Transportable {
 
-	/**Update when this file is updated.
-	 * 
-	 */
-	private static final long serialVersionUID = -4366560152538990286L;
+	private static final long serialVersionUID = -7957495904471250085L;
 
 	private List<QueryReport> report;
 	
@@ -40,7 +36,7 @@ public class KeywordReport implements Serializable, Transportable {
 		report.add(temp);
 	}
 	
-	public void addQuery(String query, int clicknum, double avgcpc, int imp, double pos){
+	public void addQuery(String query, int clicknum, float avgcpc, int imp, float pos){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
@@ -52,7 +48,7 @@ public class KeywordReport implements Serializable, Transportable {
 		return report.size();
 	}
 	
-	public void setQueryAvgPosition(String q, double p){
+	public void setQueryAvgPosition(String q, float p){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
@@ -68,7 +64,7 @@ public class KeywordReport implements Serializable, Transportable {
 		report.add(temp);
 	}
 	
-	public void setQueryAvgPosition(int i, double p){
+	public void setQueryAvgPosition(int i, float p){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
@@ -121,7 +117,7 @@ public class KeywordReport implements Serializable, Transportable {
 		report.get(i).setClicks(click);
 	}
 	
-	public void setQueryAvgCPC(String q, double cpc){
+	public void setQueryAvgCPC(String q, float cpc){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
@@ -137,14 +133,14 @@ public class KeywordReport implements Serializable, Transportable {
 		report.add(temp);
 	}
 	
-	public void setQueryAvgCPC(int i, double cpc){
+	public void setQueryAvgCPC(int i, float cpc){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
 		report.get(i).setAvgCPC(cpc);
 	}
 	
-	public double getQueryAvgPosition(String query){
+	public float getQueryAvgPosition(String query){
 		int i;
 		for(i = 0; i < report.size(); i++){
 			if(report.get(i).query.equals(query)){
@@ -154,11 +150,11 @@ public class KeywordReport implements Serializable, Transportable {
 		return 0;
 	}
 	
-	public double getQueryAvgPosition(int i){
+	public float getQueryAvgPosition(int i){
 		return report.get(i).getAvgPosition();
 	}
 	
-	public double getQueryAvgCPC(String query){
+	public float getQueryAvgCPC(String query){
 		int i;
 		for(i = 0; i < report.size(); i++){
 			if(report.get(i).query.equals(query)){
@@ -168,7 +164,7 @@ public class KeywordReport implements Serializable, Transportable {
 		return 0;
 	}
 	
-	public double getQueryAvgCPC(int i){
+	public float getQueryAvgCPC(int i){
 		return report.get(i).getAvgCPC();
 	}
 	
@@ -237,8 +233,8 @@ public class KeywordReport implements Serializable, Transportable {
 			temp.setQuery(reader.getAttribute("query"));
 			temp.setImpressions(reader.getAttributeAsInt("impressions"));
 			temp.setClicks(reader.getAttributeAsInt("clicks"));
-			temp.setAvgPosition(reader.getAttributeAsInt("position"));
-			temp.setAvgCPC(reader.getAttributeAsDouble("costperclick"));
+			temp.setAvgPosition(reader.getAttributeAsFloat("avgposition"));
+			temp.setAvgCPC(reader.getAttributeAsFloat("costperclick"));
 			report.add(temp);
 		}
 	    if(lock){
@@ -255,10 +251,10 @@ public class KeywordReport implements Serializable, Transportable {
 		for(i = 0; i < report.size(); i++){
 			temp = report.get(i);
 			writer.node("keywordreport");
-			writer.attr("queryString", temp.getQuery());
+			writer.attr("query", temp.getQuery());
 			writer.attr("impressions", temp.getImpressions());
 			writer.attr("clicks", temp.getClicks());
-			writer.attr("position", temp.getAvgPosition());
+			writer.attr("avgposition", temp.getAvgPosition());
 			writer.attr("costperclick", temp.getAvgCPC());
 			writer.endNode("keywordreport");
 		}
@@ -267,10 +263,10 @@ public class KeywordReport implements Serializable, Transportable {
 	private static class QueryReport {
 
 		private String query = new String();
-		private int impressions;
-		private int clicks;
-		private double avgPosition;
-		private double avgCPC;
+		private int impressions = 0;
+		private int clicks = 0;
+		private float avgPosition = 0;
+		private float avgCPC = 0;
 		
 		public QueryReport(){}
 		
@@ -278,7 +274,7 @@ public class KeywordReport implements Serializable, Transportable {
 			query = q;
 		}
 		
-		public QueryReport(String q, int clicknum, double cost, int imp, double pos){
+		public QueryReport(String q, int clicknum, float cost, int imp, float pos){
 			query = q;
 			clicks = clicknum;
 			avgCPC = cost;
@@ -310,19 +306,19 @@ public class KeywordReport implements Serializable, Transportable {
 			this.clicks = clicks;
 		}
 
-		public double getAvgPosition() {
+		public float getAvgPosition() {
 			return avgPosition;
 		}
 
-		public void setAvgPosition(double avgPosition) {
+		public void setAvgPosition(float avgPosition) {
 			this.avgPosition = avgPosition;
 		}
 
-		public double getAvgCPC() {
+		public float getAvgCPC() {
 			return avgCPC;
 		}
 
-		public void setAvgCPC(double avgCPC) {
+		public void setAvgCPC(float avgCPC) {
 			this.avgCPC = avgCPC;
 		}
 
