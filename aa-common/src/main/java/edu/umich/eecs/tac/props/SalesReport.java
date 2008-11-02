@@ -32,21 +32,33 @@ public class SalesReport implements Transportable, Serializable{
 	}
 	
 	public void addQuery(){
+	    if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
 		QuerySalesReport temp = new QuerySalesReport();
 		sales.add(temp);
 	}
 	
 	public void addQuery(String query){
+	    if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
 		QuerySalesReport temp = new QuerySalesReport(query);
 		sales.add(temp);
 	}
 	
 	public void addQuery(String query, int conversions, double revenue){
+	    if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
 		QuerySalesReport temp = new QuerySalesReport(query, conversions, revenue);
 		sales.add(temp);
 	}
 	
 	public void setQueryConversions(String query, int conversions){
+	    if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
 		int i;
 		for(i = 0; i < sales.size(); i++){
 			if(sales.get(i).query.equals(query)){
@@ -60,10 +72,16 @@ public class SalesReport implements Transportable, Serializable{
 	}
 	
 	public void setQueryConversions(int index, int conversions){
+	    if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
 		sales.get(index).setConversions(conversions);
 	}
 	
 	public void setQueryRevenue(String query, double revenue){
+	    if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
 		int i;
 		for(i = 0; i < sales.size(); i++){
 			if(sales.get(i).query.equals(query)){
@@ -77,6 +95,9 @@ public class SalesReport implements Transportable, Serializable{
 	}
 	
 	public void setQueryRevenue(int index, double revenue){
+	    if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
 		sales.get(index).setRevenue(revenue);
 	}
 	
@@ -96,6 +117,16 @@ public class SalesReport implements Transportable, Serializable{
 	
 	public int getQueryConversions(int i){
 		return sales.get(i).getConversions();
+	}
+
+	public double getQueryRevenue(String query){
+		int i;
+		for(i = 0; i < sales.size(); i++){
+			if(sales.get(i).query.equals(query)){
+				return sales.get(i).getRevenue();
+			}
+		}
+		return 0;
 	}
 	
 	public double getQueryRevenue(int i){

@@ -23,61 +23,6 @@ public class BidBundle implements Transportable, Serializable {
 		bundle = new LinkedList<BidPair>();
 	}
 
-	public void addBidPair(String search, double bid){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		search.toLowerCase();
-		Integer index = indexOfSearchString(search);
-		
-		if(index != null){
-			bundle.get(index).setBidAmount(bid);
-			return;
-		}
-
-		bundle.add(new BidPair(search, bid));
-	}
-	
-	public void removeAll(){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		bundle.clear();
-	}
-	
-	public void updateBid(String search, double bid){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		search.toLowerCase();
-		Integer index = indexOfSearchString(search);
-		if(index == null){
-			bundle.add(new BidPair(search, bid));
-			return;
-		}
-		bundle.get(index).setBidAmount(bid);
-	}
-	
-	public void removeBidPair(String search){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		search.toLowerCase();
-		Integer index = indexOfSearchString(search);
-		if(index != null)
-			bundle.remove(index);
-	}
-	
-	private Integer indexOfSearchString(String search) {
-		search.toLowerCase();
-		int i;
-		for(i = 0; i < bundle.size(); i++){
-			if(bundle.get(i).getSearchString() == search)
-				return i;
-		}
-		return null;
-	}
-
 	public boolean isLocked(){
 		return isLocked;
 	}
@@ -90,41 +35,107 @@ public class BidBundle implements Transportable, Serializable {
 		return "bidbundle";
 	}
 
+	public void addBidPair(){
+		if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
+		bundle.add(new BidPair());
+	}
+
+	public void addBidPair(String q){
+		if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
+		bundle.add(new BidPair(q));
+	}
+	
+	public void addBidPair(String q, double b){
+		if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
+		bundle.add(new BidPair(q, b));
+	}
+	
+	public int getSize(){
+		return bundle.size();
+	}
+	
+	public void setBid(String q, double b){
+		if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
+		int i;
+		for(i = 0; i < bundle.size(); i++){
+			if(bundle.get(i).query.equals(q)){
+				bundle.get(i).setBidAmount(b);
+				return;
+			}
+		}
+		BidPair temp = new BidPair(q, b);
+		bundle.add(temp);
+	}
+	
+	public void setBid(int i, double b){
+		bundle.get(i).setBidAmount(b);
+	}
+	
 	public void read(TransportReader reader) throws ParseException {
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
 	    boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
 	    while(reader.nextNode("bidbundle", false)){
-	    	
+	    	BidPair temp = new BidPair();
+	    	temp.setQuery(reader.getAttribute("query"));
+	    	temp.setBidAmount(reader.getAttributeAsDouble("bidamount"));
+	    	bundle.add(temp);
+	    }
+	    if(lock){
+	        lock();
 	    }
 	}
-
+	
 	public void write(TransportWriter writer) {
-		// TODO Auto-generated method stub
-
+		if (isLocked) {
+			writer.attr("lock", 1);
+	    }
+		int i;
+		BidPair temp;
+		for(i = 0; i < bundle.size(); i++){
+			temp = bundle.get(i);
+			writer.node("bidbundle");
+			writer.attr("query", temp.getQuery());
+			writer.attr("bidamount", temp.getBidAmount());
+			writer.endNode("bidbundle");
+		}
 	}
 
 	private static class BidPair{
 
-		private String searchString = new String();
-		private double bidAmount;
+		private String query = "";
+		private double bidAmount = 0;
 		
-		public BidPair(String s, double b){
-			searchString = s.toLowerCase();
+		public BidPair(){};
+		
+		public BidPair(String q){
+			query = q;
+		}
+		
+		public BidPair(String q, double b){
+			query = q;
 			bidAmount = b;
 		}
 
+		public void setQuery(String q){
+			query = q;
+		}
+		
 		public void setBidAmount(double b){
 			bidAmount = b;
 		}
 		
-		public void setSearchString(String s){
-			searchString = s.toLowerCase();
-		}
-		
-		public String getSearchString(){
-			return searchString;
+		public String getQuery(){
+			return query;
 		}
 		
 		public double getBidAmount(){

@@ -17,10 +17,19 @@ public class BankStatus implements Transportable, Serializable {
 	 */
 	private static final long serialVersionUID = -6576269032652384128L;
 
-  private double balance;
+	private boolean isLocked = false;
+	private double balance;
 
+	public boolean isLocked(){
+		return isLocked;
+	}
+	
+	public void lock(){
+		isLocked = true;
+	}
+	
 	public BankStatus(){
-		balance = 0.0d;
+		balance = 0.0;
 	}
 	
 	public BankStatus(double b){
@@ -31,34 +40,51 @@ public class BankStatus implements Transportable, Serializable {
 		return balance;
 	}
 
-  public void setAccountBalance(double b){
-    balance = b;
-  }
+    public void setAccountBalance(double b){
+		if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
+        balance = b;
+    }
 
-  public String toString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append(getTransportName()).append('[')
-      .append(balance).append(']');
+    public String toString() {
+    	StringBuffer sb = new StringBuffer();
+    	sb.append(getTransportName()).append('[')
+    	.append(balance).append(']');
 
-    return sb.toString();
-  }
+    	return sb.toString();
+    }
+    
+    // -------------------------------------------------------------------
+    //  Transportable (externalization support)
+    // -------------------------------------------------------------------
 
-  // -------------------------------------------------------------------
-  //  Transportable (externalization support)
-  // -------------------------------------------------------------------
 
-
-  //Returns transport name used for externalization
-  public String getTransportName() {
-		return "bankStatus";
+    //Returns transport name used for externalization
+    public String getTransportName() {
+		return "bankstatus";
 	}
 
 	public void read(TransportReader reader) throws ParseException {
-		balance = reader.getAttributeAsDouble("balance", 0.0d);
+	    if(isLocked){
+	    	throw new IllegalStateException("locked");
+	    }
+	    boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
+	    if(reader.nextNode("bankstatus", false)){
+	    	this.setAccountBalance(reader.getAttributeAsDouble("balance", 0.0));
+	    }
+	    if(lock){
+	        lock();
+	    }
 	}
 
 	public void write(TransportWriter writer) {
+		if (isLocked) {
+			writer.attr("lock", 1);
+	    }
+		writer.node("bankstatus");
 		writer.attr("balance", balance);       //If (balance != 0)? See TAC-SCM version
+		writer.endNode("bankstatus");
 	}
 
 }
