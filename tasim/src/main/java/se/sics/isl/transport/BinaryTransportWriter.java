@@ -442,6 +442,7 @@ public class BinaryTransportWriter extends TransportWriter implements BinaryTran
             break;
           case DOUBLE:            //Modified by Lee Callender
             writeDouble(currentDValues[pos][i]);
+            break;
           case STRING:
             writeString((String) currentOValues[pos][i]);
             break;
