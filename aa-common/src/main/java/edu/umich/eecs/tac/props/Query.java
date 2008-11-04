@@ -13,55 +13,32 @@ import java.text.ParseException;
  *
  * @author Patrick Jordan
  */
-public class Query implements Transportable, Serializable {
+public class Query extends AbstractTransportable {
     private static final String MANUFACTURER_KEY = "manufacturer";
     private static final String COMPONENT_KEY = "component";
     private static final String QUERY_KEY = "query";
     private static final String LOCK_KEY = "lock";
 
     /**
+     * Cached hashcode
+     */
+    private int hashCode;
+
+    /**
      * The string representing the manufacturer.
      * May be <code>null</code>.
      */
     private String manufacturer;
+    
     /**
      * The string representing the component.
      * May be <code>null</code>.
      */
     private String component;
 
-    /**
-     * The locked variable designates whether or not the query is mutable.
-     */
-    private boolean locked;
 
-    /**
-     * Make the query immutable.
-     */
-    public void lock() {
-        locked = true;
-    }
-
-
-    /**
-     * Check whether the query is immutable
-     *
-     * @return <code>true</code> if the query is locked, <code>false</code> otherwise.
-     */
-    private boolean isLocked() {
-        return locked;
-    }
-
-    /**
-     * Before writing an attribute value, lockCheck should be called.  This method will throw an illegal state
-     * exception if a write is called on a locked query.
-     *
-     * @throws IllegalStateException
-     */
-    private void lockCheck() throws IllegalStateException {
-        if (isLocked()) {
-            throw new IllegalStateException("locked");
-        }
+    public Query() {
+        calculateHashCode();
     }
 
     /**
@@ -82,6 +59,7 @@ public class Query implements Transportable, Serializable {
     public void setManufacturer(String manufacturer) {
         lockCheck();
         this.manufacturer = manufacturer;
+        calculateHashCode();
     }
 
     /**
@@ -102,17 +80,14 @@ public class Query implements Transportable, Serializable {
     public void setComponent(String component) {
         lockCheck();
         this.component = component;
+        calculateHashCode();
     }
 
     public String getTransportName() {
         return QUERY_KEY;
     }
 
-    public void read(TransportReader reader) throws ParseException {
-        if (isLocked()) {
-            throw new IllegalStateException("locked");
-        }
-
+    public void readWithLock(TransportReader reader) throws ParseException {
         boolean lock = false;
 
         if (reader.nextNode(QUERY_KEY, false)) {
@@ -124,6 +99,8 @@ public class Query implements Transportable, Serializable {
         if (lock) {
             lock();
         }
+
+        calculateHashCode();
     }
 
     public void write(TransportWriter writer) {
@@ -149,7 +126,7 @@ public class Query implements Transportable, Serializable {
 
         Query query = (Query) o;
 
-        if (locked != query.locked) return false;
+        if (isLocked() != query.isLocked()) return false;
         if (component != null ? !component.equals(query.component) : query.component != null) return false;
         if (manufacturer != null ? !manufacturer.equals(query.manufacturer) : query.manufacturer != null) return false;
 
@@ -157,10 +134,15 @@ public class Query implements Transportable, Serializable {
     }
 
     public int hashCode() {
+        return hashCode;
+    }
+
+    private void calculateHashCode() {
         int result;
         result = (manufacturer != null ? manufacturer.hashCode() : 0);
         result = 31 * result + (component != null ? component.hashCode() : 0);
-        result = 31 * result + (locked ? 1 : 0);
-        return result;
+        result = 31 * result + (isLocked() ? 1 : 0);
+
+        hashCode = result;
     }
 }
