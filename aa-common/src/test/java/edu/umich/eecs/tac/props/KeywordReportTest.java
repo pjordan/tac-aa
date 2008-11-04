@@ -10,9 +10,9 @@ public class KeywordReportTest {
 	@Test
 	public void testKeywordReport() throws ParseException {
 		KeywordReport temp = new KeywordReport();
-		temp.addQuery("pg", 100, .25f, 500, 3.4f);
-		temp.addQuery("lioneer", 200, .35f, 500, 2.3f);
-		temp.addQuery("flat", 350, .43f, 500, 1.0f);
+		temp.addQuery("pg", 100, .25, 500, 3.4);
+		temp.addQuery("lioneer", 200, .35, 500, 2.3);
+		temp.addQuery("flat", 350, .43, 500, 1.0);
 		System.out.println(temp.toString());
 		BinaryTransportWriter writer = new BinaryTransportWriter();
 		temp.write(writer);

@@ -36,7 +36,7 @@ public class KeywordReport implements Serializable, Transportable {
 		report.add(temp);
 	}
 	
-	public void addQuery(String query, int clicknum, float avgcpc, int imp, float pos){
+	public void addQuery(String query, int clicknum, double avgcpc, int imp, double pos){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
@@ -48,7 +48,7 @@ public class KeywordReport implements Serializable, Transportable {
 		return report.size();
 	}
 	
-	public void setQueryAvgPosition(String q, float p){
+	public void setQueryAvgPosition(String q, double p){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
@@ -64,7 +64,7 @@ public class KeywordReport implements Serializable, Transportable {
 		report.add(temp);
 	}
 	
-	public void setQueryAvgPosition(int i, float p){
+	public void setQueryAvgPosition(int i, double p){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
@@ -117,7 +117,7 @@ public class KeywordReport implements Serializable, Transportable {
 		report.get(i).setClicks(click);
 	}
 	
-	public void setQueryAvgCPC(String q, float cpc){
+	public void setQueryAvgCPC(String q, double cpc){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
@@ -133,14 +133,14 @@ public class KeywordReport implements Serializable, Transportable {
 		report.add(temp);
 	}
 	
-	public void setQueryAvgCPC(int i, float cpc){
+	public void setQueryAvgCPC(int i, double cpc){
 	    if(isLocked){
 	    	throw new IllegalStateException("locked");
 	    }
 		report.get(i).setAvgCPC(cpc);
 	}
 	
-	public float getQueryAvgPosition(String query){
+	public double getQueryAvgPosition(String query){
 		int i;
 		for(i = 0; i < report.size(); i++){
 			if(report.get(i).query.equals(query)){
@@ -150,11 +150,11 @@ public class KeywordReport implements Serializable, Transportable {
 		return 0;
 	}
 	
-	public float getQueryAvgPosition(int i){
+	public double getQueryAvgPosition(int i){
 		return report.get(i).getAvgPosition();
 	}
 	
-	public float getQueryAvgCPC(String query){
+	public double getQueryAvgCPC(String query){
 		int i;
 		for(i = 0; i < report.size(); i++){
 			if(report.get(i).query.equals(query)){
@@ -164,7 +164,7 @@ public class KeywordReport implements Serializable, Transportable {
 		return 0;
 	}
 	
-	public float getQueryAvgCPC(int i){
+	public double getQueryAvgCPC(int i){
 		return report.get(i).getAvgCPC();
 	}
 	
@@ -233,8 +233,8 @@ public class KeywordReport implements Serializable, Transportable {
 			temp.setQuery(reader.getAttribute("query"));
 			temp.setImpressions(reader.getAttributeAsInt("impressions"));
 			temp.setClicks(reader.getAttributeAsInt("clicks"));
-			temp.setAvgPosition(reader.getAttributeAsFloat("avgposition"));
-			temp.setAvgCPC(reader.getAttributeAsFloat("costperclick"));
+			temp.setAvgPosition(reader.getAttributeAsDouble("avgposition"));
+			temp.setAvgCPC(reader.getAttributeAsDouble("costperclick"));
 			report.add(temp);
 		}
 	    if(lock){
@@ -265,8 +265,8 @@ public class KeywordReport implements Serializable, Transportable {
 		private String query = new String();
 		private int impressions = 0;
 		private int clicks = 0;
-		private float avgPosition = 0;
-		private float avgCPC = 0;
+		private double avgPosition = 0;
+		private double avgCPC = 0;
 		
 		public QueryReport(){}
 		
@@ -274,7 +274,7 @@ public class KeywordReport implements Serializable, Transportable {
 			query = q;
 		}
 		
-		public QueryReport(String q, int clicknum, float cost, int imp, float pos){
+		public QueryReport(String q, int clicknum, double cost, int imp, double pos){
 			query = q;
 			clicks = clicknum;
 			avgCPC = cost;
@@ -306,19 +306,19 @@ public class KeywordReport implements Serializable, Transportable {
 			this.clicks = clicks;
 		}
 
-		public float getAvgPosition() {
+		public double getAvgPosition() {
 			return avgPosition;
 		}
 
-		public void setAvgPosition(float avgPosition) {
+		public void setAvgPosition(double avgPosition) {
 			this.avgPosition = avgPosition;
 		}
 
-		public float getAvgCPC() {
+		public double getAvgCPC() {
 			return avgCPC;
 		}
 
-		public void setAvgCPC(float avgCPC) {
+		public void setAvgCPC(double avgCPC) {
 			this.avgCPC = avgCPC;
 		}
 
