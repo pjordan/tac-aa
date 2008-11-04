@@ -109,12 +109,13 @@ public class Query implements Transportable, Serializable {
     }
 
     public void read(TransportReader reader) throws ParseException {
+        if (isLocked()) {
+            throw new IllegalStateException("locked");
+        }
+
         boolean lock = false;
 
         if (reader.nextNode(QUERY_KEY, false)) {
-            if (isLocked()) {
-                throw new IllegalStateException("locked");
-            }
             lock = reader.getAttributeAsInt(LOCK_KEY, 0) > 0;
             this.setManufacturer(reader.getAttribute(MANUFACTURER_KEY,null));
             this.setComponent(reader.getAttribute(COMPONENT_KEY,null));
