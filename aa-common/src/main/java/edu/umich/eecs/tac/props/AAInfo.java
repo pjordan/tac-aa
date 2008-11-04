@@ -5,11 +5,7 @@ import se.sics.isl.transport.ContextFactory;
 import se.sics.tasim.props.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: leecallender
- * Date: Oct 6, 2008
- * Time: 12:32:06 AM
- * To change this template use File | Settings | File Templates.
+ * @author Lee Callender 
  */
 public class AAInfo implements ContextFactory{
     public static final String CONTEXT_NAME = "aacontext";

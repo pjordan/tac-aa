@@ -28,7 +28,7 @@ public class BankStatus implements Transportable, Serializable {
 		isLocked = true;
 	}
 	
-	public BankStatus(){
+    public BankStatus(){
 		balance = 0.0;
 	}
 	
