@@ -28,7 +28,6 @@ public class Bank {
     accountNames = new String[accountNumber];
     accountAmounts = new double[accountNumber];
     bankStatus = new BankStatus[accountNumber];
-
   }
 
   public void addAccount(String name) {

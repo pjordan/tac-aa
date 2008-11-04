@@ -47,7 +47,6 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
       }
     };
 
-
   private boolean recoverAgents = false;
   
   private static final Logger log = Logger.getLogger(TACAASimulation.class.getName());
@@ -114,6 +113,9 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
       
     //Initialize in-game agents, bank etc.
     bank = new Bank(this, numberOfAdvertisers);
+    createBuiltinAgents("users", USERS, Users.class);
+    createBuiltinAgents("publisher", PUBLISHER, Publisher.class);
+
 
     // Create proxy agents for all participants
     for(int i = 0, n = info.getParticipantCount(); i < n; i++){

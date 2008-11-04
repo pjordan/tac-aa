@@ -51,18 +51,18 @@ public interface TACAAConstants {
   // TAC AA Participant roles
   // --------------------------------------------------------------------
 
-  /** The TAC AA Auctioneer role */
-  public static final int AUCTIONEER = 0;
+  /** The TAC AA Publisher role */
+  public static final int PUBLISHER = 0;
 
   /** The TAC AA Advertiser role */
   public static final int ADVERTISER = 1;
 
   /** The TAC AA User role */
-  public static final int USER = 2;
+  public static final int USERS = 2;
 
   /** The TAC AA participant roles as human readable names. */
   public static final String[] ROLE_NAME = {
-    "Auctioneer", "Advertiser", "User"
+    "Publisher", "Advertiser", "User"
   };
 
 

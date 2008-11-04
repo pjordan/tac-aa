@@ -440,6 +440,8 @@ public class BinaryTransportWriter extends TransportWriter implements BinaryTran
           case FLOAT:
             writeFloat(currentFValues[pos][i]);
             break;
+          case DOUBLE:            //Modified by Lee Callender
+            writeDouble(currentDValues[pos][i]);
           case STRING:
             writeString((String) currentOValues[pos][i]);
             break;
@@ -496,6 +498,11 @@ public class BinaryTransportWriter extends TransportWriter implements BinaryTran
   private void writeFloat(float data)
   {
     writeInt(Float.floatToIntBits(data));
+  }
+
+  private void writeDouble(double data)  //Modified by Lee Callender
+  {
+    writeLong(Double.doubleToLongBits(data));
   }
   
   /**
@@ -648,6 +655,7 @@ public class BinaryTransportWriter extends TransportWriter implements BinaryTran
       int newSize = ac + DEF_SIZE;
       currentIValues[currentPos] = ArrayUtils.setSize(currentIValues[currentPos], newSize);
       currentFValues[currentPos] = ArrayUtils.setSize(currentFValues[currentPos], newSize);
+      currentDValues[currentPos] = ArrayUtils.setSize(currentDValues[currentPos], newSize); //Modified by Lee Callender
       currentOValues[currentPos] = ArrayUtils.setSize(currentOValues[currentPos], newSize);
       currentRow[currentPos] = ArrayUtils.setSize(currentRow[currentPos], newSize * 2);
     }

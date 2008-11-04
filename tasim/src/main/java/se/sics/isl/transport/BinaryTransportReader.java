@@ -361,6 +361,7 @@ public class BinaryTransportReader extends TransportReader implements BinaryTran
         case FLOAT:
           valPos += 4;
           break;
+        case DOUBLE:      //Modified by Lee Callender
         case LONG:
           valPos += 8;
           break;
@@ -639,6 +640,13 @@ public class BinaryTransportReader extends TransportReader implements BinaryTran
             return Float.toString(Float.intBitsToFloat(getIValue(valPos)));
           }
           valPos += 4;
+          break;
+        case DOUBLE:      //Modified by Lee Callender
+          if (nid == id)
+          {
+            return Double.toString(Double.longBitsToDouble(getLValue(valPos)));
+          }
+          valPos += 8;
           break;
         case STRING:
         {
