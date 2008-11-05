@@ -34,19 +34,6 @@ public class AAInfo implements ContextFactory{
       //context.addTransportable(new ActiveOrders());
 
       context.addTransportable(new Alert());
-     /* context.addTransportable(new BankStatus());
-      context.addTransportable(new BOMBundle());
-      context.addTransportable(new ComponentCatalog());
-      context.addTransportable(new DeliveryNotice());
-      context.addTransportable(new DeliverySchedule());
-      context.addTransportable(new FactoryStatus());
-      context.addTransportable(new InventoryStatus());
-      context.addTransportable(new MarketReport());
-      context.addTransportable(new OfferBundle());
-      context.addTransportable(new OrderBundle());
-      context.addTransportable(new PriceReport());
-      context.addTransportable(new ProductionSchedule());
-      context.addTransportable(new RFQBundle()); */
       context.addTransportable(new BankStatus());
       context.addTransportable(new BidBundle());
       context.addTransportable(new KeywordReport());
@@ -54,6 +41,10 @@ public class AAInfo implements ContextFactory{
       context.addTransportable(new SimulationStatus());
       context.addTransportable(new StartInfo());
       context.addTransportable(new ServerConfig());
+      context.addTransportable(new Query());
+      context.addTransportable(new SalesReport());
+      context.addTransportable(new SalesReport.SalesReportEntry());
+
       // Cache the last context
       lastContext = context;
       return context;

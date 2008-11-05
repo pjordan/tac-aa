@@ -19,6 +19,7 @@ public class Query extends AbstractTransportable {
     private static final String QUERY_KEY = "query";
     private static final String LOCK_KEY = "lock";
 
+    
     /**
      * Cached hashcode
      */
@@ -90,11 +91,10 @@ public class Query extends AbstractTransportable {
     public void readWithLock(TransportReader reader) throws ParseException {
         boolean lock = false;
 
-        if (reader.nextNode(QUERY_KEY, false)) {
-            lock = reader.getAttributeAsInt(LOCK_KEY, 0) > 0;
-            this.setManufacturer(reader.getAttribute(MANUFACTURER_KEY,null));
-            this.setComponent(reader.getAttribute(COMPONENT_KEY,null));
-        }
+        lock = reader.getAttributeAsInt(LOCK_KEY, 0) > 0;
+        this.setManufacturer(reader.getAttribute(MANUFACTURER_KEY,null));
+        this.setComponent(reader.getAttribute(COMPONENT_KEY,null));
+
 
         if (lock) {
             lock();
@@ -104,14 +104,11 @@ public class Query extends AbstractTransportable {
     }
 
     public void write(TransportWriter writer) {
-        writer.node(QUERY_KEY);
         writer.attr(LOCK_KEY, isLocked() ? 1 : 0);
-
         if(getManufacturer()!=null)
             writer.attr(MANUFACTURER_KEY, getManufacturer());
         if(getComponent()!=null)
-            writer.attr(COMPONENT_KEY, getComponent());
-        writer.endNode(QUERY_KEY);
+            writer.attr(COMPONENT_KEY, getComponent());        
     }
 
 
@@ -122,10 +119,10 @@ public class Query extends AbstractTransportable {
 
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || hashCode() != o.hashCode()|| getClass() != o.getClass()) return false;
 
         Query query = (Query) o;
-
+        
         if (isLocked() != query.isLocked()) return false;
         if (component != null ? !component.equals(query.component) : query.component != null) return false;
         if (manufacturer != null ? !manufacturer.equals(query.manufacturer) : query.manufacturer != null) return false;
@@ -140,8 +137,7 @@ public class Query extends AbstractTransportable {
     private void calculateHashCode() {
         int result;
         result = (manufacturer != null ? manufacturer.hashCode() : 0);
-        result = 31 * result + (component != null ? component.hashCode() : 0);
-        result = 31 * result + (isLocked() ? 1 : 0);
+        result = 31 * result + (component != null ? component.hashCode() : 0);        
 
         hashCode = result;
     }

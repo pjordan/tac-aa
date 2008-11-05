@@ -9,218 +9,253 @@ import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
 import se.sics.isl.transport.Transportable;
 
-public class SalesReport implements Transportable, Serializable{
+/**
+ * Sales report.
+ *
+ * @author Ben Cassell, Patrick Jordan
+ */
+public class SalesReport extends AbstractTransportable {
 
-	private static final long serialVersionUID = 3473199640271355791L;
-	
-	private List<QuerySalesReport> sales;
-	private boolean isLocked = false;
-	
-	public boolean isLocked() {
-		return isLocked;
-	}
+    private static final long serialVersionUID = 3473199640271355791L;
 
-	public void lock() {
-		isLocked = true;
-	}
-	
-	public String getTransportName() {
-		return "salesreport";
-	}
-	public SalesReport(){
-		sales = new LinkedList<QuerySalesReport>();
-	}
-	
-	public void addQuery(){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		QuerySalesReport temp = new QuerySalesReport();
-		sales.add(temp);
-	}
-	
-	public void addQuery(String query){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		QuerySalesReport temp = new QuerySalesReport(query);
-		sales.add(temp);
-	}
-	
-	public void addQuery(String query, int conversions, double revenue){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		QuerySalesReport temp = new QuerySalesReport(query, conversions, revenue);
-		sales.add(temp);
-	}
-	
-	public void setQueryConversions(String query, int conversions){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		int i;
-		for(i = 0; i < sales.size(); i++){
-			if(sales.get(i).query.equals(query)){
-				sales.get(i).setConversions(conversions);
-				return;
-			}
-		}
-		QuerySalesReport temp = new QuerySalesReport(query);
-		temp.setConversions(conversions);
-		sales.add(temp);
-	}
-	
-	public void setQueryConversions(int index, int conversions){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		sales.get(index).setConversions(conversions);
-	}
-	
-	public void setQueryRevenue(String query, double revenue){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		int i;
-		for(i = 0; i < sales.size(); i++){
-			if(sales.get(i).query.equals(query)){
-				sales.get(i).setRevenue(revenue);
-				return;
-			}
-		}
-		QuerySalesReport temp = new QuerySalesReport(query);
-		temp.setRevenue(revenue);
-		sales.add(temp);
-	}
-	
-	public void setQueryRevenue(int index, double revenue){
-	    if(isLocked){
-	    	throw new IllegalStateException("locked");
-	    }
-		sales.get(index).setRevenue(revenue);
-	}
-	
-	public int getSize(){
-		return sales.size();
-	}
-	
-	public int getQueryConversions(String query){
-		int i;
-		for(i = 0; i < sales.size(); i++){
-			if(sales.get(i).query.equals(query)){
-				return sales.get(i).getConversions();
-			}
-		}
-		return 0;
-	}
-	
-	public int getQueryConversions(int i){
-		return sales.get(i).getConversions();
-	}
+    private List<SalesReportEntry> sales;
 
-	public double getQueryRevenue(String query){
-		int i;
-		for(i = 0; i < sales.size(); i++){
-			if(sales.get(i).query.equals(query)){
-				return sales.get(i).getRevenue();
-			}
-		}
-		return 0;
-	}
-	
-	public double getQueryRevenue(int i){
-		return sales.get(i).getRevenue();
-	}
-	
-	public String toString(){
-		String r = new String();
-		QuerySalesReport temp;
-		int i;
-		for(i = 0; i < sales.size(); i++){
-			temp = sales.get(i);
-			r += "Query: " + temp.getQuery() + " ";
-			r += "Conversions: " + temp.getConversions() + " ";
-			r += "Revenue: " + temp.getRevenue() + "\n";
-		}
-		return r;
-	}
 
-	public void read(TransportReader reader) throws ParseException {
-	    if (isLocked) {
-	        throw new IllegalStateException("locked");
-	    }
-		boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
-		while(reader.nextNode("salesreport", false)){
-			QuerySalesReport temp = new QuerySalesReport();
-			temp.setQuery(reader.getAttribute("query"));
-			temp.setConversions(reader.getAttributeAsInt("conversions"));
-			temp.setRevenue(reader.getAttributeAsDouble("revenue"));
-			sales.add(temp);
-		}
-	    if(lock){
-	        lock();
-	    }
-	}
+    public String getTransportName() {
+        return "salesReport";
+    }
 
-	public void write(TransportWriter writer) {
-		if (isLocked) {
-			writer.attr("lock", 1);
-	    }
-		int i;
-		QuerySalesReport temp;
-		for(i = 0; i < sales.size(); i++){
-			temp = sales.get(i);
-			writer.node("salesreport");
-			writer.attr("query", temp.getQuery());
-			writer.attr("conversions", temp.getConversions());
-			writer.attr("revenue", temp.getRevenue());
-			writer.endNode("salesreport");
-		}
-	}
-		
-	private static class QuerySalesReport{
-		
-		private String query = "";
-		private int conversions = 0;
-		private double revenue = 0;
-		
-		public QuerySalesReport(){}
-		
-		public QuerySalesReport(String q){
-			query = q;
-		}
-		
-		public QuerySalesReport(String q, int c, double r){
-			query = q;
-			conversions = c;
-			revenue = r;
-		}
+    public SalesReport() {
+        sales = new LinkedList<SalesReportEntry>();
+    }
 
-		public String getQuery() {
-			return query;
-		}
+    protected void addQuery(Query query) {
+        addQuery(query,0,0.0);
+    }
 
-		public void setQuery(String query) {
-			this.query = query;
-		}
+    protected void addQuery(Query query, int conversions, double revenue) {
+        lockCheck();
 
-		public int getConversions() {
-			return conversions;
-		}
+        if(query==null) {
+            throw new NullPointerException("Query cannot be null");
+        }
 
-		public void setConversions(int conversions) {
-			this.conversions = conversions;
-		}
+        SalesReportEntry entry = new SalesReportEntry();
+        entry.setQuery(query);
+        entry.setConversions(conversions);
+        entry.setRevenue(revenue);
+        
+        sales.add(entry);
+    }
 
-		public double getRevenue() {
-			return revenue;
-		}
+    public void addConversions(Query query, int conversions) {
+        int index = findSalesReportEntry(query);
 
-		public void setRevenue(double revenue) {
-			this.revenue = revenue;
-		}
-		
-	}
+        if(index < 0) {
+            setConversions(query,conversions);
+        } else {
+            addConversions(index,conversions);
+        }
+    }
 
+    public void addConversions(int index, int conversions) {
+        setConversions(index,conversions+getConversions(index));
+    }
+
+    public void addRevenue(Query query, double revenue) {
+        int index = findSalesReportEntry(query);
+
+        if(index < 0) {
+            setRevenue(query,revenue);
+        } else {
+            addRevenue(index,revenue);
+        }
+    }
+
+    public void addRevenue(int index, double revenue) {
+        setRevenue(index,revenue+getRevenue(index));
+    }
+
+    public void setConversions(Query query, int conversions) {
+        lockCheck();
+
+        int index = findSalesReportEntry(query);
+
+        if (index < 0) {
+            addQuery(query,conversions,0.0);
+        } else {
+            setConversions(index, conversions);
+        }
+    }
+
+    public void setConversions(int index, int conversions) {
+        lockCheck();
+        sales.get(index).setConversions(conversions);
+    }
+
+    public void setRevenue(Query query, double revenue) {
+        lockCheck();
+
+        int index = findSalesReportEntry(query);
+
+        if (index < 0) {
+            addQuery(query,0,revenue);
+        } else {
+            setRevenue(index, revenue);
+        }
+    }
+
+    public void setRevenue(int index, double revenue) {
+        lockCheck();
+        sales.get(index).setRevenue(revenue);
+    }
+
+    public void setConversionsAndRevenue(Query query, int conversions, double revenue) {
+        lockCheck();
+
+        int index = findSalesReportEntry(query);
+
+        if (index < 0) {
+            addQuery(query,conversions,revenue);
+        } else {
+            setConversionsAndRevenue(index, conversions, revenue);
+        }
+    }
+
+    public void setConversionsAndRevenue(int index, int conversions, double revenue) {
+        lockCheck();
+        SalesReportEntry entry = sales.get(index);
+        entry.setConversions(conversions);
+        entry.setRevenue(revenue);
+    }
+
+    public int size() {
+        return sales.size();
+    }
+
+    public int getConversions(Query query) {
+        int index = findSalesReportEntry(query);
+
+        return index < 0 ? 0 : getConversions(index);
+    }
+
+    public int getConversions(int index) {
+        return sales.get(index).getConversions();
+    }
+
+    public double getRevenue(Query query) {
+        int index = findSalesReportEntry(query);
+        
+        return index < 0 ? 0.0 : getRevenue(index);
+    }
+
+    public double getRevenue(int index) {
+        return sales.get(index).getRevenue();
+    }
+
+    public boolean containsQuery(Query query) {
+        return findSalesReportEntry(query)>-1;
+    }
+    
+    public String toString() {
+        StringBuilder builder = new StringBuilder("(sales-report");
+
+        for (SalesReportEntry salesReportEntry : sales) {
+            builder.append(' ').append(salesReportEntry);
+        }
+        builder.append(')');
+        
+        return builder.toString();
+    }
+
+    private int findSalesReportEntry(Query query) {
+        for(int i = 0; i < sales.size(); i++) {
+            if(sales.get(i).getQuery().equals(query))
+                return i;
+        }
+        return -1;
+    }
+
+    public void readWithLock(TransportReader reader) throws ParseException {
+
+        boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
+        while (reader.nextNode("salesReportEntry", false)) {
+            sales.add((SalesReportEntry)reader.readTransportable());
+        }
+
+        if (lock) {
+            lock();
+        }
+    }
+
+    public void write(TransportWriter writer) {
+        if (isLocked()) {
+            writer.attr("lock", 1);
+        }
+
+        for (SalesReportEntry salesReportEntry : sales) {
+            writer.write(salesReportEntry);
+        }
+    }
+
+    public static class SalesReportEntry implements Serializable, Transportable {
+        private static final long serialVersionUID = -3012145053844178964L;
+
+        private Query query;
+        private int conversions;
+        private double revenue;
+        
+        public SalesReportEntry() {
+        }
+
+        public Query getQuery() {
+            return query;
+        }
+
+        void setQuery(Query query) {
+            this.query = query;
+        }
+
+        public int getConversions() {
+            return conversions;
+        }
+
+        void setConversions(int conversions) {
+            this.conversions = conversions;
+        }
+
+        public double getRevenue() {
+            return revenue;
+        }
+
+        void setRevenue(double revenue) {
+            this.revenue = revenue;
+        }
+
+
+        public String getTransportName() {
+            return "salesReportEntry";
+        }
+
+        public void read(TransportReader reader) throws ParseException {
+            this.conversions = reader.getAttributeAsInt("conversions", 0);
+            this.revenue = reader.getAttributeAsDouble("revenue", 0.0);
+            if (reader.nextNode("query",false)) {
+                this.query = (Query)reader.readTransportable();
+            }
+        }
+
+        public void write(TransportWriter writer) {
+            writer.attr("conversions", conversions);
+            writer.attr("revenue", revenue);
+            if(query!=null) {
+                writer.write(query);
+            }
+        }
+
+
+        public String toString() {
+            return String.format("(%s conv: %d rev: %f)",query!=null?query.toString():"null",conversions,revenue);
+        }
+    }
 }

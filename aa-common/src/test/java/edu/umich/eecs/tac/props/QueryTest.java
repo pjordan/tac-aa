@@ -2,8 +2,10 @@ package edu.umich.eecs.tac.props;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static edu.umich.eecs.tac.props.TransportableTestUtils.*;
 import se.sics.isl.transport.BinaryTransportWriter;
 import se.sics.isl.transport.BinaryTransportReader;
+import se.sics.isl.transport.TransportWriter;
 
 import java.text.ParseException;
 
@@ -13,7 +15,8 @@ import java.text.ParseException;
 public class QueryTest {
     @Test
     public void testConstructor() {
-        new Query();
+        Query q = new Query();
+        assertNotNull(q);
     }
 
     @Test
@@ -34,7 +37,7 @@ public class QueryTest {
         assertNull(manufacturerQuery.getManufacturer());
         assertNull(manufacturerQuery.getComponent());
         manufacturerQuery.setManufacturer(manufacturer);
-        assertEquals(manufacturerQuery.getManufacturer(),manufacturer);
+        assertEquals(manufacturerQuery.getManufacturer(), manufacturer);
         assertNull(manufacturerQuery.getComponent());
 
         Query componentQuery = new Query();
@@ -42,7 +45,7 @@ public class QueryTest {
         assertNull(componentQuery.getManufacturer());
         assertNull(componentQuery.getComponent());
         componentQuery.setComponent(component);
-        assertEquals(componentQuery.getComponent(),component);
+        assertEquals(componentQuery.getComponent(), component);
         assertNull(componentQuery.getManufacturer());
     }
 
@@ -57,13 +60,13 @@ public class QueryTest {
         assertNull(query.getComponent());
         query.setManufacturer(manufacturer);
         query.setComponent(component);
-        assertEquals(query.getManufacturer(),manufacturer);
-        assertEquals(query.getComponent(),component);        
+        assertEquals(query.getManufacturer(), manufacturer);
+        assertEquals(query.getComponent(), component);
     }
 
     @Test
     public void testTransportName() {
-        assertEquals(new Query().getTransportName(),"query");
+        assertEquals(new Query().getTransportName(), "query");
     }
 
     @Test
@@ -71,7 +74,7 @@ public class QueryTest {
         Query query = new Query();
         query.setManufacturer("a");
         query.setComponent("b");
-        assertEquals(query.toString(),"(query (a,b))");
+        assertEquals(query.toString(), "(query (a,b))");
     }
 
     @Test
@@ -101,16 +104,16 @@ public class QueryTest {
         f2DuplicateLocked.lock();
 
         assertNotNull(f0);
-        assertEquals(f0,new Query());
-        assertEquals(f1,f1Duplicate);
-        assertEquals(f2,f2Duplicate);
+        assertEquals(f0, new Query());
+        assertEquals(f1, f1Duplicate);
+        assertEquals(f2, f2Duplicate);
         assertFalse(f1.equals(f2));
         assertTrue(f1.equals(f1));
         assertFalse(f1.equals(null));
         assertFalse(f1.equals(new Object()));
-        assertEquals(f0.hashCode(),new Query().hashCode());
-        assertEquals(f1.hashCode(),f1Duplicate.hashCode());
-        assertFalse(f1.hashCode()==f1NotDuplicate.hashCode());
+        assertEquals(f0.hashCode(), new Query().hashCode());
+        assertEquals(f1.hashCode(), f1Duplicate.hashCode());
+        assertFalse(f1.hashCode() == f1NotDuplicate.hashCode());
         assertFalse(f2.equals(f2DuplicateLocked));
         assertFalse(f1.equals(f1NotDuplicate));
         assertFalse(f1NotDuplicate.equals(f2));
@@ -119,27 +122,28 @@ public class QueryTest {
         assertFalse(f0.equals(f1));
         assertFalse(f0.equals(f1NotDuplicate));
         assertFalse(f2.equals(f1));
-        assertFalse(f2.equals(f1NotDuplicate));        
-        assertFalse(f2DuplicateLocked.hashCode()==f2.hashCode());
+        assertFalse(f2.equals(f1NotDuplicate));
+        assertFalse(f2DuplicateLocked.hashCode() == f2.hashCode());
     }
 
     @Test
     public void testValidTransport() throws ParseException {
+        BinaryTransportWriter writer = new BinaryTransportWriter();
+        BinaryTransportReader reader = new BinaryTransportReader();
+        reader.setContext(new AAInfo().createContext());
+
         Query query = new Query();
         query.setManufacturer("a");
         query.setComponent("b");
 
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-		query.write(writer);
-		byte [] buffer = new byte [1024];
-		writer.write(buffer);
-		BinaryTransportReader reader = new BinaryTransportReader();
-		reader.setMessage(buffer);
-		Query received = new Query();
-        received.read(reader);
-		assertNotNull(query);
+
+        byte[] buffer = getBytesForTransportable(writer,query);
+        Query received = readFromBytes(reader,buffer,"query");
+
+
+        assertNotNull(query);
         assertNotNull(received);
-        assertEquals(query,received);
+        assertEquals(query, received);
 
 
         Query lockedQuery = new Query();
@@ -147,53 +151,31 @@ public class QueryTest {
         query.setComponent("b");
         lockedQuery.lock();
 
-        writer = new BinaryTransportWriter();
-		lockedQuery.write(writer);
-		buffer = new byte [1024];
-		writer.write(buffer);
-		reader = new BinaryTransportReader();
-		reader.setMessage(buffer);
-		received = new Query();
-        received.read(reader);
-
+        buffer = getBytesForTransportable(writer,lockedQuery);
+        received = readFromBytes(reader,buffer,"query");
+        
         assertNotNull(lockedQuery);
         assertNotNull(received);
-        assertEquals(lockedQuery,received);
+        assertEquals(lockedQuery, received);
     }
 
-    @Test(expected=IllegalStateException.class)
-    public void testInvalidTransport() throws ParseException {
-        Query query = new Query();
-        query.setManufacturer("a");
-        query.setComponent("b");
-
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-		query.write(writer);
-		byte [] buffer = new byte [1024];
-		writer.write(buffer);
-		BinaryTransportReader reader = new BinaryTransportReader();
-		reader.setMessage(buffer);
-		Query received = new Query();
-        received.lock();
-        received.read(reader);
-    }
-
-    @Test(expected=ParseException.class)
+    @Test
     public void testEmptyTransport() throws ParseException {
         BinaryTransportWriter writer = new BinaryTransportWriter();
-		byte [] buffer = new byte [1024];
-		writer.write(buffer);
-		
         BinaryTransportReader reader = new BinaryTransportReader();
-		reader.setMessage(buffer);
-		Query received = new Query();
-        received.read(reader);
+        reader.setContext(new AAInfo().createContext());
+
+        byte[] buffer = writer.getBytes();
+        Query received = readFromBytes(reader,buffer,"query");
+
+        assertNull(received);
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void testWriteToLocked() {
-       Query query = new Query();
+        Query query = new Query();
         query.lock();
         query.setManufacturer("a");
     }
+
 }

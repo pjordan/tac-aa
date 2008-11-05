@@ -48,10 +48,7 @@ public abstract class AbstractTransportable implements Transportable, Serializab
     }
 
     public final void read(TransportReader reader) throws ParseException {
-        if (isLocked()) {
-            throw new IllegalStateException("locked");
-        }
-
+        lockCheck();
         readWithLock(reader);
     }
 
