@@ -16,8 +16,7 @@ import java.text.ParseException;
 public class Query extends AbstractTransportable {
     private static final String MANUFACTURER_KEY = "manufacturer";
     private static final String COMPONENT_KEY = "component";
-    private static final String QUERY_KEY = "query";
-    private static final String LOCK_KEY = "lock";
+    private static final String QUERY_KEY = "Query";
 
     
     /**
@@ -84,27 +83,15 @@ public class Query extends AbstractTransportable {
         calculateHashCode();
     }
 
-    public String getTransportName() {
-        return QUERY_KEY;
-    }
 
-    public void readWithLock(TransportReader reader) throws ParseException {
-        boolean lock = false;
 
-        lock = reader.getAttributeAsInt(LOCK_KEY, 0) > 0;
+    protected void readWithLock(TransportReader reader) throws ParseException {
         this.setManufacturer(reader.getAttribute(MANUFACTURER_KEY,null));
         this.setComponent(reader.getAttribute(COMPONENT_KEY,null));
-
-
-        if (lock) {
-            lock();
-        }
-
         calculateHashCode();
     }
 
-    public void write(TransportWriter writer) {
-        writer.attr(LOCK_KEY, isLocked() ? 1 : 0);
+    protected void writeWithLock(TransportWriter writer) {
         if(getManufacturer()!=null)
             writer.attr(MANUFACTURER_KEY, getManufacturer());
         if(getComponent()!=null)
@@ -141,4 +128,6 @@ public class Query extends AbstractTransportable {
 
         hashCode = result;
     }
+
+
 }

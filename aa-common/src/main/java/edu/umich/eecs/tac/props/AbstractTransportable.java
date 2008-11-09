@@ -2,6 +2,7 @@ package edu.umich.eecs.tac.props;
 
 import se.sics.isl.transport.Transportable;
 import se.sics.isl.transport.TransportReader;
+import se.sics.isl.transport.TransportWriter;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -49,8 +50,30 @@ public abstract class AbstractTransportable implements Transportable, Serializab
 
     public final void read(TransportReader reader) throws ParseException {
         lockCheck();
+
+        boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
+
         readWithLock(reader);
+
+        if (lock) {
+            lock();
+        }
+    }
+
+    public final void write(TransportWriter writer) {
+        if (isLocked()) {
+            writer.attr("lock", 1);
+        }
+
+        writeWithLock(writer);
+    }
+
+
+    public final String getTransportName() {
+        return this.getClass().getSimpleName();
     }
 
     protected abstract void readWithLock(TransportReader reader) throws ParseException;
+
+    protected abstract void writeWithLock(TransportWriter writer);
 }

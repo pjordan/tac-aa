@@ -36,7 +36,7 @@ public class AAInfo implements ContextFactory{
       context.addTransportable(new Alert());
       context.addTransportable(new BankStatus());
       context.addTransportable(new BidBundle());
-      context.addTransportable(new KeywordReport());
+      context.addTransportable(new QueryReport());
       context.addTransportable(new BidBundle());
       context.addTransportable(new SimulationStatus());
       context.addTransportable(new StartInfo());
@@ -44,6 +44,8 @@ public class AAInfo implements ContextFactory{
       context.addTransportable(new Query());
       context.addTransportable(new SalesReport());
       context.addTransportable(new SalesReport.SalesReportEntry());
+      context.addTransportable(new QueryReport());
+      context.addTransportable(new QueryReport.QueryReportEntry());
 
       // Cache the last context
       lastContext = context;

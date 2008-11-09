@@ -46,8 +46,8 @@ public class SalesReportTest {
         assertEquals(entry.getRevenue(), 1.5);
 
 
-        assertEquals(entry.getTransportName(), "salesReportEntry");
-        assertEquals(entry.toString(), "((query (null,null)) conv: 1 rev: 1.500000)");
+        assertEquals(entry.getTransportName(), "SalesReportEntry");
+        assertEquals(entry.toString(), "((Query (null,null)) conv: 1 rev: 1.500000)");
 
     }
 
@@ -64,7 +64,7 @@ public class SalesReportTest {
         entry.setRevenue(1.5);
 
         byte[] buffer = getBytesForTransportable(writer, entry);
-        SalesReport.SalesReportEntry received = readFromBytes(reader, buffer, "salesReportEntry");
+        SalesReport.SalesReportEntry received = readFromBytes(reader, buffer, "SalesReportEntry");
 
 
         assertNotNull(entry);
@@ -73,7 +73,7 @@ public class SalesReportTest {
         assertEquals(received.getQuery(), new Query());
         assertEquals(received.getConversions(), 1);
         assertEquals(received.getRevenue(), 1.5);
-        assertEquals(entry.getTransportName(), "salesReportEntry");
+        assertEquals(entry.getTransportName(), "SalesReportEntry");
 
 
     }
@@ -90,7 +90,7 @@ public class SalesReportTest {
         entry.setRevenue(1.5);
 
         byte[] buffer = getBytesForTransportable(writer, entry);
-        SalesReport.SalesReportEntry received = readFromBytes(reader, buffer, "salesReportEntry");
+        SalesReport.SalesReportEntry received = readFromBytes(reader, buffer, "SalesReportEntry");
 
 
         assertNotNull(entry);
@@ -101,7 +101,7 @@ public class SalesReportTest {
         assertEquals(received.getRevenue(), 1.5);
 
 
-        assertEquals(received.getTransportName(), "salesReportEntry");
+        assertEquals(received.getTransportName(), "SalesReportEntry");
         assertEquals(received.toString(), "(null conv: 1 rev: 1.500000)");
     }
 
@@ -117,7 +117,7 @@ public class SalesReportTest {
         report.lock();
         
         byte[] buffer = getBytesForTransportable(writer, report);
-        SalesReport received = readFromBytes(reader, buffer, "salesReport");
+        SalesReport received = readFromBytes(reader, buffer, "SalesReport");
 
 
         assertNotNull(report);
@@ -126,10 +126,10 @@ public class SalesReportTest {
         assertEquals(received.size(),1);
         assertEquals(received.getConversions(new Query()),2);
 
-        assertEquals(report.getTransportName(), "salesReport");
+        assertEquals(report.getTransportName(), "SalesReport");
 
         buffer = getBytesForTransportable(writer, new SalesReport());
-        received = readFromBytes(reader, buffer, "salesReport");
+        received = readFromBytes(reader, buffer, "SalesReport");
         assertFalse(received.isLocked());
 
     }
@@ -214,7 +214,7 @@ public class SalesReportTest {
     public void testSalesReportToString() {
         SalesReport report = new SalesReport();
         report.addQuery(new Query());
-        assertEquals(report.toString(),"(sales-report ((query (null,null)) conv: 0 rev: 0.000000))");
+        assertEquals(report.toString(),"(SalesReport ((Query (null,null)) conv: 0 rev: 0.000000))");
     }
 
     @Test

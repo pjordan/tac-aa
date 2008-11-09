@@ -66,7 +66,7 @@ public class QueryTest {
 
     @Test
     public void testTransportName() {
-        assertEquals(new Query().getTransportName(), "query");
+        assertEquals(new Query().getTransportName(), "Query");
     }
 
     @Test
@@ -74,7 +74,7 @@ public class QueryTest {
         Query query = new Query();
         query.setManufacturer("a");
         query.setComponent("b");
-        assertEquals(query.toString(), "(query (a,b))");
+        assertEquals(query.toString(), "(Query (a,b))");
     }
 
     @Test
@@ -138,7 +138,7 @@ public class QueryTest {
 
 
         byte[] buffer = getBytesForTransportable(writer,query);
-        Query received = readFromBytes(reader,buffer,"query");
+        Query received = readFromBytes(reader,buffer,"Query");
 
 
         assertNotNull(query);
@@ -152,7 +152,7 @@ public class QueryTest {
         lockedQuery.lock();
 
         buffer = getBytesForTransportable(writer,lockedQuery);
-        received = readFromBytes(reader,buffer,"query");
+        received = readFromBytes(reader,buffer,"Query");
         
         assertNotNull(lockedQuery);
         assertNotNull(received);
@@ -166,7 +166,7 @@ public class QueryTest {
         reader.setContext(new AAInfo().createContext());
 
         byte[] buffer = writer.getBytes();
-        Query received = readFromBytes(reader,buffer,"query");
+        Query received = readFromBytes(reader,buffer,"Query");
 
         assertNull(received);
     }
