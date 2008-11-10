@@ -1,13 +1,9 @@
 package edu.umich.eecs.tac.props;
 
-import java.io.Serializable;
 import java.text.ParseException;
-import java.util.LinkedList;
-import java.util.List;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
-import se.sics.isl.transport.Transportable;
 
 /**
  * Sales report.
@@ -41,7 +37,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
     public void addConversions(Query query, int conversions) {
-        int index = findReportEntry(query);
+        int index = findEntry(query);
 
         if(index < 0) {
             setConversions(query,conversions);
@@ -56,7 +52,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
     public void addRevenue(Query query, double revenue) {
-        int index = findReportEntry(query);
+        int index = findEntry(query);
 
         if(index < 0) {
             setRevenue(query,revenue);
@@ -73,7 +69,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     public void setConversions(Query query, int conversions) {
         lockCheck();
 
-        int index = findReportEntry(query);
+        int index = findEntry(query);
 
         if (index < 0) {
             addQuery(query,conversions,0.0);
@@ -90,7 +86,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     public void setRevenue(Query query, double revenue) {
         lockCheck();
 
-        int index = findReportEntry(query);
+        int index = findEntry(query);
 
         if (index < 0) {
             addQuery(query,0,revenue);
@@ -107,7 +103,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     public void setConversionsAndRevenue(Query query, int conversions, double revenue) {
         lockCheck();
 
-        int index = findReportEntry(query);
+        int index = findEntry(query);
 
         if (index < 0) {
             addQuery(query,conversions,revenue);
@@ -124,7 +120,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
     public int getConversions(Query query) {
-        int index = findReportEntry(query);
+        int index = findEntry(query);
 
         return index < 0 ? 0 : getConversions(index);
     }
@@ -134,7 +130,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
     public double getRevenue(Query query) {
-        int index = findReportEntry(query);
+        int index = findEntry(query);
         
         return index < 0 ? 0.0 : getRevenue(index);
     }
@@ -144,7 +140,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
 
-    public static class SalesReportEntry extends AbstractReportEntry {
+    public static class SalesReportEntry extends AbstractQueryEntry {
         private static final long serialVersionUID = -3012145053844178964L;
 
         private int conversions;
@@ -191,7 +187,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
 
 
         public String toString() {
-            return String.format("(%s conv: %d rev: %f)",getQuery()!=null?getQuery().toString():"null",conversions,revenue);
+            return String.format("(%s conv: %d rev: %f)",getQuery(),conversions,revenue);
         }
     }
 }

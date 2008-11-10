@@ -8,6 +8,6 @@ import java.io.Serializable;
  *
  * @author Patrick Jordan
  */
-public interface ReportEntry extends Serializable, Transportable {
+public interface QueryEntry extends CompositeEntry<Query> {
     public Query getQuery();
 }

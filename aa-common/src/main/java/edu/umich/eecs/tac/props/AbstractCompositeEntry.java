@@ -8,15 +8,16 @@ import java.text.ParseException;
 /**
  * @author Patrick Jordan
  */
-public abstract class AbstractReportEntry implements ReportEntry {
-    private Query query;
+public abstract class AbstractCompositeEntry<T extends ManufacturerComponentComposable> implements CompositeEntry<T> {
+    private T key;
 
-    public Query getQuery() {
-        return query;
+
+    public T getKey() {
+        return key;
     }
 
-    protected void setQuery(Query query) {
-        this.query = query;
+    public void setKey(T key) {
+        this.key = key;
     }
 
     public String getTransportName() {
@@ -26,20 +27,22 @@ public abstract class AbstractReportEntry implements ReportEntry {
     public void read(TransportReader reader) throws ParseException {
         readEntry(reader);
 
-        if (reader.nextNode("Query", false)) {
-            this.query = (Query) reader.readTransportable();
+        if (reader.nextNode(keyNodeName(), false)) {
+            this.key = (T) reader.readTransportable();
         }
     }
 
     public void write(TransportWriter writer) {
         writeEntry(writer);
 
-        if (query != null) {
-            writer.write(query);
+        if (key != null) {
+            writer.write(key);
         }
     }
 
     protected abstract void readEntry(TransportReader reader) throws ParseException;
 
     protected abstract void writeEntry(TransportWriter writer);
+
+    protected abstract String keyNodeName();
 }
