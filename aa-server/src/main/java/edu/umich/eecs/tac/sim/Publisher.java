@@ -4,6 +4,9 @@ package edu.umich.eecs.tac.sim;
  * @author Lee Callender, Patrick Jordan
  */
 
+import edu.umich.eecs.tac.props.Auction;
+import edu.umich.eecs.tac.props.Query;
+
 import java.util.logging.Logger;
 
 public abstract class Publisher extends Builtin {
@@ -14,7 +17,8 @@ public abstract class Publisher extends Builtin {
     }
 
     public abstract void sendQueryReportsToAll();
-    
+
+    public abstract Auction runAuction(Query query);
 
     // DEBUG FINALIZE REMOVE THIS!!! REMOVE THIS!!!
     protected void finalize() throws Throwable {

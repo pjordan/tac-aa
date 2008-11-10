@@ -356,7 +356,6 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
             for(SimulationAgent agent : getAgents(PUBLISHER) ) {
                 if(agent.getAgent() instanceof Publisher) {
                     Publisher publisher = (Publisher)agent.getAgent();
-
                     publisher.sendQueryReportsToAll();
                 }
             }
@@ -370,6 +369,8 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         }
     }
 
+
+    
     /**
      * Called when a new time unit has begun similar to time listeners
      * but this method is guaranteed to be called after the time
