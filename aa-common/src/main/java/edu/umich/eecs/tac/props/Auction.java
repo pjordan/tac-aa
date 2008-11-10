@@ -11,7 +11,7 @@ import java.text.ParseException;
 public class Auction extends AbstractTransportable {
     private Ranking ranking;
     private Pricing pricing;
-
+    private Query query;
 
     public Ranking getRanking() {
         return ranking;
@@ -29,6 +29,13 @@ public class Auction extends AbstractTransportable {
         this.pricing = pricing;
     }
 
+    public Query getQuery() {
+        return query;
+    }
+
+    public void setQuery(Query query) {
+        this.query = query;
+    }
 
     protected void readWithLock(TransportReader reader) throws ParseException {
         if (reader.nextNode(Ranking.class.getSimpleName(), false)) {
@@ -38,6 +45,10 @@ public class Auction extends AbstractTransportable {
         if (reader.nextNode(Pricing.class.getSimpleName(), false)) {
             this.pricing = (Pricing)reader.readTransportable();
         }
+
+        if (reader.nextNode(Query.class.getSimpleName(), false)) {
+            this.query = (Query)reader.readTransportable();
+        }
     }
 
     protected void writeWithLock(TransportWriter writer) {
@@ -46,5 +57,8 @@ public class Auction extends AbstractTransportable {
 
         if(pricing!=null)
             writer.write(pricing);
+
+        if(query!=null)
+            writer.write(query);
     }
 }
