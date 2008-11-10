@@ -25,13 +25,7 @@
  *           $Revision: 1.1 $
  */
 package edu.umich.eecs.tac.sim;
-/**
- * Created by IntelliJ IDEA.
- * User: leecallender
- * Date: Oct 28, 2008
- * Time: 11:05:35 AM
- * To change this template use File | Settings | File Templates.
- */
+
 import java.util.Random;
 
 import se.sics.isl.util.ConfigManager;
@@ -39,6 +33,7 @@ import se.sics.tasim.aw.Agent;
 import se.sics.tasim.is.EventWriter;
 
 /**
+ * @author Lee Callender
  */
 public abstract class Builtin extends Agent {
 

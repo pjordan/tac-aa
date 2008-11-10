@@ -11,44 +11,49 @@ import se.sics.isl.transport.Transportable;
 import java.util.logging.Logger;
 
 /**
- * Created by IntelliJ IDEA.
- * User: leecallender
- * Date: Oct 31, 2008
- * Time: 2:08:09 PM
- * To change this template use File | Settings | File Templates.
+ * @author Lee Callender, Patrick Jordan
  */
 public class DefaultPublisher extends Publisher implements TACAAConstants, TimeListener {
 
-  public DefaultPublisher() {
-  }
+    public DefaultPublisher() {
+    }
 
-  public void nextTimeUnit(int date) {
+    public void nextTimeUnit(int date) {
 
-  }
+    }
 
-  protected void setup(){}
-  protected void stopped() {}
-  protected void shutdown() {}
+    protected void setup() {
+    }
 
-  // -------------------------------------------------------------------
-  // Message handling
-  // -------------------------------------------------------------------
+    protected void stopped() {
+    }
 
-  protected void messageReceived(Message message) {
+    protected void shutdown() {
+    }
 
-  }
+    // -------------------------------------------------------------------
+    // Message handling
+    // -------------------------------------------------------------------
 
-  protected String getAgentName(String agentAddress) {
-    return super.getAgentName(agentAddress);
-  }
+    protected void messageReceived(Message message) {
+        Transportable content = message.getContent();
 
-  protected void sendEvent(String message) {
-    super.sendEvent(message);
-  }
+    }
 
-  protected void sendWarningEvent(String message) {
-    super.sendWarningEvent(message);
-  }
+    protected String getAgentName(String agentAddress) {
+        return super.getAgentName(agentAddress);
+    }
+
+    protected void sendEvent(String message) {
+        super.sendEvent(message);
+    }
+
+    protected void sendWarningEvent(String message) {
+        super.sendWarningEvent(message);
+    }
 
 
+    public void sendQueryReportsToAll() {
+        
+    }
 }
