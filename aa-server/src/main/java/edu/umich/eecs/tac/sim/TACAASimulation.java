@@ -62,16 +62,6 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         advertiserInfoMap = new HashMap<String, AdvertiserInfo>();
     }
 
-    public static String getSimulationRoleName(int simRole) {
-        return simRole >= 0 && simRole < ROLE_NAME.length
-                ? ROLE_NAME[simRole]
-                : null;
-    }
-
-    public static int getSimulationRole(String role) {
-        return ArrayUtils.indexOf(ROLE_NAME, role);
-    }
-
     protected void setupSimulation() throws IllegalConfigurationException {
         ConfigManager config = getConfig();
         SimulationInfo info = getSimulationInfo();
@@ -129,6 +119,21 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         SimulationAgent[] users = getAgents(USERS);
         log.info("Created " + (users == null ? 0 : users.length) + " users");
 
+        if(publishers != null){
+          for(int i = 0, n = publishers.length; i < n; i++){
+            SimulationAgent publisher = publishers[i];
+            Publisher publisherAgent = (Publisher) publisher.getAgent();
+            publisherAgent.simulationSetup(this, publishers[i].getIndex());
+          }
+        }
+        if(users != null){
+          for(int i = 0, n = users.length; i < n; i++){
+            SimulationAgent user = users[i];
+            Users userAgent = (Users) user.getAgent();
+            userAgent.simulationSetup(this, users[i].getIndex());
+          }
+        }
+        
         this.retailCatalog = createRetailCatalog();
         this.manufacturers = createManufacturers();
         this.components = createComponents();
@@ -249,8 +254,8 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         ServerConfig serverConfig = new ServerConfig(config);
         logWriter.write(serverConfig);
 
-        // Log the Bill-of-Materials and component catalogs
-        //  logWriter.dataUpdated(TYPE_NONE, this.bomBundle);
+        //Log the retailCatalog
+        logWriter.dataUpdated(TYPE_NONE, this.retailCatalog);
         // logWriter.dataUpdated(TYPE_NONE, this.componentCatalog);
 
         SimulationInfo simInfo = getSimulationInfo();
@@ -261,35 +266,22 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
 
         sendToRole(PUBLISHER, startInfo);
         sendToRole(USERS, startInfo);
+        sendToRole(ADVERTISER, startInfo);  //startInfo may want to contain more information for advertiser
 
         // If a new agent arrives now it will be recovered
         recoverAgents = true;
 
-        /*SimulationAgent[] factories = getAgents(FACTORY);
-        long startTime = simInfo.getStartTime();
-        if (factories != null) {
-            for (int i = 0, n = factories.length; i < n; i++) {
-              SimulationAgent factoryAgent = factories[i];
-              Factory factory = (Factory) factoryAgent.getAgent();
-              SimulationAgent agent = factory.getOwner();
-              StartInfo info = createManufacturerInfo(simInfo, factory);
-              logWriter.message(COORDINATOR_INDEX, agent.getIndex(), info,
-                        startTime);
-              sendMessage(new Message(agent.getAddress(), info));
-            }
-        }*/
-
-        // Send the component catalog to the manufacturer and customers
-        sendToRole(PUBLISHER, this.retailCatalog);
-        sendToRole(USERS, this.retailCatalog);
-        sendToRole(ADVERTISER, this.retailCatalog);
-        
         for(Map.Entry<String,AdvertiserInfo> entry : advertiserInfoMap.entrySet()) {
             sendMessage(entry.getKey(), entry.getValue());
         }
 
 
+        // Send the component catalog to the manufacturer and customers
+        sendToRole(PUBLISHER, this.retailCatalog);
+        sendToRole(USERS, this.retailCatalog);
+        sendToRole(ADVERTISER, this.retailCatalog);
 
+      
         startTickTimer(simInfo.getStartTime(), secondsPerDay * 1000);
 
         logWriter.commit();
@@ -528,6 +520,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
      * @param agent the <code>SimulationAgent</code> to be recovered.
      */
     protected void recoverAgent(SimulationAgent agent) {
+      //TODO-Write this....
     }
 
     /**
@@ -538,6 +531,16 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
      */
     protected void messageReceived(Message message) {
         log.warning("received (ignoring) " + message);
+    }
+
+    public static String getSimulationRoleName(int simRole) {
+        return simRole >= 0 && simRole < ROLE_NAME.length
+                ? ROLE_NAME[simRole]
+                : null;
+    }
+
+    public static int getSimulationRole(String role) {
+        return ArrayUtils.indexOf(ROLE_NAME, role);
     }
 
     // -------------------------------------------------------------------
