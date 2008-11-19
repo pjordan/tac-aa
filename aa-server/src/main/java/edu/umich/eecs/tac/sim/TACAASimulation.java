@@ -271,15 +271,15 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         // If a new agent arrives now it will be recovered
         recoverAgents = true;
 
-        for(Map.Entry<String,AdvertiserInfo> entry : advertiserInfoMap.entrySet()) {
-            sendMessage(entry.getKey(), entry.getValue());
-        }
-
 
         // Send the component catalog to the manufacturer and customers
         sendToRole(PUBLISHER, this.retailCatalog);
         sendToRole(USERS, this.retailCatalog);
         sendToRole(ADVERTISER, this.retailCatalog);
+
+        for(Map.Entry<String,AdvertiserInfo> entry : advertiserInfoMap.entrySet()) {
+            sendMessage(entry.getKey(), entry.getValue());
+        }
 
       
         startTickTimer(simInfo.getStartTime(), secondsPerDay * 1000);
