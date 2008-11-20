@@ -2,12 +2,11 @@ package edu.umich.eecs.tac.user;
 
 import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.sim.Publisher;
-import com.sun.tools.javac.util.Pair;
 
 import java.util.*;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Ben Cassell
  */
 public class UserManager {
     private final Object lock;
@@ -62,7 +61,7 @@ public class UserManager {
 
         boolean converted = false;
 
-        boolean clicking = true;
+        boolean clicking = true;   
 
         //TODO: grab this value
         double continuationProbability = 0.0;
@@ -79,15 +78,36 @@ public class UserManager {
 
             if ( clicking ) {
                 double clickProbability = calculateClickProbability(user,ad);
-
-
+                if(random.nextDouble() < clickProbability) {
+                	fireAdClicked(query, ad, i+1, pricing.getPrice(ad));
+                	double conversionProbability = calculateConversionProbability(query, ad);
+                	if(random.nextDouble() < conversionProbability) {
+                		fireAdConverted(query, ad, i+1, calculateSalesProfit());
+                		converted = true;
+                		break;
+                	}
+                }
             }
+            if(random.nextDouble()>continuationProbability)
+            	break;
         }
 
         return converted;
     }
 
-    private double calculateClickProbability(User user, Ad ad) {
+    private double calculateSalesProfit() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	private double calculateConversionProbability(Query query, Ad ad) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	private double calculateClickProbability(User user, Ad ad) {
         double probability;
 
         return 0;
@@ -104,8 +124,45 @@ public class UserManager {
 
 
     private Query generateQuery(User user) {
-        //TODO: generate query
-        return null;
+    	Query query = new Query();
+    	if(user.state.equals(QueryState.INFORMATIONAL_SEARCH)) {
+    		double temp = random.nextDouble();
+    		if(temp <(double)(1/3)) {
+        		query.setComponent(null);
+        		query.setManufacturer(null);
+    		}
+    		else if(temp <(double)(1/2)) {
+    			query.setComponent(user.product.getComponent());
+    			query.setManufacturer(null);
+    		}
+    		else if(temp < (double)(2/3)) {
+    			query.setManufacturer(user.product.getManufacturer());
+    			query.setComponent(null);
+    		}
+    		else {
+        		query.setComponent(user.product.getComponent());
+        		query.setManufacturer(user.product.getManufacturer());
+    		}
+    	}
+    	else if(user.state.equals(QueryState.FOCUS_LEVEL_ZERO)) {
+    		query.setComponent(null);
+    		query.setManufacturer(null);
+    	}
+    	else if(user.state.equals(QueryState.FOCUS_LEVEL_ONE)) {
+    		if(random.nextDouble() < .5) {
+    			query.setComponent(user.product.getComponent());
+    			query.setManufacturer(null);
+    		}
+    		else {
+    			query.setManufacturer(user.product.getManufacturer());
+    			query.setComponent(null);
+    		}
+    	}
+    	else if(user.state.equals(QueryState.FOCUS_LEVEL_TWO)) {
+    		query.setComponent(user.product.getComponent());
+    		query.setManufacturer(user.product.getManufacturer());
+    	}
+        return query;
     }
                                                           
     public boolean addUserEventListener(UserEventListener listener) {
