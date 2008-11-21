@@ -8,7 +8,7 @@ import se.sics.isl.transport.TransportWriter;
 /**
  * Sales report.
  *
- * @author Ben Cassell, Patrick Jordan
+ * @author Ben Cassell, Patrick Jordan, Lee Callender
  */
 public class SalesReport extends AbstractReportTransportable<SalesReport.SalesReportEntry> {
 
@@ -139,16 +139,14 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
         return getEntry(index).getRevenue();
     }
 
-
     public static class SalesReportEntry extends AbstractQueryEntry {
         private static final long serialVersionUID = -3012145053844178964L;
 
-        private int conversions;
-        private double revenue;
+        private int conversions = 0;
+        private double revenue = 0.0;
         
         public SalesReportEntry() {
         }
-
 
         public int getConversions() {
             return conversions;
@@ -179,12 +177,10 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
             this.revenue = reader.getAttributeAsDouble("revenue", 0.0);
         }
 
-
         protected void writeEntry(TransportWriter writer) {
             writer.attr("conversions", conversions);
             writer.attr("revenue", revenue);
         }
-
 
         public String toString() {
             return String.format("(%s conv: %d rev: %f)",getQuery(),conversions,revenue);

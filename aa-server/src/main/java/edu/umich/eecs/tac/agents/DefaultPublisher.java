@@ -27,10 +27,15 @@ public class DefaultPublisher extends Publisher implements TACAAConstants, TimeL
     }
 
     public void nextTimeUnit(int date) {
-
+        //Auctions should be updated here.
         if(bidManager!=null) {
             bidManager.nextTimeUnit(date);
         }
+
+        Query query = new Query();
+        query.setComponent("dvd");
+        runAuction(query);
+        
     }
 
 
@@ -39,6 +44,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants, TimeL
     }
 
     protected void setup() {
+        this.log = Logger.getLogger(DefaultPublisher.class.getName());
 
         bidManager = createBidManager();
         auctionFactory = createAuctionFactory();
@@ -50,7 +56,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants, TimeL
 
     private BidManager createBidManager() {
         BidManager bidManager = new BidManagerImpl();
-
+        
         //TODO: initialize the bid manager
 
 
@@ -65,7 +71,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants, TimeL
         AuctionFactory factory = null;
 
         try {
-            auctionFactory = (AuctionFactory)Class.forName(auctionFactoryClass).newInstance();
+            factory = (AuctionFactory)Class.forName(auctionFactoryClass).newInstance();
             factory.setSlotLimit(slotLimit);
             factory.setSquashValue(squashValue);
         } catch (InstantiationException e) {
@@ -119,7 +125,6 @@ public class DefaultPublisher extends Publisher implements TACAAConstants, TimeL
 
 
     public void sendQueryReportsToAll() {
-        
     }
 
 

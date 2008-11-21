@@ -61,4 +61,8 @@ public class Auction extends AbstractTransportable {
         if(query!=null)
             writer.write(query);
     }
+
+    public void printRanking(){
+      
+    }
 }

@@ -22,7 +22,7 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         double[] cpc = new double[advertisers.length];
 
         for(int i = 0; i < advertisers.length; i++) {
-            bids[i] = bidManager.getQualityScore(advertisers[i],query);
+            bids[i] = bidManager.getBid(advertisers[i],query);
             qualityScores[i] = bidManager.getQualityScore(advertisers[i],query);
             ads[i] = bidManager.getAd(advertisers[i],query);
             scores[i] = Math.pow(qualityScores[i],squashValue)*bids[i];

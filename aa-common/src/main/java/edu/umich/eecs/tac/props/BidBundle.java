@@ -10,12 +10,11 @@ import se.sics.isl.transport.TransportWriter;
 import se.sics.isl.transport.Transportable;
 
 /**
- * @author Ben Cassell, Patrick Jordan
+ * @author Ben Cassell, Patrick Jordan, Lee Callender
  */
 public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
 
     private static final long serialVersionUID = 5057969669832603679L;
-
 
     public BidBundle() {
     }
@@ -30,7 +29,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         return BidEntry.class;
     }
     
-    protected void addQuery(Query query, double bid, Ad ad) {
+    public void addQuery(Query query, double bid, Ad ad) {
         int index = addQuery(query);
         BidEntry entry = getEntry(index);
         entry.setQuery(query);

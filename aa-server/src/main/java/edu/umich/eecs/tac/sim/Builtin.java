@@ -29,6 +29,7 @@ package edu.umich.eecs.tac.sim;
 import java.util.Random;
 
 import se.sics.isl.util.ConfigManager;
+import se.sics.isl.transport.Transportable;
 import se.sics.tasim.aw.Agent;
 import se.sics.tasim.is.EventWriter;
 
@@ -214,6 +215,15 @@ public abstract class Builtin extends Agent {
   protected void sendWarningEvent(String message) {
     simulation.getEventWriter()
       .dataUpdated(index, TACAASimulation.TYPE_WARNING, message);
+  }
+
+  protected String[] getAdvertiserAddresses(){
+    return simulation.getAdvertiserAddresses();
+  }
+
+
+  final void sendMessage(String sender, String receiver, Transportable content){
+    
   }
 
   protected abstract void setup();

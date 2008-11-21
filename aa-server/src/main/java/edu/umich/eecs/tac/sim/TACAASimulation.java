@@ -19,10 +19,7 @@ import se.sics.tasim.sim.SimulationAgent;
 import se.sics.tasim.aw.Message;
 
 import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.props.BankStatus;
-import edu.umich.eecs.tac.props.RetailCatalog;
-import edu.umich.eecs.tac.props.AdvertiserInfo;
-import edu.umich.eecs.tac.props.Product;
+import edu.umich.eecs.tac.props.*;
 
 
 /**
@@ -44,6 +41,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
     private RetailCatalog retailCatalog;
     private String[] manufacturers;
     private String[] components;
+    private String[] advertiserAddresses = new String[numberOfAdvertisers];
     private Map<String, AdvertiserInfo> advertiserInfoMap;
 
     private Runnable afterTickTarget = new Runnable() {
@@ -119,21 +117,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         SimulationAgent[] users = getAgents(USERS);
         log.info("Created " + (users == null ? 0 : users.length) + " users");
 
-        if(publishers != null){
-          for(int i = 0, n = publishers.length; i < n; i++){
-            SimulationAgent publisher = publishers[i];
-            Publisher publisherAgent = (Publisher) publisher.getAgent();
-            publisherAgent.simulationSetup(this, publishers[i].getIndex());
-          }
-        }
-        if(users != null){
-          for(int i = 0, n = users.length; i < n; i++){
-            SimulationAgent user = users[i];
-            Users userAgent = (Users) user.getAgent();
-            userAgent.simulationSetup(this, users[i].getIndex());
-          }
-        }
-        
+
         this.retailCatalog = createRetailCatalog();
         this.manufacturers = createManufacturers();
         this.components = createComponents();
@@ -154,6 +138,25 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         }
 
         initializeAdvertisers();
+
+
+        //Simulation setup needs to be called after advertisers have been initialized
+        if(publishers != null){
+          for(int i = 0, n = publishers.length; i < n; i++){
+            SimulationAgent publisher = publishers[i];
+            Publisher publisherAgent = (Publisher) publisher.getAgent();
+            publisherAgent.simulationSetup(this, publishers[i].getIndex());
+          }
+        }
+        if(users != null){
+          for(int i = 0, n = users.length; i < n; i++){
+            SimulationAgent user = users[i];
+            Users userAgent = (Users) user.getAgent();
+            userAgent.simulationSetup(this, users[i].getIndex());
+          }
+        }
+        
+        
     }
 
 
@@ -217,7 +220,9 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
 
             for (int i = 0, n = advertisers.length; i < n; i++) {
                 SimulationAgent agent = advertisers[i];
+                
                 String agentAddress = agent.getAddress();
+                advertiserAddresses[i] = agentAddress;
 
                 AdvertiserInfo advertiserInfo = new AdvertiserInfo();
                 advertiserInfo.setAdvertiserId(agentAddress);
@@ -360,9 +365,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
             }
         }
     }
-
-
-    
+   
     /**
      * Called when a new time unit has begun similar to time listeners
      * but this method is guaranteed to be called after the time
@@ -377,7 +380,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
                             - timeUnit * secondsPerDay * 1000);
 
             SimulationStatus status = new SimulationStatus(timeUnit, millisConsumed);
-            sendToRole(ADVERTISER, status);
+            sendToRole(ADVERTISER, status); //Advertisers notified of new day
         }
 
         invokeLater(afterTickTarget);  //?
@@ -456,6 +459,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
             catalog.setSalesProfit(product,salesProfit);
         }                
 
+        
         catalog.lock();
 
         return catalog;
@@ -662,12 +666,21 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         //}
     }
 
+    
     // -------------------------------------------------------------------
     // API to TACSCM builtin agents (trusted components)
     // -------------------------------------------------------------------
 
     final int getNumberOfAdvertisers() {
         return numberOfAdvertisers;
+    }
+
+    final SimulationAgent[] getPublishers(){
+        return getAgents(PUBLISHER);  
+    }
+
+    final String[] getAdvertiserAddresses(){
+        return advertiserAddresses;
     }
 
     final String getAgentName(String agentAddress) {
@@ -702,6 +715,11 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
                     .attr("amount", amount)
                     .endNode("transaction");
         }
+    }
+
+    // Publishers send query reports
+    final void sendQueryReport(QueryReport queryReport) {
+      sendToRole(ADVERTISER, queryReport);
     }
 
 /*    // Customers are responsible for reporting demand

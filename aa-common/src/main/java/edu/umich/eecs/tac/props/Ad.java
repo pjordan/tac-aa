@@ -6,13 +6,18 @@ import se.sics.isl.transport.TransportWriter;
 import java.text.ParseException;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class Ad extends AbstractTransportable {
     private Product product;
     private String advertiser;
 
     public Ad() {
+    }
+
+    public Ad(Product product, String advertiser){
+      this.product = product;
+      this.advertiser = advertiser;
     }
 
     public boolean isGeneric() {

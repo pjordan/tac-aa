@@ -11,9 +11,7 @@ import se.sics.tasim.props.SimulationStatus;
 import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
-import java.util.Random;
-import java.util.Queue;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import edu.umich.eecs.tac.props.*;
@@ -41,6 +39,7 @@ public class DummyAdvertiser extends Agent {
 
     private Random random = new Random();
 
+    private LinkedList<Query> possibleQueries;
 
 
     public DummyAdvertiser() {
@@ -54,6 +53,7 @@ public class DummyAdvertiser extends Agent {
         if (content instanceof QueryReport) {
             handleQueryReport((QueryReport) content);
         } else if (content instanceof SalesReport) {
+            log.finer("Received Sales Report: "+content.toString());
             handleSalesReport((SalesReport) content);
         } else if (content instanceof SimulationStatus) {
             handleSimulationStatus((SimulationStatus) content);
@@ -72,9 +72,10 @@ public class DummyAdvertiser extends Agent {
         currentDate = simulationStatus.getCurrentDate() + 1;
     }
 
-
     private void handleRetailCatalog(RetailCatalog retailCatalog) {
         this.retailCatalog = retailCatalog;
+        generatePossibleQueries();
+        
         checkInitialized();
     }
 
@@ -111,7 +112,6 @@ public class DummyAdvertiser extends Agent {
             salesReportQueue.remove();
         }
     }
-
 
     private int calculateRecentConversions() {
         int conversions = 0;
@@ -156,14 +156,46 @@ public class DummyAdvertiser extends Agent {
         queryReportQueue.clear();
     }
 
-
     private boolean isInitialized() {
         return initialized;
     }
 
     protected void sendBidAndAds() {
-        if (bidBundle != null && publisherAddress != null) {
-            sendMessage(publisherAddress, bidBundle);
+      bidBundle = new BidBundle();
+      Ad ad = new Ad(null, advertiserInfo.getAdvertiserId());
+      for (Iterator<Query> it=possibleQueries.iterator(); it.hasNext(); ) {
+        Query query = it.next();
+        bidBundle.addQuery(query, Math.abs(random.nextDouble()), ad);
+      }
+      
+      if (bidBundle != null && publisherAddress != null) {
+        sendMessage(publisherAddress, bidBundle);
+      }
+    }
+
+    private void generatePossibleQueries(){
+      if(retailCatalog != null && possibleQueries == null){
+        int cSize = retailCatalog.getComponents().size();
+        int mSize = retailCatalog.getManufacturers().size();
+        possibleQueries = new LinkedList<Query>();
+        String[] mans = (String[]) retailCatalog.getManufacturers().toArray();
+        String[] comps = (String[]) retailCatalog.getComponents().toArray();
+
+        possibleQueries.add(new Query(null, null));
+        for(int i = 0; i < mSize; i++){
+          possibleQueries.add(new Query(mans[i], null));
         }
+
+        for(int i = 0; i < cSize; i++){
+          possibleQueries.add(new Query(null, comps[i]));
+        }
+
+        for(int i = 0; i < mSize; i++){
+          for(int j = 0; j < cSize; j++){
+            possibleQueries.add(new Query(mans[i], comps[j]));
+          }
+        }
+
+      }
     }
 }

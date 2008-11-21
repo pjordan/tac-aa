@@ -31,7 +31,7 @@ public class TACAAManager extends SimulationManager {
   /** Default number of participants in a TACSCM simulation if not
    * specified in configuration file
    */
-  final static int NUMBER_OF_ADVERTISERS = 6;
+  final static int NUMBER_OF_ADVERTISERS = 8;
 
   private static Hashtable<String, Config> configTable = new Hashtable<String, Config>();
 

@@ -11,10 +11,15 @@ import java.text.ParseException;
  * The query class represents a set of information the user is revealing during a search.  A query can contain
  * a manufacturer and a component, a manufacturer, a component, or neither.
  *
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class Query extends ManufacturerComponentComposable {
 
+    public Query(String manufacturer, String component){
+      this.manufacturer = manufacturer;
+      this.component = component;
+      calculateHashCode();
+    }
 
 
     public Query() {
