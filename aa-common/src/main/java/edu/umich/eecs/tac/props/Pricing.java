@@ -13,19 +13,19 @@ import java.text.ParseException;
  * @author Patrick Jordan
  */
 public class Pricing extends AbstractTransportable {
-    private Map<Ad,Double> prices;
+    private Map<AdLink,Double> prices;
 
 
     public Pricing() {
-        prices = new HashMap<Ad,Double>();
+        prices = new HashMap<AdLink,Double>();
     }
 
-    public void setPrice(Ad ad, double price) {
+    public void setPrice(AdLink ad, double price) {
         lockCheck();
         prices.put(ad,price);
     }
 
-    public double getPrice(Ad ad) {
+    public double getPrice(AdLink ad) {
         Double price = prices.get(ad);
 
         if(price==null)
@@ -34,7 +34,7 @@ public class Pricing extends AbstractTransportable {
             return price;
     }
 
-    public Set<Ad> ads() {
+    public Set<AdLink> ads() {
         return prices.keySet();
     }
 
@@ -43,9 +43,9 @@ public class Pricing extends AbstractTransportable {
         prices.clear();
         while(reader.nextNode("PriceEntry", false)) {
             double price = reader.getAttributeAsDouble("price",Double.NaN);
-            Ad ad = null;
-            if(reader.nextNode(Ad.class.getSimpleName(),false)) {
-                ad = (Ad)reader.readTransportable();
+            AdLink ad = null;
+            if(reader.nextNode(AdLink.class.getSimpleName(),false)) {
+                ad = (AdLink)reader.readTransportable();
             }
 
             if(ad!=null) {
@@ -55,7 +55,7 @@ public class Pricing extends AbstractTransportable {
     }
 
     protected void writeWithLock(TransportWriter writer) {
-        for (Map.Entry<Ad,Double> entry : prices.entrySet()) {
+        for (Map.Entry<AdLink,Double> entry : prices.entrySet()) {
             writer. node("PriceEntry");
             if(entry.getValue()!=null)
                 writer.attr("price",entry.getValue());

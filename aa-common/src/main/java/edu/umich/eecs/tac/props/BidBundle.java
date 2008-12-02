@@ -37,7 +37,6 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         entry.setAd(ad);
     }
 
-
     public void setBid(Query query, double bid) {
         lockCheck();
 
@@ -95,7 +94,8 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     public double getBid(Query query) {
         int index = findEntry(query);
 
-        return index < 0 ? Double.NaN : getBid(index);
+        //return index < 0 ? Double.NaN : getBid(index);
+        return index < 0 ? 0.0 : getBid(index);
     }
 
     public double getBid(int index) {
@@ -119,7 +119,8 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
 
 
         public BidEntry() {
-            this.bid = Double.NaN;
+            //this.bid = Double.NaN;
+            this.bid = 0.0;
         }
 
         public Ad getAd() {

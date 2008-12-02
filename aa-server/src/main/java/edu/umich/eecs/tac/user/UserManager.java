@@ -81,7 +81,7 @@ public class UserManager {
 
         for(int i = 0; i < ranking.size(); i++) {
 
-            Ad ad = ranking.get(i);
+            AdLink ad = ranking.get(i);
 
             fireAdViewed(query, ad, i+1);
 
@@ -104,7 +104,7 @@ public class UserManager {
         return converted;
     }
 
-    private double calculateSalesProfit(Ad ad, Map<String, AdvertiserInfo> advertiserInfo) {
+    private double calculateSalesProfit(AdLink ad, Map<String, AdvertiserInfo> advertiserInfo) {
 		double salesProfit;
 		AdvertiserInfo AI = advertiserInfo.get(ad.getAdvertiser());
 		if(AI.getManufacturerSpecialty().equals(ad.getProduct().getManufacturer()))
@@ -116,13 +116,14 @@ public class UserManager {
 	}
 
 
-	private double calculateConversionProbability(Query query, Ad ad, Map<String, AdvertiserInfo> advertiserInfo) {
+
+	private double calculateConversionProbability(Query query, AdLink ad, Map<String, AdvertiserInfo> advertiserInfo) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
-	private double calculateClickProbability(User user, Ad ad) {
+	private double calculateClickProbability(User user, AdLink ad) {
         double probability;
 
         return 0;
@@ -204,19 +205,19 @@ public class UserManager {
         }
     }
 
-    private void fireAdViewed(Query query, Ad ad, int slot) {
+    private void fireAdViewed(Query query, AdLink ad, int slot) {
         for(int i = 0; i < listeners.size(); i++) {
             listeners.get(i).viewed(query,ad,slot);
         }
     }
 
-    private void fireAdClicked(Query query, Ad ad, int slot, double cpc) {
+    private void fireAdClicked(Query query, AdLink ad, int slot, double cpc) {
         for(int i = 0; i < listeners.size(); i++) {
             listeners.get(i).clicked(query,ad,slot,cpc);
         }
     }
 
-    private void fireAdConverted(Query query, Ad ad, int slot, double salesProfit) {
+    private void fireAdConverted(Query query, AdLink ad, int slot, double salesProfit) {
         for(int i = 0; i < listeners.size(); i++) {
             listeners.get(i).converted(query,ad,slot,salesProfit);
         }

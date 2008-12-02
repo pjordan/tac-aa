@@ -37,8 +37,6 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
         entry.setPosition(position);
     }
 
-
-
     public void setPosition(Query query, double position) {
         lockCheck();
 
@@ -56,7 +54,6 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
         lockCheck();
         getEntry(index).setPosition(position);
     }
-
 
     public void setCPC(Query query, double cpc) {
         lockCheck();

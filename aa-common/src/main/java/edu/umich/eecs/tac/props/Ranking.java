@@ -11,26 +11,25 @@ import java.text.ParseException;
  * @author Patrick Jordan
  */
 public class Ranking extends AbstractTransportable {
-    private List<Ad> slots;
-
+    private List<AdLink> slots;
 
     public Ranking() {
-        slots = new ArrayList<Ad>();
+        slots = new ArrayList<AdLink>();
     }
 
-    public void add(Ad ad) {
+    public void add(AdLink ad) {
         slots.add(ad);
     }
 
-    public void set(int position, Ad ad) {
+    public void set(int position, AdLink ad) {
         slots.set(position, ad);
     }
 
-    public Ad get(int position) {
+    public AdLink get(int position) {
         return slots.get(position);
     }
 
-    public int positionForAd(Ad ad) {
+    public int positionForAd(AdLink ad) {
         for(int i = 0; i < size(); i++) {
             if(get(i).equals(ad))
                 return i;
@@ -43,15 +42,24 @@ public class Ranking extends AbstractTransportable {
         return slots.size();
     }
 
+    public String toString(){
+      StringBuffer sb = new StringBuffer().append('[');
+      for (int i = 0, n = size(); i < n; i++) {
+        sb.append('[').append(i).append(": ").append(get(i)).append(']');
+      }
+      sb.append(']');
+
+      return sb.toString();
+    }
 
     protected void readWithLock(TransportReader reader) throws ParseException {
         while (reader.nextNode(Ad.class.getSimpleName(), false)) {
-            add((Ad) reader.readTransportable());
+            add((AdLink) reader.readTransportable());
         }
     }
 
     protected void writeWithLock(TransportWriter writer) {
-        for (Ad ad : slots) {
+        for (AdLink ad : slots) {
             writer.write(ad);
         }
     }

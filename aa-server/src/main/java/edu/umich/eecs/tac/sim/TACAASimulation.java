@@ -525,6 +525,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
      */
     protected void recoverAgent(SimulationAgent agent) {
       //TODO-Write this....
+      //TODO: Keep day old sales reports and query reports
     }
 
     /**

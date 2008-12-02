@@ -4,35 +4,42 @@ import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.sim.Publisher;
 import se.sics.isl.util.ConfigManager;
 
+import java.util.logging.Logger;
+
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
+
+//TODO: Discuss/Resolve bids that are NaN, discuss tie-breakers
 public class LahaiePennockAuctionFactory implements AuctionFactory {
     private BidManager bidManager;
     private double squashValue;
     private int slotLimit;
+    private Logger log = Logger.getLogger(LahaiePennockAuctionFactory.class.getName());
+
 
     public Auction runAuction(Query query) {
-        String[] advertisers = bidManager.advertisers().toArray(new String[0]);
+        int nAdvertisers = bidManager.advertisers().size();
+        String[] advertisers = bidManager.advertisers().toArray(new String[nAdvertisers]);
         double[] qualityScores = new double[advertisers.length];
         double[] bids = new double[advertisers.length];
         double[] scores = new double[advertisers.length];
-        Ad[] ads = new Ad[advertisers.length];
+        AdLink[] ads = new AdLink[advertisers.length];
         int[] indices = new int[advertisers.length];
         double[] cpc = new double[advertisers.length];
 
         for(int i = 0; i < advertisers.length; i++) {
             bids[i] = bidManager.getBid(advertisers[i],query);
             qualityScores[i] = bidManager.getQualityScore(advertisers[i],query);
-            ads[i] = bidManager.getAd(advertisers[i],query);
+            ads[i] = bidManager.getAdLink(advertisers[i],query);
             scores[i] = Math.pow(qualityScores[i],squashValue)*bids[i];
             indices[i] = i;
+            log.finest("Advertiser: "+advertisers[i]+"\tScore: "+scores[i]);
         }
 
-
+        //This currently runs for an infinite loop if scores are NaN
         bubbleSort(scores,indices);
-
-
+        
         calculateCPC(indices, scores, bids, cpc);
 
         Ranking ranking = new Ranking();
@@ -40,7 +47,7 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
 
         for(int i = 0; i < indices.length && i < slotLimit; i++) {
             if(ads[indices[i]]!=null) {
-                Ad ad = ads[indices[i]];
+                AdLink ad = ads[indices[i]];
                 double price = cpc[indices[i]];
 
                 price = Double.isNaN(price) ? 0.0 : price;
@@ -94,7 +101,7 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         do {
             flag = false;
             for(int i = 0; i < indices.length-1; i++) {
-                if(!(Double.isNaN(scores[indices[i]]) && Double.isNaN(indices[i+1]))) {
+                if(!(Double.isNaN(scores[indices[i]]) && Double.isNaN(scores[indices[i+1]]))) {
                     if(!(scores[indices[i]] > scores[indices[i+1]])) {
                         int sw = indices[i];
                         indices[i] = indices[i+1];

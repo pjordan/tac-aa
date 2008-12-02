@@ -53,7 +53,6 @@ public class DummyAdvertiser extends Agent {
         if (content instanceof QueryReport) {
             handleQueryReport((QueryReport) content);
         } else if (content instanceof SalesReport) {
-            log.finer("Received Sales Report: "+content.toString());
             handleSalesReport((SalesReport) content);
         } else if (content instanceof SimulationStatus) {
             handleSimulationStatus((SimulationStatus) content);
@@ -162,7 +161,7 @@ public class DummyAdvertiser extends Agent {
 
     protected void sendBidAndAds() {
       bidBundle = new BidBundle();
-      Ad ad = new Ad(null, advertiserInfo.getAdvertiserId());
+      Ad ad = new Ad(null);
       for (Iterator<Query> it=possibleQueries.iterator(); it.hasNext(); ) {
         Query query = it.next();
         bidBundle.addQuery(query, Math.abs(random.nextDouble()), ad);
@@ -178,8 +177,8 @@ public class DummyAdvertiser extends Agent {
         int cSize = retailCatalog.getComponents().size();
         int mSize = retailCatalog.getManufacturers().size();
         possibleQueries = new LinkedList<Query>();
-        String[] mans = (String[]) retailCatalog.getManufacturers().toArray();
-        String[] comps = (String[]) retailCatalog.getComponents().toArray();
+        String[] mans = retailCatalog.getManufacturers().toArray(new String[mSize]);
+        String[] comps = retailCatalog.getComponents().toArray(new String[cSize]);
 
         possibleQueries.add(new Query(null, null));
         for(int i = 0; i < mSize; i++){

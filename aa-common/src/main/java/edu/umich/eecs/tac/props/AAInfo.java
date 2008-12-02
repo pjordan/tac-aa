@@ -43,6 +43,7 @@ public class AAInfo implements ContextFactory {
         context.addTransportable(new Query());
         context.addTransportable(new Product());
         context.addTransportable(new Ad());
+        context.addTransportable(new AdLink());
         context.addTransportable(new SalesReport());
         context.addTransportable(new SalesReport.SalesReportEntry());
         context.addTransportable(new QueryReport());

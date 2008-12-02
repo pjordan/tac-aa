@@ -221,7 +221,6 @@ public abstract class Builtin extends Agent {
     return simulation.getAdvertiserAddresses();
   }
 
-
   final void sendMessage(String sender, String receiver, Transportable content){
     
   }

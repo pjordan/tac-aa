@@ -9,27 +9,18 @@ import java.text.ParseException;
  * @author Patrick Jordan, Lee Callender
  */
 public class Ad extends AbstractTransportable {
-    private Product product;
-    private String advertiser;
+    //private Product product;
+    protected Product product;
 
     public Ad() {
     }
 
-    public Ad(Product product, String advertiser){
+    public Ad(Product product){
       this.product = product;
-      this.advertiser = advertiser;
     }
 
     public boolean isGeneric() {
-        return product==null;
-    }
-
-    public String getAdvertiser() {
-        return advertiser;
-    }
-
-    public void setAdvertiser(String advertiser) {
-        this.advertiser = advertiser;
+       return product==null;
     }
 
     public Product getProduct() {
@@ -41,7 +32,7 @@ public class Ad extends AbstractTransportable {
     }
 
     protected void readWithLock(TransportReader reader) throws ParseException {
-        advertiser = reader.getAttribute("advertiser",null);
+        //advertiser = reader.getAttribute("advertiser",null);
 
         if (reader.nextNode(Product.class.getSimpleName(), false)) {
             this.product = (Product)reader.readTransportable();
@@ -49,8 +40,8 @@ public class Ad extends AbstractTransportable {
     }
 
     protected void writeWithLock(TransportWriter writer) {
-        if(advertiser!=null)
-            writer.attr("advertiser", advertiser);
+        //if(advertiser!=null)
+        //    writer.attr("advertiser", advertiser);
 
         if(product!=null)
             writer.write(product);
@@ -67,7 +58,7 @@ public class Ad extends AbstractTransportable {
 
         Ad ad = (Ad) o;
 
-        if (advertiser != null ? !advertiser.equals(ad.advertiser) : ad.advertiser != null) return false;
+        //if (advertiser != null ? !advertiser.equals(ad.advertiser) : ad.advertiser != null) return false;
         if (product != null ? !product.equals(ad.product) : ad.product != null) return false;
 
         return true;
@@ -76,7 +67,7 @@ public class Ad extends AbstractTransportable {
     public int hashCode() {
         int result;
         result = (product != null ? product.hashCode() : 0);
-        result = 31 * result + (advertiser != null ? advertiser.hashCode() : 0);
+        //result = 31 * result + (advertiser != null ? advertiser.hashCode() : 0);
         return result;
     }
 }
