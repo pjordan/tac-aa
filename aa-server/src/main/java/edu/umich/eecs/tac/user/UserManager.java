@@ -17,6 +17,8 @@ public class UserManager {
 
     private Random random;
     
+    private double unitSalesProfit;
+    
     public UserManager() {
         lock = new Object();
         users = new ArrayList<User>();
@@ -24,8 +26,15 @@ public class UserManager {
         random = new Random();
     }
 
+    public double getUnitSalesProfit() {
+		return unitSalesProfit;
+	}
 
-    public void transition(Publisher publisher) {
+	public void setUnitSalesProfit(double unitSalesProfit) {
+		this.unitSalesProfit = unitSalesProfit;
+	}
+
+	public void transition(Publisher publisher, Map<String, AdvertiserInfo> advertiserInfo) {
 
         synchronized( lock ) {
 
@@ -35,7 +44,7 @@ public class UserManager {
 
                 if(user.state.isSearching()) {
 
-                    handleSearch(user,publisher);
+                    handleSearch(user,publisher, advertiserInfo);
 
                 } else {
                 
@@ -46,16 +55,16 @@ public class UserManager {
         }
     }
 
-    private void handleSearch(User user, Publisher publisher) {
+    private void handleSearch(User user, Publisher publisher, Map<String, AdvertiserInfo> advertiserInfo) {
 
         Query query = generateQuery(user);
 
         Auction auction = publisher.runAuction(query);
 
-        handleTransition(user, handleImpression(query, auction, user) );
+        handleTransition(user, handleImpression(query, auction, user,advertiserInfo) );
     }
 
-    private boolean handleImpression(Query query, Auction auction, User user) {
+    private boolean handleImpression(Query query, Auction auction, User user, Map<String, AdvertiserInfo> advertiserInfo) {
 
         fireQueryIssued(query);
 
@@ -80,9 +89,9 @@ public class UserManager {
                 double clickProbability = calculateClickProbability(user,ad);
                 if(random.nextDouble() < clickProbability) {
                 	fireAdClicked(query, ad, i+1, pricing.getPrice(ad));
-                	double conversionProbability = calculateConversionProbability(query, ad);
+                	double conversionProbability = calculateConversionProbability(query, ad,  advertiserInfo);
                 	if(random.nextDouble() < conversionProbability) {
-                		fireAdConverted(query, ad, i+1, calculateSalesProfit());
+                		fireAdConverted(query, ad, i+1, calculateSalesProfit(ad, advertiserInfo));
                 		converted = true;
                 		break;
                 	}
@@ -95,13 +104,19 @@ public class UserManager {
         return converted;
     }
 
-    private double calculateSalesProfit() {
-		// TODO Auto-generated method stub
-		return 0;
+    private double calculateSalesProfit(Ad ad, Map<String, AdvertiserInfo> advertiserInfo) {
+		double salesProfit;
+		AdvertiserInfo AI = advertiserInfo.get(ad.getAdvertiser());
+		if(AI.getManufacturerSpecialty().equals(ad.getProduct().getManufacturer()))
+			salesProfit = AI.getManufacturerBonus()*unitSalesProfit;
+		else
+			salesProfit = unitSalesProfit;
+		return salesProfit;
+		
 	}
 
 
-	private double calculateConversionProbability(Query query, Ad ad) {
+	private double calculateConversionProbability(Query query, Ad ad, Map<String, AdvertiserInfo> advertiserInfo) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
