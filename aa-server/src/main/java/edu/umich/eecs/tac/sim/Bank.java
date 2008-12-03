@@ -7,11 +7,9 @@ package edu.umich.eecs.tac.sim;
  * Time: 4:02:45 PM
  * To change this template use File | Settings | File Templates.
  */
-import java.util.Random;
 import java.util.logging.Logger;
 
 import com.botbox.util.ArrayUtils;
-import se.sics.isl.util.ConfigManager;
 import edu.umich.eecs.tac.props.BankStatus;
 
 public class Bank {

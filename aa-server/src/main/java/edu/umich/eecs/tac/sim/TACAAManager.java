@@ -12,7 +12,6 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 
 
-import com.botbox.util.ArrayUtils;
 import se.sics.isl.util.ConfigManager;
 import se.sics.tasim.is.SimulationInfo;
 import se.sics.tasim.sim.Simulation;
