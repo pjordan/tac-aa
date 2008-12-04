@@ -17,22 +17,14 @@ public class UserManager {
 
     private Random random;
     
-    private double unitSalesProfit;
+    private RetailCatalog catalog;
     
-    public UserManager() {
+    public UserManager(RetailCatalog c) {
         lock = new Object();
         users = new ArrayList<User>();
         listeners = new ArrayList<UserEventListener>();
         random = new Random();
     }
-
-    public double getUnitSalesProfit() {
-		return unitSalesProfit;
-	}
-
-	public void setUnitSalesProfit(double unitSalesProfit) {
-		this.unitSalesProfit = unitSalesProfit;
-	}
 
 	public void transition(Publisher publisher, Map<String, AdvertiserInfo> advertiserInfo) {
 
@@ -108,9 +100,9 @@ public class UserManager {
 		double salesProfit;
 		AdvertiserInfo AI = advertiserInfo.get(ad.getAdvertiser());
 		if(AI.getManufacturerSpecialty().equals(ad.getProduct().getManufacturer()))
-			salesProfit = AI.getManufacturerBonus()*unitSalesProfit;
+			salesProfit = AI.getManufacturerBonus()*catalog.getSalesProfit(ad.getProduct());
 		else
-			salesProfit = unitSalesProfit;
+			salesProfit = catalog.getSalesProfit(ad.getProduct());
 		return salesProfit;
 		
 	}

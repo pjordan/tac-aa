@@ -60,9 +60,6 @@ public class RetailCatalog extends AbstractListCompositeEntryTransportable<Produ
         return addKey(product);
     }
 
-
-
-
     protected int addEntry(RetailCatalogEntry entry) {
         int index = super.addEntry(entry);
 
