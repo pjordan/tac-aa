@@ -24,6 +24,7 @@ public class UserManager {
         users = new ArrayList<User>();
         listeners = new ArrayList<UserEventListener>();
         random = new Random();
+        catalog = c;
     }
 
 	public void transition(Publisher publisher, Map<String, AdvertiserInfo> advertiserInfo) {
@@ -116,6 +117,7 @@ public class UserManager {
 
 
 	private double calculateClickProbability(User user, AdLink ad) {
+		//TODO: THIS
         double probability;
 
         return 0;
@@ -220,4 +222,7 @@ public class UserManager {
         public QueryState state;
         public Product product;
     }
+    
+    
+    
 }
