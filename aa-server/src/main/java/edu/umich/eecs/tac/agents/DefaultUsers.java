@@ -2,7 +2,7 @@ package edu.umich.eecs.tac.agents;
 
 import edu.umich.eecs.tac.sim.Users;
 import edu.umich.eecs.tac.sim.Publisher;
-import edu.umich.eecs.tac.user.TransitionLookup;
+import edu.umich.eecs.tac.user.SuccessorTable;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.Ranking;
 import edu.umich.eecs.tac.props.Query;
@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class DefaultUsers extends Users implements TACAAConstants, TimeListener {
     private Hashtable<String, SalesReport> salesTable; 
     private int salesReportCount;
-    private TransitionLookup tltable;
+    private SuccessorTable sg;
     
     public DefaultUsers() {
     }
@@ -38,7 +38,6 @@ public class DefaultUsers extends Users implements TACAAConstants, TimeListener 
       if(numberOfAdvertisers <= 0){
         throw new IllegalArgumentException("Number of advertisers not specified in config.");
       }
-      tltable = new TransitionLookup();
       
       salesTable = new Hashtable<String, SalesReport>(numberOfAdvertisers);
       String[] advertisers = getAdvertiserAddresses();

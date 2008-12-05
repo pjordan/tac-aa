@@ -218,9 +218,13 @@ public class UserManager {
     }
 
 
-    private static class User {
+    private class User {
         public QueryState state;
         public Product product;
+        
+        public void generateSuccessor(SuccessorTable sg){
+        	state = state.generateSuccessor();
+        }
     }
     
     
