@@ -31,12 +31,13 @@ import java.util.Random;
 import se.sics.isl.util.ConfigManager;
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.aw.Agent;
+import se.sics.tasim.aw.TimeListener;
 import se.sics.tasim.is.EventWriter;
 
 /**
- * @author Lee Callender
+ * @author Lee Callender, Patrick Jordan
  */
-public abstract class Builtin extends Agent {
+public abstract class Builtin extends Agent implements TimeListener {
 
   private final String baseConfigName;
   private ConfigManager config;
@@ -49,9 +50,7 @@ public abstract class Builtin extends Agent {
     this.baseConfigName = baseConfigName;
   }
 
-  // Only accessible from this package for security reasons (API for
-  // the builtin participants extending this class)
-  TACAASimulation getSimulation() {
+  protected TACAASimulation getSimulation() {
     return simulation;
   }
 

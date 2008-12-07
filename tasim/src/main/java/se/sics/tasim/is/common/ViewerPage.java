@@ -56,6 +56,8 @@ public class ViewerPage extends HttpPage
   public ViewerPage(InfoServer infoServer, SimServer simServer)
   {
     String serverName = simServer.getServerName();
+    viewerArchive = infoServer.getConfig().getProperty("is.viewer.jars",viewerArchive);
+      
     // Generate the page
     topPage = "<html>\r\n<head>\r\n<title>Simulation viewer for "
         + serverName

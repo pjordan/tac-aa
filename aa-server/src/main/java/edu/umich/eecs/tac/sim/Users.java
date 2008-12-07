@@ -8,12 +8,13 @@ import se.sics.tasim.sim.SimulationAgent;
 import edu.umich.eecs.tac.props.Ranking;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.SalesReport;
+import edu.umich.eecs.tac.user.UserEventListener;
 
 /**
  * @author Lee Callender, Patrick Jordan
  */
 public abstract class Users extends Builtin {
-  private static final String CONF = "user.";
+  private static final String CONF = "users.";
 
   protected Logger log = Logger.getLogger(Users.class.getName());
 
@@ -36,6 +37,7 @@ public abstract class Users extends Builtin {
     
     public abstract void sendSalesReportsToAll();
 
+    public abstract void broadcastUserDistribution();
     
 
     // DEBUG FINALIZE REMOVE THIS!!! REMOVE THIS!!!
@@ -44,5 +46,9 @@ public abstract class Users extends Builtin {
         super.finalize();
     }
 
+    public abstract boolean addUserEventListener(UserEventListener listener);
 
+    public abstract boolean containsUserEventListener(UserEventListener listener);
+
+    public abstract boolean removeUserEventListener(UserEventListener listener);
 }

@@ -60,6 +60,14 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         advertiserInfoMap = new HashMap<String, AdvertiserInfo>();
     }
 
+    public RetailCatalog getRetailCatalog() {
+        return retailCatalog;
+    }
+
+    public Map<String, AdvertiserInfo> getAdvertiserInfo() {
+        return advertiserInfoMap;
+    }
+
     protected void setupSimulation() throws IllegalConfigurationException {
         ConfigManager config = getConfig();
         SimulationInfo info = getSimulationInfo();
@@ -146,6 +154,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
             SimulationAgent publisher = publishers[i];
             Publisher publisherAgent = (Publisher) publisher.getAgent();
             publisherAgent.simulationSetup(this, publishers[i].getIndex());
+            addTimeListener(publisherAgent);  
           }
         }
         if(users != null){
@@ -153,6 +162,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
             SimulationAgent user = users[i];
             Users userAgent = (Users) user.getAgent();
             userAgent.simulationSetup(this, users[i].getIndex());
+            addTimeListener(userAgent);
           }
         }
         
@@ -361,6 +371,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
                 if(agent.getAgent() instanceof Users) {
                     Users users = (Users)agent.getAgent();
                     users.sendSalesReportsToAll();
+                    users.broadcastUserDistribution();
                 }
             }
         }
@@ -676,7 +687,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         return numberOfAdvertisers;
     }
 
-    final SimulationAgent[] getPublishers(){
+    public final SimulationAgent[] getPublishers(){
         return getAgents(PUBLISHER);  
     }
 
@@ -861,6 +872,4 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
     final void sendBankStatus(String agentName, BankStatus status) {
         sendMessage(agentName, status);
     }
-
-
 }

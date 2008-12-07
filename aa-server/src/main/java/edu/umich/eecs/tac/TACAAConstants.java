@@ -45,7 +45,23 @@ public interface TACAAConstants {
   public final static int DU_BANK_ACCOUNT = 100;
 
 
+  /** The number of non-searching users */
+  public final static int DU_NON_SEARCHING = 200;
 
+  /** The number of informational-search users */
+  public final static int DU_INFORMATIONAL_SEARCH = 201;
+
+  /** The number of focus level zero users */
+  public final static int DU_FOCUS_LEVEL_ZERO = 202;
+
+  /** The number of focus level one users */
+  public final static int DU_FOCUS_LEVEL_ONE = 203;
+
+  /** The number of focus level two users */
+  public final static int DU_FOCUS_LEVEL_TWO = 204;
+
+  /** The number of transacted users */
+  public final static int DU_TRANSACTED = 205;
 
   // --------------------------------------------------------------------
   // TAC AA Participant roles

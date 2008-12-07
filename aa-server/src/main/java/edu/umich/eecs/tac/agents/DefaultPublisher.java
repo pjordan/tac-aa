@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * @author Lee Callender, Patrick Jordan
  */
-public class DefaultPublisher extends Publisher implements TACAAConstants, TimeListener {
+public class DefaultPublisher extends Publisher implements TACAAConstants {
     private AuctionFactory auctionFactory;
     private BidManager bidManager;
     private RetailCatalog retailCatalog;

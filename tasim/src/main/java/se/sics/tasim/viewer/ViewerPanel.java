@@ -98,7 +98,7 @@ public class ViewerPanel extends ViewerConnection {
       log.severe("could not find config " + configFile);
     }
 
-    // Should not be hardcoded but setup depending on simulation type. FIX THIS!!! \TODO
+    // Should not be hardcoded but setup depending on simulation type. FIX THIS!!! 0      \TODO
 
 
     viewer = null;
