@@ -24,7 +24,7 @@ public class AdvertiserAgentPanel extends JPanel implements TACAAConstants {
     private String advertiser;
     private AdvertiserTabPanel advertiserTabPanel;
 
-    private DefaultValueDataset cpcValue;
+    private DefaultValueDataset ctrValue;
     private DefaultValueDataset convValue;
 
     private int impressions;
@@ -44,15 +44,15 @@ public class AdvertiserAgentPanel extends JPanel implements TACAAConstants {
     private void initialize() {
         setLayout(new GridLayout(2, 1));
 
-        add(new ChartPanel(createCPCChart()));
+        add(new ChartPanel(createCTRChart()));
         add(new ChartPanel(createConvChart()));
 
         setBorder(BorderFactory.createTitledBorder(advertiser));
     }
 
 
-    private JFreeChart createCPCChart() {
-        return createChart("CPC", cpcValue = new DefaultValueDataset(0.0));
+    private JFreeChart createCTRChart() {
+        return createChart("CTR", ctrValue = new DefaultValueDataset(0.0));
     }
 
     private JFreeChart createConvChart() {
@@ -92,13 +92,13 @@ public class AdvertiserAgentPanel extends JPanel implements TACAAConstants {
     protected void addImpressions(int impressions) {
         this.impressions += impressions;
 
-        updateCPC();
+        updateCTR();
     }
 
     protected void addClicks(int clicks) {
         this.clicks += clicks;
 
-        updateCPC();
+        updateCTR();
         updateConvRate();
     }
 
@@ -108,11 +108,11 @@ public class AdvertiserAgentPanel extends JPanel implements TACAAConstants {
         updateConvRate();
     }
 
-    protected void updateCPC() {
+    protected void updateCTR() {
         if (impressions > 0) {
-            cpcValue.setValue(100.0*((double) clicks) / ((double) impressions));
+            ctrValue.setValue(100.0*((double) clicks) / ((double) impressions));
         } else {
-            cpcValue.setValue(0.0D);
+            ctrValue.setValue(0.0D);
         }
     }
 
