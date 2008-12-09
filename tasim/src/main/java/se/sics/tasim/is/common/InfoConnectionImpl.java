@@ -164,7 +164,12 @@ public class InfoConnectionImpl extends InfoConnection
   {
     simServer.dataUpdated(agent, type, value);
   }
-  
+
+  public void dataUpdated(int agent, int type, double value)
+  {
+    simServer.dataUpdated(agent, type, value);
+  }
+
   public void dataUpdated(int agent, int type, String value)
   {
     simServer.dataUpdated(agent, type, value);

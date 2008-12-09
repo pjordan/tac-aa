@@ -4,11 +4,14 @@ import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.sim.Publisher;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author Patrick Jordan, Ben Cassell
  */
 public class DefaultUserManager implements UserManager {
+    protected Logger log = Logger.getLogger(Publisher.class.getName());
+
     private final Object lock;
 
     private List<User> users;
@@ -21,6 +24,7 @@ public class DefaultUserManager implements UserManager {
 
     private UserViewManager viewManager;
 
+    private UserClickModel userClickModel;
 
     public DefaultUserManager(RetailCatalog retailCatalog, UserTransitionManager transitionManager, UserQueryManager queryManager, UserViewManager viewManager, int populationSize) {
         this(retailCatalog, transitionManager, queryManager, viewManager, populationSize, new Random());
@@ -53,6 +57,7 @@ public class DefaultUserManager implements UserManager {
     public void triggerBehavior(Publisher publisher) {
 
         synchronized (lock) {
+            log.finest("START OF USER TRIGGER");
 
             Collections.shuffle(users, random);
 
@@ -61,20 +66,23 @@ public class DefaultUserManager implements UserManager {
                 boolean transacted = handleSearch(user, publisher);
 
                 handleTransition(user, transacted);
-
             }
+
+            log.finest("FINISH OF USER TRIGGER");
         }
+
+        
     }
 
     private boolean handleSearch(User user, Publisher publisher) {
         boolean transacted = false;
 
         Query query = generateQuery(user);
-
         if (query != null) {
             Auction auction = publisher.runAuction(query);
 
             transacted = handleImpression(query, auction, user);
+
         }
 
         return transacted;
@@ -128,5 +136,18 @@ public class DefaultUserManager implements UserManager {
         }
         
         return distribution;
+    }
+
+
+    public UserClickModel getUserClickModel() {
+        return userClickModel;
+    }
+
+    public void setUserClickModel(UserClickModel userClickModel) {
+        this.userClickModel = userClickModel;
+
+        if(viewManager!=null) {
+            viewManager.setUserClickModel(userClickModel);
+        }
     }
 }

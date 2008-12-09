@@ -69,7 +69,9 @@ public abstract class EventWriter
   public abstract void dataUpdated(int agent, int type, long value);
   
   public abstract void dataUpdated(int agent, int type, float value);
-  
+
+  public abstract void dataUpdated(int agent, int type, double value);
+
   public abstract void dataUpdated(int agent, int type, String value);
   
   public abstract void dataUpdated(int agent, int type, Transportable content);

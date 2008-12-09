@@ -2,11 +2,9 @@ package edu.umich.eecs.tac.props;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
-import se.sics.isl.transport.Transportable;
 
 import java.text.ParseException;
 import java.util.*;
-import java.io.Serializable;
 
 /**
  * @author Patrick Jordan
@@ -30,7 +28,7 @@ public class RetailCatalog extends AbstractListCompositeEntryTransportable<Produ
     }
 
     public double getSalesProfit(Product product) {
-        int index = findEntry(product);
+        int index = indexForEntry(product);
 
         return index < 0 ? 0.0 : getSalesProfit(index);
     }
@@ -42,7 +40,7 @@ public class RetailCatalog extends AbstractListCompositeEntryTransportable<Produ
     public void setSalesProfit(Product product, double salesProfit) {
         lockCheck();
 
-        int index = findEntry(product);
+        int index = indexForEntry(product);
 
         if (index < 0) {
             index = addProduct(product);

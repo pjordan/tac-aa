@@ -1281,7 +1281,28 @@ public class SimServer
       sendToViewers(data);
     }
   }
-  
+
+  public void dataUpdated(int agent, int type, double value)
+  {
+    ViewerCache cache = this.currentViewerCache;
+    if (cache != null)
+    {
+      cache.dataUpdated(agent, type, value);
+    }
+    if (viewerConnections != null)
+    {
+      byte[] data;
+      synchronized (transportWriter)
+      {
+        transportWriter.clear();
+        transportEventWriter.dataUpdated(agent, type, value);
+        transportWriter.finish();
+        data = transportWriter.getBytes();
+      }
+      sendToViewers(data);
+    }
+  }
+
   public void dataUpdated(int agent, int type, String value)
   {
     ViewerCache cache = this.currentViewerCache;

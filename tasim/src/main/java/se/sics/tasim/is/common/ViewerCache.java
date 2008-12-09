@@ -85,7 +85,10 @@ public class ViewerCache extends EventWriter
   
   public void dataUpdated(int agent, int type, float value)
   {}
-  
+
+  public void dataUpdated(int agent, int type, double value)
+  {}
+
   public void dataUpdated(int agent, int type, String value)
   {}
   

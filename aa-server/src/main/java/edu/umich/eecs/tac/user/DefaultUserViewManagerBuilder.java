@@ -11,6 +11,6 @@ import java.util.Random;
  */
 public class DefaultUserViewManagerBuilder implements UserBehaviorBuilder<UserViewManager> {
     public UserViewManager build(ConfigProxy userConfigProxy, TACAASimulation simulation, Random random) {
-        return new DefaultUserViewManager(simulation.getRetailCatalog(),simulation.getAdvertiserInfo(), random);
+        return new DefaultUserViewManager(simulation.getRetailCatalog(),simulation.getSalesAnalyst(), simulation.getAdvertiserInfo(), random);
     }
 }

@@ -6,11 +6,10 @@ import edu.umich.eecs.tac.user.*;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.util.config.ConfigProxy;
 import edu.umich.eecs.tac.util.config.ConfigProxyUtils;
-import edu.umich.eecs.tac.props.Ranking;
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.SalesReport;
+import edu.umich.eecs.tac.props.*;
 import se.sics.tasim.aw.Message;
 import se.sics.tasim.is.EventWriter;
+import se.sics.isl.transport.Transportable;
 
 import java.util.Iterator;
 import java.util.Hashtable;
@@ -21,17 +20,16 @@ import java.util.logging.Logger;
  * @author Lee Callender
  */
 public class DefaultUsers extends Users implements TACAAConstants {
-    private Hashtable<String, SalesReport> salesTable;
-    private int salesReportCount;
     private ConfigProxy usersConfigProxy;
     private UserManager userManager;
+    private UserClickModel userClickModel;
 
     public DefaultUsers() {
     }
 
     public void nextTimeUnit(int date) {
         userManager.nextTimeUnit(date);
-        userManager.triggerBehavior((Publisher)(getSimulation().getPublishers()[0].getAgent()));
+        userManager.triggerBehavior((Publisher) (getSimulation().getPublishers()[0].getAgent()));
     }
 
     protected void setup() {
@@ -42,6 +40,11 @@ public class DefaultUsers extends Users implements TACAAConstants {
             // Create the user manager
             UserBehaviorBuilder<UserManager> managerBuilder = createBuilder();
             userManager = managerBuilder.build(getUsersConfigProxy(), getSimulation(), new Random());
+            if (userClickModel != null)
+                userManager.setUserClickModel(userClickModel);
+
+            addUserEventListener(new ConversionMonitor());
+
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (InstantiationException e) {
@@ -55,21 +58,6 @@ public class DefaultUsers extends Users implements TACAAConstants {
         if (numberOfAdvertisers <= 0) {
             throw new IllegalArgumentException("Number of advertisers not specified in config.");
         }
-
-        salesTable = new Hashtable<String, SalesReport>(numberOfAdvertisers);
-        String[] advertisers = getAdvertiserAddresses();
-        for (int i = 0; i < advertisers.length; i++) {
-            log.finest("Adding Sales Report for" + advertisers[i]);
-            SalesReport report = new SalesReport();
-            Query query = new Query();
-            query.setComponent(String.valueOf(salesReportCount));
-            query.setManufacturer("Blah");
-            report.addQuery(query);
-
-            salesTable.put(advertisers[i], report);
-        }
-
-
     }
 
     protected void stopped() {
@@ -83,7 +71,26 @@ public class DefaultUsers extends Users implements TACAAConstants {
     // -------------------------------------------------------------------
 
     protected void messageReceived(Message message) {
+        String sender = message.getSender();
+        Transportable content = message.getContent();
 
+        if (content instanceof UserClickModel) {
+            handleUserClickModel((UserClickModel) content);
+        } else if (content instanceof RetailCatalog) {
+            handleRetailCatalog((RetailCatalog) content);
+        }
+    }
+
+    private void handleRetailCatalog(RetailCatalog retailCatalog) {
+
+    }
+
+    private void handleUserClickModel(UserClickModel userClickModel) {
+        this.userClickModel = userClickModel;
+
+        if (userManager != null) {
+            userManager.setUserClickModel(userClickModel);
+        }
     }
 
     protected String getAgentName(String agentAddress) {
@@ -96,20 +103,6 @@ public class DefaultUsers extends Users implements TACAAConstants {
 
     protected void sendWarningEvent(String message) {
         super.sendWarningEvent(message);
-    }
-
-
-    public void sendSalesReportsToAll() {
-
-        for (Iterator<String> it = salesTable.keySet().iterator(); it.hasNext();) {
-            String key = it.next();
-
-            sendMessage(key, salesTable.get(key));
-            salesTable.put(key, new SalesReport()); //Initialize new Sales Report for every day
-        }
-
-
-        
     }
 
     // ------------------
@@ -210,7 +203,7 @@ public class DefaultUsers extends Users implements TACAAConstants {
     }
 
     protected UserBehaviorBuilder<UserManager> createBuilder() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        return ConfigProxyUtils.createObjectFromProperty(getUsersConfigProxy(),"usermanger.builder","edu.umich.eecs.tac.user.DefaultUserManagerBuilder");
+        return ConfigProxyUtils.createObjectFromProperty(getUsersConfigProxy(), "usermanger.builder", "edu.umich.eecs.tac.user.DefaultUserManagerBuilder");
     }
 
 
@@ -221,8 +214,8 @@ public class DefaultUsers extends Users implements TACAAConstants {
 
         int[] distribution = userManager.getStateDistribution();
         QueryState[] states = QueryState.values();
-        for(int i = 0; i < distribution.length; i++) {
-            switch(states[i]) {
+        for (int i = 0; i < distribution.length; i++) {
+            switch (states[i]) {
                 case NON_SEARCHING:
                     eventWriter.dataUpdated(usersIndex, DU_NON_SEARCHING, distribution[i]);
                     break;
@@ -244,6 +237,25 @@ public class DefaultUsers extends Users implements TACAAConstants {
                 default:
                     break;
             }
+        }
+    }
+
+    protected class ConversionMonitor implements UserEventListener {
+
+        public void queryIssued(Query query) {
+
+        }
+
+        public void viewed(Query query, Ad ad, int slot, String advertiser) {
+
+        }
+
+        public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
+
+        }
+
+        public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {
+            DefaultUsers.this.transact(advertiser, salesProfit);
         }
     }
 }

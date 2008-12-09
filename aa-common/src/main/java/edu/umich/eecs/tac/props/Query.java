@@ -26,7 +26,6 @@ public class Query extends ManufacturerComponentComposable {
         calculateHashCode();
     }
 
-
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || hashCode() != o.hashCode()|| getClass() != o.getClass()) return false;
@@ -36,5 +35,7 @@ public class Query extends ManufacturerComponentComposable {
         return composableEquals(query);
     }
 
-
+    public QueryType getType() {
+        return QueryType.value(this);
+    }
 }

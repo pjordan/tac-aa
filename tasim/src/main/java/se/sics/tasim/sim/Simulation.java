@@ -546,7 +546,12 @@ public abstract class Simulation
     }
     return logWriter;
   }
-  
+
+
+  public int agentIndex(String name) {
+      return ((SimulationAgent)agentTable.get(name)).getIndex();
+  }
+
   protected SimulationAgent getAgent(String name)
   {
     return (SimulationAgent) agentTable.get(name);

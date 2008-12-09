@@ -80,7 +80,17 @@ public class TransportEventWriter extends EventWriter
     }
     writer.attr("value", value).endNode("floatUpdated");
   }
-  
+
+  public void dataUpdated(int agent, int type, double value)
+  {
+    writer.node("doubleUpdated").attr("agent", agent);
+    if (type != 0)
+    {
+      writer.attr("type", type);
+    }
+    writer.attr("value", value).endNode("doubleUpdated");
+  }
+
   public void dataUpdated(int agent, int type, String value)
   {
     writer.node("stringUpdated").attr("agent", agent);

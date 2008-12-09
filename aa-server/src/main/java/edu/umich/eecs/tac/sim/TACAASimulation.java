@@ -27,22 +27,26 @@ import edu.umich.eecs.tac.props.*;
  */
 public class TACAASimulation extends Simulation implements TACAAConstants {
     private Bank bank;
+    private SalesAnalyst salesAnalyst;
+
     private String timeUnitName = "Day";
     private int currentTimeUnit = 0;
     private int secondsPerDay = 10;
     private int numberOfDays = 60;
 
     private int numberOfAdvertisers = TACAAManager.NUMBER_OF_ADVERTISERS;
-
+    
     private int pingInterval = 0;
     private int nextPingRequest = 0;
     private int nextPingReport = 0;
 
     private RetailCatalog retailCatalog;
+    private UserClickModel userClickModel;
     private String[] manufacturers;
     private String[] components;
     private String[] advertiserAddresses = new String[numberOfAdvertisers];
     private Map<String, AdvertiserInfo> advertiserInfoMap;
+
 
     private Runnable afterTickTarget = new Runnable() {
         public void run() {
@@ -56,8 +60,6 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
 
     public TACAASimulation(ConfigManager config) {
         super(config);
-
-        advertiserInfoMap = new HashMap<String, AdvertiserInfo>();
     }
 
     public RetailCatalog getRetailCatalog() {
@@ -116,15 +118,16 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
 
         //Initialize in-game agents, bank etc.
         bank = new Bank(this, numberOfAdvertisers);
+        salesAnalyst = new SalesAnalyst(this,numberOfAdvertisers);
+
         createBuiltinAgents("users", USERS, Users.class);
         createBuiltinAgents("publisher", PUBLISHER, Publisher.class);
 
 
-        SimulationAgent[] publishers = getAgents(PUBLISHER);
-        log.info("Created " + (publishers == null ? 0 : publishers.length) + " publishers");
         SimulationAgent[] users = getAgents(USERS);
         log.info("Created " + (users == null ? 0 : users.length) + " users");
-
+        SimulationAgent[] publishers = getAgents(PUBLISHER);
+        log.info("Created " + (publishers == null ? 0 : publishers.length) + " publishers");
 
         this.retailCatalog = createRetailCatalog();
         this.manufacturers = createManufacturers();
@@ -149,6 +152,17 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
 
 
         //Simulation setup needs to be called after advertisers have been initialized
+        // Users must be initialized first
+        if(users != null){
+          for(int i = 0, n = users.length; i < n; i++){
+            SimulationAgent user = users[i];
+            Users userAgent = (Users) user.getAgent();
+            userAgent.simulationSetup(this, users[i].getIndex());
+            addTimeListener(userAgent);
+            userAgent.addUserEventListener(salesAnalyst);  
+          }
+        }
+
         if(publishers != null){
           for(int i = 0, n = publishers.length; i < n; i++){
             SimulationAgent publisher = publishers[i];
@@ -157,16 +171,10 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
             addTimeListener(publisherAgent);  
           }
         }
-        if(users != null){
-          for(int i = 0, n = users.length; i < n; i++){
-            SimulationAgent user = users[i];
-            Users userAgent = (Users) user.getAgent();
-            userAgent.simulationSetup(this, users[i].getIndex());
-            addTimeListener(userAgent);
-          }
-        }
+
         
-        
+        userClickModel = createUserClickModel();
+
     }
 
 
@@ -197,8 +205,14 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         double decayRate = config.getPropertyAsDouble("advertiser.capacity.decay_rate",1.0);
         int window = config.getPropertyAsInt("advertiser.capacity.window",7);
 
+        double focusEffect_f0 = config.getPropertyAsDouble("advertiser.focuseffect.FOCUS_LEVEL_ZERO",1.0);
+        double focusEffect_f1 = config.getPropertyAsDouble("advertiser.focuseffect.FOCUS_LEVEL_ONE",1.0);
+        double focusEffect_f2 = config.getPropertyAsDouble("advertiser.focuseffect.FOCUS_LEVEL_TWO",1.0);
+
         //Initialize advertisers..
         SimulationAgent[] advertisers = getAgents(ADVERTISER);
+        advertiserInfoMap = new HashMap<String,AdvertiserInfo>();
+
         if (advertisers != null) {
 
 
@@ -244,11 +258,14 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
                 advertiserInfo.setManufacturerSpecialty(manufacturers[r.nextInt(manufacturers.length)]);
                 advertiserInfo.setManufacturerBonus(manufacturerBonus);
                 advertiserInfo.setDistributionWindow(window);
-
+                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO,focusEffect_f0);
+                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ONE,focusEffect_f1);
+                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_TWO,focusEffect_f2);
                 advertiserInfoMap.put(agentAddress,advertiserInfo);
 
                 // Create bank account for the advertiser
                 bank.addAccount(agentAddress);
+                salesAnalyst.addAccount(agentAddress);
             }
         }
     }
@@ -287,10 +304,13 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         recoverAgents = true;
 
 
-        // Send the component catalog to the manufacturer and customers
+        // Send the retail catalog to the manufacturer and customers
         sendToRole(PUBLISHER, this.retailCatalog);
         sendToRole(USERS, this.retailCatalog);
         sendToRole(ADVERTISER, this.retailCatalog);
+
+        sendToRole(PUBLISHER, this.userClickModel);
+        sendToRole(USERS, this.userClickModel);
 
         for(Map.Entry<String,AdvertiserInfo> entry : advertiserInfoMap.entrySet()) {
             sendMessage(entry.getKey(), entry.getValue());
@@ -320,7 +340,8 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         recoverAgents = false;
         // The bank needs to send its final account statuses
         bank.sendBankStatusToAll();
-
+        salesAnalyst.sendSalesReportToAll();
+        
         // Send the final simulation status
         int millisConsumed = (int)
                 (getServerTime() - getSimulationInfo().getEndTime());
@@ -359,7 +380,8 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         } else {
             // Let the bank send their first messages
             bank.sendBankStatusToAll();
-
+            salesAnalyst.sendSalesReportToAll();
+            
             for(SimulationAgent agent : getAgents(PUBLISHER) ) {
                 if(agent.getAgent() instanceof Publisher) {
                     Publisher publisher = (Publisher)agent.getAgent();
@@ -370,7 +392,6 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
             for(SimulationAgent agent : getAgents(USERS) ) {
                 if(agent.getAgent() instanceof Users) {
                     Users users = (Users)agent.getAgent();
-                    users.sendSalesReportsToAll();
                     users.broadcastUserDistribution();
                 }
             }
@@ -446,11 +467,11 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
 
 
     private String[] createManufacturers() {
-        return getConfig().getPropertyAsArray("manufacturer.names");    
+        return retailCatalog.getManufacturers().toArray(new String[0]);
     }
 
     private String[] createComponents() {
-        return getConfig().getPropertyAsArray("component.names");
+        return retailCatalog.getComponents().toArray(new String[0]);
     }
 
     private RetailCatalog createRetailCatalog() {
@@ -474,6 +495,60 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         catalog.lock();
 
         return catalog;
+    }
+
+    private UserClickModel createUserClickModel() {
+        ConfigManager config = getConfig();
+
+
+
+        String[] advertisers = getAdvertiserAddresses();
+        Set<Query> queryList = new HashSet<Query>();
+
+        for(Product product : retailCatalog) {
+            // Create f0
+            Query f0 = new Query();
+
+            // Create f1's
+            Query f1_manufacturer = new Query(product.getManufacturer(), null);
+            Query f1_component = new Query(null, product.getComponent());
+
+            // Create f2
+            Query f2 = new Query(product.getManufacturer(), product.getComponent());
+
+            queryList.add(f0);
+            queryList.add(f1_manufacturer);
+            queryList.add(f1_component);
+            queryList.add(f2);
+        }
+
+        Query[] queries = queryList.toArray(new Query[0]);
+
+
+        UserClickModel clickModel = new UserClickModel(queries,advertisers);
+
+
+        Random random = getRandom();
+
+        for(int queryIndex = 0; queryIndex < clickModel.queryCount(); queryIndex++) {
+            double continuationLow = config.getPropertyAsDouble(String.format("users.clickbehavior.continuationprobability.%s.low",clickModel.query(queryIndex).getType()),0.1);
+            double continuationHigh = config.getPropertyAsDouble(String.format("users.clickbehavior.continuationprobability.%s.high",clickModel.query(queryIndex).getType()),0.9);
+            double effectLow = config.getPropertyAsDouble(String.format("users.clickbehavior.advertisereffect.%s.low",clickModel.query(queryIndex).getType()),0.1);
+            double effectHigh = config.getPropertyAsDouble(String.format("users.clickbehavior.advertisereffect.%s.high",clickModel.query(queryIndex).getType()),0.9);
+
+            double continuationProbability = Math.max(Math.min(1.0,random.nextDouble()*(continuationHigh - continuationLow) + continuationLow),0.0);
+
+            clickModel.setContinuationProbability(queryIndex, continuationProbability);
+
+            for(int advertiserIndex = 0; advertiserIndex < clickModel.advertiserCount(); advertiserIndex++) {
+                double effect = Math.max(Math.min(1.0,random.nextDouble()*(effectHigh - effectLow) + effectHigh),0.0);
+                clickModel.setAdvertiserEffect(queryIndex, advertiserIndex, effect);
+            }
+        }
+
+        clickModel.lock();
+
+        return clickModel;
     }
 
     private void validateConfiguration() throws IllegalConfigurationException {
@@ -691,6 +766,10 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         return getAgents(PUBLISHER);  
     }
 
+    public final SimulationAgent[] getUsers(){
+        return getAgents(USERS);  
+    }
+
     final String[] getAdvertiserAddresses(){
         return advertiserAddresses;
     }
@@ -700,30 +779,26 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
         return agent != null ? agent.getName() : agentAddress;
     }
 
-    final void transaction(String supplier, String customer, int orderID, long amount) {
-        log.finer("Transacted " + amount + " from " + customer + " to " + supplier);
+    final void transaction(String source, String receipient, double amount) {
+        log.finer("Transacted " + amount + " from " + source + " to " + receipient);
 
-        SimulationAgent supplierAgent = getAgent(supplier);
-        SimulationAgent customerAgent = getAgent(customer);
+        SimulationAgent sourceAgent = getAgent(source);
+        SimulationAgent receipientAgent = getAgent(receipient);
 
-        if (supplierAgent != null && supplierAgent.getRole() == ADVERTISER) {
-            bank.deposit(supplier, amount);
+        if (receipientAgent != null && receipientAgent.getRole() == ADVERTISER) {
+            bank.deposit(receipient, amount);
         }
-        if (customerAgent != null && customerAgent.getRole() == ADVERTISER) {
-            bank.withdraw(customer, amount);
+        if (sourceAgent != null && sourceAgent.getRole() == ADVERTISER) {
+            bank.withdraw(source, amount);
         }
 
-        int supplierIndex = supplierAgent != null
-                ? supplierAgent.getIndex()
-                : COORDINATOR_INDEX;
-        int customerIndex = customerAgent != null
-                ? customerAgent.getIndex()
-                : COORDINATOR_INDEX;
+        int sourceIndex = sourceAgent != null ? sourceAgent.getIndex() : COORDINATOR_INDEX;
+        int receipientIndex = receipientAgent != null ? receipientAgent.getIndex() : COORDINATOR_INDEX;
+
         LogWriter writer = getLogWriter();
         synchronized (writer) {
-            writer.node("transaction").attr("supplier", supplierIndex)
-                    .attr("customer", customerIndex)
-                    .attr("orderID", orderID)
+            writer.node("transaction").attr("source", sourceIndex)
+                    .attr("receipient", (float)receipientIndex)
                     .attr("amount", amount)
                     .endNode("transaction");
         }
@@ -861,6 +936,10 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
     }*/
 
 
+    public SalesAnalyst getSalesAnalyst() {
+        return salesAnalyst;
+    }
+
     private AdvertiserInfo getAdvertiserInfoForAgent(String agentName) {
         return advertiserInfoMap.get(agentName);
     }
@@ -871,5 +950,16 @@ public class TACAASimulation extends Simulation implements TACAAConstants {
 
     final void sendBankStatus(String agentName, BankStatus status) {
         sendMessage(agentName, status);
+                
+        EventWriter eventWriter = getEventWriter();
+        eventWriter.dataUpdated(getAgent(agentName).getIndex(), DU_BANK_ACCOUNT, status.getAccountBalance());
+    }
+
+    final void sendSalesReport(String agentName, SalesReport report) {
+        sendMessage(agentName, report);
+    }
+
+    final void sendQueryReport(String agentName, QueryReport report) {
+        sendMessage(agentName, report);
     }
 }

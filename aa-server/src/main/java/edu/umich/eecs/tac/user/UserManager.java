@@ -1,6 +1,7 @@
 package edu.umich.eecs.tac.user;
 
 import edu.umich.eecs.tac.sim.Publisher;
+import edu.umich.eecs.tac.props.UserClickModel;
 import se.sics.tasim.aw.TimeListener;
 
 /**
@@ -19,4 +20,8 @@ public interface UserManager extends TimeListener {
     public boolean removeUserEventListener(UserEventListener listener);
 
     public int[] getStateDistribution();
+
+    public UserClickModel getUserClickModel();
+
+    public void setUserClickModel(UserClickModel userClickModel);
 }

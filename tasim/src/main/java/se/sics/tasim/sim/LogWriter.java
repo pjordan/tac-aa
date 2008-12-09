@@ -237,7 +237,21 @@ public class LogWriter extends EventWriter
       writer.attr("value", value).endNode("floatUpdated");
     }
   }
-  
+
+  public synchronized void dataUpdated(int agent, int type, double value)
+  {
+    parentWriter.dataUpdated(agent, type, value);
+    if (!isClosed)
+    {
+      writer.node("doubleUpdated").attr("agent", agent);
+      if (type != 0)
+      {
+        writer.attr("type", type);
+      }
+      writer.attr("value", value).endNode("doubleUpdated");
+    }
+  }
+
   public synchronized void dataUpdated(int agent, int type, String value)
   {
     parentWriter.dataUpdated(agent, type, value);
@@ -391,7 +405,17 @@ public class LogWriter extends EventWriter
     }
     return this;
   }
-  
+
+  // NOTE: MUST BE SYNCHRONIZED ON THIS OBJECT TO BE CALLED
+  public LogWriter attr(String name, double value)
+  {
+    if (!isClosed)
+    {
+      writer.attr(name, value);
+    }
+    return this;
+  }
+
   // NOTE: MUST BE SYNCHRONIZED ON THIS OBJECT TO BE CALLED
   public LogWriter attr(String name, String value)
   {

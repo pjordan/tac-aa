@@ -1,25 +1,20 @@
 package edu.umich.eecs.tac.agents;
 
 import edu.umich.eecs.tac.sim.Publisher;
+import edu.umich.eecs.tac.sim.Users;
 import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.auction.AuctionFactory;
-import edu.umich.eecs.tac.auction.BidManager;
-import edu.umich.eecs.tac.auction.BidManagerImpl;
-import edu.umich.eecs.tac.props.Auction;
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.BidBundle;
-import edu.umich.eecs.tac.props.RetailCatalog;
+import edu.umich.eecs.tac.user.UserEventListener;
+import edu.umich.eecs.tac.auction.*;
+import edu.umich.eecs.tac.props.*;
 import se.sics.tasim.aw.TimeListener;
 import se.sics.tasim.props.StartInfo;
 import se.sics.tasim.is.EventWriter;
 import se.sics.tasim.aw.Message;
+import se.sics.tasim.sim.SimulationAgent;
 import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
-import java.util.LinkedList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Lee Callender, Patrick Jordan
@@ -29,23 +24,27 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     private BidManager bidManager;
     private RetailCatalog retailCatalog;
     private Set<Query> possibleQueries;
+    private UserClickModel userClickModel;
+    private QueryReportManager queryReportManager;
+    private BudgetManager budgetManager;
 
     public DefaultPublisher() {
+
     }
 
     public void nextTimeUnit(int date) {
         //Auctions should be updated here.
-        if(bidManager!=null) {
+        if (bidManager != null) {
             bidManager.nextTimeUnit(date);
         }
 
-        if(date != 0){
-          //Update auctions, send AuctionUpdatedEvent
-          log.finest("Running Auction");
-          Iterator it = possibleQueries.iterator();
-          Query query = (Query) it.next(); 
-          Auction a = runAuction(query);
-          log.finest("Auction Complete: "+a.getRanking().toString());
+        if (date != 0) {
+            //Update auctions, send AuctionUpdatedEvent
+            //log.finest("Running Auction");
+            //Iterator it = possibleQueries.iterator();
+            //Query query = (Query) it.next();
+            //Auction a = runAuction(query);
+            //log.finest("Auction Complete: " + a.getRanking().toString());
         }
     }
 
@@ -57,37 +56,71 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
         this.log = Logger.getLogger(DefaultPublisher.class.getName());
 
         bidManager = createBidManager();
+        budgetManager = createBudgetManager();
         auctionFactory = createAuctionFactory();
-        
-        if(auctionFactory!=null) {
+        queryReportManager = createQueryReportManager();
+
+        if (auctionFactory != null) {
             auctionFactory.setBidManager(bidManager);
         }
 
-       addTimeListener(this);
+
+        addTimeListener(this);
+
+        for(SimulationAgent agent : getSimulation().getUsers()) {
+            Users users = (Users)agent.getAgent();
+            users.addUserEventListener(new ClickMonitor());
+        }
+    }
+
+    private BudgetManager createBudgetManager() {
+        BudgetManager budgetManager = new BudgetManager(0);
+
+        for (String advertiser : getAdvertiserAddresses()) {
+            budgetManager.addAdvertiser(advertiser);
+        }
+
+
+        return budgetManager;
+    }
+
+    private QueryReportManager createQueryReportManager() {
+        QueryReportManager queryReportManager = new QueryReportManager(this,0);
+
+        for (String advertiser : getAdvertiserAddresses()) {
+            queryReportManager.addAdvertiser(advertiser);
+        }
+
+        for(SimulationAgent agent : getSimulation().getUsers()) {
+            Users users = (Users)agent.getAgent();
+            users.addUserEventListener(queryReportManager);
+        }
+
+        return queryReportManager;
     }
 
     private BidManager createBidManager() {
-        BidManager bidManager = new BidManagerImpl();
+        BidManager bidManager = new BidManagerImpl(userClickModel);
         //TODO: initialize the bid manager
 
         //All advertisers should be known to the bidManager
         String[] advertisers = getAdvertiserAddresses();
-        for(int i = 0, n = advertisers.length; i < n; i++){
-          bidManager.addAdvertiser(advertisers[i]);
+        for (int i = 0, n = advertisers.length; i < n; i++) {
+            bidManager.addAdvertiser(advertisers[i]);
         }
 
         return bidManager;
     }
 
     private AuctionFactory createAuctionFactory() {
-        String auctionFactoryClass = getProperty("auctionfactory.class","edu.umich.eecs.tac.auction.LahaiePennockAuctionFactory");
-        int slotLimit = getPropertyAsInt("auctionfactory.slotLimit",5);
-        double squashValue = getPropertyAsDouble("auctionfactory.squashing",1.0);
+        String auctionFactoryClass = getProperty("auctionfactory.class", "edu.umich.eecs.tac.auction.LahaiePennockAuctionFactory");
+        int slotLimit = getPropertyAsInt("auctionfactory.slotLimit", 5);
+        double squashValue = getPropertyAsDouble("auctionfactory.squashing", 1.0);
 
         AuctionFactory factory = null;
 
         try {
-            factory = (AuctionFactory)Class.forName(auctionFactoryClass).newInstance();
+            factory = (AuctionFactory) Class.forName(auctionFactoryClass).newInstance();
             factory.setSlotLimit(slotLimit);
             factory.setSquashValue(squashValue);
         } catch (InstantiationException e) {
@@ -103,7 +136,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     }
 
     protected void stopped() {
-      removeTimeListener(this);
+        removeTimeListener(this);
     }
 
     protected void shutdown() {
@@ -117,52 +150,55 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
         String sender = message.getSender();
         Transportable content = message.getContent();
 
-        if(content instanceof BidBundle) {
-            handleBidBundle(sender, (BidBundle)content);
+        if (content instanceof BidBundle) {
+            handleBidBundle(sender, (BidBundle) content);
+        } else if (content instanceof UserClickModel) {
+            handleUserClickModel((UserClickModel) content);
         } else if (content instanceof RetailCatalog) {
             handleRetailCatalog((RetailCatalog) content);
-        } 
+        }
+    }
+
+    private void handleUserClickModel(UserClickModel userClickModel) {
+        this.userClickModel = userClickModel;
     }
 
     private void handleBidBundle(String advertiser, BidBundle bidBundle) {
-        if(bidManager==null) {
-          // Not yet initialized => ignore the RFQ
-          log.warning("Received BidBundle from " + advertiser + " before initialization");
+        if (bidManager == null) {
+            // Not yet initialized => ignore the RFQ
+            log.warning("Received BidBundle from " + advertiser + " before initialization");
         } else {
-          bidManager.updateBids(advertiser, bidBundle);
+            bidManager.updateBids(advertiser, bidBundle);
+
+            int advertiserIndex = getSimulation().agentIndex(advertiser);
+            EventWriter writer = getEventWriter();
+            writer.dataUpdated(advertiserIndex,TACAAConstants.DU_BIDS,bidBundle);
         }
     }
 
-    private void handleRetailCatalog(RetailCatalog retailCatalog){
-      this.retailCatalog = retailCatalog;
-      generatePossibleQueries();
-      bidManager.initializeQuerySpace(possibleQueries);
+    private void handleRetailCatalog(RetailCatalog retailCatalog) {
+        this.retailCatalog = retailCatalog;
+        generatePossibleQueries();
+        bidManager.initializeQuerySpace(possibleQueries);
     }
 
-    private void generatePossibleQueries(){
-      if(retailCatalog != null && possibleQueries == null){
-        int cSize = retailCatalog.getComponents().size();
-        int mSize = retailCatalog.getManufacturers().size();
-        possibleQueries = new HashSet<Query>();
-        String[] mans = retailCatalog.getManufacturers().toArray(new String[mSize]);
-        String[] comps = retailCatalog.getComponents().toArray(new String[cSize]);
+    private void generatePossibleQueries() {
+        if (retailCatalog != null && possibleQueries == null) {
+            possibleQueries = new HashSet<Query>();
 
-        possibleQueries.add(new Query(null, null));
-        for(int i = 0; i < mSize; i++){
-          possibleQueries.add(new Query(mans[i], null));
+            for (Product product : retailCatalog) {
+                Query f0 = new Query();
+                Query f1_manufacturer = new Query(product.getManufacturer(), null);
+                Query f1_component = new Query(null, product.getComponent());
+                Query f2 = new Query(product.getManufacturer(), product.getComponent());
+
+                possibleQueries.add(f0);
+                possibleQueries.add(f1_manufacturer);
+                possibleQueries.add(f1_component);
+                possibleQueries.add(f2);
+            }
+
         }
-
-        for(int i = 0; i < cSize; i++){
-          possibleQueries.add(new Query(null, comps[i]));
-        }
-
-        for(int i = 0; i < mSize; i++){
-          for(int j = 0; j < cSize; j++){
-            possibleQueries.add(new Query(mans[i], comps[j]));
-          }
-        }
-
-      }
     }
 
     protected String getAgentName(String agentAddress) {
@@ -178,15 +214,52 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     }
 
     public void sendQueryReportsToAll() {
-      //TODO: Generate Query Reports
+        if(queryReportManager!=null)
+            queryReportManager.sendQueryReportToAll();
     }
 
     public Auction runAuction(Query query) {
         //TODO: Check against possible queries
-        if(auctionFactory!=null) {
+        if (auctionFactory != null) {
             return auctionFactory.runAuction(query);
         }
 
         return null;
+    }
+
+    protected class ClickMonitor implements UserEventListener {
+
+        public void queryIssued(Query query) {
+        }
+
+        public void viewed(Query query, Ad ad, int slot, String advertiser) {
+        }
+
+        public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
+            DefaultPublisher.this.charge(advertiser,cpc);
+        }
+
+        public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {
+        }
+    }
+
+
+    public void sendQueryReport(String advertiser, QueryReport report) {
+        super.sendQueryReport(advertiser, report);
+
+        int index = getSimulation().agentIndex(advertiser);
+
+        int impressions = 0;
+        int clicks = 0;
+
+        for(int i = 0; i < report.size(); i++) {
+            impressions += report.getImpressions(i);
+            clicks += report.getClicks(i);
+        }
+
+        EventWriter writer = getEventWriter();
+        writer.dataUpdated(index,DU_IMPRESSIONS, impressions);
+        writer.dataUpdated(index,DU_CLICKS, clicks);
+
     }
 }

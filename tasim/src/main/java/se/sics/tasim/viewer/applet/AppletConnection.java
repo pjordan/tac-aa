@@ -210,6 +210,11 @@ public class AppletConnection implements Runnable {
 			     reader.getAttributeAsInt("type", 0),
 			     reader.getAttributeAsFloat("value"));
 
+	} else if (reader.isNode("doubleUpdated")) {
+	  viewer.dataUpdated(reader.getAttributeAsInt("agent"),
+			     reader.getAttributeAsInt("type", 0),
+			     reader.getAttributeAsDouble("value"));
+
 	} else if (reader.isNode("stringUpdated")) {
 	  viewer.dataUpdated(reader.getAttributeAsInt("agent"),
 			     reader.getAttributeAsInt("type", 0),

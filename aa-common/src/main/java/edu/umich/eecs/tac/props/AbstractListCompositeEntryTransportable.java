@@ -35,7 +35,8 @@ public abstract class AbstractListCompositeEntryTransportable<T extends Manufact
         return builder.toString();
     }
 
-    protected final int findEntry(T key) {
+
+    public final int indexForEntry(T key) {
         for (int i = 0; i < entries.size(); i++) {
             if (entries.get(i).getKey().equals(key))
                 return i;
@@ -60,7 +61,7 @@ public abstract class AbstractListCompositeEntryTransportable<T extends Manufact
     }
 
     public final boolean containsKey(T key) {
-        return findEntry(key)>-1;
+        return indexForEntry(key)>-1;
     }
 
     protected final S getEntry(int index) {

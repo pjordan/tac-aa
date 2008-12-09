@@ -34,9 +34,6 @@ public abstract class Users extends Builtin {
         }
     }
 
-    
-    public abstract void sendSalesReportsToAll();
-
     public abstract void broadcastUserDistribution();
     
 
@@ -51,4 +48,8 @@ public abstract class Users extends Builtin {
     public abstract boolean containsUserEventListener(UserEventListener listener);
 
     public abstract boolean removeUserEventListener(UserEventListener listener);
+
+    protected void transact(String advertiser, double amount) {
+        getSimulation().transaction(getAddress(), advertiser, amount);
+    }
 }

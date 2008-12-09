@@ -18,7 +18,29 @@ public class AdvertiserInfo extends AbstractTransportable {
     private int distributionCapacity;
     private String advertiserId;
     private int distributionWindow;
+    private double targetEffect;
+    private double[] focusEffects;
 
+
+    public AdvertiserInfo() {
+        focusEffects = new double[QueryType.values().length];
+    }
+
+    public double getFocusEffects(QueryType queryType) {
+        return focusEffects[queryType.ordinal()];
+    }
+
+    public void setFocusEffects(QueryType queryType, double focusEffect) {
+        this.focusEffects[queryType.ordinal()] = focusEffect;
+    }
+
+    public double getTargetEffect() {
+        return targetEffect;
+    }
+
+    public void setTargetEffect(double targetEffect) {
+        this.targetEffect = targetEffect;
+    }
 
     public int getDistributionWindow() {
         return distributionWindow;
@@ -101,7 +123,11 @@ public class AdvertiserInfo extends AbstractTransportable {
         publisherId = reader.getAttribute("publisherId");
         distributionCapacity = reader.getAttributeAsInt("distributionCapacity");
         advertiserId = reader.getAttribute("advertiserId");
-        distributionWindow = reader.getAttributeAsInt("distributionWindow"); 
+        distributionWindow = reader.getAttributeAsInt("distributionWindow");
+        targetEffect = reader.getAttributeAsDouble("targetEffect", 0.0);
+        for(QueryType type : QueryType.values()) {
+            focusEffects[type.ordinal()] = reader.getAttributeAsDouble(String.format("focusEffect[%s]",type.name()), 1.0);
+        }
     }
 
     protected void writeWithLock(TransportWriter writer) {
@@ -114,5 +140,10 @@ public class AdvertiserInfo extends AbstractTransportable {
         writer.attr("distributionCapacity", distributionCapacity);
         writer.attr("advertiserId", advertiserId);
         writer.attr("distributionWindow", distributionWindow);
+        writer.attr("targetEffect", targetEffect);
+
+        for(QueryType type : QueryType.values()) {
+            writer.attr(String.format("focusEffect[%s]",type.name()),focusEffects[type.ordinal()]);
+        }
     }
 }

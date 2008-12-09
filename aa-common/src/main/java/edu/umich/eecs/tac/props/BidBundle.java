@@ -1,13 +1,9 @@
 package edu.umich.eecs.tac.props;
 
-import java.io.Serializable;
 import java.text.ParseException;
-import java.util.LinkedList;
-import java.util.List;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
-import se.sics.isl.transport.Transportable;
 
 /**
  * @author Ben Cassell, Patrick Jordan, Lee Callender
@@ -40,7 +36,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     public void setBid(Query query, double bid) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             index = addQuery(query);
@@ -57,7 +53,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     public void setAd(Query query, Ad ad) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             index = addQuery(query);
@@ -74,7 +70,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     public void setConversionsAndRevenue(Query query, double bid, Ad ad) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             index = addQuery(query);
@@ -92,7 +88,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     }
 
     public double getBid(Query query) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         //return index < 0 ? Double.NaN : getBid(index);
         return index < 0 ? 0.0 : getBid(index);
@@ -103,7 +99,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     }
 
     public Ad getAd(Query query) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         return index < 0 ? null : getAd(index);
     }

@@ -63,6 +63,13 @@ public interface TACAAConstants {
   /** The number of transacted users */
   public final static int DU_TRANSACTED = 205;
 
+  /** The bid of an advertiser */
+  public final static int DU_BIDS= 300;
+
+  public final static int DU_IMPRESSIONS= 301;
+  public final static int DU_CLICKS= 302;
+  public final static int DU_CONVERSIONS= 303;
+
   // --------------------------------------------------------------------
   // TAC AA Participant roles
   // --------------------------------------------------------------------

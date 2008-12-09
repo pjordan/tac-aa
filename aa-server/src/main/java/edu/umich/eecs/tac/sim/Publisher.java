@@ -6,6 +6,7 @@ package edu.umich.eecs.tac.sim;
 
 import edu.umich.eecs.tac.props.Auction;
 import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.props.QueryReport;
 import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
@@ -29,9 +30,15 @@ public abstract class Publisher extends Builtin {
 
     // DEBUG FINALIZE REMOVE THIS!!! REMOVE THIS!!!
     protected void finalize() throws Throwable {
-        Logger.global.info("CUSTOMER " + getName() + " IS BEING GARBAGED");
+        Logger.global.info("PUBLISHER " + getName() + " IS BEING GARBAGED");
         super.finalize();
     }
 
+    protected void charge(String advertiser, double amount) {
+        getSimulation().transaction(advertiser, getAddress(), amount);
+    }
 
+    public void sendQueryReport(String advertiser, QueryReport report) {
+        sendMessage(advertiser,report);
+    }
 }

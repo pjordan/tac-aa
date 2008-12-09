@@ -71,7 +71,13 @@ public class BuiltinGUIWriter extends ViewerConnection
     viewer.dataUpdated(agent, type, value);
     writer.dataUpdated(agent, type, value);
   }
-  
+
+  public void dataUpdated(int agent, int type, double value)
+  {
+    viewer.dataUpdated(agent, type, value);
+    writer.dataUpdated(agent, type, value);
+  }
+
   public void dataUpdated(int agent, int type, String value)
   {
     viewer.dataUpdated(agent, type, value);

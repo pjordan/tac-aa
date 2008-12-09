@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 /**
  * @author Patrick Jordan
  */
-public abstract class TACAAAgentView extends JComponent {
+public abstract class TACAAAgentView extends JComponent implements ViewListener {
     private static final Logger log = Logger.getLogger(TACAAAgentView.class.getName());
 
 
@@ -32,17 +32,6 @@ public abstract class TACAAAgentView extends JComponent {
     }
 
     protected abstract void initializeView();
-
-    public abstract void dataUpdated(int type, int value);
-
-    public abstract void dataUpdated(int type, long value);
-
-    public abstract void dataUpdated(int type, float value);
-
-    public abstract void dataUpdated(int type, String value);
-
-    public abstract void dataUpdated(int type, Transportable value);
-
 
     final void init(TACAASimulationPanel parent, int index, String name, int role, String roleName) {
         if (this.name != null) {

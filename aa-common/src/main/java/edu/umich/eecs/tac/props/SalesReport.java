@@ -37,7 +37,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
     public void addConversions(Query query, int conversions) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if(index < 0) {
             setConversions(query,conversions);
@@ -52,7 +52,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
     public void addRevenue(Query query, double revenue) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if(index < 0) {
             setRevenue(query,revenue);
@@ -69,7 +69,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     public void setConversions(Query query, int conversions) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             addQuery(query,conversions,0.0);
@@ -86,7 +86,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     public void setRevenue(Query query, double revenue) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             addQuery(query,0,revenue);
@@ -103,7 +103,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     public void setConversionsAndRevenue(Query query, int conversions, double revenue) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             addQuery(query,conversions,revenue);
@@ -120,7 +120,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
     public int getConversions(Query query) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         return index < 0 ? 0 : getConversions(index);
     }
@@ -130,7 +130,7 @@ public class SalesReport extends AbstractReportTransportable<SalesReport.SalesRe
     }
 
     public double getRevenue(Query query) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
         
         return index < 0 ? 0.0 : getRevenue(index);
     }

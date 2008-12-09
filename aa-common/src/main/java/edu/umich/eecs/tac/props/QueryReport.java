@@ -40,7 +40,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     public void setPosition(Query query, double position) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             index = addQuery(query);
@@ -58,7 +58,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     public void setCPC(Query query, double cpc) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             index = addQuery(query);
@@ -76,7 +76,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     public void setImpressions(Query query, int impressions) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             index = addQuery(query);
@@ -89,7 +89,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     public void addImpressions(Query query, int impressions) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             setImpressions(query,impressions);
@@ -113,7 +113,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     public void setClicks(Query query, int clicks) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             index = addQuery(query);
@@ -131,7 +131,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     public void addClicks(Query query, int clicks) {
         lockCheck();
 
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         if (index < 0) {
             setClicks(query,clicks);
@@ -146,7 +146,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     }
 
     public double getPosition(Query query) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         return index < 0 ? 0.0 : getPosition(index);
     }
@@ -156,7 +156,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     }
 
     public double getCPC(Query query) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         return index < 0 ? 0.0 : getCPC(index);
     }
@@ -166,7 +166,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     }
 
     public int getImpressions(Query query) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         return index < 0 ? 0 : getImpressions(index);
     }
@@ -176,7 +176,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     }
 
     public int getClicks(Query query) {
-        int index = findEntry(query);
+        int index = indexForEntry(query);
 
         return index < 0 ? 0 : getClicks(index);
     }
