@@ -1,7 +1,7 @@
 package edu.umich.eecs.tac.util.sampling;
 
 /**
- * SynchronizedSampler provides synchronization support to a MutableSampler.
+ * SynchronizedSampler provides synchronization support to a {@link MutableSampler}.
  *
  * @author Patrick Jordan
  */
