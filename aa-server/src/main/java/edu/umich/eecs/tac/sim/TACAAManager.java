@@ -1,11 +1,8 @@
 package edu.umich.eecs.tac.sim;
 
 /**
- * Created by IntelliJ IDEA.
- * User: leecallender
- * Date: Sep 26, 2008
- * Time: 6:09:12 PM
- * To change this template use File | Settings | File Templates.
+ * @author Lee Callender
+ * 
  */
 
 import java.util.Hashtable;
