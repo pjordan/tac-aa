@@ -44,13 +44,13 @@ public abstract class AbstractListCompositeEntryTransportable<T extends Manufact
         return -1;
     }
 
-    protected final void readWithLock(TransportReader reader) throws ParseException {
+    protected void readWithLock(TransportReader reader) throws ParseException {
         while (reader.nextNode(entryClass().getSimpleName(), false)) {
             addEntry((S) reader.readTransportable());
         }
     }
 
-    protected final void writeWithLock(TransportWriter writer) {
+    protected void writeWithLock(TransportWriter writer) {
         for (S reportEntry : entries) {
             writer.write(reportEntry);
         }

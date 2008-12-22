@@ -5,20 +5,14 @@ import se.sics.isl.transport.TransportWriter;
 
 import java.text.ParseException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: leecallender
- * Date: Dec 2, 2008
- * Time: 1:33:46 PM
- * To change this template use File | Settings | File Templates.
- */
+
 
 /**
+ * This class represents an ad link. It contains the Product of the {@link Ad} as well as a string for the
+ * advertiser's address.
+ * 
  * @author Lee Callender
  */
-
-//This class represents an ad link. It contains the Product of the Ad
-//as well as a string for the advertiser's address.
 public class AdLink extends Ad{
     protected String advertiser;
 

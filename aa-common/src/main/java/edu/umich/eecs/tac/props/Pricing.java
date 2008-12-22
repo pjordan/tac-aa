@@ -20,8 +20,12 @@ public class Pricing extends AbstractTransportable {
         prices = new HashMap<AdLink,Double>();
     }
 
-    public void setPrice(AdLink ad, double price) {
+    public void setPrice(AdLink ad, double price) throws NullPointerException {
         lockCheck();
+
+        if(ad==null)
+            throw new NullPointerException("ad cannot be null");
+        
         prices.put(ad,price);
     }
 
