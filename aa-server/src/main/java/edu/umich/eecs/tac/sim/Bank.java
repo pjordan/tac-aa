@@ -1,7 +1,7 @@
 package edu.umich.eecs.tac.sim;
 
 /**
- * @author Lee Callender
+ * @author Lee Callender, Ben Cassell
  */
 
 import java.util.logging.Logger;
@@ -21,7 +21,6 @@ public class Bank {
 
     public Bank(TACAASimulation simulation, int accountNumber) {
         this.simulation = simulation;
-
         accountNames = new String[accountNumber];
         accountAmounts = new double[accountNumber];
         bankStatus = new BankStatus[accountNumber];
