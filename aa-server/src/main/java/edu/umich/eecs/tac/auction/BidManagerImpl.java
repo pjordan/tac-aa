@@ -46,7 +46,7 @@ public class BidManagerImpl implements BidManager {
         }
 
         //Every QueryEntry should be set to default values
-        QueryEntry qe = new QueryEntry(0.0, 1.0, new AdLink(null, advertiser));
+        QueryEntry qe = new QueryEntry(0.0, Double.POSITIVE_INFINITY, 1.0, new AdLink(null, advertiser));
         advertiserBidInfo.get(advertiser).put(query, qe);
 
         return qe;

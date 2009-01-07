@@ -39,7 +39,7 @@ public class BankTest {
 	public void testDeposit() {
 		bank.deposit("Maverick Enterprises", 23000000);
 		assertTrue(bank.getAccountStatus("Maverick Enterprises") == 23000000);
-		bank.deposit("Maverick Enterprises", -20000000);
+		bank.withdraw("Maverick Enterprises", 20000000);
 		assertTrue(bank.getAccountStatus("Maverick Enterprises") == 3000000);
 		bank.addAccount("Change Unlimited");
 		bank.deposit("Change Unlimited", 00.01);
