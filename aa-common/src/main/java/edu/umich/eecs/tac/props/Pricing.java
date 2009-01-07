@@ -42,7 +42,6 @@ public class Pricing extends AbstractTransportable {
         return prices.keySet();
     }
 
-
     protected void readWithLock(TransportReader reader) throws ParseException {
         prices.clear();
         while(reader.nextNode("PriceEntry", false)) {

@@ -12,10 +12,9 @@ import se.sics.tasim.aw.Message;
  * @author Patrick Jordan, Lee Callender
  */
 public class BidManagerImpl implements BidManager {
-
     //TODO: Discuss 'security' issues, test, add quality score update
     //TODO: getBid, getQualityScore, etc. should remain constant throughout the day.
-    private Map<String, Map<Query, QueryEntry>> entryMap;
+    private Map<String, Map<Query, QueryEntry>> advertiserBidInfo;
     private Logger log = Logger.getLogger(BidManagerImpl.class.getName());
     private Set<Query> possibleQueries;
     private List<Message> bidBundleList;
@@ -23,7 +22,7 @@ public class BidManagerImpl implements BidManager {
 
     public BidManagerImpl(UserClickModel userClickModel) {
         this.userClickModel = userClickModel;
-        entryMap = new HashMap<String, Map<Query, QueryEntry>>();
+        advertiserBidInfo = new HashMap<String, Map<Query, QueryEntry>>();
         bidBundleList = new ArrayList<Message>();
     }
 
@@ -38,29 +37,29 @@ public class BidManagerImpl implements BidManager {
     }
 
     public QueryEntry addQuery(String advertiser, Query query) {
-        if (!entryMap.containsKey(advertiser)) {
+        if (!advertiserBidInfo.containsKey(advertiser)) {
             return null;
         }
 
-        if (entryMap.get(advertiser).containsKey(query)) {
+        if (advertiserBidInfo.get(advertiser).containsKey(query)) {
             return null;
         }
 
         //Every QueryEntry should be set to default values
         QueryEntry qe = new QueryEntry(0.0, 1.0, new AdLink(null, advertiser));
-        entryMap.get(advertiser).put(query, qe);
+        advertiserBidInfo.get(advertiser).put(query, qe);
 
         return qe;
     }
 
     public double getBid(String advertiser, Query query) {
-        if (!entryMap.containsKey(advertiser))
+        if (!advertiserBidInfo.containsKey(advertiser))
             return 0.0;  //Double.NaN?
-        if (!entryMap.get(advertiser).containsKey(query))
+        if (!advertiserBidInfo.get(advertiser).containsKey(query))
             return 0.0;
 
 
-        return entryMap.get(advertiser).get(query).getBid();
+        return advertiserBidInfo.get(advertiser).get(query).getBid();
     }
 
     public double getQualityScore(String advertiser, Query query) {
@@ -77,17 +76,17 @@ public class BidManagerImpl implements BidManager {
     }
 
     public AdLink getAdLink(String advertiser, Query query) {
-        if (!entryMap.containsKey(advertiser)) {
+        if (!advertiserBidInfo.containsKey(advertiser)) {
             AdLink generic = new AdLink(null, advertiser);
             return generic;
         }
 
-        if (!entryMap.get(advertiser).containsKey(query)) {
+        if (!advertiserBidInfo.get(advertiser).containsKey(query)) {
             AdLink generic = new AdLink(null, advertiser);
             return generic;
         }
 
-        AdLink ad = entryMap.get(advertiser).get(query).getAdLink();
+        AdLink ad = advertiserBidInfo.get(advertiser).get(query).getAdLink();
         if (ad == null) {
             ad = new AdLink(null, advertiser);
         }
@@ -108,11 +107,11 @@ public class BidManagerImpl implements BidManager {
             return;
         }
 
-        if (!entryMap.containsKey(advertiser)) {
+        if (!advertiserBidInfo.containsKey(advertiser)) {
             addAdvertiser(advertiser);
         }
 
-        Map<Query, QueryEntry> bids = entryMap.get(advertiser);
+        Map<Query, QueryEntry> bids = advertiserBidInfo.get(advertiser);
         for (Iterator<Query> it = bundle.iterator(); it.hasNext();) {
             Query query = it.next();
 
@@ -139,11 +138,16 @@ public class BidManagerImpl implements BidManager {
                 bids.get(query).setAdLink(adLink);
             }
 
+            //Update dailyLimit for query only if query was specified in BidBundle
+            double dailyLimit = bundle.getDailyLimit(query);
+            if (true) {//TODO: what's the domain of DailyLimit?
+                bids.get(query).setDailyLimit(dailyLimit);      
+            }
         }
     }
 
     public Set<String> advertisers() {
-        return entryMap.keySet();
+        return advertiserBidInfo.keySet();
     }
 
     public void nextTimeUnit(int timeUnit) {
@@ -157,29 +161,39 @@ public class BidManagerImpl implements BidManager {
     }
 
     public void addAdvertiser(String advertiser) {
-        if (!entryMap.containsKey(advertiser)) {
-            entryMap.put(advertiser, new HashMap<Query, QueryEntry>());
+        if (!advertiserBidInfo.containsKey(advertiser)) {
+            advertiserBidInfo.put(advertiser, new HashMap<Query, QueryEntry>());
         }
-
     }
 
     private static class QueryEntry {
         //TODO: track the attributes for each query
         private double bid;
+        private double dailyLimit;
         private double qualityScore;
         private AdLink ad;
 
         public QueryEntry() {
-            bid = 0.0;
+            bid = 0.0;      //Breaks auction if Double.NaN?
+            dailyLimit = Double.POSITIVE_INFINITY;
             qualityScore = 1.0;
         }
 
-        public QueryEntry(double bid, double qualityScore, AdLink ad) {
+        public QueryEntry(double bid, double dailyLimit, double qualityScore, AdLink ad) {
             setBid(bid);
+            setDailyLimit(dailyLimit);
             setQualityScore(qualityScore);
             setAdLink(ad);
         }
 
+        public double getDailyLimit() {
+			    return dailyLimit;
+		    }
+
+		    public void setDailyLimit(double dailyLimit) {
+			    this.dailyLimit = dailyLimit;
+	    	}
+      
         public AdLink getAdLink() {
             return ad;
         }

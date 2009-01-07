@@ -14,7 +14,6 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
 
     private double campaignDailySpendLimit;
 
-
     public BidBundle() {
         campaignDailySpendLimit = Double.POSITIVE_INFINITY;
     }
@@ -71,6 +70,23 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         getEntry(index).setAd(ad);
     }
 
+    public void setDailyLimit(Query query, double dailyLimit){
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            index = addQuery(query);
+        }
+
+        setDailyLimit(index, dailyLimit);
+    }
+
+    public void setDailyLimit(int index, double dailyLimit){
+        lockCheck();
+        getEntry(index).setDailyLimit(dailyLimit);
+    }
+
     public void setBidAndAd(Query query, double bid, Ad ad) {
         lockCheck();
 
@@ -111,6 +127,15 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         return getEntry(index).getAd();
     }
 
+    public double getDailyLimit(Query query){
+        int index = indexForEntry(query);
+
+        return index < 0 ? Double.POSITIVE_INFINITY : getDailyLimit(index);
+    }
+
+    public double getDailyLimit(int index){
+        return getEntry(index).getDailyLimit();
+    }
 
     public double getCampaignDailySpendLimit() {
         return campaignDailySpendLimit;
@@ -130,11 +155,11 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     }
 
     protected void writeWithLock(TransportWriter writer) {
-        // Write the entries
-        super.writeWithLock(writer);
-
         // Write the campaign daily spend limit
         writer.attr("campaignDailySpendLimit", campaignDailySpendLimit);
+
+        // Write the entries
+        super.writeWithLock(writer); 
     }
 
     public static class BidEntry extends AbstractQueryEntry {
@@ -178,11 +203,11 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
                 writer.write(ad);
         }
 
-		public double getDailyLimit() {
-			return dailyLimit;
-		}
+		    public double getDailyLimit() {
+			    return dailyLimit;
+		    }
 
-		public void setDailyLimit(double dailyLimit) {
+		    public void setDailyLimit(double dailyLimit) {
 			this.dailyLimit = dailyLimit;
 		}
     }
