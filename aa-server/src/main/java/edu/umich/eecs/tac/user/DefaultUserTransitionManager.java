@@ -74,4 +74,8 @@ public class DefaultUserTransitionManager implements UserTransitionManager {
     private void updateBurst() {
         burst = random.nextDouble() < burstProbability;
     }
+
+    public boolean isBurst() {
+        return burst;
+    }
 }

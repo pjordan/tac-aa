@@ -8,9 +8,9 @@ import java.util.Random;
 public enum QueryState {
     NON_SEARCHING(false,false),
     INFORMATIONAL_SEARCH(true,false),
-    FOCUS_LEVEL_ZERO(true,false),
-    FOCUS_LEVEL_ONE(true,false),
-    FOCUS_LEVEL_TWO(true,false), 
+    FOCUS_LEVEL_ZERO(true,true),
+    FOCUS_LEVEL_ONE(true,true),
+    FOCUS_LEVEL_TWO(true,true), 
     TRANSACTED(false,false);
 
     private boolean searching;
