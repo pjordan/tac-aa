@@ -16,7 +16,6 @@ public class BankStatusTest {
 
     @Test
     public void testIsLocked() {
-        System.out.println("isLocked");
         BankStatus instance = new BankStatus();
         boolean expResult = false;
         boolean result = instance.isLocked();
@@ -25,7 +24,6 @@ public class BankStatusTest {
 
     @Test
     public void testLock() {
-        System.out.println("lock");
         BankStatus instance = new BankStatus();
         instance.lock();
         boolean expResult = true;
@@ -35,7 +33,6 @@ public class BankStatusTest {
 
     @Test
     public void testAccountBalance() {
-        System.out.println("AccountBalance");
         BankStatus instance = new BankStatus();
         double expResult = 0.0;
         double result = instance.getAccountBalance();
@@ -54,22 +51,20 @@ public class BankStatusTest {
 
     @Test
     public void testToString() {
-        System.out.println("toString");
         BankStatus instance = new BankStatus();
-        String expResult = "bankstatus[0.0]";
+        String expResult = "BankStatus[0.0]";
         String result = instance.toString();
         assertEquals(expResult, result);
 
         double b = 10.5;
         instance.setAccountBalance(b);
-        expResult = "bankstatus[10.5]";
+        expResult = "BankStatus[10.5]";
         result = instance.toString();
         assertEquals(expResult, result);
     }
 
     @Test
     public void testValidTransport() throws ParseException {
-        System.out.println("testValidTransport");
         BinaryTransportWriter writer = new BinaryTransportWriter();
         BinaryTransportReader reader = new BinaryTransportReader();
         reader.setContext(new AAInfo().createContext());
@@ -97,7 +92,6 @@ public class BankStatusTest {
 
     @Test
     public void testEmptyTransport() throws ParseException {
-        System.out.println("testEmptyTransport");
         BinaryTransportWriter writer = new BinaryTransportWriter();
         BinaryTransportReader reader = new BinaryTransportReader();
         reader.setContext(new AAInfo().createContext());

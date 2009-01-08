@@ -8,14 +8,16 @@ import se.sics.isl.transport.TransportWriter;
 /**
  * @author Ben Cassell, Patrick Jordan, Lee Callender
  */
-public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
+public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry> {
+    private static final double DEFAULT_SPEND_LIMIT = Double.NaN;
+    private static final double DEFAULT_BID = Double.NaN;
 
     private static final long serialVersionUID = 5057969669832603679L;
 
     private double campaignDailySpendLimit;
 
     public BidBundle() {
-        campaignDailySpendLimit = Double.POSITIVE_INFINITY;
+        campaignDailySpendLimit = DEFAULT_SPEND_LIMIT;
     }
 
     protected BidEntry createEntry(Query key) {
@@ -27,7 +29,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     protected Class entryClass() {
         return BidEntry.class;
     }
-    
+
     public void addQuery(Query query, double bid, Ad ad) {
         int index = addQuery(query);
         BidEntry entry = getEntry(index);
@@ -70,7 +72,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         getEntry(index).setAd(ad);
     }
 
-    public void setDailyLimit(Query query, double dailyLimit){
+    public void setDailyLimit(Query query, double dailyLimit) {
         lockCheck();
 
         int index = indexForEntry(query);
@@ -82,7 +84,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         setDailyLimit(index, dailyLimit);
     }
 
-    public void setDailyLimit(int index, double dailyLimit){
+    public void setDailyLimit(int index, double dailyLimit) {
         lockCheck();
         getEntry(index).setDailyLimit(dailyLimit);
     }
@@ -97,7 +99,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         }
 
         setBidAndAd(index, bid, ad);
-        
+
     }
 
     public void setBidAndAd(int index, double bid, Ad ad) {
@@ -110,7 +112,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
     public double getBid(Query query) {
         int index = indexForEntry(query);
 
-        return index < 0 ? Double.NaN : getBid(index);        
+        return index < 0 ? DEFAULT_BID : getBid(index);
     }
 
     public double getBid(int index) {
@@ -127,13 +129,13 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         return getEntry(index).getAd();
     }
 
-    public double getDailyLimit(Query query){
+    public double getDailyLimit(Query query) {
         int index = indexForEntry(query);
 
-        return index < 0 ? Double.POSITIVE_INFINITY : getDailyLimit(index);
+        return index < 0 ? DEFAULT_SPEND_LIMIT : getDailyLimit(index);
     }
 
-    public double getDailyLimit(int index){
+    public double getDailyLimit(int index) {
         return getEntry(index).getDailyLimit();
     }
 
@@ -151,7 +153,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         super.readWithLock(reader);
 
         // Read the campaign daily spend limit
-        this.campaignDailySpendLimit = reader.getAttributeAsDouble("campaignDailySpendLimit", Double.POSITIVE_INFINITY);
+        this.campaignDailySpendLimit = reader.getAttributeAsDouble("campaignDailySpendLimit", DEFAULT_SPEND_LIMIT);
     }
 
     protected void writeWithLock(TransportWriter writer) {
@@ -159,7 +161,7 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         writer.attr("campaignDailySpendLimit", campaignDailySpendLimit);
 
         // Write the entries
-        super.writeWithLock(writer); 
+        super.writeWithLock(writer);
     }
 
     public static class BidEntry extends AbstractQueryEntry {
@@ -168,8 +170,8 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         private double dailyLimit;
 
         public BidEntry() {
-            this.bid = Double.NaN;            
-            this.dailyLimit = Double.POSITIVE_INFINITY;
+            this.bid = DEFAULT_BID;
+            this.dailyLimit = DEFAULT_SPEND_LIMIT;
         }
 
         public Ad getAd() {
@@ -189,8 +191,8 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
         }
 
         protected void readEntry(TransportReader reader) throws ParseException {
-            this.bid = reader.getAttributeAsDouble("bid", Double.NaN);
-            this.dailyLimit = reader.getAttributeAsDouble("dailyLimit", Double.POSITIVE_INFINITY);
+            this.bid = reader.getAttributeAsDouble("bid", DEFAULT_BID);
+            this.dailyLimit = reader.getAttributeAsDouble("dailyLimit", DEFAULT_SPEND_LIMIT);
             if (reader.nextNode("Ad", false)) {
                 this.ad = (Ad) reader.readTransportable();
             }
@@ -203,13 +205,13 @@ public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry>{
                 writer.write(ad);
         }
 
-		    public double getDailyLimit() {
-			    return dailyLimit;
-		    }
+        public double getDailyLimit() {
+            return dailyLimit;
+        }
 
-		    public void setDailyLimit(double dailyLimit) {
-			this.dailyLimit = dailyLimit;
-		}
+        public void setDailyLimit(double dailyLimit) {
+            this.dailyLimit = dailyLimit;
+        }
     }
 
 }
