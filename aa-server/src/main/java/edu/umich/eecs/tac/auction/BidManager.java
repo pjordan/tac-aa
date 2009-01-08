@@ -12,11 +12,20 @@ import java.util.Set;
  * @author Patrick Jordan
  */
 public interface BidManager extends TimeListener {
+    /**
+     * Add the advertiser
+     *
+     * @param advertiser the advertiser
+     */
     void addAdvertiser(String advertiser);
-    void initializeQuerySpace(Set<Query> space);
+
     double getBid(String advertiser, Query query);
+
     double getQualityScore(String advertiser, Query query);
+
     AdLink getAdLink(String advertiser, Query query);
+
     void updateBids(String advertiser, BidBundle bundle);
+
     Set<String> advertisers();
 }

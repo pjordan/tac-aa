@@ -9,22 +9,20 @@ import com.botbox.util.ArrayUtils;
 /**
  * @author Patrick Jordan
  */
-public class BudgetManagerImpl implements BudgetManager {
+public class SpendTrackerImpl implements SpendTracker {
     private String[] advertisers;
     private int advertisersCount;
-    private double[] totalCost;
     private QueryBudget[] queryBudget;
 
 
-    public BudgetManagerImpl() {
+    public SpendTrackerImpl() {
         this(0);
     }
 
-    public BudgetManagerImpl(int advertisersCount) {
+    public SpendTrackerImpl(int advertisersCount) {
         this.advertisersCount = advertisersCount;
         advertisers = new String[advertisersCount];
         queryBudget = new QueryBudget[advertisersCount];
-        totalCost = new double[advertisersCount];
     }
 
     public void addAdvertiser(String advertiser) {
@@ -40,7 +38,6 @@ public class BudgetManagerImpl implements BudgetManager {
             int newSize = advertisersCount + 8;
             advertisers = (String[]) ArrayUtils.setSize(advertisers, newSize);
             queryBudget = (QueryBudget[])ArrayUtils.setSize(queryBudget, newSize);
-            totalCost = ArrayUtils.setSize(totalCost, newSize);
         }
 
         advertisers[advertisersCount] = advertiser;
@@ -49,7 +46,7 @@ public class BudgetManagerImpl implements BudgetManager {
     }
 
     protected void addCost(String advertiser, Query query, double cost) {
-        int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, advertisersCount);
+        int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, advertiser);
 
         if (index < 0) {
             index = doAddAdvertiser(advertiser);
@@ -59,37 +56,41 @@ public class BudgetManagerImpl implements BudgetManager {
             queryBudget[index] = new QueryBudget(0);
         }
 
-        this.totalCost[index] += cost;
         this.queryBudget[index].addCost(query,cost);
     }
 
     public double getDailyCost(String advertiser) {
-        int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, advertisersCount);
+        int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, advertiser);
 
         if (index < 0) {
-            index = doAddAdvertiser(advertiser);
-        }
-
-        return totalCost[index];
-    }
-
-    public double getDailyCost(String advertiser, Query query) {
-        int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, advertisersCount);
-
-        if (index < 0) {
-            index = doAddAdvertiser(advertiser);
+            return 0.0;
         }
 
         if (queryBudget[index] == null) {
             queryBudget[index] = new QueryBudget(0);
         }
 
+        return queryBudget[index].getTotalCost();
+    }
+
+    public double getDailyCost(String advertiser, Query query) {
+        int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, advertiser);
+
+        if (index < 0) {
+            return 0.0;
+        }
+        else if (queryBudget[index] == null) {
+            queryBudget[index] = new QueryBudget(0);
+        }
+
         return queryBudget[index].getCost(query);
+
     }
 
     public void reset() {
         for(QueryBudget budget : queryBudget) {
-            budget.clear();
+            if(budget!=null)
+                budget.reset();
         }
     }
 
@@ -101,20 +102,13 @@ public class BudgetManagerImpl implements BudgetManager {
         private Query[] queries;
         private double[] cost;
         private int queryCount;
+        private double totalCost;
 
         public QueryBudget(int queryCount) {
             queries = new Query[queryCount];
             cost = new double[queryCount];
             this.queryCount = queryCount;
         }
-
-        public void addQuery(Query query) {
-            int index = ArrayUtils.indexOf(queries, 0, queryCount, query);
-            if (index < 0) {
-                doAddQuery(query);
-            }
-        }
-
 
         private synchronized int doAddQuery(Query query) {
             if (queryCount == queries.length) {
@@ -135,20 +129,26 @@ public class BudgetManagerImpl implements BudgetManager {
             }
 
             this.cost[index] += cost;
+            this.totalCost += cost;
         }
 
         protected double getCost(Query query) {
             int index = ArrayUtils.indexOf(queries, 0, queryCount, query);
 
             if (index < 0) {
-                index = doAddQuery(query);
+                return 0.0;
             }
 
             return this.cost[index];
         }
 
-        public void clear() {
+        protected double getTotalCost() {
+            return totalCost;
+        }
+
+        public void reset() {
             Arrays.fill(cost, 0.0);
+            totalCost = 0.0;
         }
 
     }

@@ -18,31 +18,45 @@ import java.util.*;
  * @author Lee Callender, Patrick Jordan
  */
 public class DefaultPublisher extends Publisher implements TACAAConstants {
+
     private AuctionFactory auctionFactory;
-    private BidManager bidManager;
+
     private RetailCatalog retailCatalog;
-    private Set<Query> possibleQueries;
+
+
     private UserClickModel userClickModel;
+
     private QueryReportManager queryReportManager;
-    private BudgetManager budgetManager;
+
+    /**
+     * Query space defines the set of allowable queries
+     */
+    private Set<Query> querySpace;
+
+    /**
+     * The bid tracker tracks the current bids for each agent
+     */
+    private BidTracker bidTracker;
+
+    /**
+     * The spend tracker tracks the current spend for each agent
+     */
+    private SpendTracker spendTracker;
+
+    /**
+     * The bid manager tracks the bid related information for the publisher
+     */
+    private BidManager bidManager;
 
     public DefaultPublisher() {
 
     }
 
     public void nextTimeUnit(int date) {
+
         //Auctions should be updated here.
         if (bidManager != null) {
             bidManager.nextTimeUnit(date);
-        }
-
-        if (date != 0) {
-            //Update auctions, send AuctionUpdatedEvent
-            //log.finest("Running Auction");
-            //Iterator it = possibleQueries.iterator();
-            //Query query = (Query) it.next();
-            //Auction a = runAuction(query);
-            //log.finest("Auction Complete: " + a.getRanking().toString());
         }
     }
 
@@ -53,9 +67,14 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     protected void setup() {
         this.log = Logger.getLogger(DefaultPublisher.class.getName());
 
-        bidManager = createBidManager();
-        budgetManager = createBudgetManager();
+        spendTracker = createSpendTracker();
+        
+        bidTracker = createBidTracker();
+
+        bidManager = createBidManager(bidTracker, spendTracker);
+
         auctionFactory = createAuctionFactory();
+
         queryReportManager = createQueryReportManager();
 
         if (auctionFactory != null) {
@@ -71,15 +90,17 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
         }
     }
 
-    private BudgetManager createBudgetManager() {
-        BudgetManager budgetManager = new BudgetManagerImpl(0);
+    private BidTracker createBidTracker() {
+        BidTracker bidTracker = new BidTrackerImpl(0);
 
-        for (String advertiser : getAdvertiserAddresses()) {
-            budgetManager.addAdvertiser(advertiser);
-        }
+        return bidTracker;
+    }
+
+    private SpendTracker createSpendTracker() {
+        SpendTracker spendTracker = new SpendTrackerImpl(0);
 
 
-        return budgetManager;
+        return spendTracker;
     }
 
     private QueryReportManager createQueryReportManager() {
@@ -97,9 +118,10 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
         return queryReportManager;
     }
 
-    private BidManager createBidManager() {
-        BidManager bidManager = new BidManagerImpl(userClickModel);
-        //TODO: initialize the bid manager
+    private BidManager createBidManager(BidTracker bidTracker, SpendTracker spendTracker) {
+
+
+        BidManager bidManager = new BidManagerImpl(userClickModel, bidTracker, spendTracker);
 
         //All advertisers should be known to the bidManager
         String[] advertisers = getAdvertiserAddresses();
@@ -176,13 +198,16 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
 
     private void handleRetailCatalog(RetailCatalog retailCatalog) {
         this.retailCatalog = retailCatalog;
+
         generatePossibleQueries();
-        bidManager.initializeQuerySpace(possibleQueries);
+
+
+        bidTracker.initializeQuerySpace(querySpace);
     }
 
     private void generatePossibleQueries() {
-        if (retailCatalog != null && possibleQueries == null) {
-            possibleQueries = new HashSet<Query>();
+        if (retailCatalog != null && querySpace == null) {
+            querySpace = new HashSet<Query>();
 
             for (Product product : retailCatalog) {
                 Query f0 = new Query();
@@ -190,10 +215,10 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
                 Query f1_component = new Query(null, product.getComponent());
                 Query f2 = new Query(product.getManufacturer(), product.getComponent());
 
-                possibleQueries.add(f0);
-                possibleQueries.add(f1_manufacturer);
-                possibleQueries.add(f1_component);
-                possibleQueries.add(f2);
+                querySpace.add(f0);
+                querySpace.add(f1_manufacturer);
+                querySpace.add(f1_component);
+                querySpace.add(f2);
             }
 
         }

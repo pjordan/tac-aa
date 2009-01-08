@@ -3,11 +3,11 @@ package edu.umich.eecs.tac.auction;
 import edu.umich.eecs.tac.props.Query;
 
 /**
- * The budget manager tracks the daily spend each advertiser incurs.
+ * The spend tracker tracks the daily spend each advertiser incurs.
  *
  * @author Patrick Jordan
  */
-public interface BudgetManager {
+public interface SpendTracker {
     /**
      * Add the advertiser
      *
