@@ -101,7 +101,7 @@ public class SalesAnalyst implements UserEventListener {
             if (report == null) {
                 report = new SalesReport();
             } else {
-                // Can not simply clear the bank report after sending it
+                // Can not simply reset the bank report after sending it
                 // because the message might be in a send queue or used in an
                 // internal agent.  Only option is to simply forget about it
                 // and create a new bank report for the agent the next day.

@@ -5,11 +5,9 @@ package edu.umich.eecs.tac.sim;
  */
 
 import java.util.logging.Logger;
-import java.util.Random;
 
 import com.botbox.util.ArrayUtils;
 import edu.umich.eecs.tac.props.BankStatus;
-import se.sics.tasim.is.EventWriter;
 
 public class Bank {
 
@@ -72,7 +70,7 @@ public class Bank {
             if (status == null) {
                 status = new BankStatus();
             } else {
-                // Can not simply clear the bank status after sending it
+                // Can not simply reset the bank status after sending it
                 // because the message might be in a send queue or used in an
                 // internal agent.  Only option is to simply forget about it
                 // and create a new bank status for the agent the next day.

@@ -3,12 +3,9 @@ package edu.umich.eecs.tac.auction;
 import edu.umich.eecs.tac.props.QueryReport;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.Ad;
-import edu.umich.eecs.tac.sim.TACAASimulation;
 import edu.umich.eecs.tac.sim.Publisher;
-import edu.umich.eecs.tac.agents.DefaultPublisher;
 import edu.umich.eecs.tac.user.UserEventListener;
 import com.botbox.util.ArrayUtils;
-import se.sics.tasim.is.EventWriter;
 
 /**
  * @author Patrick Jordan
@@ -77,7 +74,7 @@ public class QueryReportManager implements UserEventListener {
             if (report == null) {
                 report = new QueryReport();
             } else {
-                // Can not simply clear the bank report after sending it
+                // Can not simply reset the bank report after sending it
                 // because the message might be in a send queue or used in an
                 // internal agent.  Only option is to simply forget about it
                 // and create a new bank report for the agent the next day.

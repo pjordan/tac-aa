@@ -6,8 +6,6 @@ import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.user.UserEventListener;
 import edu.umich.eecs.tac.auction.*;
 import edu.umich.eecs.tac.props.*;
-import se.sics.tasim.aw.TimeListener;
-import se.sics.tasim.props.StartInfo;
 import se.sics.tasim.is.EventWriter;
 import se.sics.tasim.aw.Message;
 import se.sics.tasim.sim.SimulationAgent;
@@ -74,7 +72,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     }
 
     private BudgetManager createBudgetManager() {
-        BudgetManager budgetManager = new BudgetManager(0);
+        BudgetManager budgetManager = new BudgetManagerImpl(0);
 
         for (String advertiser : getAdvertiserAddresses()) {
             budgetManager.addAdvertiser(advertiser);
