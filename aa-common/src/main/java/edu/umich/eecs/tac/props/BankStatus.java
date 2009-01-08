@@ -1,4 +1,3 @@
-
 //@author- Ben Cassell, Lee Callender
 
 package edu.umich.eecs.tac.props;
