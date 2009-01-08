@@ -19,7 +19,6 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
 
     private Logger log = Logger.getLogger(LahaiePennockAuctionFactory.class.getName());
 
-
     public Auction runAuction(Query query) {
         int nAdvertisers = bidManager.advertisers().size();
         String[] advertisers = bidManager.advertisers().toArray(new String[nAdvertisers]);
@@ -79,7 +78,6 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         this.bidManager = bidManager;
     }
 
-
     public double getSquashValue() {
         return squashValue;
     }
@@ -87,7 +85,6 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
     public void setSquashValue(double squash) {
         squashValue = squash;
     }
-
 
     public int getSlotLimit() {
         return slotLimit;

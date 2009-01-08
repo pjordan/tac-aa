@@ -42,10 +42,14 @@ public class BidManagerImpl implements BidManager {
     }
 
 
+  /**
+   * NOTE: isOverspent will only function correctly in this instance
+   * if auctions are computed for EVERY query and not cached.
+   */
     public double getBid(String advertiser, Query query) {
         double bid = bidTracker.getBid(advertiser, query);
 
-        if(isOverspent(bid, advertiser,query))
+        if(isOverspent(bid, advertiser, query))
             return 0.0;
         else
             return bid;
