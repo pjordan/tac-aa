@@ -53,9 +53,6 @@ public class BidManagerImpl implements BidManager {
 
 
     public double getQualityScore(String advertiser, Query query) {
-        if (this.userClickModel==null)
-            return 1.0;
-
         int advertiserIndex = userClickModel.advertiserIndex(advertiser);
         int queryIndex = userClickModel.queryIndex(query);
 

@@ -104,7 +104,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     }
 
     private QueryReportManager createQueryReportManager() {
-        QueryReportManager queryReportManager = new QueryReportManager(this,0);
+        QueryReportManager queryReportManager = new QueryReportManagerImpl(this,0);
 
         for (String advertiser : getAdvertiserAddresses()) {
             queryReportManager.addAdvertiser(advertiser);

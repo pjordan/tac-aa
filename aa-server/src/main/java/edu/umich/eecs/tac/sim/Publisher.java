@@ -11,7 +11,7 @@ import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
 
-public abstract class Publisher extends Builtin {
+public abstract class Publisher extends Builtin implements QueryReportSender {
     private static final String CONF = "publisher.";
 
     protected Logger log = Logger.getLogger(Publisher.class.getName());
