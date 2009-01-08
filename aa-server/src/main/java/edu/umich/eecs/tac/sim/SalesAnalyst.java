@@ -16,7 +16,7 @@ import se.sics.tasim.is.EventWriter;
 /**
  * @author Patrick Jordan
  */
-public class SalesAnalyst implements UserEventListener {
+public class SalesAnalyst implements UserEventListener, RecentConversionsTracker {
     private TACAASimulation simulation;
     private String[] accountNames;
     private int[][] accountConversions;

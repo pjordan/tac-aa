@@ -1,18 +1,18 @@
 package edu.umich.eecs.tac.user;
 
 import edu.umich.eecs.tac.props.*;
-import edu.umich.eecs.tac.sim.SalesAnalyst;
+import edu.umich.eecs.tac.sim.RecentConversionsTracker;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
+
+import static edu.umich.eecs.tac.user.UserUtils.*;
 
 /**
  * @author Patrick Jordan, Ben Cassell
  */
 public class DefaultUserViewManager implements UserViewManager {
-    private List<UserEventListener> listeners;
+    private UserEventSupport eventSupport;
 
     private Map<String, AdvertiserInfo> advertiserInfo;
 
@@ -22,18 +22,18 @@ public class DefaultUserViewManager implements UserViewManager {
 
     private UserClickModel userClickModel;
 
-    private SalesAnalyst salesAnalyst;
+    private RecentConversionsTracker recentConversionsTracker;
 
-    public DefaultUserViewManager(RetailCatalog catalog, SalesAnalyst salesAnalyst, Map<String, AdvertiserInfo> advertiserInfo) {
-        this(catalog, salesAnalyst, advertiserInfo, new Random());
+    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo) {
+        this(catalog, recentConversionsTracker, advertiserInfo, new Random());
     }
 
-    public DefaultUserViewManager(RetailCatalog catalog, SalesAnalyst salesAnalyst, Map<String, AdvertiserInfo> advertiserInfo, Random random) {
+    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo, Random random) {
         this.catalog = catalog;
         this.random = random;
-        this.salesAnalyst = salesAnalyst;
+        this.recentConversionsTracker = recentConversionsTracker;
         this.advertiserInfo = advertiserInfo;
-        listeners = new ArrayList<UserEventListener>();
+        eventSupport = new UserEventSupport();
     }
 
 
@@ -70,7 +70,9 @@ public class DefaultUserViewManager implements UserViewManager {
             // If the user is still considering clicks, process the attempt
             if ( clicking ) {
 
-                double clickProbability = calculateClickProbability(user, query, ad);
+                AdvertiserInfo info = advertiserInfo.get(ad.getAdvertiser());
+
+                double clickProbability = calculateClickProbability(user, ad, info, findAdvertiserEffect(query, ad, userClickModel));
 
 
                 if(random.nextDouble() <= clickProbability) {
@@ -78,12 +80,14 @@ public class DefaultUserViewManager implements UserViewManager {
 
                     fireAdClicked(query, ad, i+1, pricing.getPrice(ad));
 
-                    double conversionProbability = calculateConversionProbability(user, query, ad,  advertiserInfo.get(ad.getAdvertiser()));
+                    double conversionProbability = calculateConversionProbability(user, query,  info, recentConversionsTracker.getRecentConversions(ad.getAdvertiser()));
 
                     if(random.nextDouble() <= conversionProbability) {
                         // User has converted and will no longer click
+                        
+                        double salesProfit = catalog.getSalesProfit(user.getProduct());
 
-                        fireAdConverted(query, ad, i+1, calculateSalesProfit(user, ad, advertiserInfo.get(ad.getAdvertiser())));
+                        fireAdConverted(query, ad, i+1, modifySalesProfitForManufacturerSpecialty(user, info.getManufacturerSpecialty(), info.getManufacturerBonus(), salesProfit));
 
                         converted = true;
                         clicking = false;
@@ -99,91 +103,33 @@ public class DefaultUserViewManager implements UserViewManager {
         return converted;
     }
 
-    private double calculateConversionProbability(User user, Query query, AdLink ad, AdvertiserInfo advertiserInfo) {
-		double sales = salesAnalyst.getRecentConversions(ad.getAdvertiser());
-        double criticalSales = advertiserInfo.getDistributionCapacity();
-
-        double probability = advertiserInfo.getFocusEffects(query.getType())*Math.pow(advertiserInfo.getDecayRate(), Math.max(0.0, sales-criticalSales));
-
-        if(user.getProduct().getComponent().equals(advertiserInfo.getComponentSpecialty())) {
-            probability = modifyOdds(probability,1.0+advertiserInfo.getComponentBonus());
-        }
-
-
-        return probability;
-    }
-
-
-	private double calculateClickProbability(User user, Query query, AdLink ad) {
-        int advertiserIndex = userClickModel.advertiserIndex(ad.getAdvertiser());
-        int queryIndex = userClickModel.queryIndex(query);
-
-        double probability = 0.0;
-
-        if(advertiserIndex >= 0 && queryIndex >=0 ) {
-            probability = userClickModel.getAdvertiserEffect(queryIndex, advertiserIndex);
-
-            if(!ad.isGeneric()) {
-                if(user.getProduct().equals(ad.getProduct())) {
-                    probability = modifyOdds(probability, 1+advertiserInfo.get(ad.getAdvertiser()).getTargetEffect());
-                } else {
-                    probability = modifyOdds(probability, 1.0/(1+advertiserInfo.get(ad.getAdvertiser()).getTargetEffect()/2.0));
-                }
-            }
-        }
-
-        return probability;
-    }
-
-    private double modifyOdds(double probability, double effect) {
-        return probability * effect / (effect * probability + (1.0 - probability));
-    }
-
-    private double calculateSalesProfit(User user, AdLink ad, AdvertiserInfo advertiserInfo) {
-		double salesProfit = catalog.getSalesProfit(user.getProduct());
-
-        if(advertiserInfo.getManufacturerSpecialty().equals(user.getProduct().getManufacturer()))
-			salesProfit *= advertiserInfo.getManufacturerBonus();
-
-        return salesProfit;
-	}
-
     public boolean addUserEventListener(UserEventListener listener) {
-        return listeners.add(listener);
+        return eventSupport.addUserEventListener(listener);
     }
 
     public boolean containsUserEventListener(UserEventListener listener) {
-        return listeners.contains(listener);
+        return eventSupport.containsUserEventListener(listener);
     }
 
     public boolean removeUserEventListener(UserEventListener listener) {
-        return listeners.remove(listener);
+        return eventSupport.removeUserEventListener(listener);
     }
 
     private void fireQueryIssued(Query query) {
-        for(int i = 0; i < listeners.size(); i++) {
-            listeners.get(i).queryIssued(query);
-        }
+        eventSupport.fireQueryIssued(query);
     }
 
     private void fireAdViewed(Query query, AdLink ad, int slot) {
-        for(int i = 0; i < listeners.size(); i++) {
-            listeners.get(i).viewed(query,ad,slot,ad.getAdvertiser());
-        }
+        eventSupport.fireAdViewed(query,ad,slot);
     }
 
     private void fireAdClicked(Query query, AdLink ad, int slot, double cpc) {
-        for(int i = 0; i < listeners.size(); i++) {
-            listeners.get(i).clicked(query,ad,slot,cpc,ad.getAdvertiser());
-        }
+        eventSupport.fireAdClicked(query,ad,slot,cpc);
     }
 
     private void fireAdConverted(Query query, AdLink ad, int slot, double salesProfit) {
-        for(int i = 0; i < listeners.size(); i++) {
-            listeners.get(i).converted(query,ad,slot,salesProfit,ad.getAdvertiser());
-        }
+        eventSupport.fireAdConverted(query,ad,slot,salesProfit);
     }
-
 
     public UserClickModel getUserClickModel() {
         return userClickModel;
