@@ -1,7 +1,7 @@
 package edu.umich.eecs.tac.user;
 
 import edu.umich.eecs.tac.util.config.ConfigProxy;
-import edu.umich.eecs.tac.sim.TACAASimulation;
+import edu.umich.eecs.tac.sim.AgentRepository;
 
 import java.util.Random;
 
@@ -14,7 +14,7 @@ public class DefaultUserTransitionManagerBuilder implements UserBehaviorBuilder<
     private static final String BURST_PROBABILITY_KEY = "usermanager.usertransitionmanager.burstprobability";
     private static final double BURST_PROBABILITY_DEFAULT = 0.05;
 
-    public UserTransitionManager build(ConfigProxy userConfigProxy, TACAASimulation simulation, Random random) {
+    public UserTransitionManager build(ConfigProxy userConfigProxy, AgentRepository repository, Random random) {
         DefaultUserTransitionManager transitionManager = new DefaultUserTransitionManager(random);
 
         // Construct standard probabilities

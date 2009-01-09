@@ -1,8 +1,7 @@
 package edu.umich.eecs.tac.user;
 
 import edu.umich.eecs.tac.util.config.ConfigProxy;
-import edu.umich.eecs.tac.sim.TACAASimulation;
-import edu.umich.eecs.tac.props.RetailCatalog;
+import edu.umich.eecs.tac.sim.AgentRepository;
 
 import java.util.Random;
 
@@ -10,7 +9,7 @@ import java.util.Random;
  * @author Patrick Jordan
  */
 public class DefaultUserViewManagerBuilder implements UserBehaviorBuilder<UserViewManager> {
-    public UserViewManager build(ConfigProxy userConfigProxy, TACAASimulation simulation, Random random) {
-        return new DefaultUserViewManager(simulation.getRetailCatalog(),simulation.getSalesAnalyst(), simulation.getAdvertiserInfo(), random);
+    public UserViewManager build(ConfigProxy userConfigProxy, AgentRepository repository, Random random) {
+        return new DefaultUserViewManager(repository.getRetailCatalog(), repository.getSalesAnalyst(), repository.getAdvertiserInfo(), random);
     }
 }

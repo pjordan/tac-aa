@@ -25,7 +25,7 @@ import edu.umich.eecs.tac.props.*;
 /**
  * @author Lee Callender, Patrick Jordan
  */
-public class TACAASimulation extends Simulation implements TACAAConstants {
+public class TACAASimulation extends Simulation implements TACAAConstants, AgentRepository {
     private Bank bank;
     private SalesAnalyst salesAnalyst;
 
