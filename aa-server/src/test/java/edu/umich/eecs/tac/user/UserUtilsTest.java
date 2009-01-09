@@ -64,8 +64,8 @@ public class UserUtilsTest {
 
     @Test
     public void testModifySalesProfitForManufacturerSpecialty() {
-        assertEquals(modifySalesProfitForManufacturerSpecialty(user, manufacturer, 2, 1.0), 2.0);
-        assertEquals(modifySalesProfitForManufacturerSpecialty(user, "not" + manufacturer, 2, 1.0), 1.0);
+        assertEquals(modifySalesProfitForManufacturerSpecialty(user, manufacturer, 0.5, 1.0), 1.5);
+        assertEquals(modifySalesProfitForManufacturerSpecialty(user, "not" + manufacturer, 0.5, 1.0), 1.0);
     }
 
     @Test

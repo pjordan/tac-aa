@@ -16,9 +16,9 @@ public class UserUtils {
         return probability * effect / (effect * probability + (1.0 - probability));
     }
 
-    public static double modifySalesProfitForManufacturerSpecialty(User user, String manufacturerSpecialty, double effect, double salesProfit) {
+    public static double modifySalesProfitForManufacturerSpecialty(User user, String manufacturerSpecialty, double MSB, double salesProfit) {
         if (manufacturerSpecialty.equals(user.getProduct().getManufacturer()))
-            salesProfit *= effect;
+            salesProfit *= (1.0+MSB);
 
         return salesProfit;
     }
