@@ -2,6 +2,7 @@ package edu.umich.eecs.tac.user;
 
 import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.sim.Publisher;
+import edu.umich.eecs.tac.sim.Auctioneer;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -33,6 +34,30 @@ public class DefaultUserManager implements UserManager {
     public DefaultUserManager(RetailCatalog retailCatalog, UserTransitionManager transitionManager, UserQueryManager queryManager, UserViewManager viewManager, int populationSize, Random random) {
         lock = new Object();
 
+        if(retailCatalog==null) {
+            throw new NullPointerException("Retail catalog cannot be null");
+        }
+
+        if(transitionManager==null) {
+            throw new NullPointerException("User transition manager cannot be null");
+        }
+
+        if(queryManager==null) {
+            throw new NullPointerException("User query manager cannot be null");
+        }
+
+        if(viewManager==null) {
+            throw new NullPointerException("User view manager cannot be null");
+        }
+
+        if(populationSize<0) {
+            throw new IllegalArgumentException("Population size cannot be negative");
+        }
+
+        if(random==null) {
+            throw new NullPointerException("Random number generator cannot be null");
+        }
+        
         this.random = random;
         this.transitionManager = transitionManager;
         this.queryManager = queryManager;
@@ -54,7 +79,7 @@ public class DefaultUserManager implements UserManager {
     }
 
 
-    public void triggerBehavior(Publisher publisher) {
+    public void triggerBehavior(Auctioneer auctioneer) {
 
         synchronized (lock) {
             log.finest("START OF USER TRIGGER");
@@ -63,7 +88,7 @@ public class DefaultUserManager implements UserManager {
 
             for (User user : users) {
 
-                boolean transacted = handleSearch(user, publisher);
+                boolean transacted = handleSearch(user, auctioneer);
 
                 handleTransition(user, transacted);
             }
@@ -74,12 +99,12 @@ public class DefaultUserManager implements UserManager {
         
     }
 
-    private boolean handleSearch(User user, Publisher publisher) {
+    private boolean handleSearch(User user, Auctioneer auctioneer) {
         boolean transacted = false;
 
         Query query = generateQuery(user);
         if (query != null) {
-            Auction auction = publisher.runAuction(query);
+            Auction auction = auctioneer.runAuction(query);
 
             transacted = handleImpression(query, auction, user);
 
@@ -145,9 +170,6 @@ public class DefaultUserManager implements UserManager {
 
     public void setUserClickModel(UserClickModel userClickModel) {
         this.userClickModel = userClickModel;
-
-        if(viewManager!=null) {
-            viewManager.setUserClickModel(userClickModel);
-        }
+        viewManager.setUserClickModel(userClickModel);        
     }
 }

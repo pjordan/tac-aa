@@ -23,6 +23,14 @@ public class DefaultUserQueryManager implements UserQueryManager {
     }
 
     public DefaultUserQueryManager(RetailCatalog catalog, Random random) {
+        if(catalog==null) {
+            throw new NullPointerException("Retail catalog cannot be null");
+        }
+
+        if(random==null) {
+            throw new NullPointerException("Random number generator cannot be null");
+        }
+        
         querySamplers = buildQuerySamplers(catalog,random);
     }
 

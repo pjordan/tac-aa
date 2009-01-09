@@ -39,6 +39,16 @@ public class DefaultUserQueryManagerTest {
         assertNotNull(new DefaultUserQueryManager(catalog));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testConstructorRetailCatalogNull() {
+        new DefaultUserQueryManager(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testConstructorRandomNull() {
+        new DefaultUserQueryManager(catalog,null);
+    }
+
     @Test
     public void testQueryBehavior() {
         DefaultUserQueryManager manager = new DefaultUserQueryManager(catalog, random);

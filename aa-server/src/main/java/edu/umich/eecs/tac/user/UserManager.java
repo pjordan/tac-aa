@@ -1,6 +1,6 @@
 package edu.umich.eecs.tac.user;
 
-import edu.umich.eecs.tac.sim.Publisher;
+import edu.umich.eecs.tac.sim.Auctioneer;
 import edu.umich.eecs.tac.props.UserClickModel;
 import se.sics.tasim.aw.TimeListener;
 
@@ -11,7 +11,7 @@ import se.sics.tasim.aw.TimeListener;
  * @author Patrick Jordan
  */
 public interface UserManager extends TimeListener {
-    public void triggerBehavior(Publisher publisher);
+    public void triggerBehavior(Auctioneer auctioneer);
 
     public boolean addUserEventListener(UserEventListener listener);
 

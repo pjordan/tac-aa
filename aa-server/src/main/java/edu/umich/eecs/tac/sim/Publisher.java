@@ -11,7 +11,7 @@ import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
 
-public abstract class Publisher extends Builtin implements QueryReportSender {
+public abstract class Publisher extends Builtin implements QueryReportSender, Auctioneer {
     private static final String CONF = "publisher.";
 
     protected Logger log = Logger.getLogger(Publisher.class.getName());
@@ -25,8 +25,6 @@ public abstract class Publisher extends Builtin implements QueryReportSender {
     }
 
     public abstract void sendQueryReportsToAll();
-
-    public abstract Auction runAuction(Query query);
 
     // DEBUG FINALIZE REMOVE THIS!!! REMOVE THIS!!!
     protected void finalize() throws Throwable {

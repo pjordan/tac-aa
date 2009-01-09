@@ -32,6 +32,11 @@ public class DefaultUserTransitionManagerTest {
         assertNotNull(userTransitionManager);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testConstructorRandomNull() {
+        new DefaultUserTransitionManager(null);
+    }
+
     @Test
     public void testBurst() {
         assertFalse(userTransitionManager.isBurst());

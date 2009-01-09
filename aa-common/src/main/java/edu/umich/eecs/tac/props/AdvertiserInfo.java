@@ -4,6 +4,7 @@ import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
 
 import java.text.ParseException;
+import java.util.Arrays;
 
 /**
  * @author Patrick Jordan
@@ -126,14 +127,14 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     protected void readWithLock(TransportReader reader) throws ParseException {
-        manufacturerSpecialty = reader.getAttribute("manufacturerSpecialty");
+        manufacturerSpecialty = reader.getAttribute("manufacturerSpecialty",null);
         manufacturerBonus = reader.getAttributeAsDouble("manufacturerBonus", 0.0);
-        componentSpecialty = reader.getAttribute("componentSpecialty");
+        componentSpecialty = reader.getAttribute("componentSpecialty",null);
         componentBonus = reader.getAttributeAsDouble("componentBonus", 0.0);
         decayRate = reader.getAttributeAsDouble("decayRate", 1.0);
-        publisherId = reader.getAttribute("publisherId");
+        publisherId = reader.getAttribute("publisherId",null);
         distributionCapacity = reader.getAttributeAsInt("distributionCapacity");
-        advertiserId = reader.getAttribute("advertiserId");
+        advertiserId = reader.getAttribute("advertiserId",null);
         distributionWindow = reader.getAttributeAsInt("distributionWindow");
         targetEffect = reader.getAttributeAsDouble("targetEffect", 0.0);
         for(QueryType type : QueryType.values()) {
@@ -142,19 +143,81 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     protected void writeWithLock(TransportWriter writer) {
-        writer.attr("manufacturerSpecialty", manufacturerSpecialty);
+        if(manufacturerSpecialty!=null) {
+            writer.attr("manufacturerSpecialty", manufacturerSpecialty);
+        }
+
+
         writer.attr("manufacturerBonus", manufacturerBonus);
-        writer.attr("componentSpecialty", componentSpecialty);
+
+        if(componentSpecialty!=null) {
+            writer.attr("componentSpecialty", componentSpecialty);
+        }
+
         writer.attr("componentBonus", componentBonus);
         writer.attr("decayRate", decayRate);
-        writer.attr("publisherId", publisherId);
+
+        if(publisherId!=null) {
+            writer.attr("publisherId", publisherId);
+        }
+
         writer.attr("distributionCapacity", distributionCapacity);
-        writer.attr("advertiserId", advertiserId);
+
+        if(advertiserId!=null) {
+            writer.attr("advertiserId", advertiserId);
+        }
+
         writer.attr("distributionWindow", distributionWindow);
+
         writer.attr("targetEffect", targetEffect);
 
         for(QueryType type : QueryType.values()) {
             writer.attr(String.format("focusEffect[%s]",type.name()),focusEffects[type.ordinal()]);
         }
+    }
+
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AdvertiserInfo that = (AdvertiserInfo) o;
+
+        if (Double.compare(that.componentBonus, componentBonus) != 0) return false;
+        if (Double.compare(that.decayRate, decayRate) != 0) return false;
+        if (distributionCapacity != that.distributionCapacity) return false;
+        if (distributionWindow != that.distributionWindow) return false;
+        if (Double.compare(that.manufacturerBonus, manufacturerBonus) != 0) return false;
+        if (Double.compare(that.targetEffect, targetEffect) != 0) return false;
+        if (advertiserId != null ? !advertiserId.equals(that.advertiserId) : that.advertiserId != null) return false;
+        if (componentSpecialty != null ? !componentSpecialty.equals(that.componentSpecialty) : that.componentSpecialty != null)
+            return false;
+        if (!Arrays.equals(focusEffects, that.focusEffects)) return false;
+        if (manufacturerSpecialty != null ? !manufacturerSpecialty.equals(that.manufacturerSpecialty) : that.manufacturerSpecialty != null)
+            return false;
+        if (publisherId != null ? !publisherId.equals(that.publisherId) : that.publisherId != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (manufacturerSpecialty != null ? manufacturerSpecialty.hashCode() : 0);
+        result = 31 * result + (componentSpecialty != null ? componentSpecialty.hashCode() : 0);
+        temp = manufacturerBonus != +0.0d ? Double.doubleToLongBits(manufacturerBonus) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = componentBonus != +0.0d ? Double.doubleToLongBits(componentBonus) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = decayRate != +0.0d ? Double.doubleToLongBits(decayRate) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (publisherId != null ? publisherId.hashCode() : 0);
+        result = 31 * result + distributionCapacity;
+        result = 31 * result + (advertiserId != null ? advertiserId.hashCode() : 0);
+        result = 31 * result + distributionWindow;
+        temp = targetEffect != +0.0d ? Double.doubleToLongBits(targetEffect) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + Arrays.hashCode(focusEffects);
+        return result;
     }
 }

@@ -22,6 +22,10 @@ public class DefaultUserTransitionManager implements UserTransitionManager {
     }
 
     public DefaultUserTransitionManager(Random random) {
+        if(random==null) {
+            throw new NullPointerException("Random number generator cannot be null");
+        }
+        
         standardSamplers = new HashMap<QueryState, MutableSampler<QueryState>>(QueryState.values().length);
         burstSamplers = new HashMap<QueryState, MutableSampler<QueryState>>(QueryState.values().length);
         this.random = random;
