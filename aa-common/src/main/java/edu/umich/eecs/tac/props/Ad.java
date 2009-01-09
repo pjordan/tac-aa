@@ -28,6 +28,7 @@ public class Ad extends AbstractTransportable {
     }
 
     public void setProduct(Product product) {
+        lockCheck();
         this.product = product;
     }
 

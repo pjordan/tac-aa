@@ -18,6 +18,7 @@ public class Auction extends AbstractTransportable {
     }
 
     public void setRanking(Ranking ranking) {
+        lockCheck();
         this.ranking = ranking;
     }
 
@@ -26,6 +27,7 @@ public class Auction extends AbstractTransportable {
     }
 
     public void setPricing(Pricing pricing) {
+        lockCheck();
         this.pricing = pricing;
     }
 
@@ -34,6 +36,7 @@ public class Auction extends AbstractTransportable {
     }
 
     public void setQuery(Query query) {
+        lockCheck();
         this.query = query;
     }
 
@@ -61,5 +64,4 @@ public class Auction extends AbstractTransportable {
         if(query!=null)
             writer.write(query);
     }
-
 }

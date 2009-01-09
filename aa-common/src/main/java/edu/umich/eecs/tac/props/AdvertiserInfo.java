@@ -31,6 +31,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setFocusEffects(QueryType queryType, double focusEffect) {
+        lockCheck();
         this.focusEffects[queryType.ordinal()] = focusEffect;
     }
 
@@ -39,6 +40,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setTargetEffect(double targetEffect) {
+        lockCheck();
         this.targetEffect = targetEffect;
     }
 
@@ -47,6 +49,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setDistributionWindow(int distributionWindow) {
+        lockCheck();
         this.distributionWindow = distributionWindow;
     }
 
@@ -55,6 +58,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setAdvertiserId(String advertiserId) {
+        lockCheck();
         this.advertiserId = advertiserId;
     }
 
@@ -63,6 +67,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setManufacturerSpecialty(String manufacturerSpecialty) {
+        lockCheck();
         this.manufacturerSpecialty = manufacturerSpecialty;
     }
 
@@ -71,6 +76,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setComponentSpecialty(String componentSpecialty) {
+        lockCheck();
         this.componentSpecialty = componentSpecialty;
     }
 
@@ -79,6 +85,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setManufacturerBonus(double manufacturerBonus) {
+        lockCheck();
         this.manufacturerBonus = manufacturerBonus;
     }
 
@@ -87,6 +94,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setComponentBonus(double componentBonus) {
+        lockCheck();
         this.componentBonus = componentBonus;
     }
 
@@ -95,6 +103,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setPublisherId(String publisherId) {
+        lockCheck();
         this.publisherId = publisherId;
     }
 
@@ -103,6 +112,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setDistributionCapacity(int distributionCapacity) {
+        lockCheck();
         this.distributionCapacity = distributionCapacity;
     }
 
@@ -111,6 +121,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     }
 
     public void setDecayRate(double decayRate) {
+        lockCheck();
         this.decayRate = decayRate;
     }
 

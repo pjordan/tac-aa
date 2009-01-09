@@ -18,10 +18,12 @@ public class Ranking extends AbstractTransportable {
     }
 
     public void add(AdLink ad) {
+        lockCheck();
         slots.add(ad);
     }
 
     public void set(int position, AdLink ad) {
+        lockCheck();
         slots.set(position, ad);
     }
 
@@ -34,7 +36,6 @@ public class Ranking extends AbstractTransportable {
             if(get(i).equals(ad))
                 return i;
         }
-
         return -1;
     }
 
@@ -53,7 +54,7 @@ public class Ranking extends AbstractTransportable {
     }
 
     protected void readWithLock(TransportReader reader) throws ParseException {
-        while (reader.nextNode(Ad.class.getSimpleName(), false)) {
+        while (reader.nextNode(AdLink.class.getSimpleName(), false)) {
             add((AdLink) reader.readTransportable());
         }
     }

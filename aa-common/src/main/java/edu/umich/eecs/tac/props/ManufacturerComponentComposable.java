@@ -103,7 +103,7 @@ public class ManufacturerComponentComposable extends AbstractTransportable {
     }
 
     protected boolean composableEquals(ManufacturerComponentComposable o) {
-
+        if (o == null) return false;
         if (isLocked() != o.isLocked()) return false;
         if (component != null ? !component.equals(o.component) : o.component != null) return false;
         if (manufacturer != null ? !manufacturer.equals(o.manufacturer) : o.manufacturer != null) return false;

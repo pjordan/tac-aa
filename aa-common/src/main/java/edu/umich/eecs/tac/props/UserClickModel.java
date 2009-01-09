@@ -108,15 +108,15 @@ public class UserClickModel extends AbstractTransportable {
 
 
         while(reader.nextNode("continuationProbability",false)) {
-            int queryIndex = reader.getAttributeAsInt("queryIndex");
+            int index = reader.getAttributeAsInt("index");
             double probability = reader.getAttributeAsDouble("probability");
 
-            setContinuationProbability(queryIndex, probability);
+            setContinuationProbability(index, probability);
         }
 
         while(reader.nextNode("advertiserEffect",false)) {
-            int advertiserIndex = reader.getAttributeAsInt("advertiserIndex");
             int queryIndex = reader.getAttributeAsInt("queryIndex");
+            int advertiserIndex = reader.getAttributeAsInt("advertiserIndex");
             double effect = reader.getAttributeAsDouble("effect");
 
             setAdvertiserEffect(queryIndex, advertiserIndex, effect);

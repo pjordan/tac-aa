@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import static edu.umich.eecs.tac.props.TransportableTestUtils.*;
 import se.sics.isl.transport.BinaryTransportWriter;
 import se.sics.isl.transport.BinaryTransportReader;
-import se.sics.isl.transport.TransportWriter;
 
 import java.text.ParseException;
 
@@ -139,12 +138,9 @@ public class QueryTest {
 
         byte[] buffer = getBytesForTransportable(writer,query);
         Query received = readFromBytes(reader,buffer,"Query");
-
-
         assertNotNull(query);
         assertNotNull(received);
         assertEquals(query, received);
-
 
         Query lockedQuery = new Query();
         query.setManufacturer("aa");
@@ -153,7 +149,6 @@ public class QueryTest {
 
         buffer = getBytesForTransportable(writer,lockedQuery);
         received = readFromBytes(reader,buffer,"Query");
-        
         assertNotNull(lockedQuery);
         assertNotNull(received);
         assertEquals(lockedQuery, received);
@@ -165,10 +160,13 @@ public class QueryTest {
         BinaryTransportReader reader = new BinaryTransportReader();
         reader.setContext(new AAInfo().createContext());
 
-        byte[] buffer = writer.getBytes();
+        Query instance = new Query();
+        byte[] buffer = getBytesForTransportable(writer, instance);
         Query received = readFromBytes(reader,buffer,"Query");
 
-        assertNull(received);
+        assertNotNull(instance);
+        assertNotNull(received);
+        assertEquals(instance, received);
     }
 
     @Test(expected = IllegalStateException.class)

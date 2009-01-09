@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import static edu.umich.eecs.tac.props.TransportableTestUtils.*;
 import se.sics.isl.transport.BinaryTransportWriter;
 import se.sics.isl.transport.BinaryTransportReader;
-import se.sics.isl.transport.TransportWriter;
 
 import java.text.ParseException;
 
@@ -137,16 +136,12 @@ public class ProductTest {
         product.setManufacturer("a");
         product.setComponent("b");
 
-
         byte[] buffer = getBytesForTransportable(writer,product);
         Product received = readFromBytes(reader,buffer,"Product");
-
-
         assertNotNull(product);
         assertNotNull(received);
         assertEquals(product, received);
-
-
+    
         Product lockedProduct = new Product();
         product.setManufacturer("aa");
         product.setComponent("b");
@@ -154,7 +149,6 @@ public class ProductTest {
 
         buffer = getBytesForTransportable(writer,lockedProduct);
         received = readFromBytes(reader,buffer,"Product");
-
         assertNotNull(lockedProduct);
         assertNotNull(received);
         assertEquals(lockedProduct, received);
@@ -166,10 +160,13 @@ public class ProductTest {
         BinaryTransportReader reader = new BinaryTransportReader();
         reader.setContext(new AAInfo().createContext());
 
-        byte[] buffer = writer.getBytes();
+        Product instance = new Product();
+        byte[] buffer = getBytesForTransportable(writer, instance);
         Product received = readFromBytes(reader,buffer,"Product");
-
-        assertNull(received);
+        
+        assertNotNull(instance);
+        assertNotNull(received);
+        assertEquals(instance,received);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -178,5 +175,4 @@ public class ProductTest {
         product.lock();
         product.setManufacturer("a");
     }
-
 }

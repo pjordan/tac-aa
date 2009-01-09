@@ -5,8 +5,6 @@ import se.sics.isl.transport.TransportWriter;
 
 import java.text.ParseException;
 
-
-
 /**
  * This class represents an ad link. It contains the Product of the {@link Ad} as well as a string for the
  * advertiser's address.
@@ -28,6 +26,7 @@ public class AdLink extends Ad{
     }
 
     public void setAdvertiser(String advertiser) {
+      lockCheck();
       this.advertiser = advertiser;
     }
 
