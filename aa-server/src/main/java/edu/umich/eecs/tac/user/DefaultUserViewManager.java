@@ -37,7 +37,7 @@ public class DefaultUserViewManager implements UserViewManager {
         }
 
         if(recentConversionsTracker==null) {
-            throw new NullPointerException("Recent conversions tracker");
+            throw new NullPointerException("Recent conversions tracker cannot be null");
         }
 
         if(advertiserInfo==null) {

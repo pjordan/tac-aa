@@ -11,9 +11,6 @@ import java.util.Random;
  */
 public class DefaultUserQueryManagerBuilder implements UserBehaviorBuilder<UserQueryManager> {
     public UserQueryManager build(ConfigProxy userConfigProxy, AgentRepository repository, Random random) {
-
-        RetailCatalog retailCatalog = repository.getRetailCatalog();
-
-        return new DefaultUserQueryManager(retailCatalog,random);
+        return new DefaultUserQueryManager(repository.getRetailCatalog(),random);
     }
 }
