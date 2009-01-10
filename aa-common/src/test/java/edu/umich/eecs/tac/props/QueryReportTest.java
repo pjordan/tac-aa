@@ -157,6 +157,11 @@ public class QueryReportTest {
         assertEquals(report.size(), 1);
         assertTrue(report.containsQuery(new Query()));
 
+        Query q = new Query();
+        q.setComponent("c1");
+        report.addQuery(q, 10, 100, 40.0, 4.0);
+        assertEquals(report.size(), 2);
+        assertTrue(report.containsQuery(q));
 
         report.addQuery(null);
     }
@@ -233,6 +238,35 @@ public class QueryReportTest {
 
         report = new QueryReport();
         report.addClicks(query, 3);
+        report.addImpressions(query, 10);
         assertEquals(report.getClicks(query), 3);
+        assertEquals(report.getImpressions(query), 10);
+    }
+
+    @Test
+    public void testPosition() {
+        QueryReport instance = new QueryReport();
+        instance.setPosition(new Query(), 0);
+        instance.setPosition(0, 3.2);
+        assertEquals(instance.getPosition(0), 3.2);
+
+        Query q = new Query();
+        q.setComponent("c1");
+        instance.setPosition(q, 4.0);
+        assertEquals(instance.getPosition(q), 4.0);
+
+        instance.setPosition(q, 2.0);
+        assertEquals(instance.getPosition(q), 2.0);
+    }
+
+    @Test
+    public void testClicks() {
+        QueryReport instance = new QueryReport();
+        Query query = new Query();
+        query.setComponent("c1");
+        instance.setClicks(query, 3);
+        assertEquals(instance.getClicks(query), 3);
+        instance.setClicks(query, 4);
+        assertEquals(instance.getClicks(query), 4);
     }
 }

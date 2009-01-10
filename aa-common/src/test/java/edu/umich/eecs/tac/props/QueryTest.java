@@ -24,6 +24,7 @@ public class QueryTest {
         assertNotNull(query);
         assertNull(query.getManufacturer());
         assertNull(query.getComponent());
+        assertEquals(query.getType(), QueryType.FOCUS_LEVEL_ZERO);
     }
 
     @Test
@@ -46,6 +47,9 @@ public class QueryTest {
         componentQuery.setComponent(component);
         assertEquals(componentQuery.getComponent(), component);
         assertNull(componentQuery.getManufacturer());
+
+        assertEquals(componentQuery.getType(), QueryType.FOCUS_LEVEL_ONE);
+        assertEquals(manufacturerQuery.getType(), QueryType.FOCUS_LEVEL_ONE);
     }
 
     @Test
@@ -61,6 +65,8 @@ public class QueryTest {
         query.setComponent(component);
         assertEquals(query.getManufacturer(), manufacturer);
         assertEquals(query.getComponent(), component);
+
+        assertEquals(query.getType(), QueryType.FOCUS_LEVEL_TWO);
     }
 
     @Test
@@ -79,6 +85,9 @@ public class QueryTest {
     @Test
     public void testEquals() {
         Query f0 = new Query();
+
+        assertFalse(f0.equals(null));
+        assertFalse(f0.equals(new Product()));
 
         Query f1 = new Query();
         f1.setManufacturer("Alice");

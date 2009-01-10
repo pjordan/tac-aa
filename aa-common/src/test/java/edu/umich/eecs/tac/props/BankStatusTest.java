@@ -47,6 +47,9 @@ public class BankStatusTest {
         instance.setAccountBalance(b);
         result = instance.getAccountBalance();
         assertEquals(b, result);
+
+        instance = new BankStatus(100.0);
+        assertEquals(instance.getAccountBalance(), 100.0);
     }
 
     @Test

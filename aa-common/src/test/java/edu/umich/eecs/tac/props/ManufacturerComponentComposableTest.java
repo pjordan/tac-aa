@@ -152,24 +152,20 @@ public class ManufacturerComponentComposableTest {
     public void testComposableEquals() {
         ManufacturerComponentComposable o = null;
         ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
-        boolean expResult = false;
-        boolean result = instance.composableEquals(o);
-        assertEquals(expResult, result);
+        assertFalse(instance.composableEquals(o));
+        
+        assertTrue(instance.composableEquals(instance));
+        assertFalse(instance.composableEquals(null));
 
         o = new ManufacturerComponentComposable();
-        expResult = true;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
-
+        assertTrue(instance.composableEquals(o));
+        
         o.lock();
-        expResult = false;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
-
+        assertFalse(instance.composableEquals(o));
+        assertFalse(o.composableEquals(instance));
+        
         instance.lock();
-        expResult = true;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
+        assertTrue(instance.composableEquals(o));
 
         instance = new ManufacturerComponentComposable();
         o = new ManufacturerComponentComposable();
@@ -177,41 +173,38 @@ public class ManufacturerComponentComposableTest {
         String component = "test_component";
 
         instance.setManufacturer(manufacturer);
-        expResult = false;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
+        assertFalse(instance.composableEquals(o));
+        assertFalse(o.composableEquals(instance));
+
+        o.setManufacturer("manufacturer_1");
+        assertFalse(instance.composableEquals(o));
+        assertFalse(o.composableEquals(instance));
 
         o.setManufacturer(manufacturer);
-        expResult = true;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
-
+        assertTrue(instance.composableEquals(o));
+        
         manufacturer = "manufacturer_2";
-        o.setManufacturer(manufacturer);
-        expResult = false;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
+        instance.setManufacturer(manufacturer);
+        assertFalse(instance.composableEquals(o));
+        assertFalse(o.composableEquals(instance));
 
+        o.setManufacturer(manufacturer);
         instance.setComponent(component);
-        expResult = false;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
+        assertFalse(instance.composableEquals(o));
+        assertFalse(o.composableEquals(instance));
 
         o.setComponent(component);
-        expResult = false;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
-
-        instance.setManufacturer(manufacturer);
-        expResult = true;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
+        assertTrue(instance.composableEquals(o));
 
         component = "test_component_2";
         o.setComponent(component);
-        expResult = false;
-        result = instance.composableEquals(o);
-        assertEquals(expResult, result);
+        assertFalse(instance.composableEquals(o));
+        assertFalse(o.composableEquals(instance));
+
+        instance.setComponent(component);
+        o = new ManufacturerComponentComposable();
+        assertFalse(instance.equals(o));
+        assertFalse(o.equals(instance));
     }
 
 }

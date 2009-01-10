@@ -56,9 +56,27 @@ public class UserClickModelTest {
         return defaultClickModel;
     }
 
-    /**
-     * Test of advertiserCount method, of class UserClickModel.
-     */
+    @Test
+    public void testConstructor() {
+        String[] s = new String[3];
+        Query[] q = new Query[3];
+        int thrown = 0;
+        UserClickModel instance;
+        try {
+            instance = new UserClickModel(null, s);
+        } catch (NullPointerException e) {
+            thrown++;
+        }
+        try {
+            instance = new UserClickModel(q, null);
+        } catch (NullPointerException e) {
+            thrown++;
+        }
+        if (thrown != 2) {
+            fail("Cannot use null pointer in constructor of UserClickModel");
+        }
+    }
+
     @Test
     public void testAdvertiserCount() {
         UserClickModel instance = new UserClickModel();
@@ -71,9 +89,6 @@ public class UserClickModelTest {
 
     }
 
-    /**
-     * Test of advertiser method, of class UserClickModel.
-     */
     @Test
     public void testAdvertiser() {
         int index = 0;
@@ -85,7 +100,6 @@ public class UserClickModelTest {
         } catch (IndexOutOfBoundsException expected) {
             ; //Intentional semicolon.
         }
-
 
         instance = getModel();
         assertEquals(instance.advertiser(0), "advertiser_1");
@@ -100,9 +114,6 @@ public class UserClickModelTest {
         }
     }
 
-    /**
-     * Test of advertiserIndex method, of class UserClickModel.
-     */
     @Test
     public void testAdvertiserIndex() {
         String advertiser = "";
@@ -127,9 +138,6 @@ public class UserClickModelTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of queryCount method, of class UserClickModel.
-     */
     @Test
     public void testQueryCount() {
         UserClickModel instance = new UserClickModel();
@@ -198,9 +206,6 @@ public class UserClickModelTest {
         }
     }
 
-    /**
-     * Test of queryIndex method, of class UserClickModel.
-     */
     @Test
     public void testQueryIndex() {
         Query query = null;
@@ -252,9 +257,6 @@ public class UserClickModelTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of getContinuationProbability method, of class UserClickModel.
-     */
     @Test
     public void testGetContinuationProbability() {
         int queryIndex = 0;
@@ -287,9 +289,6 @@ public class UserClickModelTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of setContinuationProbability method, of class UserClickModel.
-     */
     @Test
     public void testSetContinuationProbability() {
         int queryIndex = 0;
@@ -335,9 +334,6 @@ public class UserClickModelTest {
         }
     }
 
-    /**
-     * Test of getAdvertiserEffect method, of class UserClickModel.
-     */
     @Test
     public void testGetAdvertiserEffect() {
         int queryIndex = 0;
@@ -392,9 +388,6 @@ public class UserClickModelTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of setAdvertiserEffect method, of class UserClickModel.
-     */
     @Test
     public void testSetAdvertiserEffect() {
         int queryIndex = 0;

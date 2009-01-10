@@ -25,6 +25,6 @@ public class CompositeIterator<T extends ManufacturerComponentComposable> implem
     }
 
     public void remove() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("remvoe is not supported in this iterator");
+        throw new UnsupportedOperationException("remove is not supported in this iterator");
     }
 }

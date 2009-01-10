@@ -1,6 +1,7 @@
 package edu.umich.eecs.tac.props;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import org.junit.Test;
 import se.sics.isl.transport.BinaryTransportReader;
 import se.sics.isl.transport.BinaryTransportWriter;
@@ -38,8 +39,7 @@ public class AdvertiserInfoTest {
         info.setFocusEffects(QueryType.FOCUS_LEVEL_ONE, 2.2);
         info.setFocusEffects(QueryType.FOCUS_LEVEL_TWO, 4.4);
 
-        
-        assertEquals(info.getAdvertiserId(),"a");
+        assertEquals(info.getAdvertiserId(), "a");
         assertEquals(info.getComponentBonus(),1.0);
         assertEquals(info.getComponentSpecialty(),"b");
         assertEquals(info.getDistributionCapacity(),10);
@@ -120,6 +120,10 @@ public class AdvertiserInfoTest {
 
         AdvertiserInfo instance = new AdvertiserInfo();
         instance.setComponentBonus(100.5);
+        instance.setManufacturerSpecialty("c1");
+        instance.setComponentSpecialty("cs");
+        instance.setPublisherId("pub");
+        instance.setAdvertiserId("advertiser");
 
         byte[] buffer = getBytesForTransportable(writer, instance);
         AdvertiserInfo received = readFromBytes(reader, buffer, "AdvertiserInfo");
@@ -177,5 +181,137 @@ public class AdvertiserInfoTest {
         double price = 100.00;
 
         instance.setPrice(ad, price);
+    }
+
+    @Test
+    public void testHashCode() {
+        AdvertiserInfo instance = new AdvertiserInfo();
+        instance.setComponentBonus(100.5);
+        instance.setManufacturerSpecialty("c1");
+        instance.setComponentSpecialty("cs");
+        instance.setPublisherId("pub");
+        instance.setAdvertiserId("advertiser");
+        instance.setDecayRate(10.5);
+        instance.setDistributionCapacity(5);
+        instance.setDistributionWindow(4);
+        instance.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO, 0.4);
+        instance.setFocusEffects(QueryType.FOCUS_LEVEL_ONE, 0.3);
+        instance.setFocusEffects(QueryType.FOCUS_LEVEL_TWO, 0.3);
+        instance.setManufacturerBonus(13.3);
+        instance.setTargetEffect(14.4);
+
+
+        int result;
+        long temp;
+        result = instance.getManufacturerSpecialty().hashCode();
+        result = 31 * result + instance.getComponentSpecialty().hashCode();
+        temp = Double.doubleToLongBits(instance.getManufacturerBonus());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(instance.getComponentBonus());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(instance.getDecayRate());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + instance.getPublisherId().hashCode();
+        result = 31 * result + instance.getDistributionCapacity();
+        result = 31 * result + instance.getAdvertiserId().hashCode();
+        result = 31 * result + instance.getDistributionWindow();
+        temp = Double.doubleToLongBits(instance.getTargetEffect());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+
+        double[] focusEffects = new double[3];
+        focusEffects[0] = instance.getFocusEffects(QueryType.FOCUS_LEVEL_ZERO);
+        focusEffects[1] = instance.getFocusEffects(QueryType.FOCUS_LEVEL_ONE);
+        focusEffects[2] = instance.getFocusEffects(QueryType.FOCUS_LEVEL_TWO);
+
+        result = 31 * result + Arrays.hashCode(focusEffects);
+        
+        assertEquals(instance.hashCode(), result);
+
+        instance = new AdvertiserInfo();
+        assertEquals(instance.hashCode(),29791);
+    }
+
+    @Test
+    public void testEquals() {
+        AdvertiserInfo instance = new AdvertiserInfo();
+        assertTrue(instance.equals(instance));
+        assertFalse(instance.equals(null));
+        assertFalse(instance.equals(Product.class));
+
+        double componentBonus = 10.0;
+        double decayRate = 0.5;
+        int distributionCapacity = 5;
+        int distributionWindow = 4;
+        double manufacturerBonus = 0.3;
+        double targetEffect = 0.4;
+        String advertiserId = "ad";
+        String componentSpecialty = "comp";
+        String manufacturerSpecialty = "man";
+        String publisherId = "pub";
+
+        AdvertiserInfo that = new AdvertiserInfo();
+        
+        that.setComponentBonus(componentBonus);
+        assertFalse(instance.equals(that));
+        instance.setComponentBonus(componentBonus);
+
+        that.setDecayRate(decayRate);
+        assertFalse(instance.equals(that));
+        instance.setDecayRate(decayRate);
+
+        that.setDistributionCapacity(distributionCapacity);
+        assertFalse(instance.equals(that));
+        instance.setDistributionCapacity(distributionCapacity);
+
+        that.setDistributionWindow(distributionWindow);
+        assertFalse(instance.equals(that));
+        instance.setDistributionWindow(distributionWindow);
+        
+
+        that.setManufacturerBonus(manufacturerBonus);
+        assertFalse(instance.equals(that));
+        instance.setManufacturerBonus(manufacturerBonus);
+
+        that.setTargetEffect(targetEffect);
+        assertFalse(instance.equals(that));
+        instance.setTargetEffect(targetEffect);
+
+        that.setAdvertiserId(advertiserId);
+        assertFalse(instance.equals(that));
+        assertFalse(that.equals(instance));
+        instance.setAdvertiserId(advertiserId + "x");
+        assertFalse(instance.equals(that));
+        assertFalse(that.equals(instance));
+        instance.setAdvertiserId(advertiserId);
+
+        that.setComponentSpecialty(componentSpecialty);
+        assertFalse(instance.equals(that));
+        assertFalse(that.equals(instance));
+        instance.setComponentSpecialty(componentSpecialty + "x");
+        assertFalse(instance.equals(that));
+        assertFalse(that.equals(instance));
+        instance.setComponentSpecialty(componentSpecialty);
+
+        that.setFocusEffects(QueryType.FOCUS_LEVEL_TWO, 0.4);
+        assertFalse(instance.equals(that));
+        instance.setFocusEffects(QueryType.FOCUS_LEVEL_TWO, 0.4);
+
+        that.setManufacturerSpecialty(manufacturerSpecialty);
+        assertFalse(instance.equals(that));
+        assertFalse(that.equals(instance));
+        instance.setManufacturerSpecialty(manufacturerSpecialty + "x");
+        assertFalse(instance.equals(that));
+        assertFalse(that.equals(instance));
+        instance.setManufacturerSpecialty(manufacturerSpecialty);
+
+        that.setPublisherId(publisherId);
+        assertFalse(instance.equals(that));
+        assertFalse(that.equals(instance));
+        instance.setPublisherId(publisherId + "x");
+        assertFalse(instance.equals(that));
+        assertFalse(that.equals(instance));
+        instance.setPublisherId(publisherId);
+
+        assertTrue(instance.equals(that));
     }
 }

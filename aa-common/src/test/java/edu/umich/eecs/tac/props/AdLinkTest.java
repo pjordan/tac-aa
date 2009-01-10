@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package edu.umich.eecs.tac.props;
 
 import java.text.ParseException;
@@ -15,7 +10,7 @@ import static edu.umich.eecs.tac.props.TransportableTestUtils.readFromBytes;
 
 /**
  *
- * @author kemal
+ * @author Kemal Eren
  */
 public class AdLinkTest {
     @Test
@@ -81,33 +76,30 @@ public class AdLinkTest {
 
     @Test
     public void testEquals() {
-        Object o = null;
+        
         AdLink instance = new AdLink();
-        boolean expResult = false;
-        boolean result = instance.equals(o);
-        assertEquals(expResult, result);
+        assertTrue(instance.equals(instance));
+
+        assertFalse(instance.equals(new Product()));
+
+        Object o = null;
+        assertFalse(instance.equals(o));
 
         AdLink instance_2 = new AdLink();
-        expResult = true;
-        result = instance.equals(instance_2);
-        assertEquals(expResult, result);
-
+        assertTrue(instance.equals(instance_2));
+        
         instance_2.setAdvertiser("abc");
         instance_2.setProduct(new Product("123", "xyz"));
-        expResult = false;
-        result = instance.equals(instance_2);
-        assertEquals(expResult, result);
+        assertFalse(instance.equals(instance_2));
 
         instance.setAdvertiser("abc");
+        assertFalse(instance.equals(instance_2));
+
         instance.setProduct(new Product("123", "xyz"));
-        expResult = true;
-        result = instance.equals(instance_2);
-        assertEquals(expResult, result);
-        
+        assertTrue(instance.equals(instance_2));
+
         instance.setAdvertiser("abcd");
-        expResult = false;
-        result = instance.equals(instance_2);
-        assertEquals(expResult, result);
+        assertFalse(instance.equals(instance_2));
     }
 
     @Test

@@ -80,6 +80,7 @@ public class ProductTest {
     @Test
     public void testEquals() {
         Product f0 = new Product();
+        assertFalse(f0.equals(new ManufacturerComponentComposable()));
 
         Product f1 = new Product();
         f1.setManufacturer("Alice");

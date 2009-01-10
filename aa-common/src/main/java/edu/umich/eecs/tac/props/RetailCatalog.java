@@ -18,7 +18,6 @@ public class RetailCatalog extends AbstractListCompositeEntryTransportable<Produ
         components = new TreeSet<String>();
     }
 
-
     public Set<String> getManufacturers() {
         return manufacturers;
     }
@@ -82,9 +81,7 @@ public class RetailCatalog extends AbstractListCompositeEntryTransportable<Produ
     public static class RetailCatalogEntry extends AbstractCompositeEntry<Product> {
         private static final long serialVersionUID = -1140097762238141476L;
         
-
         private double salesProfit;
-
 
         public Product getProduct() {
             return getKey();
@@ -94,7 +91,6 @@ public class RetailCatalog extends AbstractListCompositeEntryTransportable<Produ
             setKey(product);
         }
 
-
         public double getSalesProfit() {
             return salesProfit;
         }
@@ -102,7 +98,6 @@ public class RetailCatalog extends AbstractListCompositeEntryTransportable<Produ
         protected void setSalesProfit(double salesProfit) {
             this.salesProfit = salesProfit;
         }
-
 
         protected void readEntry(TransportReader reader) throws ParseException {
             salesProfit = reader.getAttributeAsDouble("salesProfit", 0.0);

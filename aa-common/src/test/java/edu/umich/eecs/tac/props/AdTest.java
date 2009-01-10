@@ -55,5 +55,42 @@ public class AdTest {
         assertEquals(ad.getProduct(),received.getProduct());
         assertEquals(ad,received);
 
+        ad = new Ad(new Product("m", "c"));
+        assertNotNull(ad);
+        assertFalse(ad.isGeneric());
+        assertFalse(ad.equals(null));
+        assertEquals(ad.toString(), "(Ad generic:false product:(Product (m,c)))");
+
+        buffer = getBytesForTransportable(writer, ad);
+        received = readFromBytes(reader, buffer, "Ad");
+
+        assertEquals(ad.isGeneric(),received.isGeneric());
+        assertEquals(ad.getProduct(),received.getProduct());
+        assertEquals(ad,received);
+
+        Ad emptyAd = new Ad();
+        assertFalse(emptyAd.equals(ad));
+        assertFalse(ad.equals(emptyAd));
+    }
+
+    @Test
+    public void testHashCode() {
+        Ad ad = new Ad(new Product("m", "c"));
+        assertEquals(ad.hashCode(), ad.getProduct().hashCode());
+
+        ad = new Ad();
+        assertEquals(ad.hashCode(), 0);
+    }
+
+    @Test
+    public void testEquals() {
+        Ad ad = new Ad();
+        assertTrue(ad.equals(ad));
+        assertFalse(ad.equals(new Product()));
+        assertFalse(ad.equals(null));
+
+        ad.setProduct(new Product("m", "c"));
+        assertTrue(ad.equals(ad));
+        assertFalse(ad.equals(new Ad()));
     }
 }
