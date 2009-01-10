@@ -16,15 +16,7 @@ public class Product extends ManufacturerComponentComposable {
 
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) {
-            return false;
-        }
-        if (hashCode() != o.hashCode() ) {
-            return false;
-        }
-        if (getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || hashCode() != o.hashCode() || getClass() != o.getClass()) return false;
 
         Product product = (Product) o;
 
