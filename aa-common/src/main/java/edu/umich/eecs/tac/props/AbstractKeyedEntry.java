@@ -25,7 +25,7 @@ public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
         return this.getClass().getSimpleName();
     }
 
-    public void read(TransportReader reader) throws ParseException {
+    public void read(TransportReader reader) throws ParseException {       
         readEntry(reader);
 
         readKey(reader);

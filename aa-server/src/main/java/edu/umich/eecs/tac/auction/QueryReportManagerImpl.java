@@ -35,8 +35,9 @@ public class QueryReportManagerImpl implements QueryReportManager {
 
     /**
      * Create a new query report manager
+     *
      * @param queryReportSender the query report sender
-     * @param advertisersCount the initial advertiser count
+     * @param advertisersCount  the initial advertiser count
      */
     public QueryReportManagerImpl(QueryReportSender queryReportSender, int advertisersCount) {
         this.queryReportSender = queryReportSender;
@@ -47,6 +48,7 @@ public class QueryReportManagerImpl implements QueryReportManager {
 
     /**
      * Add an advertiser to the dataset
+     *
      * @param name the name of the advertiser to add
      */
     public void addAdvertiser(String name) {
@@ -74,11 +76,11 @@ public class QueryReportManagerImpl implements QueryReportManager {
             index = doAddAccount(name);
         }
 
-        if(queryReports[index]==null) {
+        if (queryReports[index] == null) {
             queryReports[index] = new QueryReport();
         }
 
-        queryReports[index].addClicks(query,clicks,cost);
+        queryReports[index].addClicks(query, clicks, cost);
     }
 
     protected void addImpressions(String name, Query query, int impression, Ad ad, double positionSum) {
@@ -87,28 +89,49 @@ public class QueryReportManagerImpl implements QueryReportManager {
             index = doAddAccount(name);
         }
 
-        if(queryReports[index]==null) {
+        if (queryReports[index] == null) {
             queryReports[index] = new QueryReport();
         }
 
-        queryReports[index].addImpressions(query,impression,ad,positionSum);
+        queryReports[index].addImpressions(query, impression, ad, positionSum);
     }
 
     /**
      * Send each advertiser their report.
      */
     public void sendQueryReportToAll() {
+        // Make sure all query reports are non-null
+        for (int i = 0; i < advertisersCount; i++) {
+            if (queryReports[i] == null) {
+                queryReports[i] = new QueryReport();
+            }
+        }
+
+        // For each advertiser, tell the other advertisers about their positions and ads
+        for (int advertiserIndex = 0; advertiserIndex < advertisersCount; advertiserIndex++) {
+
+            QueryReport baseReport = queryReports[advertiserIndex];
+
+            String baseAdvertiser = advertisers[advertiserIndex];
+
+            for (int index = 0; index < baseReport.size(); index++) {
+                Query query = baseReport.getQuery(index);
+
+                double position = baseReport.getPosition(index);
+
+                Ad ad = baseReport.getAd(index);
+
+                for (int otherIndex = 0; otherIndex < advertisersCount; otherIndex++) {
+                    queryReports[otherIndex].setAdAndPosition(query, baseAdvertiser, ad, position);
+                }
+            }
+        }
+
+        // Send the query reports
         for (int i = 0; i < advertisersCount; i++) {
             QueryReport report = queryReports[i];
-            if (report == null) {
-                report = new QueryReport();
-            } else {
-                // Can not simply reset the bank report after sending it
-                // because the message might be in a send queue or used in an
-                // internal agent.  Only option is to simply forget about it
-                // and create a new bank report for the agent the next day.
-                queryReports[i] = null;
-            }
+
+            queryReports[i] = null;
 
             queryReportSender.sendQueryReport(advertisers[i], report);
         }
@@ -118,16 +141,16 @@ public class QueryReportManagerImpl implements QueryReportManager {
     public int size() {
         return advertisersCount;
     }
-    
+
     public void queryIssued(Query query) {
     }
 
     public void viewed(Query query, Ad ad, int slot, String advertiser) {
-        addImpressions( advertiser, query, 1, ad, slot);
+        addImpressions(advertiser, query, 1, ad, slot);
     }
 
     public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
-        addClicks( advertiser, query, 1, cpc);
+        addClicks(advertiser, query, 1, cpc);
     }
 
     public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {

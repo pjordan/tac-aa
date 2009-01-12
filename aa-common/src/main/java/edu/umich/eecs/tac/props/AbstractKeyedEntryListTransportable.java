@@ -5,9 +5,7 @@ import se.sics.isl.transport.TransportWriter;
 import se.sics.isl.transport.Transportable;
 
 import java.text.ParseException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * @author Patrick Jordan
@@ -96,4 +94,14 @@ public abstract class AbstractKeyedEntryListTransportable<T, S extends KeyedEntr
     protected abstract S createEntry(T key);
 
     protected abstract Class entryClass();
+
+    public Set<T> keys() {
+        Set<T>  keys = new HashSet<T>();
+
+        for(int i = 0; i < size(); i++) {
+            keys.add(getEntry(i).getKey());
+        }
+
+        return keys;
+    }
 }

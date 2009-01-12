@@ -19,4 +19,8 @@ public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry
     public boolean containsQuery(Query query) {
         return containsKey(query);   
     }
+
+    public Query getQuery(int index) {
+        return getEntry(index).getKey();
+    }
 }

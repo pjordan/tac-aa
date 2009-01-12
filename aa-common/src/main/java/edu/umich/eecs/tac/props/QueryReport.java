@@ -1,6 +1,8 @@
 package edu.umich.eecs.tac.props;
 
 import java.text.ParseException;
+import java.util.Set;
+import java.util.Collections;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
@@ -372,6 +374,33 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
         getEntry(index).setAd(advertiser, ad);
     }
 
+    public void setAdAndPosition(Query query, String advertiser, Ad ad, double position) {
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            index = addQuery(query);
+        }
+
+        setAd(index, advertiser, ad, position);
+    }
+
+    public void setAd(int index, String advertiser, Ad ad, double position) {
+        lockCheck();
+
+        getEntry(index).setAdAndPosition(advertiser, ad, position);
+    }
+
+    public Set<String> advertisers(Query query) {
+        int index = indexForEntry(query);
+
+        return index < 0 ? Collections.EMPTY_SET : advertisers(index);
+    }
+
+    public Set<String> advertisers(int index) {
+        return getEntry(index).advertisers();
+    }
     /**
      *
      * @author Patrick Jordan
@@ -455,32 +484,26 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
             return displayReport.getPosition(advertiser);
         }
 
-        public double getPosition(int index) {
-            return displayReport.getPosition(index);
-        }
-
         public void setPosition(String advertiser, double position) {
             displayReport.setPosition(advertiser, position);
-        }
-
-        public void setPosition(int index, double position) {
-            displayReport.setPosition(index, position);
         }
 
         public Ad getAd(String advertiser) {
             return displayReport.getAd(advertiser);
         }
 
-        public Ad getAd(int index) {
-            return displayReport.getAd(index);
-        }
 
         public void setAd(String advertiser, Ad ad) {
             displayReport.setAd(advertiser, ad);
         }
 
-        public void setAd(int index, Ad ad) {
-            displayReport.setAd(index, ad);
+
+        public void setAdAndPosition(String advertiser, Ad ad, double position) {
+            displayReport.setAdAndPosition(advertiser, ad, position);
+        }
+
+        public Set<String> advertisers() {
+            return displayReport.keys();
         }
 
         protected void readEntry(TransportReader reader) throws ParseException {
@@ -550,6 +573,10 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
             this.position = position;
         }
 
+        public void setAdAndPosition(Ad ad, double position) {
+            this.ad = ad;
+            this.position = position;
+        }
 
         protected void readEntry(TransportReader reader) throws ParseException {
             this.position = reader.getAttributeAsDouble("position", Double.NaN);
@@ -640,5 +667,25 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
             lockCheck();
             getEntry(index).setAd(ad);
         }
+
+        public void setAdAndPosition(String advertiser, Ad ad, double position) {
+            lockCheck();
+
+            int index = indexForEntry(advertiser);
+
+            if (index < 0) {
+                index = addAdvertiser(advertiser);
+            }
+
+            setAd(index, ad, position);
+
+        }
+
+        public void setAd(int index, Ad ad, double position) {
+            lockCheck();
+            getEntry(index).setAdAndPosition(ad, position);
+        }
+
+        
     }
 }

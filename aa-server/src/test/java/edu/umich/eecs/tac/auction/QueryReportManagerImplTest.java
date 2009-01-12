@@ -63,9 +63,9 @@ public class QueryReportManagerImplTest {
 
         queryReportManager.sendQueryReportToAll();
 
-        queryReportManager.addClick("c",query,1);
-        queryReportManager.addImpression("d",query,1);
-        queryReportManager.addImpression("c",query,1);
+        queryReportManager.addClicks("c",query,1,1.0);
+        queryReportManager.addImpressions("d",query,1,null,1);
+        queryReportManager.addImpressions("c",query,1,null,1);
     }
 
 
