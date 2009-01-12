@@ -979,7 +979,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
     //  API to Bank to allow it to send bank statuses
     // -------------------------------------------------------------------
 
-    final void sendBankStatus(String agentName, BankStatus status) {
+    void sendBankStatus(String agentName, BankStatus status) {
         sendMessage(agentName, status);
                 
         EventWriter eventWriter = getEventWriter();

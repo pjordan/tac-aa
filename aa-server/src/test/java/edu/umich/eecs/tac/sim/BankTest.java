@@ -17,10 +17,11 @@ import edu.umich.eecs.tac.props.BankStatus;
 public class BankTest {
 
 	private Bank bank;
+	private DummyTACAASimulation dummy;
 	
 	@Before
 	public void setUp() throws IllegalConfigurationException {
-		bank = new Bank(null, 1);
+		bank = new Bank(dummy, 1);
 	}
 
 	@Test
@@ -49,7 +50,7 @@ public class BankTest {
 
 	@Test
 	public void testSendBankStatusToAll() {
-		//TODO: figure out the simplest way to get a simulation for bank
+		bank.sendBankStatusToAll();
 	}
 
 }
