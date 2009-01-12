@@ -78,7 +78,9 @@ public class Ranking extends AbstractTransportable {
     }
 
     public static class Slot extends AbstractTransportable {
-        private AdLink adLink;
+
+		private static final long serialVersionUID = -2489798409612047493L;
+		private AdLink adLink;
         private boolean promoted;
 
 
