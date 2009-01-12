@@ -8,6 +8,6 @@ import java.io.Serializable;
  *
  * @author Patrick Jordan
  */
-public interface QueryEntry extends CompositeEntry<Query> {
+public interface QueryEntry extends KeyedEntry<Query> {
     public Query getQuery();
 }

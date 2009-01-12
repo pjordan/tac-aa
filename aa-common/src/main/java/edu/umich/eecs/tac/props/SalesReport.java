@@ -10,7 +10,7 @@ import se.sics.isl.transport.TransportWriter;
  *
  * @author Ben Cassell, Patrick Jordan, Lee Callender
  */
-public class SalesReport extends AbstractReportTransportable<SalesReport.SalesReportEntry> {
+public class SalesReport extends AbstractQueryKeyedReportTransportable<SalesReport.SalesReportEntry> {
 
     private static final long serialVersionUID = 3473199640271355791L;
 

@@ -46,11 +46,11 @@ public class QueryReportTest {
         assertEquals(entry.getClicks(), 2);
 
         assertEquals(entry.getCPC(), 0.0);
-        entry.setCPC(3.0);
+        entry.setCost(3.0);
         assertEquals(entry.getCPC(), 3.0);
 
         assertEquals(entry.getPosition(), 0.0);
-        entry.setPosition(4.0);
+        entry.addPosition(4.0);
         assertEquals(entry.getPosition(), 4.0);
 
         assertEquals(entry.getTransportName(), "QueryReportEntry");
@@ -69,8 +69,8 @@ public class QueryReportTest {
         entry.setQuery(new Query());
         entry.setImpressions(1);
         entry.setClicks(2);
-        entry.setCPC(3.0);
-        entry.setPosition(4.0);
+        entry.setCost(3.0);
+        entry.addPosition(4.0);
 
         byte[] buffer = getBytesForTransportable(writer, entry);
         QueryReport.QueryReportEntry received = readFromBytes(reader, buffer, "QueryReportEntry");
@@ -99,8 +99,8 @@ public class QueryReportTest {
         QueryReport.QueryReportEntry entry = new QueryReport.QueryReportEntry();
         entry.setImpressions(1);
         entry.setClicks(2);
-        entry.setCPC(3.0);
-        entry.setPosition(4.0);
+        entry.setCost(3.0);
+        entry.addPosition(4.0);
 
         byte[] buffer = getBytesForTransportable(writer, entry);
         QueryReport.QueryReportEntry received = readFromBytes(reader, buffer, "QueryReportEntry");
@@ -188,17 +188,17 @@ public class QueryReportTest {
         QueryReport report = new QueryReport();
         assertEquals(report.size(), 0);
 
-        report.setCPC(new Query(), 1.0);
+        report.setCost(new Query(), 1.0);
         assertEquals(report.size(), 1);
         assertTrue(report.containsQuery(new Query()));
         assertEquals(report.getCPC(new Query()), 1.0);
 
 
-        report.setCPC(new Query(), 3.0);
+        report.setCost(new Query(), 3.0);
         assertEquals(report.size(), 1);
         assertEquals(report.getCPC(new Query()), 3.0);
 
-        report.setCPC(null, 2);
+        report.setCost(null, 2);
     }
 
     @Test
@@ -246,16 +246,16 @@ public class QueryReportTest {
     @Test
     public void testPosition() {
         QueryReport instance = new QueryReport();
-        instance.setPosition(new Query(), 0);
-        instance.setPosition(0, 3.2);
+        instance.setPositionSum(new Query(), 0);
+        instance.setPositionSum(0, 3.2);
         assertEquals(instance.getPosition(0), 3.2);
 
         Query q = new Query();
         q.setComponent("c1");
-        instance.setPosition(q, 4.0);
+        instance.setPositionSum(q, 4.0);
         assertEquals(instance.getPosition(q), 4.0);
 
-        instance.setPosition(q, 2.0);
+        instance.setPositionSum(q, 2.0);
         assertEquals(instance.getPosition(q), 2.0);
     }
 

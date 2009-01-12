@@ -1,15 +1,17 @@
 package edu.umich.eecs.tac.props;
 
+import se.sics.isl.transport.Transportable;
+
 import java.util.Iterator;
 
 /**
  * @author Patrick Jordan
  */
-public class CompositeIterator<T extends ManufacturerComponentComposable> implements Iterator<T>{
-    private Iterator<? extends CompositeEntry<? extends T>> delegateIterator;
+public class KeyIterator<T extends Transportable> implements Iterator<T>{
+    private Iterator<? extends KeyedEntry<? extends T>> delegateIterator;
 
 
-    public CompositeIterator(Iterator<? extends CompositeEntry<? extends T>> delegateIterator) {
+    public KeyIterator(Iterator<? extends KeyedEntry<? extends T>> delegateIterator) {
         if(delegateIterator==null)
             throw new NullPointerException("delegate iterator cannot be null");
         this.delegateIterator = delegateIterator;

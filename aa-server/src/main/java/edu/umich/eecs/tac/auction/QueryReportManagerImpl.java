@@ -68,7 +68,7 @@ public class QueryReportManagerImpl implements QueryReportManager {
         return advertisersCount++;
     }
 
-    protected void addClick(String name, Query query, int clicks) {
+    protected void addClicks(String name, Query query, int clicks, double cost) {
         int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, name);
         if (index < 0) {
             index = doAddAccount(name);
@@ -78,10 +78,10 @@ public class QueryReportManagerImpl implements QueryReportManager {
             queryReports[index] = new QueryReport();
         }
 
-        queryReports[index].addClicks(query,clicks);
+        queryReports[index].addClicks(query,clicks,cost);
     }
 
-    protected void addImpression(String name, Query query, int impression) {
+    protected void addImpressions(String name, Query query, int impression, Ad ad, double positionSum) {
         int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, name);
         if (index < 0) {
             index = doAddAccount(name);
@@ -91,7 +91,7 @@ public class QueryReportManagerImpl implements QueryReportManager {
             queryReports[index] = new QueryReport();
         }
 
-        queryReports[index].addImpressions(query,impression);
+        queryReports[index].addImpressions(query,impression,ad,positionSum);
     }
 
     /**
@@ -123,12 +123,11 @@ public class QueryReportManagerImpl implements QueryReportManager {
     }
 
     public void viewed(Query query, Ad ad, int slot, String advertiser) {
-        addImpression(advertiser,query,1);
+        addImpressions( advertiser, query, 1, ad, slot);
     }
 
     public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
-        addClick(advertiser,query,1);
-
+        addClicks( advertiser, query, 1, cpc);
     }
 
     public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {

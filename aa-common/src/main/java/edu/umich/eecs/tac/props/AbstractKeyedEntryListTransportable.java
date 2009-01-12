@@ -2,6 +2,7 @@ package edu.umich.eecs.tac.props;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
+import se.sics.isl.transport.Transportable;
 
 import java.text.ParseException;
 import java.util.List;
@@ -11,11 +12,11 @@ import java.util.Iterator;
 /**
  * @author Patrick Jordan
  */
-public abstract class AbstractListCompositeEntryTransportable<T extends ManufacturerComponentComposable, S extends CompositeEntry<T>> extends AbstractTransportable implements Iterable<T> {
+public abstract class AbstractKeyedEntryListTransportable<T, S extends KeyedEntry<T>> extends AbstractTransportable implements Iterable<T> {
     protected List<S> entries;
 
 
-    protected AbstractListCompositeEntryTransportable() {
+    protected AbstractKeyedEntryListTransportable() {
         this.entries = new ArrayList<S>();
     }
 
@@ -57,7 +58,7 @@ public abstract class AbstractListCompositeEntryTransportable<T extends Manufact
     }
 
     public Iterator<T> iterator() {
-        return new CompositeIterator(entries.iterator());
+        return new KeyIterator(entries.iterator());
     }
 
     public final boolean containsKey(T key) {

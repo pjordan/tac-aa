@@ -8,7 +8,7 @@ import se.sics.isl.transport.TransportWriter;
 /**
  * @author Ben Cassell, Patrick Jordan, Lee Callender
  */
-public class BidBundle extends AbstractReportTransportable<BidBundle.BidEntry> {
+public class BidBundle extends AbstractQueryKeyedReportTransportable<BidBundle.BidEntry> {
     private static final double DEFAULT_SPEND_LIMIT = Double.NaN;
     private static final double DEFAULT_BID = Double.NaN;
 

@@ -8,7 +8,7 @@ import se.sics.isl.transport.TransportWriter;
 /**
  * @author Ben Cassell, Patrick Jordan
  */
-public class QueryReport extends AbstractReportTransportable<QueryReport.QueryReportEntry> {
+public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryReport.QueryReportEntry> {
 
     private static final long serialVersionUID = -7957495904471250085L;
 
@@ -26,18 +26,18 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     public QueryReport() {
     }
 
-    public void addQuery(Query query, int impressions, int clicks, double cpc, double position) {
+    public void addQuery(Query query, int impressions, int clicks, double cost, double positionSum) {
         lockCheck();
-        
+
         int index = addQuery(query);
         QueryReportEntry entry = getEntry(index);
         entry.setImpressions(impressions);
         entry.setClicks(clicks);
-        entry.setCPC(cpc);
-        entry.setPosition(position);
+        entry.setCost(cost);
+        entry.setPositionSum(positionSum);
     }
 
-    public void setPosition(Query query, double position) {
+    public void setPositionSum(Query query, double positionSum) {
         lockCheck();
 
         int index = indexForEntry(query);
@@ -46,16 +46,16 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
             index = addQuery(query);
         }
 
-        setPosition(index, position);
+        setPositionSum(index, positionSum);
 
     }
 
-    public void setPosition(int index, double position) {
+    public void setPositionSum(int index, double positionSum) {
         lockCheck();
-        getEntry(index).setPosition(position);
+        getEntry(index).setPositionSum(positionSum);
     }
 
-    public void setCPC(Query query, double cpc) {
+    public void setCost(Query query, double cost) {
         lockCheck();
 
         int index = indexForEntry(query);
@@ -64,13 +64,13 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
             index = addQuery(query);
         }
 
-        setCPC(index, cpc);
+        setCost(index, cost);
 
     }
 
-    public void setCPC(int index, double cpc) {
+    public void setCost(int index, double cost) {
         lockCheck();
-        getEntry(index).setCPC(cpc);
+        getEntry(index).setCost(cost);
     }
 
     public void setImpressions(Query query, int impressions) {
@@ -86,28 +86,68 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
 
     }
 
+    public void setImpressions(Query query, int impressions, Ad ad, double position) {
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            index = addQuery(query);
+        }
+
+        setImpressions(index, impressions, ad, position);
+
+    }
     public void addImpressions(Query query, int impressions) {
         lockCheck();
 
         int index = indexForEntry(query);
 
         if (index < 0) {
-            setImpressions(query,impressions);
+            setImpressions(query, impressions);
         } else {
-            addImpressions(index,impressions);
+            addImpressions(index, impressions);
         }
     }
 
-    public void addImpressions(int index, int impressions) {
+    public void addImpressions(Query query, int impressions, Ad ad, double position) {
         lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            setImpressions(query, impressions, ad, position);
+        } else {
+            addImpressions(index, impressions, ad, position);
+        }
+    }
+
+    public void addImpressions(int index,int impressions) {
+        lockCheck();
+
 
         getEntry(index).addImpressions(impressions);
 
     }
 
+    public void addImpressions(int index, int impressions, Ad ad, double position) {
+        lockCheck();
+
+        getEntry(index).addImpressions(impressions);
+        getEntry(index).setAd(ad);
+        getEntry(index).addPosition(position);
+    }
+
     public void setImpressions(int index, int impressions) {
         lockCheck();
         getEntry(index).setImpressions(impressions);
+    }
+
+    public void setImpressions(int index, int impressions, Ad ad, double position) {
+        lockCheck();
+        getEntry(index).setImpressions(impressions);
+        getEntry(index).setPositionSum(position);
+        getEntry(index).setAd(ad);
     }
 
     public void setClicks(Query query, int clicks) {
@@ -123,20 +163,51 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
 
     }
 
+    public void setClicks(Query query, int clicks, double cost) {
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            index = addQuery(query);
+        }
+
+        setClicks(index, clicks, cost);
+
+    }
+
     public void setClicks(int index, int clicks) {
         lockCheck();
         getEntry(index).setClicks(clicks);
     }
 
+    public void setClicks(int index, int clicks, double cost) {
+        lockCheck();
+        getEntry(index).setClicks(clicks);
+        getEntry(index).setCost(clicks);
+    }
+    
     public void addClicks(Query query, int clicks) {
         lockCheck();
 
         int index = indexForEntry(query);
 
         if (index < 0) {
-            setClicks(query,clicks);
+            setClicks(query, clicks);
         } else {
-            addClicks(index,clicks);
+            addClicks(index, clicks);
+        }
+    }
+
+    public void addClicks(Query query, int clicks, double cost) {
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            setClicks(query, clicks, cost);
+        } else {
+            addClicks(index, clicks, cost);
         }
     }
 
@@ -145,10 +216,32 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
         getEntry(index).addClicks(clicks);
     }
 
+    public void addClicks(int index, int clicks, double cost) {
+        lockCheck();
+        getEntry(index).addClicks(clicks);
+        getEntry(index).addCost(clicks);
+    }
+    public void addCost(Query query, double cost) {
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            setCost(query, cost);
+        } else {
+            addCost(index, cost);
+        }
+    }
+
+    public void addCost(int index, double cost) {
+        lockCheck();
+        getEntry(index).addCost(cost);
+    }
+
     public double getPosition(Query query) {
         int index = indexForEntry(query);
 
-        return index < 0 ? 0.0 : getPosition(index);
+        return index < 0 ? Double.NaN : getPosition(index);
     }
 
     public double getPosition(int index) {
@@ -158,7 +251,7 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
     public double getCPC(Query query) {
         int index = indexForEntry(query);
 
-        return index < 0 ? 0.0 : getCPC(index);
+        return index < 0 ? Double.NaN : getCPC(index);
     }
 
     public double getCPC(int index) {
@@ -185,13 +278,117 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
         return getEntry(index).getClicks();
     }
 
+    public double getCost(Query query) {
+        int index = indexForEntry(query);
+
+        return index < 0 ? 0.0 : getCost(index);
+    }
+
+    public double getCost(int index) {
+        return getEntry(index).getCost();
+    }
+
+    public double getPosition(Query query, String advertiser) {
+        int index = indexForEntry(query);
+
+        return index < 0 ? Double.NaN : getPosition(index, advertiser);
+    }
+
+    public double getPosition(int index, String advertiser) {
+        return getEntry(index).getPosition(advertiser);
+    }
+
+    public void setPosition(Query query, String advertiser, double position) {
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            index = addQuery(query);
+        }
+
+        setPosition(index, advertiser, position);
+    }
+
+    public void setPosition(int index, String advertiser, double position) {
+        lockCheck();
+
+        getEntry(index).setPosition(advertiser, position);
+    }
+
+    public Ad getAd(Query query) {
+        int index = indexForEntry(query);
+
+        return index < 0 ? null : getAd(index);
+    }
+
+    public Ad getAd(int index) {
+        return getEntry(index).getAd();
+    }
+
+    public void setAd(Query query, Ad ad) {
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            index = addQuery(query);
+        }
+
+        setAd(index, ad);
+    }
+
+    public void setAd(int index, Ad ad) {
+        lockCheck();
+
+        getEntry(index).setAd(ad);
+    }
+
+    public Ad getAd(Query query, String advertiser) {
+        int index = indexForEntry(query);
+
+        return index < 0 ? null : getAd(index, advertiser);
+    }
+
+    public Ad getAd(int index, String advertiser) {
+        return getEntry(index).getAd(advertiser);
+    }
+    
+    public void setAd(Query query, String advertiser, Ad ad) {
+        lockCheck();
+
+        int index = indexForEntry(query);
+
+        if (index < 0) {
+            index = addQuery(query);
+        }
+
+        setAd(index, advertiser, ad);
+    }
+
+    public void setAd(int index, String advertiser, Ad ad) {
+        lockCheck();
+
+        getEntry(index).setAd(advertiser, ad);
+    }
+
+    /**
+     *
+     * @author Patrick Jordan
+     */
     public static class QueryReportEntry extends AbstractQueryEntry {
         private int impressions;
         private int clicks;
-        private double position;
-        private double cpc;
+        private double cost;
+        private double positionSum;
+        private Ad ad;
+
+        private DisplayReport displayReport;
 
         public QueryReportEntry() {
+            positionSum = 0.0;
+            cost = 0.0;
+            displayReport = new DisplayReport();
         }
 
         public int getImpressions() {
@@ -219,40 +416,229 @@ public class QueryReport extends AbstractReportTransportable<QueryReport.QueryRe
         }
 
         public double getPosition() {
-            return position;
+            return positionSum / impressions;
         }
 
-        void setPosition(double position) {
-            this.position = position;
-        }        
+        void addPosition(double position) {
+            this.positionSum += position;
+        }
+
+        void setPositionSum(double positionSum) {
+            this.positionSum = positionSum;
+        }
+
+        public double getCost() {
+            return cost;
+        }
+
+        void setCost(double cost) {
+            this.cost = cost;
+        }
+
+        void addCost(double cost) {
+            this.cost += cost;
+        }
 
         public double getCPC() {
-            return cpc;
+            return cost / impressions;
         }
 
-        void setCPC(double avgCPC) {
-            this.cpc = avgCPC;
+        public Ad getAd() {
+            return ad;
+        }
+
+        public void setAd(Ad ad) {
+            this.ad = ad;
+        }
+
+        public double getPosition(String advertiser) {
+            return displayReport.getPosition(advertiser);
+        }
+
+        public double getPosition(int index) {
+            return displayReport.getPosition(index);
+        }
+
+        public void setPosition(String advertiser, double position) {
+            displayReport.setPosition(advertiser, position);
+        }
+
+        public void setPosition(int index, double position) {
+            displayReport.setPosition(index, position);
+        }
+
+        public Ad getAd(String advertiser) {
+            return displayReport.getAd(advertiser);
+        }
+
+        public Ad getAd(int index) {
+            return displayReport.getAd(index);
+        }
+
+        public void setAd(String advertiser, Ad ad) {
+            displayReport.setAd(advertiser, ad);
+        }
+
+        public void setAd(int index, Ad ad) {
+            displayReport.setAd(index, ad);
         }
 
         protected void readEntry(TransportReader reader) throws ParseException {
             this.impressions = reader.getAttributeAsInt("impressions", 0);
             this.clicks = reader.getAttributeAsInt("clicks", 0);
-            this.position = reader.getAttributeAsDouble("position", 0.0);
-            this.cpc = reader.getAttributeAsDouble("cpc", 0.0);
+            this.positionSum = reader.getAttributeAsDouble("positionSum", 0.0);
+            this.cost = reader.getAttributeAsDouble("cost", 0.0);
+
+            if (reader.nextNode(Ad.class.getSimpleName(), false)) {
+                this.ad = (Ad) reader.readTransportable();
+            }
+
+            if (reader.nextNode(DisplayReport.class.getSimpleName(), true)) {
+                this.displayReport = (DisplayReport) reader.readTransportable();
+            }
+
+
         }
 
 
         protected void writeEntry(TransportWriter writer) {
             writer.attr("impressions", impressions);
             writer.attr("clicks", clicks);
-            writer.attr("position", position);
-            writer.attr("cpc", cpc);
+            writer.attr("positionSum", positionSum);
+            writer.attr("cpc", cost);
+
+            if (ad != null) {
+                writer.write(ad);
+            }
+            
+            writer.write(displayReport);
         }
 
 
         public String toString() {
-            return String.format("(%s impr: %d clicks: %d pos: %f cpc: %f)", getQuery(), impressions, clicks, position, cpc);
+            return String.format("(%s impr: %d clicks: %d pos: %f cpc: %f)", getQuery(), impressions, clicks, getPosition(), getCPC());
         }
     }
 
+    /**
+     *
+     * @author Patrick Jordan
+     */
+    public static class DisplayReportEntry extends AbstractAdvertiserEntry {
+        private Ad ad;
+        private double position;
+
+
+        public DisplayReportEntry() {
+            position = Double.NaN;
+        }
+
+
+        public Ad getAd() {
+            return ad;
+        }
+
+        public void setAd(Ad ad) {
+            this.ad = ad;
+        }
+
+        public double getPosition() {
+            return position;
+        }
+
+        public void setPosition(double position) {
+            this.position = position;
+        }
+
+
+        protected void readEntry(TransportReader reader) throws ParseException {
+            this.position = reader.getAttributeAsDouble("position", Double.NaN);
+
+            if (reader.nextNode(Ad.class.getSimpleName(), false)) {
+                this.ad = (Ad) reader.readTransportable();
+            }
+        }
+
+        protected void writeEntry(TransportWriter writer) {
+            writer.attr("position", position);
+
+            if (ad != null) {
+                writer.write(ad);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @author Patrick Jordan
+     */
+    public static class DisplayReport extends AbstractAdvertiserKeyedReportTransportable<QueryReport.DisplayReportEntry> {
+
+        protected DisplayReportEntry createEntry(String advertiser) {
+            DisplayReportEntry entry = new DisplayReportEntry();
+            entry.setAdvertiser(advertiser);
+            return entry;
+        }
+
+        protected Class entryClass() {
+            return DisplayReportEntry.class;
+        }
+
+
+        public double getPosition(String advertiser) {
+            int index = indexForEntry(advertiser);
+
+            return index < 0 ? Double.NaN : getPosition(index);
+        }
+
+        public double getPosition(int index) {
+            return getEntry(index).getPosition();
+        }
+
+        public void setPosition(String advertiser, double position) {
+            lockCheck();
+
+            int index = indexForEntry(advertiser);
+
+            if (index < 0) {
+                index = addAdvertiser(advertiser);
+            }
+
+            setPosition(index, position);
+
+        }
+
+        public void setPosition(int index, double position) {
+            lockCheck();
+            getEntry(index).setPosition(position);
+        }
+
+        public Ad getAd(String advertiser) {
+            int index = indexForEntry(advertiser);
+
+            return index < 0 ? null : getAd(index);
+        }
+
+        public Ad getAd(int index) {
+            return getEntry(index).getAd();
+        }
+
+        public void setAd(String advertiser, Ad ad) {
+            lockCheck();
+
+            int index = indexForEntry(advertiser);
+
+            if (index < 0) {
+                index = addAdvertiser(advertiser);
+            }
+
+            setAd(index, ad);
+
+        }
+
+        public void setAd(int index, Ad ad) {
+            lockCheck();
+            getEntry(index).setAd(ad);
+        }
+    }
 }

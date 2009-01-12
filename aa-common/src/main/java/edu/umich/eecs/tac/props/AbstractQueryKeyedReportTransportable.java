@@ -5,10 +5,10 @@ import java.util.ArrayList;
 /**
  * @author Patrick Jordan
  */
-public abstract class AbstractReportTransportable<T extends QueryEntry> extends AbstractListCompositeEntryTransportable<Query,T> {
+public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry> extends AbstractKeyedEntryListTransportable<Query,T> {
 
 
-    public AbstractReportTransportable() {
+    public AbstractQueryKeyedReportTransportable() {
         this.entries = new ArrayList<T>();
     }
 

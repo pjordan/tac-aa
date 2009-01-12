@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * @author Patrick Jordan
  */
-public class RetailCatalog extends AbstractListCompositeEntryTransportable<Product, RetailCatalog.RetailCatalogEntry> {
+public class RetailCatalog extends AbstractKeyedEntryListTransportable<Product, RetailCatalog.RetailCatalogEntry> {
     private Set<String> manufacturers;
     private Set<String> components;
 
@@ -78,7 +78,7 @@ public class RetailCatalog extends AbstractListCompositeEntryTransportable<Produ
         return RetailCatalogEntry.class;
     }
 
-    public static class RetailCatalogEntry extends AbstractCompositeEntry<Product> {
+    public static class RetailCatalogEntry extends AbstractTransportableEntry<Product> {
         private static final long serialVersionUID = -1140097762238141476L;
         
         private double salesProfit;

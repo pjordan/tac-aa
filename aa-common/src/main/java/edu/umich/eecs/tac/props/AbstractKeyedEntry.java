@@ -2,13 +2,14 @@ package edu.umich.eecs.tac.props;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
+import se.sics.isl.transport.Transportable;
 
 import java.text.ParseException;
 
 /**
  * @author Patrick Jordan
  */
-public abstract class AbstractCompositeEntry<T extends ManufacturerComponentComposable> implements CompositeEntry<T> {
+public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
     private T key;
 
 
@@ -27,22 +28,22 @@ public abstract class AbstractCompositeEntry<T extends ManufacturerComponentComp
     public void read(TransportReader reader) throws ParseException {
         readEntry(reader);
 
-        if (reader.nextNode(keyNodeName(), false)) {
-            this.key = (T) reader.readTransportable();
-        }
+        readKey(reader);
     }
 
     public void write(TransportWriter writer) {
         writeEntry(writer);
 
-        if (key != null) {
-            writer.write(key);
-        }
+        writeKey(writer);
     }
 
     protected abstract void readEntry(TransportReader reader) throws ParseException;
 
+    protected abstract void readKey(TransportReader reader) throws ParseException;
+
     protected abstract void writeEntry(TransportWriter writer);
 
-    protected abstract String keyNodeName();
+    protected abstract void writeKey(TransportWriter writer);
+
+    
 }

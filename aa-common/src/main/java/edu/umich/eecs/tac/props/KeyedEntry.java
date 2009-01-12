@@ -7,7 +7,6 @@ import java.io.Serializable;
 /**
  * @author Patrick Jordan
  */
-public interface CompositeEntry<T extends ManufacturerComponentComposable> extends Serializable, Transportable {
+public interface KeyedEntry<T> extends Serializable, Transportable {
     public T getKey();
-
 }

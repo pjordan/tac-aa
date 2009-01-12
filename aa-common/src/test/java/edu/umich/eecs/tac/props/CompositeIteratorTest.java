@@ -1,9 +1,6 @@
 package edu.umich.eecs.tac.props;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -13,6 +10,6 @@ public class CompositeIteratorTest {
 
     @Test (expected=NullPointerException.class)
     public void testNullDelegate() {
-        CompositeIterator instance = new CompositeIterator(null);
+        KeyIterator instance = new KeyIterator(null);
     }
 }
