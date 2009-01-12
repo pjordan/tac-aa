@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import static edu.umich.eecs.tac.auction.AuctionUtils.*;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class AuctionUtilsTest {
     @Test
@@ -34,7 +34,7 @@ public class AuctionUtilsTest {
         assertEquals(cpc[0],0.25/0.5);
         assertEquals(cpc[1],0.5);
         assertTrue(Double.isNaN(cpc[2]));
-        assertEquals(cpc[3],0.0);
+        assertEquals(cpc[3],0.01/0.25);
     }
 
     @Test

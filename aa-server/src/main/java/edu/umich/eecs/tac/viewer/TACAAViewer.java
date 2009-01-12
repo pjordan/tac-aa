@@ -18,7 +18,6 @@ public class TACAAViewer extends SimulationViewer implements TACAAConstants {
 
     private TACAASimulationPanel simulationPanel;
 
-
     private ViewerPanel mainPanel;
 
     private RetailCatalog catalog;

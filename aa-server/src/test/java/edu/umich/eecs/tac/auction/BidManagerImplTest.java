@@ -10,7 +10,7 @@ import java.util.HashSet;
 
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class BidManagerImplTest {
     private String alice;

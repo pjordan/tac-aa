@@ -74,8 +74,7 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         
         return auction;
     }
-
-
+  
     public void configure(ConfigProxy configProxy) {
         double squashValue = configProxy.getPropertyAsDouble("auctionfactory.squashing", 1.0);
 

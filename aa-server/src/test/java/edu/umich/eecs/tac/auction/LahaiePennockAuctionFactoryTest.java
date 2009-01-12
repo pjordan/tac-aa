@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
 import edu.umich.eecs.tac.props.*;
+import edu.umich.eecs.tac.util.config.ConfigProxy;
 import com.botbox.util.ArrayUtils;
 
 import java.util.Set;
@@ -46,21 +47,37 @@ public class LahaiePennockAuctionFactoryTest {
   public void testGetSet(){
     auctionFactory.setSquashValue(1.0);
     auctionFactory.setBidManager(bidManager);
+    auctionFactory.setAuctionInfo(auctionInfo);
+    assertEquals(auctionFactory.getAuctionInfo(), auctionInfo);
     assertEquals(auctionFactory.getBidManager(), bidManager);
     assertEquals(auctionFactory.getSquashValue(),1.0);
+  }
+
+  @Test
+  public void testConfigure(){
+    auctionFactory.configure(new SimpleConfigProxy());
   }
 
   @Test
   public void testAuctions(){
     //Base auctionFactory
     Auction auction = auctionFactory.runAuction(new Query("apples","seeds"));
-    //assertEquals here.
-
-    //Fewer participants than slots available
-
     assertNotNull(auction);
+    Ranking ranking = auction.getRanking();
+    assertNotNull(ranking);
+    assertEquals(ranking.size(),4);
+    assertEquals(ranking.get(0), bidManager.getAdLink("eve", null));
 
-
+    
+    //Fewer participants than slots available
+    AuctionInfo ac = auctionFactory.getAuctionInfo();
+    ac.setRegularSlots(6);
+    auction = auctionFactory.runAuction(new Query("apples","seeds"));
+    assertNotNull(ranking);
+    ranking = auction.getRanking();
+    assertNotNull(ranking);
+    assertEquals(ranking.size(), 5);
+    assertEquals(ranking.get(0), bidManager.getAdLink("eve", null));
   }
 
   private class SimpleBidManager implements BidManager {
@@ -112,7 +129,6 @@ public class LahaiePennockAuctionFactoryTest {
       qualityScore[index] = quality;
     }
 
-    
     public double getBid(String advertiser, Query query){
 
       return bids[ArrayUtils.indexOf(advertisers, 0, size, advertiser)];
@@ -123,7 +139,8 @@ public class LahaiePennockAuctionFactoryTest {
     }
 
     public AdLink getAdLink(String advertiser, Query query){
-      return new AdLink(null, advertiser);
+      AdLink returnme = new AdLink(null, advertiser);
+      return returnme;
     }
 
     public void updateBids(String advertiser, BidBundle bundle){}
@@ -133,5 +150,29 @@ public class LahaiePennockAuctionFactoryTest {
     }
 
     public void nextTimeUnit(int i){}
+  }
+
+  private class SimpleConfigProxy implements ConfigProxy {
+    public String getProperty(String name){
+      return null;
+    }
+
+    public String getProperty(String name, String defaultValue){return null;}
+
+    public String[] getPropertyAsArray(String name){return null;}
+
+    public String[] getPropertyAsArray(String name, String defaultValue){return null;}
+
+    public int getPropertyAsInt(String name, int defaultValue){return 0;}
+
+    public int[] getPropertyAsIntArray(String name){return null;}
+
+    public int[] getPropertyAsIntArray(String name, String defaultValue){return null;}
+
+    public long getPropertyAsLong(String name, long defaultValue){return defaultValue;}
+
+    public float getPropertyAsFloat(String name, float defaultValue){return defaultValue;}
+
+    public double getPropertyAsDouble(String name, double defaultValue){return defaultValue;}
   }
 }
