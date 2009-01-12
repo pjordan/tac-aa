@@ -127,7 +127,7 @@ public class DefaultSalesAnalyst implements SalesAnalyst {
 
     private void updateConversionQueue() {
         for (int i = 0; i < accountConversions.length; i++) {
-            for (int j = 0; j < accountConversions[i].length - 1; j++) {
+            for (int j = accountConversions[i].length - 2; j >=0; j--) {
                 accountConversions[i][j + 1] = accountConversions[i][j];
             }
             accountConversions[i][0] = 0;
@@ -150,5 +150,9 @@ public class DefaultSalesAnalyst implements SalesAnalyst {
 
     protected Map<String, AdvertiserInfo> getAdvertiserInfo() {
         return agentRepository.getAdvertiserInfo();
+    }
+
+    public int size() {
+        return accountNumber;
     }
 }

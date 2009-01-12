@@ -41,6 +41,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
     private int nextPingReport = 0;
 
     private RetailCatalog retailCatalog;
+    private AuctionInfo auctionInfo;    
     private UserClickModel userClickModel;
     private String[] manufacturers;
     private String[] components;
@@ -130,6 +131,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         log.info("Created " + (publishers == null ? 0 : publishers.length) + " publishers");
 
         this.retailCatalog = createRetailCatalog();
+        this.auctionInfo = createAuctionInfo();
         this.manufacturers = createManufacturers();
         this.components = createComponents();
 
@@ -177,6 +179,27 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
 
     }
 
+    private AuctionInfo createAuctionInfo() {
+        AuctionInfo auctionInfo = new AuctionInfo();
+
+
+        ConfigManager config = getConfig();
+
+        double promotedReserve = config.getPropertyAsDouble("publisher.promoted.reserve",0.0);
+        int promotedSlots = config.getPropertyAsInt("publisher.promoted.slots",0);
+        double regularReserve = config.getPropertyAsDouble("publisher.regular.reserve",0.0);
+        int regularSlots = config.getPropertyAsInt("publisher.regular.slots",0);
+        double promotedSlotBonus = config.getPropertyAsDouble("publisher.promoted.slotbonus",0.0);
+
+        auctionInfo.setPromotedReserve(promotedReserve);
+        auctionInfo.setPromotedSlots(promotedSlots);
+        auctionInfo.setRegularReserve(regularReserve);
+        auctionInfo.setRegularSlots(regularSlots);
+        auctionInfo.setPromotedSlotBonus(promotedSlotBonus);
+        
+        return auctionInfo;
+    }
+
 
     private void initializeAdvertisers() {
         ConfigManager config = getConfig();
@@ -203,6 +226,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         double manufacturerBonus = config.getPropertyAsDouble("advertiser.specialization.manufacturerBonus",0.0);
         double componentBonus = config.getPropertyAsDouble("advertiser.specialization.componentBonus",0.0);
         double decayRate = config.getPropertyAsDouble("advertiser.capacity.decay_rate",1.0);
+        double targetEffect = config.getPropertyAsDouble("advertiser.targeteffect",0.5);
         int window = config.getPropertyAsInt("advertiser.capacity.window",7);
 
         double focusEffect_f0 = config.getPropertyAsDouble("advertiser.focuseffect.FOCUS_LEVEL_ZERO",1.0);
@@ -258,9 +282,12 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
                 advertiserInfo.setManufacturerSpecialty(manufacturers[r.nextInt(manufacturers.length)]);
                 advertiserInfo.setManufacturerBonus(manufacturerBonus);
                 advertiserInfo.setDistributionWindow(window);
+                advertiserInfo.setTargetEffect(targetEffect);
                 advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO,focusEffect_f0);
                 advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ONE,focusEffect_f1);
                 advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_TWO,focusEffect_f2);
+                advertiserInfo.lock();
+                
                 advertiserInfoMap.put(agentAddress,advertiserInfo);
 
                 // Create bank account for the advertiser
@@ -308,6 +335,10 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         sendToRole(PUBLISHER, this.retailCatalog);
         sendToRole(USERS, this.retailCatalog);
         sendToRole(ADVERTISER, this.retailCatalog);
+
+        sendToRole(PUBLISHER, this.auctionInfo);
+        sendToRole(USERS, this.auctionInfo);
+        sendToRole(ADVERTISER, this.auctionInfo);
 
         sendToRole(PUBLISHER, this.userClickModel);
         sendToRole(USERS, this.userClickModel);
@@ -966,5 +997,14 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
 
     public void broadcastConversions(String advertiser, int conversions) {
         getEventWriter().dataUpdated(agentIndex(advertiser),  TACAAConstants.DU_CONVERSIONS, conversions);
+    }
+
+
+    public AuctionInfo getAuctionInfo() {
+        return auctionInfo;
+    }
+
+    public void setAuctionInfo(AuctionInfo auctionInfo) {
+        this.auctionInfo = auctionInfo;
     }
 }

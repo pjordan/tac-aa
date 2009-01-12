@@ -16,9 +16,9 @@ import java.util.HashSet;
  * @author Lee Callender
  */
 public class LahaiePennockAuctionFactoryTest {
-  private LahaiePennockAuctionFactory auction; 
+  private LahaiePennockAuctionFactory auctionFactory;
   private BidManager bidManager;
-
+  private AuctionInfo auctionInfo;
 
 
   @Before
@@ -29,36 +29,38 @@ public class LahaiePennockAuctionFactoryTest {
     
     bidManager = new SimpleBidManager(advertisers, bids, qualityScore);
 
-    auction = new LahaiePennockAuctionFactory();
-    auction.setBidManager(bidManager);
+    auctionInfo = new AuctionInfo();
+    auctionInfo.setRegularSlots(4);
+      
+    auctionFactory = new LahaiePennockAuctionFactory();
+    auctionFactory.setBidManager(bidManager);
+    auctionFactory.setAuctionInfo(auctionInfo);
   }
 
   @Test
   public void testConstructor(){
-    assertNotNull(auction);
+    assertNotNull(auctionFactory);
   }
 
   @Test
   public void testGetSet(){
-    auction.setSlotLimit(5);
-    auction.setSquashValue(1.0);
-    auction.setBidManager(bidManager);
-    assertEquals(auction.getBidManager(), bidManager);
-    assertEquals(auction.getSlotLimit(),5);
-    assertEquals(auction.getSquashValue(),1.0);
+    auctionFactory.setSquashValue(1.0);
+    auctionFactory.setBidManager(bidManager);
+    assertEquals(auctionFactory.getBidManager(), bidManager);
+    assertEquals(auctionFactory.getSquashValue(),1.0);
   }
 
   @Test
   public void testAuctions(){
-    //Base auction
-    auction.runAuction(new Query("apples","seeds"));
+    //Base auctionFactory
+    Auction auction = auctionFactory.runAuction(new Query("apples","seeds"));
     //assertEquals here.
 
     //Fewer participants than slots available
 
-    //bid = double.NaN
+    assertNotNull(auction);
 
-    //
+
   }
 
   private class SimpleBidManager implements BidManager {

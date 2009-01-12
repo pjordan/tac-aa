@@ -11,6 +11,9 @@ import se.sics.tasim.aw.TimeListener;
  * @author Patrick Jordan
  */
 public interface UserManager extends TimeListener {
+    
+    public void initialize(int virtualDays);
+
     public void triggerBehavior(Auctioneer auctioneer);
 
     public boolean addUserEventListener(UserEventListener listener);

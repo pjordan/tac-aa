@@ -3,6 +3,8 @@ package edu.umich.eecs.tac.auction;
 import edu.umich.eecs.tac.props.*;
 
 import java.util.logging.Logger;
+import static edu.umich.eecs.tac.auction.AuctionUtils.*;
+import edu.umich.eecs.tac.util.config.ConfigProxy;
 
 /**
  * @author Patrick Jordan, Lee Callender
@@ -15,16 +17,17 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
 
     private double squashValue;
 
-    private int slotLimit;
+    private AuctionInfo auctionInfo;
 
     private Logger log = Logger.getLogger(LahaiePennockAuctionFactory.class.getName());
 
     public Auction runAuction(Query query) {
-        int nAdvertisers = bidManager.advertisers().size();
-        String[] advertisers = bidManager.advertisers().toArray(new String[nAdvertisers]);
+        String[] advertisers = bidManager.advertisers().toArray(new String[0]);
         double[] qualityScores = new double[advertisers.length];
         double[] bids = new double[advertisers.length];
         double[] scores = new double[advertisers.length];
+        double[] weight = new double[advertisers.length];
+        boolean[] promoted = new boolean[advertisers.length];
         AdLink[] ads = new AdLink[advertisers.length];
         int[] indices = new int[advertisers.length];
         double[] cpc = new double[advertisers.length];
@@ -33,29 +36,29 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
             bids[i] = bidManager.getBid(advertisers[i], query);
             qualityScores[i] = bidManager.getQualityScore(advertisers[i], query);
             ads[i] = bidManager.getAdLink(advertisers[i], query);
-            scores[i] = Math.pow(qualityScores[i], squashValue) * bids[i];
+            weight[i] = Math.pow(qualityScores[i], squashValue);
+            scores[i] = weight[i] * bids[i];
             indices[i] = i;
             //log.finest("Advertiser: "+advertisers[i]+"\tScore: "+scores[i]);
         }
 
+
         //This currently runs for an infinite loop if scores are NaN
         hardSort(scores, indices);
 
-        calculateCPC(indices, scores, bids, cpc);
+        generalizedSecondPrice( indices, weight, bids, cpc, promoted, auctionInfo.getPromotedSlots(), auctionInfo.getPromotedReserve(), auctionInfo.getRegularSlots(), auctionInfo.getRegularReserve() );
 
         Ranking ranking = new Ranking();
         Pricing pricing = new Pricing();
 
-        for (int i = 0; i < indices.length && i < slotLimit; i++) {
-            if (ads[indices[i]] != null) {
+        for (int i = 0; i < indices.length && i < auctionInfo.getRegularSlots(); i++) {
+            if (ads[indices[i]] != null && !Double.isNaN( cpc[indices[i]] ) ) {
                 AdLink ad = ads[indices[i]];
                 double price = cpc[indices[i]];
 
-                price = Double.isNaN(price) ? 0.0 : price;
+                pricing.setPrice(ad, price);
 
-                pricing.setPrice(ads[indices[i]], price);
-                ranking.add(ad);
-
+                ranking.add(ad, promoted[indices[i]]);
             }
         }
 
@@ -67,7 +70,16 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         auction.setPricing(pricing);
         auction.setRanking(ranking);
 
+        auction.lock();
+        
         return auction;
+    }
+
+
+    public void configure(ConfigProxy configProxy) {
+        double squashValue = configProxy.getPropertyAsDouble("auctionfactory.squashing", 1.0);
+
+        setSquashValue(squashValue);
     }
 
     public BidManager getBidManager() {
@@ -86,30 +98,11 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         squashValue = squash;
     }
 
-    public int getSlotLimit() {
-        return slotLimit;
+    public AuctionInfo getAuctionInfo() {
+        return auctionInfo;
     }
 
-    public void setSlotLimit(int slotLimit) {
-        this.slotLimit = slotLimit;
-    }
-
-    private void hardSort(double[] scores, int[] indices) {
-        for (int i = 0; i < indices.length - 1; i++) {
-            for (int j = i + 1; j < indices.length; j++) {
-                if (!(scores[indices[i]] >= scores[indices[j]])) {
-                    int sw = indices[i];
-                    indices[i] = indices[j];
-                    indices[j] = sw;
-                }
-            }
-        }
-    }
-
-    private void calculateCPC(int[] indices, double[] scores, double[] bids, double[] cpc) {
-
-        for (int i = 0; i < indices.length - 1; i++) {
-            cpc[i] = scores[i + 1] / scores[i] * bids[i];
-        }
+    public void setAuctionInfo(AuctionInfo auctionInfo) {
+        this.auctionInfo = auctionInfo;
     }
 }

@@ -44,9 +44,11 @@ public class RankingTest {
         AdLink ad = null;
         Ranking instance = new Ranking();
 
+        boolean promoted = false;
+
         boolean thrown = false;
         try {
-            instance.set(position, ad);
+            instance.set(position, ad, promoted);
         } catch (IndexOutOfBoundsException e) {
             thrown = true;
         }
@@ -58,19 +60,19 @@ public class RankingTest {
 
         Product product = new Product("manufacturer_111", "component_111");
         ad = new AdLink(product, "advertiser_111");
-        instance.set(0, ad);
+        instance.set(0, ad, promoted);
 
         product = new Product("manufacturer_222", "component_222");
         ad = new AdLink(product, "advertiser_333");
-        instance.set(17, ad);
+        instance.set(17, ad, promoted);
 
         product = new Product("manufacturer_333", "component_333");
         ad = new AdLink(product, "advertiser_333");
-        instance.set(34, ad);
+        instance.set(34, ad, promoted);
 
         thrown = false;
         try {
-            instance.set(35, ad);
+            instance.set(35, ad, promoted);
         } catch (IndexOutOfBoundsException e) {
             thrown = true;
         }
@@ -80,7 +82,7 @@ public class RankingTest {
         
         thrown = false;
         try {
-            instance.set(-1, ad);
+            instance.set(-1, ad, promoted);
         } catch (IndexOutOfBoundsException e) {
             thrown = true;
         }
@@ -285,7 +287,7 @@ public class RankingTest {
         } catch (IllegalStateException e) {
             thrown++;
         } try {
-            instance.set(0, ad);
+            instance.set(0, ad, false);
         } catch (IllegalStateException e) {
             thrown++;
         }

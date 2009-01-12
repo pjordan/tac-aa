@@ -5,10 +5,7 @@ import org.junit.Test;
 import org.junit.Before;
 import edu.umich.eecs.tac.sim.AgentRepository;
 import edu.umich.eecs.tac.sim.SalesAnalyst;
-import edu.umich.eecs.tac.props.AdvertiserInfo;
-import edu.umich.eecs.tac.props.RetailCatalog;
-import edu.umich.eecs.tac.props.Ad;
-import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.util.config.ConfigProxy;
 import se.sics.tasim.sim.SimulationAgent;
 
@@ -27,6 +24,7 @@ public class DefaultUserTransitionManagerBuilderTest {
     private RetailCatalog catalog;
     private SalesAnalyst salesAnalyst;
     private Map<String, AdvertiserInfo> advertiserInfo;
+    private AuctionInfo auctionInfo;
 
     @Before
     public void setup() {
@@ -35,6 +33,8 @@ public class DefaultUserTransitionManagerBuilderTest {
 
         builder = new DefaultUserTransitionManagerBuilder();
 
+        auctionInfo = new AuctionInfo();
+        
         salesAnalyst = new SalesAnalyst() {
 
             public void addAccount(String name) {
@@ -123,6 +123,10 @@ public class DefaultUserTransitionManagerBuilderTest {
 
             public SalesAnalyst getSalesAnalyst() {
                 return salesAnalyst;
+            }
+
+            public AuctionInfo getAuctionInfo() {
+                return auctionInfo;
             }
         };
 

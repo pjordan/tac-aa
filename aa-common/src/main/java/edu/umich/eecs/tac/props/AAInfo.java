@@ -53,7 +53,8 @@ public class AAInfo implements ContextFactory {
         context.addTransportable(new BidBundle());
         context.addTransportable(new BidBundle.BidEntry());
         context.addTransportable(new Ranking());
-        context.addTransportable(new Pricing());        
+        context.addTransportable(new Ranking.Slot());
+        context.addTransportable(new Pricing());
         context.addTransportable(new UserClickModel());
         context.addTransportable(new Auction());
         context.addTransportable(new AdvertiserInfo());

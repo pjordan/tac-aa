@@ -224,7 +224,7 @@ public class AdvertiserInfoTest {
         focusEffects[2] = instance.getFocusEffects(QueryType.FOCUS_LEVEL_TWO);
 
         result = 31 * result + Arrays.hashCode(focusEffects);
-        
+
         assertEquals(instance.hashCode(), result);
 
         instance = new AdvertiserInfo();

@@ -31,33 +31,34 @@ public class DefaultUserManager implements UserManager {
         this(retailCatalog, transitionManager, queryManager, viewManager, populationSize, new Random());
     }
 
+
     public DefaultUserManager(RetailCatalog retailCatalog, UserTransitionManager transitionManager, UserQueryManager queryManager, UserViewManager viewManager, int populationSize, Random random) {
         lock = new Object();
 
-        if(retailCatalog==null) {
+        if (retailCatalog == null) {
             throw new NullPointerException("Retail catalog cannot be null");
         }
 
-        if(transitionManager==null) {
+        if (transitionManager == null) {
             throw new NullPointerException("User transition manager cannot be null");
         }
 
-        if(queryManager==null) {
+        if (queryManager == null) {
             throw new NullPointerException("User query manager cannot be null");
         }
 
-        if(viewManager==null) {
+        if (viewManager == null) {
             throw new NullPointerException("User view manager cannot be null");
         }
 
-        if(populationSize<0) {
+        if (populationSize < 0) {
             throw new IllegalArgumentException("Population size cannot be negative");
         }
 
-        if(random==null) {
+        if (random == null) {
             throw new NullPointerException("Random number generator cannot be null");
         }
-        
+
         this.random = random;
         this.transitionManager = transitionManager;
         this.queryManager = queryManager;
@@ -79,6 +80,16 @@ public class DefaultUserManager implements UserManager {
     }
 
 
+    public void initialize(int virtualDays) {
+        for (int d = virtualDays; d >= 1; d--) {
+            transitionManager.nextTimeUnit(-d);
+
+            for (User user : users) {
+                user.setState(transitionManager.transition(user.getState(), false));
+            }
+        }
+    }
+
     public void triggerBehavior(Auctioneer auctioneer) {
 
         synchronized (lock) {
@@ -96,11 +107,12 @@ public class DefaultUserManager implements UserManager {
             log.finest("FINISH OF USER TRIGGER");
         }
 
-        
+
     }
 
     private boolean handleSearch(User user, Auctioneer auctioneer) {
         boolean transacted = false;
+
 
         Query query = generateQuery(user);
         if (query != null) {
@@ -154,12 +166,12 @@ public class DefaultUserManager implements UserManager {
 
 
     public int[] getStateDistribution() {
-        int[] distribution  = new int[QueryState.values().length];
+        int[] distribution = new int[QueryState.values().length];
 
-        for(User user : users) {
+        for (User user : users) {
             distribution[user.getState().ordinal()]++;
         }
-        
+
         return distribution;
     }
 
@@ -170,6 +182,6 @@ public class DefaultUserManager implements UserManager {
 
     public void setUserClickModel(UserClickModel userClickModel) {
         this.userClickModel = userClickModel;
-        viewManager.setUserClickModel(userClickModel);        
+        viewManager.setUserClickModel(userClickModel);
     }
 }

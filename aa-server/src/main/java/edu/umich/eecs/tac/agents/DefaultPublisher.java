@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.agents;
 import edu.umich.eecs.tac.sim.Publisher;
 import edu.umich.eecs.tac.sim.Users;
 import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.util.config.ConfigProxy;
 import edu.umich.eecs.tac.user.UserEventListener;
 import edu.umich.eecs.tac.auction.*;
 import edu.umich.eecs.tac.props.*;
@@ -22,7 +23,6 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     private AuctionFactory auctionFactory;
 
     private RetailCatalog retailCatalog;
-
 
     private UserClickModel userClickModel;
 
@@ -48,6 +48,17 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
      */
     private BidManager bidManager;
 
+    /**
+     * Configuration proxy for this publisher
+     */
+    private ConfigProxy publisherConfigProxy;
+
+    /**
+     * The basic auction information
+     */
+    private AuctionInfo auctionInfo;
+
+
     public DefaultPublisher() {
 
     }
@@ -68,24 +79,17 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
         this.log = Logger.getLogger(DefaultPublisher.class.getName());
 
         spendTracker = createSpendTracker();
-        
-        bidTracker = createBidTracker();
 
-        bidManager = createBidManager(bidTracker, spendTracker);
+        bidTracker = createBidTracker();
 
         auctionFactory = createAuctionFactory();
 
         queryReportManager = createQueryReportManager();
 
-        if (auctionFactory != null) {
-            auctionFactory.setBidManager(bidManager);
-        }
-
-
         addTimeListener(this);
 
-        for(SimulationAgent agent : getSimulation().getUsers()) {
-            Users users = (Users)agent.getAgent();
+        for (SimulationAgent agent : getSimulation().getUsers()) {
+            Users users = (Users) agent.getAgent();
             users.addUserEventListener(new ClickMonitor());
         }
     }
@@ -104,14 +108,14 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     }
 
     private QueryReportManager createQueryReportManager() {
-        QueryReportManager queryReportManager = new QueryReportManagerImpl(this,0);
+        QueryReportManager queryReportManager = new QueryReportManagerImpl(this, 0);
 
         for (String advertiser : getAdvertiserAddresses()) {
             queryReportManager.addAdvertiser(advertiser);
         }
 
-        for(SimulationAgent agent : getSimulation().getUsers()) {
-            Users users = (Users)agent.getAgent();
+        for (SimulationAgent agent : getSimulation().getUsers()) {
+            Users users = (Users) agent.getAgent();
             users.addUserEventListener(queryReportManager);
         }
 
@@ -134,15 +138,11 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
 
     private AuctionFactory createAuctionFactory() {
         String auctionFactoryClass = getProperty("auctionfactory.class", "edu.umich.eecs.tac.auction.LahaiePennockAuctionFactory");
-        int slotLimit = getPropertyAsInt("auctionfactory.slotLimit", 5);
-        double squashValue = getPropertyAsDouble("auctionfactory.squashing", 1.0);
 
         AuctionFactory factory = null;
 
         try {
             factory = (AuctionFactory) Class.forName(auctionFactoryClass).newInstance();
-            factory.setSlotLimit(slotLimit);
-            factory.setSquashValue(squashValue);
         } catch (InstantiationException e) {
             //TODO: log these
             e.printStackTrace();
@@ -150,6 +150,10 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+
+        if (factory != null) {
+
         }
 
         return factory;
@@ -176,11 +180,27 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
             handleUserClickModel((UserClickModel) content);
         } else if (content instanceof RetailCatalog) {
             handleRetailCatalog((RetailCatalog) content);
+        } else if (content instanceof AuctionInfo) {
+            handleAuctionInfo((AuctionInfo) content);
+        }
+    }
+
+    private void handleAuctionInfo(AuctionInfo auctionInfo) {
+        this.auctionInfo = auctionInfo;
+
+        if (auctionFactory != null) {
+            auctionFactory.setAuctionInfo(auctionInfo);
         }
     }
 
     private void handleUserClickModel(UserClickModel userClickModel) {
         this.userClickModel = userClickModel;
+
+        bidManager = createBidManager(bidTracker, spendTracker);
+
+        if (auctionFactory != null) {
+            auctionFactory.setBidManager(bidManager);
+        }
     }
 
     private void handleBidBundle(String advertiser, BidBundle bidBundle) {
@@ -192,7 +212,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
 
             int advertiserIndex = getSimulation().agentIndex(advertiser);
             EventWriter writer = getEventWriter();
-            writer.dataUpdated(advertiserIndex,TACAAConstants.DU_BIDS,bidBundle);
+            writer.dataUpdated(advertiserIndex, TACAAConstants.DU_BIDS, bidBundle);
         }
     }
 
@@ -237,7 +257,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     }
 
     public void sendQueryReportsToAll() {
-        if(queryReportManager!=null)
+        if (queryReportManager != null)
             queryReportManager.sendQueryReportToAll();
     }
 
@@ -259,7 +279,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
         }
 
         public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
-            DefaultPublisher.this.charge(advertiser,cpc);
+            DefaultPublisher.this.charge(advertiser, cpc);
         }
 
         public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {
@@ -275,14 +295,64 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
         int impressions = 0;
         int clicks = 0;
 
-        for(int i = 0; i < report.size(); i++) {
+        for (int i = 0; i < report.size(); i++) {
             impressions += report.getImpressions(i);
             clicks += report.getClicks(i);
         }
 
         EventWriter writer = getEventWriter();
-        writer.dataUpdated(index,DU_IMPRESSIONS, impressions);
-        writer.dataUpdated(index,DU_CLICKS, clicks);
+        writer.dataUpdated(index, DU_IMPRESSIONS, impressions);
+        writer.dataUpdated(index, DU_CLICKS, clicks);
 
     }
+
+    protected ConfigProxy getUsersConfigProxy() {
+        if (publisherConfigProxy == null) {
+            publisherConfigProxy = new ConfigProxy() {
+
+                public String getProperty(String name) {
+                    return DefaultPublisher.this.getProperty(name);
+                }
+
+                public String getProperty(String name, String defaultValue) {
+                    return DefaultPublisher.this.getProperty(name, defaultValue);
+                }
+
+                public String[] getPropertyAsArray(String name) {
+                    return DefaultPublisher.this.getPropertyAsArray(name);
+                }
+
+                public String[] getPropertyAsArray(String name, String defaultValue) {
+                    return DefaultPublisher.this.getPropertyAsArray(name, defaultValue);
+                }
+
+                public int getPropertyAsInt(String name, int defaultValue) {
+                    return DefaultPublisher.this.getPropertyAsInt(name, defaultValue);
+                }
+
+                public int[] getPropertyAsIntArray(String name) {
+                    return DefaultPublisher.this.getPropertyAsIntArray(name);
+                }
+
+                public int[] getPropertyAsIntArray(String name, String defaultValue) {
+                    return DefaultPublisher.this.getPropertyAsIntArray(name, defaultValue);
+                }
+
+                public long getPropertyAsLong(String name, long defaultValue) {
+                    return DefaultPublisher.this.getPropertyAsLong(name, defaultValue);
+                }
+
+                public float getPropertyAsFloat(String name, float defaultValue) {
+                    return DefaultPublisher.this.getPropertyAsFloat(name, defaultValue);
+                }
+
+                public double getPropertyAsDouble(String name, double defaultValue) {
+                    return DefaultPublisher.this.getPropertyAsDouble(name, defaultValue);
+                }
+            };
+        }
+
+        return publisherConfigProxy;
+    }
+
 }

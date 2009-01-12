@@ -11,24 +11,36 @@ import java.text.ParseException;
  * @author Patrick Jordan
  */
 public class Ranking extends AbstractTransportable {
-    private List<AdLink> slots;
+    private List<Slot> slots;
 
     public Ranking() {
-        slots = new ArrayList<AdLink>();
+        slots = new ArrayList<Slot>();
+    }
+
+    public void add(AdLink ad, boolean promoted) {
+        add(new Slot(ad,promoted));
     }
 
     public void add(AdLink ad) {
-        lockCheck();
-        slots.add(ad);
+        add(ad,false);
     }
 
-    public void set(int position, AdLink ad) {
+    protected void add(Slot slot) {
         lockCheck();
-        slots.set(position, ad);
+        slots.add(slot);
+    }
+
+    public void set(int position, AdLink ad, boolean promoted) {
+        lockCheck();
+        slots.set(position, new Slot(ad,promoted));
     }
 
     public AdLink get(int position) {
-        return slots.get(position);
+        return slots.get(position).getAdLink();
+    }
+
+    public boolean isPromoted(int position) {
+        return slots.get(position).isPromoted();
     }
 
     public int positionForAd(AdLink ad) {
@@ -54,14 +66,63 @@ public class Ranking extends AbstractTransportable {
     }
 
     protected void readWithLock(TransportReader reader) throws ParseException {
-        while (reader.nextNode(AdLink.class.getSimpleName(), false)) {
-            add((AdLink) reader.readTransportable());
+        while (reader.nextNode(Slot.class.getSimpleName(), false)) {
+            add((Slot) reader.readTransportable());
         }
     }
 
     protected void writeWithLock(TransportWriter writer) {
-        for (AdLink ad : slots) {
-            writer.write(ad);
+        for (Slot slot : slots) {
+            writer.write(slot);
+        }
+    }
+
+    public static class Slot extends AbstractTransportable {
+        private AdLink adLink;
+        private boolean promoted;
+
+
+        public Slot() {
+        }
+
+        public Slot(AdLink adLink, boolean promoted) {
+            this.adLink = adLink;
+            this.promoted = promoted;
+        }
+
+        public AdLink getAdLink() {
+            return adLink;
+        }
+
+        public void setAdLink(AdLink adLink) {
+            this.adLink = adLink;
+        }
+
+        public boolean isPromoted() {
+            return promoted;
+        }
+
+        public void setPromoted(boolean promoted) {
+            this.promoted = promoted;
+        }
+
+
+        protected void readWithLock(TransportReader reader) throws ParseException {
+            promoted = reader.getAttributeAsInt("lock", 0) > 0;
+
+            if(reader.nextNode(AdLink.class.getSimpleName(), false)) {
+                adLink = (AdLink)reader.readTransportable();
+            }
+        }
+
+        protected void writeWithLock(TransportWriter writer) {
+            if(promoted) {
+                writer.attr("promoted", 1);
+            }
+
+            if(adLink!=null) {
+                writer.write(adLink);
+            }
         }
     }
 }

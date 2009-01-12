@@ -31,8 +31,19 @@ public class BidManagerImpl implements BidManager {
 
 
     public BidManagerImpl(UserClickModel userClickModel, BidTracker bidTracker, SpendTracker spendTracker) {
+        if(userClickModel==null)
+            throw new NullPointerException("user click model cannot be null");
+
         this.userClickModel = userClickModel;
+
+        if(bidTracker==null)
+            throw new NullPointerException("bid tracker cannot be null");
+
         this.bidTracker = bidTracker;
+
+        if(spendTracker==null)
+            throw new NullPointerException("spend tracker cannot be null");
+        
         this.spendTracker = spendTracker;
 
 

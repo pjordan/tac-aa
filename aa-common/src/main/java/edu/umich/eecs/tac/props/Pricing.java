@@ -59,8 +59,7 @@ public class Pricing extends AbstractTransportable {
     }
 
     protected void writePriceEntry(TransportWriter writer, Double price, AdLink adLink) {
-        String nodeName = PRICE_ENTRY_TRANSPORT_NAME;
-        writer.node(nodeName);
+        writer.node(PRICE_ENTRY_TRANSPORT_NAME);
 
         int nodeLevel = writer.getNodeLevel();
 
@@ -75,7 +74,7 @@ public class Pricing extends AbstractTransportable {
                     + nodeLevel + ") for transportable " + PRICE_ENTRY_TRANSPORT_NAME);
         }
 
-        writer.endNode(nodeName);
+        writer.endNode(PRICE_ENTRY_TRANSPORT_NAME);
     }
 
     protected void readPriceEntry(TransportReader reader) throws ParseException {

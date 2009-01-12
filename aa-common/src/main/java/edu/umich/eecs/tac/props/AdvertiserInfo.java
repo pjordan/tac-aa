@@ -20,8 +20,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     private String advertiserId;
     private int distributionWindow;
     private double targetEffect;
-    private double[] focusEffects;
-
+    private double[] focusEffects;    
 
     public AdvertiserInfo() {
         focusEffects = new double[QueryType.values().length];
@@ -137,6 +136,8 @@ public class AdvertiserInfo extends AbstractTransportable {
         advertiserId = reader.getAttribute("advertiserId",null);
         distributionWindow = reader.getAttributeAsInt("distributionWindow");
         targetEffect = reader.getAttributeAsDouble("targetEffect", 0.0);
+        
+
         for(QueryType type : QueryType.values()) {
             focusEffects[type.ordinal()] = reader.getAttributeAsDouble(String.format("focusEffect[%s]",type.name()), 1.0);
         }
@@ -170,6 +171,8 @@ public class AdvertiserInfo extends AbstractTransportable {
         writer.attr("distributionWindow", distributionWindow);
 
         writer.attr("targetEffect", targetEffect);
+
+        
 
         for(QueryType type : QueryType.values()) {
             writer.attr(String.format("focusEffect[%s]",type.name()),focusEffects[type.ordinal()]);

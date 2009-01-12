@@ -24,10 +24,17 @@ public class DefaultUsers extends Users implements TACAAConstants {
     private UserManager userManager;
     private UserClickModel userClickModel;
 
+    private int virtualDays = 0;
+
     public DefaultUsers() {
     }
 
     public void nextTimeUnit(int date) {
+
+        if(date==0) {
+            userManager.initialize(virtualDays);
+        }
+        
         userManager.nextTimeUnit(date);
         userManager.triggerBehavior((Publisher) (getSimulation().getPublishers()[0].getAgent()));
     }
@@ -35,6 +42,8 @@ public class DefaultUsers extends Users implements TACAAConstants {
     protected void setup() {
         super.setup();
         this.log = Logger.getLogger(DefaultUsers.class.getName());
+
+        virtualDays = getPropertyAsInt("virtual_days", 0);
 
         try {
             // Create the user manager

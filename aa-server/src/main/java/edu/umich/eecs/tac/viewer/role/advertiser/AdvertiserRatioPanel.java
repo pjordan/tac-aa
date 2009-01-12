@@ -1,7 +1,8 @@
-package edu.umich.eecs.tac.viewer.role;
+package edu.umich.eecs.tac.viewer.role.advertiser;
 
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +20,9 @@ import se.sics.isl.transport.Transportable;
 /**
  * @author Patrick Jordan
  */
-public class AdvertiserAgentPanel extends JPanel implements TACAAConstants {
+public class AdvertiserRatioPanel extends JPanel implements TACAAConstants {
     private int agent;
     private String advertiser;
-    private AdvertiserTabPanel advertiserTabPanel;
 
     private DefaultValueDataset ctrValue;
     private DefaultValueDataset convValue;
@@ -31,14 +31,13 @@ public class AdvertiserAgentPanel extends JPanel implements TACAAConstants {
     private int clicks;
     private int conversions;
 
-    public AdvertiserAgentPanel(int agent, String advertiser, AdvertiserTabPanel advertiserTabPanel) {
+    public AdvertiserRatioPanel(int agent, String advertiser, TACAASimulationPanel simulationPanel) {
         this.agent = agent;
         this.advertiser = advertiser;
-        this.advertiserTabPanel = advertiserTabPanel;
-
+    
         initialize();
 
-        advertiserTabPanel.getSimulationPanel().addViewListener(new DataUpdateListener());
+        simulationPanel.addViewListener(new DataUpdateListener());
     }
 
     private void initialize() {
@@ -127,7 +126,7 @@ public class AdvertiserAgentPanel extends JPanel implements TACAAConstants {
     private class DataUpdateListener implements ViewListener {
 
         public void dataUpdated(int agent, int type, int value) {
-            if (agent == AdvertiserAgentPanel.this.agent) {
+            if (agent == AdvertiserRatioPanel.this.agent) {
                 switch (type) {
                     case TACAAConstants.DU_IMPRESSIONS:
                         addImpressions(value);

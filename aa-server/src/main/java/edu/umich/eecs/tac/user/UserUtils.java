@@ -41,16 +41,18 @@ public class UserUtils {
         return probability;
     }
 
-    public static double calculateClickProbability(User user, AdLink ad, AdvertiserInfo advertiserInfo, double advertiserEffect) {
+    public static double calculateClickProbability(User user, AdLink ad, double targetEffect, double promotionEffect, double advertiserEffect) {
 
         double probability = advertiserEffect;
 
         if (!ad.isGeneric()) {
             if (user.getProduct().equals(ad.getProduct())) {
-                probability = modifyOdds(probability, 1 + advertiserInfo.getTargetEffect());
+                probability = modifyOdds(probability, (1.0 + promotionEffect) * (1.0 + targetEffect) );
             } else {
-                probability = modifyOdds(probability, 1.0 / (1 + advertiserInfo.getTargetEffect() / 2.0));
+                probability = modifyOdds(probability, (1.0 + promotionEffect) / (1.0 + targetEffect) );
             }
+        } else {
+            probability = modifyOdds(probability, 1.0 + promotionEffect );
         }
 
         return probability;

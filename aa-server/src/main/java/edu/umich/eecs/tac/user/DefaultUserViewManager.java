@@ -19,6 +19,8 @@ public class DefaultUserViewManager implements UserViewManager {
 
     private Map<String, AdvertiserInfo> advertiserInfo;
 
+    private AuctionInfo auctionInfo; 
+
     private RetailCatalog catalog;
 
     private Random random;
@@ -27,13 +29,17 @@ public class DefaultUserViewManager implements UserViewManager {
 
     private RecentConversionsTracker recentConversionsTracker;
 
-    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo) {
-        this(catalog, recentConversionsTracker, advertiserInfo, new Random());
+    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo, AuctionInfo auctionInfo) {
+        this(catalog, recentConversionsTracker, advertiserInfo, auctionInfo, new Random());
     }
 
-    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo, Random random) {
+    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo, AuctionInfo auctionInfo, Random random) {
         if(catalog==null) {
             throw new NullPointerException("Retail catalog cannot be null");
+        }
+
+        if(auctionInfo==null) {
+            throw new NullPointerException("Auction info cannot be null");
         }
 
         if(recentConversionsTracker==null) {
@@ -52,6 +58,7 @@ public class DefaultUserViewManager implements UserViewManager {
         this.random = random;
         this.recentConversionsTracker = recentConversionsTracker;
         this.advertiserInfo = advertiserInfo;
+        this.auctionInfo = auctionInfo;
         eventSupport = new UserEventSupport();
     }
 
@@ -92,8 +99,9 @@ public class DefaultUserViewManager implements UserViewManager {
 
                 AdvertiserInfo info = advertiserInfo.get(ad.getAdvertiser());
 
-                double clickProbability = calculateClickProbability(user, ad, info, findAdvertiserEffect(query, ad, userClickModel));
+                double promotionEffect = ranking.isPromoted(i) ? auctionInfo.getPromotedSlotBonus() : 0.0;
 
+                double clickProbability = calculateClickProbability(user, ad, info.getTargetEffect(), promotionEffect, findAdvertiserEffect(query, ad, userClickModel));
 
                 if (random.nextDouble() <= clickProbability) {
                     // Users has clicked on the ad

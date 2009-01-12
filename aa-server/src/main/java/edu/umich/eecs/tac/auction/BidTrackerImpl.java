@@ -182,7 +182,7 @@ public class BidTrackerImpl implements BidTracker {
                 spendLimits = ArrayUtils.setSize(spendLimits, newSize);
                 bids = ArrayUtils.setSize(bids, newSize);
 
-                for(int i = queryCount+1; i < newSize; i++) {
+                for(int i = queryCount; i < newSize; i++) {
                     bids[i] = DEFAULT_BID;
                     spendLimits[i] = DEFAULT_SPEND_LIMIT;
                     adLinks[i] = new AdLink(DEFAULT_AD.getProduct(), advertiser);

@@ -70,6 +70,7 @@ public class DummyAdvertiser extends Agent {
 
     private void handleSimulationStatus(SimulationStatus simulationStatus) {
         sendBidAndAds();
+
         // Now nothing more will be done until the next day
         currentDate = simulationStatus.getCurrentDate() + 1;
     }
