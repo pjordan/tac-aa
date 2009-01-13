@@ -9,19 +9,23 @@ import java.util.logging.Logger;
 import com.botbox.util.ArrayUtils;
 import edu.umich.eecs.tac.props.BankStatus;
 
+//Commented out bankStatus[]; so long as bankStatus only contains amounts,
+//this array is doing nothing.  If in the future this becomes more like SCM, i.e.
+//there are interests and penalties, then this array becomes meaningful
+
 public class Bank {
 
     private TACAASimulation simulation;
     private String[] accountNames;
     private double[] accountAmounts;
-    private BankStatus[] bankStatus;
+//    private BankStatus[] bankStatus;
     private int accountNumber;  //number of accounts
 
     public Bank(TACAASimulation simulation, int accountNumber) {
         this.simulation = simulation;
         accountNames = new String[accountNumber];
         accountAmounts = new double[accountNumber];
-        bankStatus = new BankStatus[accountNumber];
+//        bankStatus = new BankStatus[accountNumber];
     }
 
     public void addAccount(String name) {
@@ -37,7 +41,7 @@ public class Bank {
             accountNames = (String[])
                     ArrayUtils.setSize(accountNames, newSize);
             accountAmounts = ArrayUtils.setSize(accountAmounts, newSize);
-            bankStatus = (BankStatus[]) ArrayUtils.setSize(bankStatus, newSize);
+//            bankStatus = (BankStatus[]) ArrayUtils.setSize(bankStatus, newSize);
         }
         accountNames[accountNumber] = name;
         accountAmounts[accountNumber] = 0.0d;
@@ -66,16 +70,17 @@ public class Bank {
 
     public void sendBankStatusToAll() {
         for (int i = 0; i < accountNumber; i++) {
-            BankStatus status = bankStatus[i];
-            if (status == null) {
-                status = new BankStatus();
-            } else {
-                // Can not simply reset the bank status after sending it
-                // because the message might be in a send queue or used in an
-                // internal agent.  Only option is to simply forget about it
-                // and create a new bank status for the agent the next day.
-                bankStatus[i] = null;
-            }
+        	  BankStatus status = new BankStatus();
+  //          BankStatus status = bankStatus[i];
+  //          if (status == null) {
+  //              status = new BankStatus();
+  //          } else {
+ //               // Can not simply reset the bank status after sending it
+ //               // because the message might be in a send queue or used in an
+ //              // internal agent.  Only option is to simply forget about it
+ //               // and create a new bank status for the agent the next day.
+ //               bankStatus[i] = null;
+ //           }
             status.setAccountBalance(accountAmounts[i]);
             simulation.sendBankStatus(accountNames[i], status);            
         }
