@@ -97,11 +97,6 @@ public class TACAASimulationPanel extends JPanel implements TickListener, TACAAC
 
         createTabs();
 
-        if (timeUnitCount < 1) timeUnitCount = 1;
-
-
-        long currentTime = viewerPanel.getServerTime();
-
         if (!isRunning) {
             viewerPanel.addTickListener(this);
             isRunning = true;

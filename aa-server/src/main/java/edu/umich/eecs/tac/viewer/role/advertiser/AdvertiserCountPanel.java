@@ -7,6 +7,8 @@ import edu.umich.eecs.tac.viewer.ViewListener;
 import javax.swing.*;
 
 import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Day;
@@ -15,6 +17,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.ui.RectangleInsets;
 
 import java.awt.*;
@@ -29,10 +32,10 @@ public class AdvertiserCountPanel extends JPanel implements TACAAConstants {
     private int agent;
     private String advertiser;
 
-    private Day currentDay;
-    private TimeSeries impressions;
-    private TimeSeries clicks;
-    private TimeSeries conversions;
+    private int currentDay;
+    private XYSeries impressions;
+    private XYSeries clicks;
+    private XYSeries conversions;
 
     public AdvertiserCountPanel(int agent, String advertiser, TACAASimulationPanel simulationPanel) {
         this.agent = agent;
@@ -40,7 +43,7 @@ public class AdvertiserCountPanel extends JPanel implements TACAAConstants {
 
         initialize();
 
-        currentDay = new Day();
+        currentDay = 0;
         simulationPanel.addViewListener(new DataUpdateListener());
         simulationPanel.addTickListener(new DayListener());
     }
@@ -56,23 +59,23 @@ public class AdvertiserCountPanel extends JPanel implements TACAAConstants {
     }
 
     private JFreeChart createConversionsChart() {
-        conversions = new TimeSeries("Convs", Day.class);
-        return createChart("Convs", new TimeSeriesCollection(conversions));
+        conversions = new XYSeries("Convs");
+        return createChart("Convs", new XYSeriesCollection(conversions));
     }
 
     private JFreeChart createClicksChart() {
-        clicks = new TimeSeries("Clicks", Day.class);
-        return createChart("Clicks", new TimeSeriesCollection(clicks));
+        clicks = new XYSeries("Clicks");
+        return createChart("Clicks", new XYSeriesCollection(clicks));
     }
 
     private JFreeChart createImpressionsChart() {
-        impressions = new TimeSeries("Imprs", Day.class);
-        return createChart("Imprs", new TimeSeriesCollection(impressions));
+        impressions = new XYSeries("Imprs");
+        return createChart("Imprs", new XYSeriesCollection(impressions));
     }
 
 
     private JFreeChart createChart(String s, XYDataset xydataset) {
-        JFreeChart jfreechart = ChartFactory.createTimeSeriesChart(s, "Day", "$", xydataset, true, true, false);
+        JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", "$", xydataset, PlotOrientation.VERTICAL, true, true, false);
         jfreechart.setBackgroundPaint(Color.white);
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
         xyplot.setBackgroundPaint(Color.lightGray);
@@ -81,7 +84,6 @@ public class AdvertiserCountPanel extends JPanel implements TACAAConstants {
         xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
         xyplot.setDomainCrosshairVisible(true);
         xyplot.setRangeCrosshairVisible(true);
-        xyplot.getDomainAxis().setVisible(false);
 
         org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot.getRenderer();
         if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
@@ -100,15 +102,15 @@ public class AdvertiserCountPanel extends JPanel implements TACAAConstants {
     }
 
     protected void addImpressions(int impressions) {
-        this.impressions.add(currentDay,impressions);
+        this.impressions.addOrUpdate(currentDay,impressions);
     }
 
     protected void addClicks(int clicks) {
-        this.clicks.add(currentDay, clicks);
+        this.clicks.addOrUpdate(currentDay, clicks);
     }
 
     protected void addConversions(int conversions) {
-        this.conversions.add(currentDay, conversions);
+        this.conversions.addOrUpdate(currentDay, conversions);
     }
 
     private class DataUpdateListener implements ViewListener {
@@ -167,7 +169,7 @@ public class AdvertiserCountPanel extends JPanel implements TACAAConstants {
     }
 
     protected void simulationTick(long serverTime, int simulationDate) {
-        currentDay = (Day) currentDay.next();
+        currentDay = simulationDate;
     }
 }
 

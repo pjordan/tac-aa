@@ -14,15 +14,17 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.Day;
 import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.data.xy.XYSeries;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.ui.RectangleInsets;
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
-import com.botbox.util.ArrayUtils;
 
 /**
  * @author Patrick Jordan
@@ -30,16 +32,16 @@ import com.botbox.util.ArrayUtils;
 public class AuctionPanel extends JComponent implements TACAAConstants {
     private Query query;
 
-    private TimeSeriesCollection timeseriescollection;
-    private Day currentDay;
+    private XYSeriesCollection seriescollection;
+    private int currentDay;
     private PublisherTabPanel publisherPanel;
-    private Map<String, TimeSeries> bidSeries;
+    private Map<String, XYSeries> bidSeries;
 
     public AuctionPanel(Query query, PublisherTabPanel publisherPanel) {
         this.query = query;
         this.publisherPanel = publisherPanel;
-        this.bidSeries = new HashMap<String, TimeSeries>();
-        this.currentDay = new Day();
+        this.bidSeries = new HashMap<String, XYSeries>();
+        this.currentDay = 0;
         initialize();
 
         publisherPanel.getSimulationPanel().addViewListener(new BidBundleListener());
@@ -50,8 +52,8 @@ public class AuctionPanel extends JComponent implements TACAAConstants {
     protected void initialize() {
         setLayout(new GridLayout(1, 1));
 
-        timeseriescollection = new TimeSeriesCollection();
-        JFreeChart chart = createChart(timeseriescollection);
+        seriescollection = new XYSeriesCollection();
+        JFreeChart chart = createChart(seriescollection);
         ChartPanel chartpanel = new ChartPanel(chart, false);
         chartpanel.setMouseZoomable(true, false);
 
@@ -62,16 +64,16 @@ public class AuctionPanel extends JComponent implements TACAAConstants {
 
         for (int index = 0; index < count; index++) {
             if (publisherPanel.getRole(index) == TACAAConstants.ADVERTISER) {
-                TimeSeries series = new TimeSeries(publisherPanel.getAgentName(index), Day.class);
+                XYSeries series = new XYSeries(publisherPanel.getAgentName(index));
                 bidSeries.put(publisherPanel.getAgentName(index), series);
-                timeseriescollection.addSeries(series);
+                seriescollection.addSeries(series);
             }
         }
     }
 
 
     private JFreeChart createChart(XYDataset xydataset) {
-        JFreeChart jfreechart = ChartFactory.createTimeSeriesChart(String.format("Auction for (%s,%s)", getQuery().getManufacturer(), getQuery().getComponent()), "Day", "Bid [$]", xydataset, true, true, false);
+        JFreeChart jfreechart = ChartFactory.createXYLineChart(String.format("Auction for (%s,%s)", getQuery().getManufacturer(), getQuery().getComponent()), "Day", "Bid [$]", xydataset, PlotOrientation.VERTICAL, true, true, false);
         jfreechart.setBackgroundPaint(Color.white);
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
         xyplot.setBackgroundPaint(Color.lightGray);
@@ -80,7 +82,6 @@ public class AuctionPanel extends JComponent implements TACAAConstants {
         xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
         xyplot.setDomainCrosshairVisible(true);
         xyplot.setRangeCrosshairVisible(true);
-        xyplot.getDomainAxis().setVisible(false);
         
         org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot.getRenderer();
         if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
@@ -123,7 +124,7 @@ public class AuctionPanel extends JComponent implements TACAAConstants {
                 String name = index < 0 ? null : publisherPanel.getAgentName(index);
 
                 if (name != null) {
-                    TimeSeries timeSeries = bidSeries.get(name);
+                    XYSeries timeSeries = bidSeries.get(name);
 
                     if (timeSeries != null) {
 
@@ -132,7 +133,7 @@ public class AuctionPanel extends JComponent implements TACAAConstants {
 
                         double bid = bundle.getBid(query);
                         if (!Double.isNaN(bid)) {
-                            timeSeries.add(currentDay, bid);
+                            timeSeries.addOrUpdate(currentDay, bid);
                         }
                     }
                 }
@@ -163,6 +164,6 @@ public class AuctionPanel extends JComponent implements TACAAConstants {
     }
 
     protected void simulationTick(long serverTime, int simulationDate) {
-        currentDay = (Day) currentDay.next();
+        currentDay = simulationDate;
     }
 }
