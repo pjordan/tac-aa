@@ -469,7 +469,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
         }
 
         public double getCPC() {
-            return cost / impressions;
+            return cost / ((double)clicks);
         }
 
         public Ad getAd() {
@@ -528,7 +528,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
             writer.attr("impressions", impressions);
             writer.attr("clicks", clicks);
             writer.attr("positionSum", positionSum);
-            writer.attr("cpc", cost);
+            writer.attr("cost", cost);
 
             if (ad != null) {
                 writer.write(ad);

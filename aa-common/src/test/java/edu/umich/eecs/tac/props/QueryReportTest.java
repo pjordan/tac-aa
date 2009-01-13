@@ -47,14 +47,15 @@ public class QueryReportTest {
 
         assertEquals(entry.getCPC(), 0.0);
         entry.setCost(3.0);
-        assertEquals(entry.getCPC(), 3.0);
+        assertEquals(entry.getCost(), 3.0);
+        assertEquals(entry.getCPC(), 1.5);
 
         assertEquals(entry.getPosition(), 0.0);
         entry.addPosition(4.0);
         assertEquals(entry.getPosition(), 4.0);
 
         assertEquals(entry.getTransportName(), "QueryReportEntry");
-        assertEquals(entry.toString(), "((Query (null,null)) impr: 1 clicks: 2 pos: 4.000000 cpc: 3.000000)");
+        assertEquals(entry.toString(), "((Query (null,null)) impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000)");
 
     }
 
@@ -82,7 +83,8 @@ public class QueryReportTest {
         assertEquals(received.getQuery(), new Query());
         assertEquals(received.getImpressions(), 1);
         assertEquals(received.getClicks(), 2);
-        assertEquals(received.getCPC(), 3.0);
+        assertEquals(received.getCost(), 3.0);
+        assertEquals(received.getCPC(), 1.5);
         assertEquals(received.getPosition(), 4.0);
         assertEquals(entry.getTransportName(), "QueryReportEntry");
 
@@ -112,11 +114,12 @@ public class QueryReportTest {
         assertNull(received.getQuery());
         assertEquals(received.getImpressions(), 1);
         assertEquals(received.getClicks(), 2);
-        assertEquals(received.getCPC(), 3.0);
+        assertEquals(received.getCost(), 3.0);
+        assertEquals(received.getCPC(), 1.5);
         assertEquals(received.getPosition(), 4.0);
 
         assertEquals(received.getTransportName(), "QueryReportEntry");
-        assertEquals(received.toString(), "(null impr: 1 clicks: 2 pos: 4.000000 cpc: 3.000000)");
+        assertEquals(received.toString(), "(null impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000)");
     }
 
     @Test
@@ -191,12 +194,12 @@ public class QueryReportTest {
         report.setCost(new Query(), 1.0);
         assertEquals(report.size(), 1);
         assertTrue(report.containsQuery(new Query()));
-        assertEquals(report.getCPC(new Query()), 1.0);
+        assertEquals(report.getCPC(new Query()), Double.POSITIVE_INFINITY);
 
 
         report.setCost(new Query(), 3.0);
         assertEquals(report.size(), 1);
-        assertEquals(report.getCPC(new Query()), 3.0);
+        assertEquals(report.getCPC(new Query()), Double.POSITIVE_INFINITY);
 
         report.setCost(null, 2);
     }
@@ -208,15 +211,16 @@ public class QueryReportTest {
 
         assertEquals(report.getImpressions(null), 0);
         assertEquals(report.getClicks(null), 0);
-        assertEquals(report.getCPC(null), 0.0);
-        assertEquals(report.getPosition(null), 0.0);
+        assertEquals(report.getCost(null), 0.0);
+        assertEquals(report.getCPC(null), Double.NaN);
+        assertEquals(report.getPosition(null), Double.NaN);
     }
 
     @Test
     public void testQueryReportToString() {
         QueryReport report = new QueryReport();
         report.addQuery(new Query());
-        assertEquals(report.toString(), "(QueryReport ((Query (null,null)) impr: 0 clicks: 0 pos: 0.000000 cpc: 0.000000))");
+        assertEquals(report.toString(), "(QueryReport ((Query (null,null)) impr: 0 clicks: 0 pos: NaN cpc: NaN))");
     }
 
     @Test
@@ -226,7 +230,7 @@ public class QueryReportTest {
         Query query = new Query();
 
         assertEquals(report.getImpressions(query), 0);
-        assertEquals(report.getCPC(query), 0.0);
+        assertEquals(report.getCPC(query), Double.NaN);
         report.addImpressions(query, 2);
         report.addClicks(query, 3);
         assertEquals(report.getImpressions(query), 2);
@@ -248,11 +252,12 @@ public class QueryReportTest {
         QueryReport instance = new QueryReport();
         instance.setPositionSum(new Query(), 0);
         instance.setPositionSum(0, 3.2);
-        assertEquals(instance.getPosition(0), 3.2);
+        assertEquals(instance.getPosition(0), Double.POSITIVE_INFINITY);
 
         Query q = new Query();
         q.setComponent("c1");
         instance.setPositionSum(q, 4.0);
+        instance.setImpressions(q, 1);
         assertEquals(instance.getPosition(q), 4.0);
 
         instance.setPositionSum(q, 2.0);
