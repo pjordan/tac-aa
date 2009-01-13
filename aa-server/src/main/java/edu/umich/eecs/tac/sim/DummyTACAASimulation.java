@@ -5,17 +5,16 @@ package edu.umich.eecs.tac.sim;
  */
 
 import edu.umich.eecs.tac.props.BankStatus;
-import se.sics.isl.util.ConfigManager;
 
 public class DummyTACAASimulation extends TACAASimulation {
 
-	private DummyTACAASimulation(ConfigManager config) {
-		super(config);
+	public DummyTACAASimulation() {
+		super(null);
 	}
-
+	
 	@Override
 	public void sendBankStatus(String accountName, BankStatus status) {
-		
+		return;
 	}
 
 }

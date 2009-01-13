@@ -21,6 +21,7 @@ public class BankTest {
 	
 	@Before
 	public void setUp() throws IllegalConfigurationException {
+		dummy = new DummyTACAASimulation();
 		bank = new Bank(dummy, 1);
 	}
 
@@ -50,6 +51,8 @@ public class BankTest {
 
 	@Test
 	public void testSendBankStatusToAll() {
+		bank.addAccount("Joe's Plumbing");
+		bank.deposit("Joe's Plumbing", 123.45);
 		bank.sendBankStatusToAll();
 	}
 
