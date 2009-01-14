@@ -55,7 +55,7 @@ public class QueryReportTest {
         assertEquals(entry.getPosition(), 4.0);
 
         assertEquals(entry.getTransportName(), "QueryReportEntry");
-        assertEquals(entry.toString(), "((Query (null,null)) impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000)");
+        assertEquals(entry.toString(), "((Query (null,null)) impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000 advertisers: (DisplayReport))");
 
     }
 
@@ -119,7 +119,7 @@ public class QueryReportTest {
         assertEquals(received.getPosition(), 4.0);
 
         assertEquals(received.getTransportName(), "QueryReportEntry");
-        assertEquals(received.toString(), "(null impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000)");
+        assertEquals(received.toString(), "(null impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000 advertisers: (DisplayReport))");
     }
 
     @Test
@@ -220,7 +220,7 @@ public class QueryReportTest {
     public void testQueryReportToString() {
         QueryReport report = new QueryReport();
         report.addQuery(new Query());
-        assertEquals(report.toString(), "(QueryReport ((Query (null,null)) impr: 0 clicks: 0 pos: NaN cpc: NaN))");
+        assertEquals(report.toString(), "(QueryReport ((Query (null,null)) impr: 0 clicks: 0 pos: NaN cpc: NaN advertisers: (DisplayReport)))");
     }
 
     @Test
