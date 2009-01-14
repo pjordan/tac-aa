@@ -149,11 +149,11 @@ public class BidBundle extends AbstractQueryKeyedReportTransportable<BidBundle.B
     }
 
     protected void readWithLock(TransportReader reader) throws ParseException {
-        // Read the entries
-        super.readWithLock(reader);
-
         // Read the campaign daily spend limit
         this.campaignDailySpendLimit = reader.getAttributeAsDouble("campaignDailySpendLimit", DEFAULT_SPEND_LIMIT);
+
+        // Read the entries
+        super.readWithLock(reader);
     }
 
     protected void writeWithLock(TransportWriter writer) {
@@ -162,6 +162,19 @@ public class BidBundle extends AbstractQueryKeyedReportTransportable<BidBundle.B
 
         // Write the entries
         super.writeWithLock(writer);
+    }
+
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder("(");
+        builder.append(this.getClass().getSimpleName());
+        builder.append(" limit: ").append(campaignDailySpendLimit);
+        for (Object reportEntry : entries) {
+            builder.append(' ').append(reportEntry);
+        }
+        builder.append(')');
+
+        return builder.toString();
     }
 
     public static class BidEntry extends AbstractQueryEntry {
@@ -211,6 +224,11 @@ public class BidBundle extends AbstractQueryKeyedReportTransportable<BidBundle.B
 
         public void setDailyLimit(double dailyLimit) {
             this.dailyLimit = dailyLimit;
+        }
+
+
+        public String toString() {
+            return String.format("(Bid query:%s ad:%s bid: %f limit: %f)", getQuery(), ad, bid, dailyLimit);
         }
     }
 

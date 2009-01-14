@@ -28,11 +28,6 @@
             <artifactId>aa-common</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>edu.umich.eecs.tac</groupId>
-            <artifactId>aa-server</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 	<build>
 		<plugins>

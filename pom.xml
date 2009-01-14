@@ -54,5 +54,6 @@
 	<module>aa-common</module>
 	<module>aa-server</module>
 	<module>aa-agent</module>
+    <module>aa-viewer</module>
   </modules>
 </project>

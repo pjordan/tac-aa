@@ -7,10 +7,10 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.umich.eecs.tac</groupId>
-	<artifactId>aa-server</artifactId>
+	<artifactId>aa-viewer</artifactId>
 	<packaging>jar</packaging>
 	<version>0.1-SNAPSHOT</version>
-	<name>Trading Agent Ad Auctions server</name>
+	<name>Trading Agent Ad Auctions viewer</name>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -33,16 +33,6 @@
             <artifactId>aa-common</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>edu.umich.eecs.tac</groupId>
-            <artifactId>aa-viewer</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
-        </dependency>
     </dependencies>
 	<build>
 		<plugins>
@@ -55,16 +45,6 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.0-beta-1</version>
-                <configuration>
-                    <descriptor>src/main/assembly/dep.xml</descriptor>
-                    <finalName>${artifactId}-${version}</finalName>
-                    <outputDirectory>target/</outputDirectory>
-                    <workDirectory>target/assembly/work></workDirectory>
-                </configuration>
-            </plugin>
   		</plugins>
 	</build>
     <reporting>

@@ -226,7 +226,7 @@ public abstract class TransportReader
 
   public double getAttributeAsDouble(String name, double defaultValue) throws ParseException
   {
-    return getAttributeAsDouble(name, 0.0d, false);
+    return getAttributeAsDouble(name, defaultValue, false);
   }
 
   public double getAttributeAsDouble(String name, double defaultValue, boolean isRequired)

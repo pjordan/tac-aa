@@ -144,6 +144,7 @@ public class BidBundleTest {
         byte[] buffer = getBytesForTransportable(writer,bundle);
         BidBundle received = readFromBytes(reader,buffer,"BidBundle");
 
+        assertEquals(received.getCampaignDailySpendLimit(), Double.NaN);
         assertNotNull(bundle);
         assertNotNull(received);
         assertEquals(received.size(),2);
