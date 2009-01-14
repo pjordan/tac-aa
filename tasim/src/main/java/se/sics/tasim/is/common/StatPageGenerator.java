@@ -390,7 +390,7 @@ public class StatPageGenerator
       {
         // Special calculation because the lowest scores used for zero
         // games are not stored in the competition participant
-        long baseScore = user.getTotalScore() - zeroScore;
+        double baseScore = user.getTotalScore() - zeroScore;
         int games = user.getGamesPlayed() - zeroScoreCount;
         double avgScore = (games <= 0) ? 0.0 : (((double) baseScore) / games);
         out.td(toString(avgScore), "align=right");
