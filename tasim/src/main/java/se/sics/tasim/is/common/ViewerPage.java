@@ -43,7 +43,7 @@ public class ViewerPage extends HttpPage
   
   private String viewerClass = "se.sics.tasim.viewer.applet.ViewerApplet";
   private String viewerCodeBase = "/code/";
-  private String viewerArchive = "simviewer.jar";
+  private String viewerArchive = "simviewer.jar"; //TODO-could be changed @asleep
   private String width = "100%";
   private String height = "100%";
   
@@ -83,14 +83,16 @@ public class ViewerPage extends HttpPage
         + "'>\r\n"
         + "  <param name=type value='application/x-java-applet;version=1.4.1'>\r\n"
         + "  <param name='scriptable' value='false'>\r\n"
-        + "  <param name='serverName' value='" + serverName + "'>\r\n";
+        + "  <param name='serverName' value='" + serverName + "'>\r\n"
+        + "<param name=contextFactory value='"+ contextFactory + "'>\r\n";
     middlePage = "\r\n" + "  <COMMENT>\r\n" + "    <embed\r\n"
         + "       type='application/x-java-applet;version=1.4.1'\r\n"
         + "       code='" + viewerClass + "'\r\n" + "       codebase='"
         + viewerCodeBase + "'\r\n" + "       archive='" + viewerArchive
         + "'\r\n" + "       width='" + width + "'\r\n" + "       height='"
         + height + "'\r\n" + "       scriptable=false\r\n"
-        + "       serverName='" + serverName + "'\r\n";
+        + "       serverName='" + serverName + "'\r\n"
+        + "       contextFactory='" + contextFactory + "'\r\n";
     bottomPage = "	pluginspage='http://java.sun.com/products/plugin/index.html#download'\r\n"
         + "       alt='Your browser understands the &lt;EMBED&gt; tag but isn't running the Java Applet, for some reason.'>\r\n"
         + "	<noembed>\r\n"

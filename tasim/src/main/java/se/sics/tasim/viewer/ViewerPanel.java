@@ -83,16 +83,18 @@ public class ViewerPanel extends ViewerConnection {
     this.userName = userName;
 
     // TODO: use the tasim_viewer.conf file
-    String configFile = "tasim_viewer.conf";
+    // NOTE: this should actually be the tac09aa_viewer.conf file 
+//    String configFile = "tasim_viewer.conf";
+    String configFile = "tac09aa_viewer.conf"; 
     URL configURL = ViewerPanel.class.getResource("/config/" + configFile);
     config = new ConfigManager();
     try {
       if (configURL != null) {
-	config.loadConfiguration(configURL);
+	      config.loadConfiguration(configURL);
       } else if (!config.loadConfiguration("config" + File.separatorChar
 					   + configFile)) {
-	// Failed to load the configuration.
-	log.severe("could not find config " + configFile);
+	      // Failed to load the configuration.
+	      log.severe("could not find config " + configFile);
       }
     } catch (Exception e) {
       log.severe("could not find config " + configFile);

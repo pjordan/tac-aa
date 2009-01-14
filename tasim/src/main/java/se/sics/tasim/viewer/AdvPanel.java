@@ -41,8 +41,8 @@ public class AdvPanel extends JLabel {
     setHorizontalAlignment(CENTER);
     setVerticalTextPosition(BOTTOM);
     setHorizontalTextPosition(CENTER);
-    setIconTextGap(1);
-    setIcon(viewerPanel.getIcon("banner2.jpg"));
+    //setIconTextGap(1);
+    //setIcon(viewerPanel.getIcon("banner2.jpg"));
   }
 
   public Insets getInsets() {

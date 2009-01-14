@@ -33,6 +33,7 @@ import se.sics.tasim.viewer.ChatListener;
 import se.sics.tasim.viewer.ViewerPanel;
 import se.sics.isl.transport.ContextFactory;
 
+//MODIFIED BY-Lee Callender
 public class ViewerApplet extends JApplet implements ChatListener {
 
   private static final Logger log =
@@ -66,7 +67,7 @@ public class ViewerApplet extends JApplet implements ChatListener {
       {"user",		"name",		"the user name"},
       {"port",		"int",		"the viewer connection port"},
       {"serverName",	"name",		"the server name"},
-      {"contextFactory",	"name",		"the context factory class"}
+      {"contextFactory",	"name",		"the context factory class"},
     };
     return info;
   }
@@ -85,18 +86,22 @@ public class ViewerApplet extends JApplet implements ChatListener {
     String portDesc = getParameter("port");
     if (portDesc != null) {
       try {
-	this.serverPort = Integer.parseInt(portDesc);
+	      this.serverPort = Integer.parseInt(portDesc);
       } catch (Exception e) {
-	log.log(Level.SEVERE, "could not parse server port '" + portDesc
-		+ '\'', e);
+	      log.log(Level.SEVERE, "could not parse server port '" + portDesc
+		    + '\'', e);
       }
     }
 
     //TODO-contextFactory must be passed in, should be the same as in TACTGateway
     String contextFactoryClassName =  getParameter("contextFactory");
+    if (contextFactoryClassName == null){
+        throw new IllegalArgumentException("no contextFactory specified");
+    }
+    
 
     try {
-       contextFactory = (ContextFactory)Class.forName(contextFactoryClassName).newInstance();
+      contextFactory = (ContextFactory)Class.forName(contextFactoryClassName).newInstance();
     } catch (ClassNotFoundException e) {
       log.severe("unable to load context factory: Class not found");
     } catch (InstantiationException e) {
@@ -105,9 +110,9 @@ public class ViewerApplet extends JApplet implements ChatListener {
       log.severe("unable to load context factory: Illegal access exception");
     }
 
-    if (contextFactory == null) {
+    /*if (contextFactory == null) {
       throw new IllegalArgumentException("no context factory specified");
-    }
+    }*/
 
     mainPanel = new ViewerPanel(userName, serverName);
     mainPanel.setChatListener(this);
