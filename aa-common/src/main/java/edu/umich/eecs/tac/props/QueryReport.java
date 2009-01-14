@@ -539,7 +539,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
 
 
         public String toString() {
-            return String.format("(%s impr: %d clicks: %d pos: %f cpc: %f)", getQuery(), impressions, clicks, getPosition(), getCPC());
+            return String.format("(%s impr: %d clicks: %d pos: %f cpc: %f advertisers: %s)", getQuery(), impressions, clicks, getPosition(), getCPC(), displayReport);
         }
     }
 
