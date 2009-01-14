@@ -97,6 +97,14 @@ public abstract class Parser implements TACAAConstants {
                     dataUpdated(agentIndex, type, value);
                 }
 
+            } else if (reader.isNode("doubleUpdated")) {
+                int type = reader.getAttributeAsInt("type", 0);
+                int agentIndex = reader.getAttributeAsInt("agent", -1);
+                double value = reader.getAttributeAsDouble("value");
+                if (agentIndex >= 0) {
+                    dataUpdated(agentIndex, type, value);
+                }
+
             } else if (reader.isNode("stringUpdated")) {
                 int type = reader.getAttributeAsInt("type", 0);
                 int agentIndex = reader.getAttributeAsInt("agent", -1);
@@ -142,10 +150,10 @@ public abstract class Parser implements TACAAConstants {
                 }
 
             } else if (reader.isNode("transaction")) {
-                int supplier = reader.getAttributeAsInt("supplier");
-                int customer = reader.getAttributeAsInt("customer");
-                long amount = reader.getAttributeAsLong("amount");
-                transaction(supplier, customer, amount);
+                int source = reader.getAttributeAsInt("source");
+                int recipient = reader.getAttributeAsInt("recipient");
+                double amount = reader.getAttributeAsDouble("amount");
+                transaction(source, recipient, amount);
 
             } else if (reader.isNode("nextTimeUnit")) {
                 int date = reader.getAttributeAsInt("unit");
@@ -268,6 +276,16 @@ public abstract class Parser implements TACAAConstants {
      * @param type  the type of the data
      * @param value the data value
      */
+    protected void dataUpdated(int agent, int type, double value) {
+    }
+
+    /**
+     * Invoked when a data update is encountered in the log file.
+     *
+     * @param agent the agent for which the data was updated
+     * @param type  the type of the data
+     * @param value the data value
+     */
     protected void dataUpdated(int agent, int type, String value) {
     }
 
@@ -292,43 +310,13 @@ public abstract class Parser implements TACAAConstants {
     }
 
     /**
-     * Invoked when an impression update for a specific agent is
-     * encountered in the log file.
-     *
-     * @param agent  the agent that received the impressions
-     * @param amount the impression amount
-     */
-    protected void impressions(int agent, long amount) {
-    }
-
-    /**
-     * Invoked when an click update for a specific agent is
-     * encountered in the log file.
-     *
-     * @param agent  the agent that received the clicks
-     * @param amount the click amount
-     */
-    protected void clicks(int agent, long amount) {
-    }
-
-    /**
-     * Invoked when an conversion update for a specific agent is
-     * encountered in the log file.
-     *
-     * @param agent  the agent that received the conversions
-     * @param amount the conversion amount
-     */
-    protected void conversions(int agent, long amount) {
-    }
-
-    /**
      * Invoked when a transaction is encountered in the log file.
      *
-     * @param from   the from which receives the payment
-     * @param to     the paying to
+     * @param source   the source which receives the payment
+     * @param recipient     the paying recipient
      * @param amount the transacted amount
      */
-    protected void transaction(int from, int to, long amount) {
+    protected void transaction(int source, int recipient, double amount) {
     }
 
     /**

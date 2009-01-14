@@ -199,13 +199,31 @@ public class TACAASimulationInfo extends Parser {
     }
 
     protected void dataUpdated(int agentIndex, int type, int value) {
+        switch (type) {
+            case TACAAConstants.DU_IMPRESSIONS:
+                impressions(agentIndex, value);
+                break;
+            case TACAAConstants.DU_CLICKS:
+                clicks(agentIndex, value);
+                break;
+            case TACAAConstants.DU_CONVERSIONS:
+                conversions(agentIndex, value);
+                break;
+            case TACAAConstants.DU_BANK_ACCOUNT:
+                Participant p = getParticipant(agentIndex);
+                p.setResult(value);
+                break;
+        }
+    }
+
+    protected void dataUpdated(int agentIndex, int type, long value) {
         if (type == DU_BANK_ACCOUNT) {
             Participant p = getParticipant(agentIndex);
             p.setResult(value);
         }
     }
 
-    protected void dataUpdated(int agentIndex, int type, long value) {
+    protected void dataUpdated(int agentIndex, int type, double value) {
         if (type == DU_BANK_ACCOUNT) {
             Participant p = getParticipant(agentIndex);
             p.setResult(value);
@@ -245,11 +263,11 @@ public class TACAASimulationInfo extends Parser {
     }
 
 
-    protected void transaction(int from, int to, long amount) {
-        Participant fromP = getParticipant(from);
-        Participant toP = getParticipant(to);
-        toP.addCost(amount);
-        fromP.addRevenue(amount);
+    protected void transaction(int source, int recipient, double amount) {
+        Participant sourceParticipant = getParticipant(source);
+        Participant recipientParticipant = getParticipant(recipient);
+        recipientParticipant.addCost(amount);
+        sourceParticipant.addRevenue(amount);
     }
 
     protected void nextDay(int date, long serverTime) {
