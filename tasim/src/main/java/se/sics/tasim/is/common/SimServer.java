@@ -2495,7 +2495,7 @@ public class SimServer
               (crScore[i] == 0) || ((crFlags[i] & ZERO_GAME) != 0));
           
           dbm.setInt("participantid", crParticipantIDs[i]);
-          object.setLong("score", cp.getTotalScore());
+          object.setDouble("score", cp.getTotalScore());
           object.setDouble("wscore", cp.getTotalWeightedScore());
           object.setInt("gamesplayed", cp.getGamesPlayed());
           object.setInt("zgamesplayed", cp.getZeroGamesPlayed());
@@ -3242,7 +3242,7 @@ public class SimServer
                   (lowestScoreForZero && isZeroGame) ? lowestScore : scores[i],
                   weight, isZeroGame);
               
-              object.setLong("score", cp.getTotalScore());
+              object.setDouble("score", cp.getTotalScore());
               object.setDouble("wscore", cp.getTotalWeightedScore());
               object.setInt("gamesplayed", cp.getGamesPlayed());
               object.setInt("zgamesplayed", cp.getZeroGamesPlayed());
@@ -3288,7 +3288,134 @@ public class SimServer
       }
     }
   }
-  
+
+  final void addSimulationResult(LogReader logReader,
+      ParticipantInfo[] participants, double[] scores, boolean update)
+  {
+    if (participants == null)
+    {
+      return;
+    }
+
+    int simulationUniqID = logReader.getUniqueID();
+    DBObject object = null;
+    if (resultTable != null)
+    {
+      try
+      {
+        object = new DBObject();
+        object.setInt("id", simulationUniqID);
+        for (int i = 0, n = participants.length; i < n; i++)
+        {
+          ParticipantInfo info = participants[i];
+          if (!info.isBuiltinAgent())
+          {
+            object.setInt("participantid", info.getUserID());
+            object.setInt("participantrole", info.getRole());
+            object.setDouble("score", scores[i]);
+            resultTable.insert(object);
+          }
+        }
+        resultTable.flush();
+      }
+      catch (Exception e)
+      {
+        log.log(Level.SEVERE, "could not store results for simulation "
+            + logReader.getSimulationID(), e);
+      }
+    }
+
+    Competition competition;
+    if (competitionResultTable != null
+        && ((competition = getCompetitionBySimulation(simulationUniqID)) != null))
+    {
+      try
+      {
+        boolean lowestScoreForZero = (competition.getFlags() & Competition.LOWEST_SCORE_FOR_ZERO) != 0;
+        double weight = competition.getWeight(simulationUniqID);
+        double lowestScore = 0.0;
+        if (object == null)
+        {
+          object = new DBObject();
+        }
+        else
+        {
+          object.clear();
+        }
+        if (lowestScoreForZero)
+        {
+          for (int i = 0, n = scores.length; i < n; i++)
+          {
+            if (scores[i] < lowestScore)
+            {
+              lowestScore = scores[i];
+            }
+          }
+        }
+
+        if (!update)
+        {
+          DBMatcher dbm = new DBMatcher();
+          dbm.setInt("competition", competition.getID());
+          for (int i = 0, n = participants.length; i < n; i++)
+          {
+            ParticipantInfo info = participants[i];
+            CompetitionParticipant cp;
+            if (!info.isBuiltinAgent()
+                && ((cp = competition.getParticipantByID(info.getUserID())) != null))
+            {
+              boolean isZeroGame = scores[i] == 0L;
+              dbm.setInt("participantid", info.getUserID());
+              cp.addScore(logReader.getSimulationID(),
+                  (lowestScoreForZero && isZeroGame) ? lowestScore : scores[i],
+                  weight, isZeroGame);
+
+              object.setDouble("score", cp.getTotalScore());
+              object.setDouble("wscore", cp.getTotalWeightedScore());
+              object.setInt("gamesplayed", cp.getGamesPlayed());
+              object.setInt("zgamesplayed", cp.getZeroGamesPlayed());
+              object.setDouble("wgamesplayed", cp.getWeightedGamesPlayed());
+              object
+                  .setDouble("zwgamesplayed", cp.getZeroWeightedGamesPlayed());
+              if (competitionParticipantTable.update(dbm, object) == 0)
+              {
+                log.severe("failed to update scores for simulation "
+                    + logReader.getSimulationID() + " in competition "
+                    + competition.getName() + " for " + cp.getName());
+              }
+            }
+          }
+          competitionParticipantTable.flush();
+          object.clear();
+        }
+
+        object.setInt("id", simulationUniqID);
+        object.setInt("simid", logReader.getSimulationID());
+        object.setInt("competition", competition.getID());
+        for (int i = 0, n = participants.length; i < n; i++)
+        {
+          ParticipantInfo info = participants[i];
+          if (!info.isBuiltinAgent())
+          {
+            boolean isZeroGame = scores[i] == 0L;
+            object.setInt("participantid", info.getUserID());
+            object.setInt("participantrole", info.getRole());
+            object.setDouble("score",
+                (lowestScoreForZero && isZeroGame) ? lowestScore : scores[i]);
+            object.setDouble("weight", weight);
+            object.setInt("flags", isZeroGame ? ZERO_GAME : 0);
+            competitionResultTable.insert(object);
+          }
+        }
+        competitionResultTable.flush();
+      }
+      catch (Exception e)
+      {
+        log.log(Level.SEVERE, "could not store results for simulation "
+            + logReader.getSimulationID(), e);
+      }
+    }
+  }
   // -------------------------------------------------------------------
   // State table handling
   // -------------------------------------------------------------------

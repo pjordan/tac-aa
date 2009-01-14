@@ -155,7 +155,7 @@ public class CompetitionParticipant
   
   private int flags;
   
-  private long totalScore;
+  private double totalScore;
   private double wTotalScore;
   private int gamesPlayed;
   private int zGamesPlayed;
@@ -217,7 +217,7 @@ public class CompetitionParticipant
     this.flags = flags;
   }
   
-  public long getTotalScore()
+  public double getTotalScore()
   {
     return totalScore;
   }
@@ -303,7 +303,7 @@ public class CompetitionParticipant
     zwGamesPlayed += user.zwGamesPlayed;
   }
   
-  public void addScore(int simulationID, long score, double weight,
+  public void addScore(int simulationID, double score, double weight,
       boolean isZeroGame)
   {
     totalScore += score;

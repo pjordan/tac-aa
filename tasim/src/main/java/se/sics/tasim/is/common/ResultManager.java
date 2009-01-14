@@ -132,6 +132,17 @@ public abstract class ResultManager
           !addToTable);
     }
   }
+
+  // This method will be REMOVED due to better API. FIX THIS!!! TODO
+  protected void addSimulationResult(ParticipantInfo[] participants,
+      double[] scores)
+  {
+    if (simServer != null)
+    {
+      simServer.addSimulationResult(logReader, participants, scores,
+          !addToTable);
+    }
+  }
   
   /**
    * <code>generateResult</code> is responsible for:
