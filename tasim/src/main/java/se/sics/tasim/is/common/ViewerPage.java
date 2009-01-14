@@ -44,11 +44,12 @@ public class ViewerPage extends HttpPage
   private String viewerClass = "se.sics.tasim.viewer.applet.ViewerApplet";
   private String viewerCodeBase = "/code/";
   private String viewerArchive = "simviewer.jar";
-  private int width = 800;
-  private int height = 750;
+  private String width = "100%";
+  private String height = "100%";
   
   private int infoPort = 4042;
-  
+  private String contextFactory = "";
+
   private String topPage;
   private String middlePage;
   private String bottomPage;
@@ -57,7 +58,8 @@ public class ViewerPage extends HttpPage
   {
     String serverName = simServer.getServerName();
     viewerArchive = infoServer.getConfig().getProperty("is.viewer.jars",viewerArchive);
-      
+    contextFactory = infoServer.getConfig().getProperty("is.viewer.contextFactory",contextFactory);
+
     // Generate the page
     topPage = "<html>\r\n<head>\r\n<title>Simulation viewer for "
         + serverName
@@ -108,8 +110,9 @@ public class ViewerPage extends HttpPage
   {
     String userName = request.getAuthUser();
     String page = topPage + "<param name=user value='" + userName + "'>\r\n"
-        + "<param name=port value='" + infoPort + "'>\r\n" + middlePage
-        + "user='" + userName + "'\r\n" + "port='" + infoPort + "'\r\n"
+        + "<param name=port value='" + infoPort + "'>\r\n" + "<param name=contextFactory value='" +contextFactory+"'>\r\n"
+        + middlePage
+        + "user='" + userName + "'\r\n" + "port='" + infoPort + "'\r\n" + "contextFactory='" + contextFactory + "'\r\n"
         + bottomPage;
     
     ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer();
