@@ -125,6 +125,34 @@ public class Participant {
         this.totalConversions += conversions;
     }
 
+    public double getCTR() {
+        return getClicks() / ((double) getImpressions());
+    }
+
+    public double getCPC() {
+        return getCost() / ((double) getClicks());
+    }
+
+    public double getCPI() {
+        return getCost() / ((double) getImpressions());
+    }
+
+    public double getROI() {
+        return getResult() / getCost();
+    }
+
+    public double getConversionRate() {
+        return getConversions() / ((double) getClicks());
+    }
+
+    public double getValuePerClick() {
+        return getResult() / ((double) getClicks());
+    }
+    
+    public double getValuePerImpression() {
+        return getResult() / ((double) getImpressions());
+    }
+
     // -------------------------------------------------------------------
     // Information through messages sent and received
     // -------------------------------------------------------------------

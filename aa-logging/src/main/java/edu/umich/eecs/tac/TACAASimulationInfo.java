@@ -266,8 +266,8 @@ public class TACAASimulationInfo extends Parser {
     protected void transaction(int source, int recipient, double amount) {
         Participant sourceParticipant = getParticipant(source);
         Participant recipientParticipant = getParticipant(recipient);
-        recipientParticipant.addCost(amount);
-        sourceParticipant.addRevenue(amount);
+        recipientParticipant.addRevenue(amount);
+        sourceParticipant.addCost(amount);
     }
 
     protected void nextDay(int date, long serverTime) {
