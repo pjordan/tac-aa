@@ -810,14 +810,14 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         return agent != null ? agent.getName() : agentAddress;
     }
 
-    final void transaction(String source, String receipient, double amount) {
-        log.finer("Transacted " + amount + " from " + source + " to " + receipient);
+    final void transaction(String source, String recipient, double amount) {
+        log.finer("Transacted " + amount + " from " + source + " to " + recipient);
 
         SimulationAgent sourceAgent = getAgent(source);
-        SimulationAgent receipientAgent = getAgent(receipient);
+        SimulationAgent receipientAgent = getAgent(recipient);
 
         if (receipientAgent != null && receipientAgent.getRole() == ADVERTISER) {
-            bank.deposit(receipient, amount);
+            bank.deposit(recipient, amount);
         }
         if (sourceAgent != null && sourceAgent.getRole() == ADVERTISER) {
             bank.withdraw(source, amount);
@@ -829,7 +829,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         LogWriter writer = getLogWriter();
         synchronized (writer) {
             writer.node("transaction").attr("source", sourceIndex)
-                    .attr("receipient", (float)receipientIndex)
+                    .attr("recipient", receipientIndex)
                     .attr("amount", amount)
                     .endNode("transaction");
         }

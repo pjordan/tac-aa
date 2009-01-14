@@ -52,27 +52,33 @@ public class TACAAResultManager extends ResultManager {
         // go through the whole logfile and find the scores of the agents...
 
         String destinationFile = getDestinationPath() + "index.html";
+
         log.info("generating results for simulation " + simulationID + " to " + destinationFile);
+
         HtmlWriter html = new HtmlWriter(new FileWriter(destinationFile));
+
         Participant[] participants = simInfo.getParticipantsByRole(TACAAConstants.ADVERTISER);
+
         if (participants != null) {
-            participants = (Participant[]) participants.clone();
+            participants = participants.clone();
             Arrays.sort(participants, Participant.getResultComparator());
         }
+
         html.pageStart("Results for game " + simulationID + '@' + serverName);
+
         html.h3("Result for game " + simulationID + '@' + serverName + " played at "
                 // Should not access InfoServer! FIX THIS!!!
                 + InfoServer.getServerTimeAsString(reader.getStartTime()));
 
-        // html.text("Played with TAC SCM 04 rules (February 2004 specification).");
 
-        html.table("border=1").colgroup(1).colgroup(9, "align=right").tr().th("Player", "rowspan=2")
-                .th("Revenue", "align=center rowspan=2").th("Interest", "align=center rowspan=2").th(
-                "Costs", "align=center colspan=4").th("Margin&nbsp;1", "align=center rowspan=2").th(
-                "Margin&nbsp;2", "align=center rowspan=2").th("Result", "align=center rowspan=2")
-
-                .tr().th("Material", "align=center").th("Storage", "align=center").th("Penalty",
-                "align=center colspan=2");
+        html.table("border=1").colgroup(1).colgroup(6, "align=right").tr()
+                .th("Player")
+                .th("Revenue", "align=center")
+                .th("Cost", "align=center")
+                .th("Impressions", "align=center")
+                .th("Clicks", "align=center")
+                .th("Conversions", "align=center")
+                .th("Result", "align=center");
 
         ParticipantInfo[] agentInfos = null;
         String[] agentColors = null;
@@ -114,9 +120,10 @@ public class TACAAResultManager extends ResultManager {
                 formatAmount(html, result);
             }
         }
+
         html.tableEnd();
-        html.text("Download game data ").tag('a').attr("href", getGameLogName()).text("here").tagEnd(
-                'a').p();
+
+        html.text("Download game data ").tag('a').attr("href", getGameLogName()).text("here").tagEnd('a').p();
 
         /*html.table("border=1").colgroup(1).colgroup(2, "align=right").colgroup(2).colgroup(1,
                 "align=right").tr().th("Player").th("Orders", "align=center").th("Utilization",
@@ -176,14 +183,8 @@ public class TACAAResultManager extends ResultManager {
 
         html.tableEnd();*/
 
-        html
-                .p()
-                .tag("hr")
-                .tag("font", "size=-1")
-                .tag("em")
-                .text(
-                        "<b>Margin&nbsp;1</b> is the margin excluding bank interest and penalties while <b>Margin&nbsp;2</b> includes bank interest and penalties.<br>"
-                                + "<b>DPerf</b> is the delivery performance.").tagEnd("em").tagEnd("font");
+        html.p().tag("hr");
+        
         html.pageEnd();
         html.close();
 
