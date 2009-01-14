@@ -71,13 +71,18 @@ public class TACAAResultManager extends ResultManager {
                 + InfoServer.getServerTimeAsString(reader.getStartTime()));
 
 
-        html.table("border=1").colgroup(1).colgroup(6, "align=right").tr()
+        html.table("border=1").colgroup(1).colgroup(11, "align=right").tr()
                 .th("Player")
                 .th("Revenue", "align=center")
                 .th("Cost", "align=center")
                 .th("Impressions", "align=center")
                 .th("Clicks", "align=center")
                 .th("Conversions", "align=center")
+                .th("CTR", "align=center")
+                .th("CPM", "align=center")
+                .th("CPC", "align=center")
+                .th("VPC", "align=center")
+                .th("ROI", "align=center")
                 .th("Result", "align=center");
 
         ParticipantInfo[] agentInfos = null;
@@ -99,6 +104,12 @@ public class TACAAResultManager extends ResultManager {
                 long clicks = player.getClicks();
                 long conversions = player.getClicks();
 
+                double roi = player.getROI();
+                double cpc = player.getCPC();
+                double ctr = player.getCTR();
+                double cpm = player.getCPI() * 1000.0;
+                double vpc = player.getValuePerClick();
+
                 agentInfos[i] = agentInfo;
                 if (result < 0) {
                     agentColors[i] = NEGATIVE_PARTICIPANT_COLOR;
@@ -115,6 +126,38 @@ public class TACAAResultManager extends ResultManager {
                          .td(getAmountAsString(impressions))
                          .td(getAmountAsString(clicks))
                          .td(getAmountAsString(conversions));
+
+                if(!Double.isNaN(ctr)) {
+                    html.td(getAmountAsString(ctr * 100)).text(" %");
+                } else {
+                    html.td("0");
+                }
+
+                if(!Double.isNaN(cpm)) {
+                    html.td(getAmountAsString(ctr));
+                } else {
+                    html.td("0");
+                }
+
+                if(!Double.isNaN(cpc)) {
+                    html.td(getAmountAsString(cpc));
+                } else {
+                    html.td("0");
+                }
+
+                if(!Double.isNaN(vpc)) {
+                    html.td();
+                    formatAmount(html,vpc);
+                } else {
+                    html.td("0");
+                }
+
+                if(!Double.isNaN(roi)) {
+                    html.td();
+                    formatAmount(html, roi * 100, " %");
+                } else {
+                    html.td("0");
+                }
 
                 html.td();
                 formatAmount(html, result);
@@ -218,11 +261,14 @@ public class TACAAResultManager extends ResultManager {
     }
 
     private void formatAmount(HtmlWriter html, double amount) {
-        if (amount < 0) {
-            html.tag("font", "color=red").text(getAmountAsString(amount)).tagEnd("font");
-        } else {
-            html.text(getAmountAsString(amount));
-        }
+        formatAmount(html, amount, "");
     }
 
+    private void formatAmount(HtmlWriter html, double amount, String postfix) {
+        if (amount < 0) {
+            html.tag("font", "color=red").text(getAmountAsString(amount)).text(postfix).tagEnd("font");
+        } else {
+            html.text(getAmountAsString(amount)).text(postfix);
+        }
+    }
 }
