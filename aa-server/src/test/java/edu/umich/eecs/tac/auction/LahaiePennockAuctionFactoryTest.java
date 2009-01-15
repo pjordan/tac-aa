@@ -139,7 +139,7 @@ public class LahaiePennockAuctionFactoryTest {
     }
 
     public AdLink getAdLink(String advertiser, Query query){
-      AdLink returnme = new AdLink(null, advertiser);
+      AdLink returnme = new AdLink((Ad)null, advertiser);
       return returnme;
     }
 
