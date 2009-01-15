@@ -7,12 +7,12 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>TAC Ad Auctions</name>
-  <url>http://manx.eecs.umich.edu</url>
+  <url>http://www.eecs.umich.edu/~prjordan/tac-aa</url>
   <description>Ad Auctions game for the Trading Agent Competition</description>
   <inceptionYear>2007</inceptionYear>
   <organization>
-    <name>Regents of the University of Michigan</name>
-    <url>http://www.umich.edu/~regents/</url>
+    <name>Association for Trading Agent Research</name>
+    <url>http://tradingagents.org/</url>
   </organization>
   <developers>
     <developer>
@@ -57,4 +57,25 @@
     <module>aa-viewer</module>
     <module>aa-logging</module>
   </modules>
+  <distributionManagement>
+    <site>
+      <id>web-eecs-umich-edu</id>
+      <url>scp://web.eecs.umich.edu/u/p/prjordan/public_html/tac-aa</url>
+    </site>
+  </distributionManagement>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>javadoc</report>              
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

@@ -10,8 +10,7 @@
 	<artifactId>tasim</artifactId>
 	<packaging>jar</packaging>
 	<version>0.8.0-SNAPSHOT</version>
-	<name>Trading Agent Simulator</name>
-	<url>http://www.sics.se/tac/</url>
+	<name>SICS Trading Agent Simulator</name>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
