@@ -4,25 +4,17 @@ package edu.umich.eecs.tac.agents;
  * @author Ben Cassell
  */
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import se.sics.isl.transport.BinaryTransportReader;
-import se.sics.isl.transport.BinaryTransportWriter;
-import se.sics.isl.transport.TransportReader;
-import se.sics.isl.transport.TransportWriter;
-import se.sics.tasim.aw.AgentService;
 import se.sics.tasim.aw.Message;
-import se.sics.tasim.sim.SimulationAgent;
-
 import edu.umich.eecs.tac.props.Product;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.QueryReport;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.sim.DummySimulationAgent;
-import edu.umich.eecs.tac.sim.DummyTACAASimulation;
 
 public class DummyAdvertiserTest {
 
@@ -49,6 +41,7 @@ public class DummyAdvertiserTest {
 		qr.addQuery(new Query("Lioneer", "TV"), 1, 1, 0.5, 3);
 		message = new Message("dummy", qr);
 		dummy.messageReceived(message);
+		
 	}
 
 	@Test
