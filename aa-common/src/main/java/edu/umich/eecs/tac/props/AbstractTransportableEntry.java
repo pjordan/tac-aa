@@ -15,7 +15,7 @@ import java.text.ParseException;
 public abstract class AbstractTransportableEntry<T extends Transportable> extends AbstractKeyedEntry<T> {
 
     /**
-     * Read in the key from the {@link TransportReader reader}.
+     * Reads in the key from the {@link TransportReader reader}.
      *
      * @param reader the reader to read the data in.
      *
@@ -28,7 +28,7 @@ public abstract class AbstractTransportableEntry<T extends Transportable> extend
     }
 
     /**
-     * Write the key out to the {@link TransportWriter writer},
+     * Writes the key out to the {@link TransportWriter writer},
      *
      * @param writer the writer to write the data out to.
      */
@@ -39,7 +39,7 @@ public abstract class AbstractTransportableEntry<T extends Transportable> extend
     }
 
     /**
-     * Getting the transport name of the key for externalization. 
+     * Returns the transport name of the key node for externalization. 
      *
      * @return the transport name of the key node.
      */

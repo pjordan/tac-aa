@@ -23,7 +23,7 @@ public class RankingTest {
         for (int i = 0; i < num_ads; i++) {
             Product product = new Product("manufacturer_" + i,"component_" + i);
             AdLink ad = new AdLink(product, "advertiser_" + i);
-            ranking.add(ad);
+            ranking.add(ad, i % 2 == 1);
         }
         return ranking;
     }
@@ -116,6 +116,7 @@ public class RankingTest {
         expResult = new AdLink(product, "advertiser_0");
         result = instance.get(position);
         assertEquals(result, expResult);
+        assertFalse(instance.isPromoted(position));
 
         position = 13;
         product = new Product("manufacturer_13", "component_13");
@@ -294,5 +295,31 @@ public class RankingTest {
         if (thrown != 2) {
             fail("Modified locked instance");
         }
+    }
+
+    @Test
+    public void testEmptySlotTransport() throws ParseException {
+        BinaryTransportWriter writer = new BinaryTransportWriter();
+        BinaryTransportReader reader = new BinaryTransportReader();
+        reader.setContext(new AAInfo().createContext());
+
+        Ranking.Slot instance = new Ranking.Slot();
+
+        byte[] buffer = getBytesForTransportable(writer, instance);
+        Ranking.Slot received = readFromBytes(reader, buffer, "Slot");
+
+        assertNotNull(instance);
+        assertNotNull(received);
+        assertEquals(instance.isPromoted(), received.isPromoted());
+        assertEquals(instance.getAdLink(), received.getAdLink());
+
+        instance.setAdLink(new AdLink());
+        instance.setPromoted(true);
+
+        buffer = getBytesForTransportable(writer, instance);
+        received = readFromBytes(reader, buffer, "Slot");
+
+        assertEquals(instance.isPromoted(), received.isPromoted());
+        assertEquals(instance.getAdLink(), received.getAdLink());
     }
 }

@@ -677,11 +677,11 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
                 index = addAdvertiser(advertiser);
             }
 
-            setAd(index, ad, position);
+            setAdAndPosition(index, ad, position);
 
         }
 
-        public void setAd(int index, Ad ad, double position) {
+        public void setAdAndPosition(int index, Ad ad, double position) {
             lockCheck();
             getEntry(index).setAdAndPosition(ad, position);
         }

@@ -7,7 +7,7 @@ import java.util.Iterator;
 /**
  * @author Patrick Jordan
  */
-public class KeyIterator<T extends Transportable> implements Iterator<T>{
+public class KeyIterator<T> implements Iterator<T>{
     private Iterator<? extends KeyedEntry<? extends T>> delegateIterator;
 
 

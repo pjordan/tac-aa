@@ -16,7 +16,7 @@ public abstract class AbstractStringEntry extends AbstractKeyedEntry<String> {
     private static final String KEY_ATTRIBUTE = "AbstractStringEntryKey";
 
     /**
-     * This method reads in a "key" node and sets the key to the value of the backing attribute.
+     * Reads in a "key" node and sets the key to the value of the backing attribute.
      * 
      * @param reader the reader to read data from.
      * @throws ParseException
@@ -33,7 +33,7 @@ public abstract class AbstractStringEntry extends AbstractKeyedEntry<String> {
     }
 
     /**
-     * This method creates and writes a "key" node and sets the backing attribute value to the key.
+     * Creates and writes a "key" node and sets the backing attribute value to the key.
      *
      * @param writer the writer to write data to.
      */

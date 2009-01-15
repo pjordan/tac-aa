@@ -7,9 +7,12 @@ import java.text.ParseException;
 import java.util.*;
 
 /**
+ * The class holds the available products, which the users have preferences over.  In addition, the advertiser sales
+ * profit per conversion is given for each product.
+ *
  * @author Patrick Jordan
  */
-public class RetailCatalog extends AbstractKeyedEntryListTransportable<Product, RetailCatalog.RetailCatalogEntry> {
+public class RetailCatalog extends AbstractKeyedEntryList<Product, RetailCatalog.RetailCatalogEntry> {
     private Set<String> manufacturers;
     private Set<String> components;
 
@@ -18,24 +21,56 @@ public class RetailCatalog extends AbstractKeyedEntryListTransportable<Product, 
         components = new TreeSet<String>();
     }
 
+    /**
+     * Returns the set of manufacturers for the products.
+     * @return the set of manufacturers for the products.
+     */
     public Set<String> getManufacturers() {
         return manufacturers;
     }
 
+    /**
+     * Returns the set of components for the products.
+     * @return the set of components for the products.
+     */
     public Set<String> getComponents() {
         return components;
     }
 
+    /**
+     * Returns the advertiser sales profit for the product. The sales profit is zero if the product is not in the
+     * retail catalog.
+     *
+     * @param product the product
+     *
+     * @return the advertiser sales profit for the product.
+     */
     public double getSalesProfit(Product product) {
         int index = indexForEntry(product);
 
         return index < 0 ? 0.0 : getSalesProfit(index);
     }
 
+    /**
+     * Returns the advertiser sales profit for the product at the index.
+     *
+     * @param index the index for the product
+     *
+     * @return the advertiser sales profit for the product.
+     */
     public double getSalesProfit(int index) {
         return getEntry(index).getSalesProfit();
     }
 
+    /**
+     * Sets the sales profit for the product.
+     *
+     * @param product the product whose sales profit is being set.
+     *
+     * @param salesProfit the sales profit for the product.
+     *
+     * @throws IllegalStateException if the retail catalog is locked.
+     */
     public void setSalesProfit(Product product, double salesProfit) {
         lockCheck();
 
@@ -48,11 +83,27 @@ public class RetailCatalog extends AbstractKeyedEntryListTransportable<Product, 
         setSalesProfit(index, salesProfit);        
     }
 
+    /**
+     * Sets the sales profit for the product.
+     *
+     * @param index the index for the product
+     *
+     * @param salesProfit the sales profit for the product.
+     * 
+     * @throws IllegalStateException if the retail catalog is locked.
+     */
     public void setSalesProfit(int index, double salesProfit) {
         lockCheck();
         getEntry(index).setSalesProfit(salesProfit);
     }
 
+    /**
+     * Adds the product to the retail catalog.  This method delegates to {@link #addKey(Object)}}.
+     *
+     * @param product the product to add.
+     *
+     * @return the index of the newly added product.
+     */
     public int addProduct(Product product) {
         return addKey(product);
     }

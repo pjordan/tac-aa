@@ -6,44 +6,66 @@ import se.sics.isl.transport.TransportWriter;
 import java.text.ParseException;
 
 /**
+ * This class represents an advertisement in the TAC/AA scenario.  Advertisements can be generic or targeted depending
+ * on whether the ad specifies a product.
+ *
  * @author Patrick Jordan, Lee Callender
  */
 public class Ad extends AbstractTransportable {
-    //private Product product;
     protected Product product;
 
+    /**
+     * Creates a generic ad.
+     */
     public Ad() {
     }
 
+    /**
+     * Creates a targeted ad if <code>product</code> is not null.  The add is generic if the <code>product</code> is
+     * null.
+     */
     public Ad(Product product){
       this.product = product;
     }
 
+    /**
+     * Returns <code>true</code> if the ad is generic and <code>false</code> if the ad is targeted.
+     *
+     * @return <code>true</code> if the ad is generic and <code>false</code> if the ad is targeted.
+     */
     public boolean isGeneric() {
        return product==null;
     }
 
+    /**
+     * Returns the product the ad is targeting.  The product is <code>null</code> if the ad is generic.
+     *
+     * @return the product the ad is targeting.  The product is <code>null</code> if the ad is generic.
+     */
     public Product getProduct() {
         return product;
     }
 
+    /**
+     * Sets the product for the ad.  Setting the product to <code>null</code> sets the ad as generic.
+     *
+     * @param product the product for the ad.  Setting the product to <code>null</code> sets the ad as generic.
+     *
+     * @throws IllegalStateException if the ad is locked.
+     */
     public void setProduct(Product product) {
         lockCheck();
         this.product = product;
     }
 
+    
     protected void readWithLock(TransportReader reader) throws ParseException {
-        //advertiser = reader.getAttribute("advertiser",null);
-
         if (reader.nextNode(Product.class.getSimpleName(), false)) {
             this.product = (Product)reader.readTransportable();
         }
     }
 
     protected void writeWithLock(TransportWriter writer) {
-        //if(advertiser!=null)
-        //    writer.attr("advertiser", advertiser);
-
         if(product!=null)
             writer.write(product);
     }
@@ -59,16 +81,11 @@ public class Ad extends AbstractTransportable {
 
         Ad ad = (Ad) o;
 
-        //if (advertiser != null ? !advertiser.equals(ad.advertiser) : ad.advertiser != null) return false;
-        if (product != null ? !product.equals(ad.product) : ad.product != null) return false;
+        return !(product != null ? !product.equals(ad.product) : ad.product != null);
 
-        return true;
     }
 
     public int hashCode() {
-        int result;
-        result = (product != null ? product.hashCode() : 0);
-        //result = 31 * result + (advertiser != null ? advertiser.hashCode() : 0);
-        return result;
+        return (product != null ? product.hashCode() : 0);
     }
 }

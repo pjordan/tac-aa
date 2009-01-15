@@ -274,4 +274,74 @@ public class QueryReportTest {
         instance.setClicks(query, 4);
         assertEquals(instance.getClicks(query), 4);
     }
+
+    @Test
+    public void testDisplayResult() {
+        QueryReport.DisplayReport report = new QueryReport.DisplayReport();
+
+        String advertiser = "alice";
+
+        report.addAdvertiser(advertiser);
+
+        assertEquals(report.size(), 1);
+
+        assertNull(report.getAd(null));
+        assertNull(report.getAd(advertiser));
+
+        Ad ad = new Ad();
+
+        report.setAd(advertiser, ad);
+        assertEquals(report.getAd(advertiser), new Ad());
+
+        report.setPosition(advertiser, 1.0);
+        assertEquals(report.getPosition(advertiser), 1.0);
+
+        report.setAdAndPosition(advertiser, null, 0.0);
+        assertEquals(report.getAd(advertiser), null);
+        assertEquals(report.getPosition(advertiser), 0.0);
+        assertTrue(Double.isNaN(report.getPosition(null)));
+
+        report = new QueryReport.DisplayReport();
+        report.setAd(advertiser, ad);
+        assertEquals(report.getAd(advertiser), new Ad());
+
+        report = new QueryReport.DisplayReport();
+        report.setPosition(advertiser, 1.0);
+        assertEquals(report.getPosition(advertiser), 1.0);
+
+        report = new QueryReport.DisplayReport();
+        report.setAdAndPosition(advertiser, ad, 1.0);
+        assertEquals(report.getAd(advertiser), new Ad());
+        assertEquals(report.getPosition(advertiser), 1.0);
+    }
+
+    @Test
+    public void testDisplayResultEntry() throws ParseException {
+        BinaryTransportWriter writer = new BinaryTransportWriter();
+        BinaryTransportReader reader = new BinaryTransportReader();
+        reader.setContext(new AAInfo().createContext());
+
+        QueryReport.DisplayReportEntry entry = new QueryReport.DisplayReportEntry();
+        entry.setAdvertiser("alice");
+        
+        byte[] buffer = getBytesForTransportable(writer, entry);
+        QueryReport.DisplayReportEntry received = readFromBytes(reader, buffer, "DisplayReportEntry");
+
+        assertEquals(entry.getAd(),received.getAd());
+        assertEquals(entry.getPosition(),received.getPosition());
+        assertEquals("alice",received.getAdvertiser());
+        entry.setAd(new Ad());
+        
+        buffer = getBytesForTransportable(writer, entry);
+        received = readFromBytes(reader, buffer, "DisplayReportEntry");
+
+        assertEquals(new Ad(),received.getAd());
+
+        entry.setPosition(1.0);
+
+        buffer = getBytesForTransportable(writer, entry);
+        received = readFromBytes(reader, buffer, "DisplayReportEntry");
+
+        assertEquals(1.0,received.getPosition());
+    }
 }

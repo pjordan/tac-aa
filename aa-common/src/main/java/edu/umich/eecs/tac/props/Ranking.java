@@ -110,7 +110,7 @@ public class Ranking extends AbstractTransportable {
 
 
         protected void readWithLock(TransportReader reader) throws ParseException {
-            promoted = reader.getAttributeAsInt("lock", 0) > 0;
+            promoted = reader.getAttributeAsInt("promoted", 0) > 0;
 
             if(reader.nextNode(AdLink.class.getSimpleName(), false)) {
                 adLink = (AdLink)reader.readTransportable();

@@ -23,6 +23,20 @@ public class RetailCatalogTest {
 
     }
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testIndexOutOfBounds() {
+        RetailCatalog catalog = new RetailCatalog();
+        catalog.getSalesProfit(-1);
+
+    }
+
+    @Test
+    public void testSalesProfitForUncontainedProduct() {
+        RetailCatalog catalog = new RetailCatalog();
+        assertEquals(catalog.getSalesProfit(null),0.0);
+
+    }
+
     @Test
     public void testUnitRetailCatalog() {
         RetailCatalog catalog = new RetailCatalog();

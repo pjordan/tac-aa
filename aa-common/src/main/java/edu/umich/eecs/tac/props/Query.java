@@ -15,26 +15,30 @@ import java.text.ParseException;
  */
 public class Query extends ManufacturerComponentComposable {
 
+    /**
+     * Creates a new query with the given manufacturer and component.
+     *
+     * @param manufacturer the manufacturer in the query
+     * @param component the component in the query
+     */
     public Query(String manufacturer, String component){
       this.manufacturer = manufacturer;
       this.component = component;
       calculateHashCode();
     }
 
-
+    /**
+     * Creates a new query with without manufacturer and component information.
+     */
     public Query() {
         calculateHashCode();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || hashCode() != o.hashCode()|| getClass() != o.getClass()) return false;
-
-        Query query = (Query) o;
-        
-        return composableEquals(query);
-    }
-
+    /**
+     * Returns the query type of the query.  This method delegates to {@link QueryType#value(Query)}.
+     *
+     * @return the query type of the query.
+     */
     public QueryType getType() {
         return QueryType.value(this);
     }

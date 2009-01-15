@@ -10,9 +10,9 @@ import java.text.ParseException;
 /**
  * This class provides a skeletal implementation of the {@link Transportable} interface by providing a locking
  * mechanism.  Inheriting classes should issue {@link #lockCheck} when setting attributes.
- *
+ * <p/>
  * Inheriting classes should implement the {@link #readWithLock} and {@link #writeWithLock} methods.
- *  
+ *
  * @author Patrick Jordan
  */
 public abstract class AbstractTransportable implements Transportable, Serializable {
@@ -29,7 +29,7 @@ public abstract class AbstractTransportable implements Transportable, Serializab
     }
 
     /**
-     * Check whether the transportable is immutable
+     * Returns whether the transportable is immutable
      *
      * @return <code>true</code> if the transportable is locked, <code>false</code> otherwise.
      */
@@ -48,15 +48,15 @@ public abstract class AbstractTransportable implements Transportable, Serializab
         if (isLocked()) {
             throw new IllegalStateException("locked");
         }
-        
+
     }
 
     /**
-   * Reads the state for this transportable from the specified reader.
-   *
-   * @param reader the reader to read data from
-   * @throws ParseException if a parse error occurs
-   */
+     * Reads the state for this transportable from the specified reader.
+     *
+     * @param reader the reader to read data from
+     * @throws ParseException if a parse error occurs
+     */
     public final void read(TransportReader reader) throws ParseException {
         lockCheck();
 
@@ -70,10 +70,10 @@ public abstract class AbstractTransportable implements Transportable, Serializab
     }
 
     /**
-   * Writes the state for this transportable to the specified writer.
-   *
-   * @param writer the writer to write data to
-   */
+     * Writes the state for this transportable to the specified writer.
+     *
+     * @param writer the writer to write data to
+     */
     public final void write(TransportWriter writer) {
 
         if (isLocked()) {
@@ -86,7 +86,7 @@ public abstract class AbstractTransportable implements Transportable, Serializab
     }
 
     /**
-     * Getting the transport name for externalization of an implementing {@link AbstractTransportable} will return the
+     * Returns the transport name for externalization of an implementing {@link AbstractTransportable} will return the
      * {@link Class#getSimpleName simple name} of the implementing class.
      *
      * @return the transport name
@@ -96,7 +96,7 @@ public abstract class AbstractTransportable implements Transportable, Serializab
     }
 
     /**
-     * Read in the state of the {@link Transportable transportable}.  Implementing classes should read in attributes
+     * Reads the state of the {@link Transportable transportable}.  Implementing classes should read in attributes
      * first and then any sub-nodes.
      *
      * @param reader the reader to read data from.
@@ -105,7 +105,7 @@ public abstract class AbstractTransportable implements Transportable, Serializab
     protected abstract void readWithLock(TransportReader reader) throws ParseException;
 
     /**
-     * Write out the state of the {@link Transportable transportable}.  Implementing classes should write out
+     * Writes the state of the {@link Transportable transportable}.  Implementing classes should write out
      * attributes first and then any sub-nodes.
      *
      * @param writer the writer to write data to.

@@ -18,13 +18,13 @@ public class AAInfo implements ContextFactory {
     private static Context lastContext;
 
     /**
-     * Create a new AA context factory.
+     * Creates a new AA context factory.
      */
     public AAInfo() {
     }
 
     /**
-     * Add the allowable transports to the context.
+     * Adds the allowable transports to the context.
      * @return the base context with new transports added.
      */
     public Context createContext() {
@@ -32,9 +32,10 @@ public class AAInfo implements ContextFactory {
     }
 
     /**
-     * Add the allowable transports to the context.
+     * Creates the allowable transports in a {@link Context}.
      *
      * @param parentContext the parent context
+     *
      * @return the context with new transports added.
      */
     public Context createContext(Context parentContext) {

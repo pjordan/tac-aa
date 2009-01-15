@@ -53,7 +53,7 @@ public class ManufacturerComponentComposable extends AbstractTransportable {
     }
 
     /**
-     * The string representing the component.
+     * Returns the string representing the component.
      *
      * @return the string representing the component.  May be <code>null</code>.
      */
@@ -62,10 +62,12 @@ public class ManufacturerComponentComposable extends AbstractTransportable {
     }
 
     /**
-     * Set the string representing the component.
+     * Sets the string representing the component.
      *
-     * @param component the string representing the component.  May be <code>null</code>
-     *                  if the component is not included in the query.
+     * @param component the string representing the component.  May be <code>null</code> if the component is not
+     *                  included in the query.
+     *
+     * @throws IllegalStateException if the object is locked.
      */
     public void setComponent(String component) {
         lockCheck();
@@ -109,5 +111,12 @@ public class ManufacturerComponentComposable extends AbstractTransportable {
         if (manufacturer != null ? !manufacturer.equals(o.manufacturer) : o.manufacturer != null) return false;
 
         return true;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || hashCode() != o.hashCode() || getClass() != o.getClass()) return false;
+
+        return composableEquals((ManufacturerComponentComposable) o);
     }
 }

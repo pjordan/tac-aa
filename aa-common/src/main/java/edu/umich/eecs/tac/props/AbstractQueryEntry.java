@@ -8,7 +8,7 @@ package edu.umich.eecs.tac.props;
 public abstract class AbstractQueryEntry extends AbstractTransportableEntry<Query> implements QueryEntry {
 
     /**
-     * Get the query key.
+     * Returns the query key.
      *
      * @return the query key.
      */
@@ -17,7 +17,7 @@ public abstract class AbstractQueryEntry extends AbstractTransportableEntry<Quer
     }
 
     /**
-     * Set the key to the given query.
+     * Sets the key to the given query.
      *
      * @param query the query key.
      */
@@ -26,7 +26,7 @@ public abstract class AbstractQueryEntry extends AbstractTransportableEntry<Quer
     }
 
     /**
-     * Getting the transport name of the query key for externalization.
+     * Returns the transport name of the query key for externalization.
      *
      * @return the {@link Class#getSimpleName() simple name} of the {@link Query} class.
      */

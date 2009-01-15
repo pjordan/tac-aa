@@ -3,12 +3,12 @@ package edu.umich.eecs.tac.props;
 import java.util.ArrayList;
 
 /**
- * This class provides a skeletal implementation of the {@link AbstractKeyedEntryListTransportable} abstract class,
+ * This class provides a skeletal implementation of the {@link AbstractKeyedEntryList} abstract class,
  * where the key is a {@link Query} object.
  *
  * @author Patrick Jordan
  */
-public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry> extends AbstractKeyedEntryListTransportable<Query,T> {
+public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry> extends AbstractKeyedEntryList<Query,T> {
 
     /**
      * Sole constructor. (For invocation by subclass constructors, typically implicit.)
@@ -47,6 +47,6 @@ public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry
      * @return the query key at the specified index.
      */
     public Query getQuery(int index) {
-        return getEntry(index).getKey();
+        return getKey(index);
     }
 }

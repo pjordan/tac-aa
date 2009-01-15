@@ -6,43 +6,49 @@ import se.sics.isl.transport.TransportWriter;
 import java.text.ParseException;
 
 /**
- * This class represents an ad link. It contains the Product of the {@link Ad} as well as a string for the
+ * This class represents an ad link. It contains the {@link Product} of the {@link Ad} as well as a string for the
  * advertiser's address.
- * 
+ *
  * @author Lee Callender
  */
-public class AdLink extends Ad{
+public class AdLink extends Ad {
     protected String advertiser;
 
-    public AdLink() {}
+    public AdLink() {
+    }
 
-    public AdLink(Product product, String advertiser){
-      this.product = product;
-      this.advertiser = advertiser;
+    public AdLink(Product product, String advertiser) {
+        this.product = product;
+        this.advertiser = advertiser;
+    }
+
+
+    public AdLink(Ad ad, String advertiser) {
+        this(ad==null ? null : ad.getProduct(), advertiser);
     }
 
     public String getAdvertiser() {
-      return advertiser;
+        return advertiser;
     }
 
     public void setAdvertiser(String advertiser) {
-      lockCheck();
-      this.advertiser = advertiser;
+        lockCheck();
+        this.advertiser = advertiser;
     }
 
     protected void readWithLock(TransportReader reader) throws ParseException {
-        advertiser = reader.getAttribute("advertiser",null);
+        advertiser = reader.getAttribute("advertiser", null);
 
         if (reader.nextNode(Product.class.getSimpleName(), false)) {
-            this.product = (Product)reader.readTransportable();
+            this.product = (Product) reader.readTransportable();
         }
     }
 
-   protected void writeWithLock(TransportWriter writer) {
-        if(advertiser!=null)
+    protected void writeWithLock(TransportWriter writer) {
+        if (advertiser != null)
             writer.attr("advertiser", advertiser);
 
-        if(product!=null)
+        if (product != null)
             writer.write(product);
     }
 
@@ -66,6 +72,6 @@ public class AdLink extends Ad{
     }
 
     public String toString() {
-        return String.format("(AdLink advertiser:%s generic:%s product:%s)",getAdvertiser(),isGeneric(),getProduct());
+        return String.format("(AdLink advertiser:%s generic:%s product:%s)", getAdvertiser(), isGeneric(), getProduct());
     }
 }
