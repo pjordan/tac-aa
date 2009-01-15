@@ -42,7 +42,7 @@ public class UserUtilsTest {
         advertiserInfo.setTargetEffect(0.5);
 
         advertiser = "alice";
-        genericAdLink = new AdLink(null, advertiser);
+        genericAdLink = new AdLink((Product)null, advertiser);
         focusedAdLink = new AdLink(product, advertiser);
         focusedWrongAdLink = new AdLink(new Product(manufacturer, "not" + component), advertiser);
 
