@@ -97,7 +97,7 @@ public class BidTrackerImplTest {
         String advertiser = "alice";
         Query query = new Query();
 
-        AdLink adLink = new AdLink(null, advertiser);
+        AdLink adLink = new AdLink((Ad)null, advertiser);
 
         assertEquals(bidTracker.getAdLink(advertiser,query),adLink);
 
@@ -148,12 +148,12 @@ public class BidTrackerImplTest {
 
 
         assertEquals(bidTracker.getBid(advertiser2,query1), 1.0);
-        assertEquals(bidTracker.getAdLink(advertiser2,query2), new AdLink(null, advertiser2));
+        assertEquals(bidTracker.getAdLink(advertiser2,query2), new AdLink((Ad)null, advertiser2));
         assertEquals(bidTracker.getDailySpendLimit(advertiser2,query3), 1.0);
 
         bidTracker.updateBids(advertiser2,bundle2);
         assertEquals(bidTracker.getBid(advertiser2,query1), 1.0);
-        assertEquals(bidTracker.getAdLink(advertiser2,query2), new AdLink(null, advertiser2));
+        assertEquals(bidTracker.getAdLink(advertiser2,query2), new AdLink((Ad)null, advertiser2));
         assertEquals(bidTracker.getDailySpendLimit(advertiser2,query3), 1.0);
     }
 
