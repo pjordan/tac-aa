@@ -25,7 +25,7 @@ import edu.umich.eecs.tac.props.*;
 /**
  * @author Lee Callender, Patrick Jordan
  */
-public class TACAASimulation extends Simulation implements TACAAConstants, AgentRepository, SalesReportSender {
+public class TACAASimulation extends Simulation implements TACAAConstants, AgentRepository, SalesReportSender, BankStatusSender {
     private Bank bank;
     private SalesAnalyst salesAnalyst;
 
@@ -118,7 +118,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
                 + " is setting up...");
 
         //Initialize in-game agents, bank etc.
-        bank = new Bank(this, numberOfAdvertisers);
+        bank = new Bank(this, this.getSimulationInfo(), numberOfAdvertisers);
         salesAnalyst = new DefaultSalesAnalyst(this, this, numberOfAdvertisers);
 
         createBuiltinAgents("users", USERS, Users.class);
@@ -990,7 +990,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
     //  API to Bank to allow it to send bank statuses
     // -------------------------------------------------------------------
 
-    void sendBankStatus(String agentName, BankStatus status) {
+    public void sendBankStatus(String agentName, BankStatus status) {
         sendMessage(agentName, status);
 
         EventWriter eventWriter = getEventWriter();

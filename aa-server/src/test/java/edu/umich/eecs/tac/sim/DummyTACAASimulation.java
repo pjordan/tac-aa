@@ -6,13 +6,8 @@ package edu.umich.eecs.tac.sim;
 
 import edu.umich.eecs.tac.props.BankStatus;
 
-public class DummyTACAASimulation extends TACAASimulation {
+public class DummyTACAASimulation implements BankStatusSender {
 
-	public DummyTACAASimulation() {
-		super(null);
-	}
-	
-	@Override
 	public void sendBankStatus(String accountName, BankStatus status) {
 		return;
 	}

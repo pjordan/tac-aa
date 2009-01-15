@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import com.botbox.util.ArrayUtils;
 import edu.umich.eecs.tac.props.BankStatus;
+import se.sics.tasim.is.SimulationInfo;
 
 //Commented out bankStatus[]; so long as bankStatus only contains amounts,
 //this array is doing nothing.  If in the future this becomes more like SCM, i.e.
@@ -15,17 +16,18 @@ import edu.umich.eecs.tac.props.BankStatus;
 
 public class Bank {
 
-    private TACAASimulation simulation;
+    private BankStatusSender bankStatusSender;
     private String[] accountNames;
     private double[] accountAmounts;
 //    private BankStatus[] bankStatus;
     private int accountNumber;  //number of accounts
+    private SimulationInfo simulationInfo;
 
-    public Bank(TACAASimulation simulation, int accountNumber) {
-        this.simulation = simulation;
+    public Bank(BankStatusSender bankStatusSender, SimulationInfo simulationInfo, int accountNumber) {
+        this.bankStatusSender = bankStatusSender;
         accountNames = new String[accountNumber];
         accountAmounts = new double[accountNumber];
-//        bankStatus = new BankStatus[accountNumber];
+        this.simulationInfo = simulationInfo;
     }
 
     public void addAccount(String name) {
@@ -82,14 +84,14 @@ public class Bank {
  //               bankStatus[i] = null;
  //           }
             status.setAccountBalance(accountAmounts[i]);
-            simulation.sendBankStatus(accountNames[i], status);            
+            bankStatusSender.sendBankStatus(accountNames[i], status);
         }
     }
 
     // DEBUG FINALIZE REMOVE THIS!!!
     protected void finalize() throws Throwable {
         Logger.global.info("BANK FOR SIMULATION "
-                + simulation.getSimulationInfo().getSimulationID()
+                + simulationInfo.getSimulationID()
                 + " IS BEING GARBAGED");
         super.finalize();
     }

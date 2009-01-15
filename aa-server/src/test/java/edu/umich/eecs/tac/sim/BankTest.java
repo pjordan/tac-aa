@@ -22,7 +22,7 @@ public class BankTest {
 	@Before
 	public void setUp() throws IllegalConfigurationException {
 		dummy = new DummyTACAASimulation();
-		bank = new Bank(dummy, 1);
+		bank = new Bank(dummy, null , 1);
 	}
 
 	@Test
