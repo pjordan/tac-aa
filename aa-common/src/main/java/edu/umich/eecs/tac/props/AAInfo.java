@@ -5,24 +5,38 @@ import se.sics.isl.transport.ContextFactory;
 import se.sics.tasim.props.*;
 
 /**
- * @author Lee Callender
+ * {@link AAInfo} is a context factory that provides the allowable transports for the TAC/AA simulation.
+ *
+ * @author Lee Callender, Patrick Jordan
  */
 public class AAInfo implements ContextFactory {
-    public static final String CONTEXT_NAME = "aacontext";
+    private static final String CONTEXT_NAME = "aacontext";
 
     /**
      * Cache of the last created context (since contexts should be constants)
      */
     private static Context lastContext;
 
-    // Prevent instances of this class
+    /**
+     * Create a new AA context factory.
+     */
     public AAInfo() {
     }
 
+    /**
+     * Add the allowable transports to the context.
+     * @return the base context with new transports added.
+     */
     public Context createContext() {
         return createContext(null);
     }
 
+    /**
+     * Add the allowable transports to the context.
+     *
+     * @param parentContext the parent context
+     * @return the context with new transports added.
+     */
     public Context createContext(Context parentContext) {
         Context context = lastContext;
         if (context != null && context.getParent() == parentContext) {
@@ -30,10 +44,7 @@ public class AAInfo implements ContextFactory {
         }
 
         context = new Context(CONTEXT_NAME, parentContext);
-        // New in version 0.9.7
         context.addTransportable(new Ping());
-        // New in version 0.9.6
-        //context.addTransportable(new ActiveOrders());
 
         context.addTransportable(new Alert());
         context.addTransportable(new BankStatus());
@@ -68,6 +79,5 @@ public class AAInfo implements ContextFactory {
         lastContext = context;
         return context;
     }
-
-} // AAInfo
+}
 
