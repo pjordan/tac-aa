@@ -137,7 +137,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
 
         getEntry(index).addImpressions(impressions);
         getEntry(index).setAd(ad);
-        getEntry(index).addPosition(position);
+        getEntry(index).addPosition(impressions*position);
     }
 
     public void setImpressions(int index, int impressions) {
@@ -148,7 +148,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
     public void setImpressions(int index, int impressions, Ad ad, double position) {
         lockCheck();
         getEntry(index).setImpressions(impressions);
-        getEntry(index).setPositionSum(position);
+        getEntry(index).setPositionSum(impressions*position);
         getEntry(index).setAd(ad);
     }
 
@@ -186,7 +186,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
     public void setClicks(int index, int clicks, double cost) {
         lockCheck();
         getEntry(index).setClicks(clicks);
-        getEntry(index).setCost(clicks);
+        getEntry(index).setCost(cost);
     }
     
     public void addClicks(Query query, int clicks) {
@@ -221,7 +221,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
     public void addClicks(int index, int clicks, double cost) {
         lockCheck();
         getEntry(index).addClicks(clicks);
-        getEntry(index).addCost(clicks);
+        getEntry(index).addCost(cost);
     }
     public void addCost(Query query, double cost) {
         lockCheck();
@@ -383,10 +383,10 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
             index = addQuery(query);
         }
 
-        setAd(index, advertiser, ad, position);
+        setAdAndPosition(index, advertiser, ad, position);
     }
 
-    public void setAd(int index, String advertiser, Ad ad, double position) {
+    public void setAdAndPosition(int index, String advertiser, Ad ad, double position) {
         lockCheck();
 
         getEntry(index).setAdAndPosition(advertiser, ad, position);
@@ -401,6 +401,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
     public Set<String> advertisers(int index) {
         return getEntry(index).advertisers();
     }
+
     /**
      *
      * @author Patrick Jordan

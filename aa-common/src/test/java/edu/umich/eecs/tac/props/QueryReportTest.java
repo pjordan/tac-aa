@@ -8,6 +8,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Collections;
 
 import se.sics.isl.transport.BinaryTransportWriter;
 import se.sics.isl.transport.BinaryTransportReader;
@@ -343,5 +347,294 @@ public class QueryReportTest {
         received = readFromBytes(reader, buffer, "DisplayReportEntry");
 
         assertEquals(1.0,received.getPosition());
+    }
+
+    @Test
+    public void testQueryReportEntry() throws ParseException {
+        BinaryTransportWriter writer = new BinaryTransportWriter();
+        BinaryTransportReader reader = new BinaryTransportReader();
+        reader.setContext(new AAInfo().createContext());
+
+        QueryReport.QueryReportEntry entry = new QueryReport.QueryReportEntry();
+
+        byte[] buffer = getBytesForTransportable(writer, entry);
+        QueryReport.QueryReportEntry received = readFromBytes(reader, buffer, "QueryReportEntry");
+
+        assertNotNull(received);
+
+        String alice = "alice";
+        String bob = "bob";
+
+        double aliceCost = 1.0;
+
+        double alicePosition = 2.0;
+        double bobPosition = 3.0;
+
+        Set<String> advertisers = new HashSet<String>(Arrays.asList(alice,bob));
+
+        Ad aliceAd = new Ad();
+        Ad bobAd = new Ad(new Product("m","c"));
+
+        entry.addCost(aliceCost);
+        entry.addCost(aliceCost);
+
+        entry.setAd(new Ad(new Product("mm","cc")));
+
+        entry.setAd(alice, aliceAd);
+        entry.setPosition(alice,alicePosition);
+        entry.setAdAndPosition(bob, bobAd, bobPosition);
+
+        buffer = getBytesForTransportable(writer, entry);
+        received = readFromBytes(reader, buffer, "QueryReportEntry");
+
+        assertEquals(received.advertisers(), new HashSet<String>(Arrays.asList(alice,bob)));
+
+        assertEquals(received.getPosition(alice),alicePosition);
+        assertEquals(received.getPosition(bob),bobPosition);
+
+        assertEquals(received.getAd(alice),new Ad());
+        assertEquals(received.getAd(bob),new Ad(new Product("m","c")));
+
+        assertEquals(received.getAd(), new Ad(new Product("mm","cc")));
+
+        assertEquals(received.getCost(), 2*aliceCost);
+    }
+
+    @Test
+    public void testBasicQueryReportSetImpressions() {
+        QueryReport report = new QueryReport();
+
+        Query query = new Query();
+        String advertiser = "alice";
+        Ad ad = new Ad();
+        double position = 1.0;
+        int impressions = 10;
+        int clicks = 3;
+        int conversions = 1;
+
+        report.setImpressions(query, impressions, ad, position);
+
+        assertEquals(report.getAd(query), ad);
+        assertEquals(report.getImpressions(query), impressions);
+        assertEquals(report.getPosition(query), position);
+
+        report.setImpressions(query, impressions, ad, position);
+
+        assertEquals(report.getAd(query), ad);
+        assertEquals(report.getImpressions(query), impressions);
+        assertEquals(report.getPosition(query), position);
+    }
+
+    @Test
+    public void testBasicQueryReportAddImpressions() {
+        QueryReport report = new QueryReport();
+
+        Query query = new Query();
+        String advertiser = "alice";
+        Ad ad = new Ad();
+        double position = 1.0;
+        int impressions = 10;
+        int clicks = 3;
+        int conversions = 1;
+
+        report.addImpressions(query, impressions, ad, position);
+        report.addImpressions(query, impressions, ad, position);
+
+        assertEquals(report.getAd(query), ad);
+        assertEquals(report.getImpressions(query), 2*impressions);
+        assertEquals(report.getPosition(query), position);
+    }
+
+    @Test
+    public void testBasicQueryReportSetClicks() {
+        QueryReport report = new QueryReport();
+
+        Query query = new Query();
+        String advertiser = "alice";
+        Ad ad = new Ad();
+        double position = 1.0;
+        int impressions = 10;
+        int clicks = 3;
+        int conversions = 1;
+        double cost = 5.0;
+
+        report.setClicks(query, clicks, cost);
+        report.setImpressions(query, impressions, ad, position);
+
+
+        assertEquals(report.getClicks(query), clicks);
+        assertEquals(report.getCost(query), cost);
+        assertEquals(report.getCPC(query), cost/clicks);
+
+        report.setClicks(query, clicks, cost);
+
+        assertEquals(report.getClicks(query), clicks);
+        assertEquals(report.getCost(query), cost);
+        assertEquals(report.getCPC(query), cost/clicks);
+    }
+
+    @Test
+    public void testBasicQueryReportAddClicks() {
+        QueryReport report = new QueryReport();
+
+        Query query = new Query();
+        String advertiser = "alice";
+        Ad ad = new Ad();
+        double position = 1.0;
+        int impressions = 10;
+        int clicks = 3;
+        int conversions = 1;
+        double cost = 5.0;
+
+        report.addClicks(query, clicks, cost);
+        report.addClicks(query, clicks, cost);
+        report.setImpressions(query, impressions, ad, position);
+
+
+        assertEquals(report.getClicks(query), 2*clicks);
+        assertEquals(report.getCost(query), 2*cost);
+        assertEquals(report.getCPC(query), cost/clicks);
+
+    }
+
+    @Test
+    public void testBasicQueryReportAddCost() {
+        QueryReport report = new QueryReport();
+
+        Query query = new Query();
+        String advertiser = "alice";
+        Ad ad = new Ad();
+        double position = 1.0;
+        int impressions = 10;
+        int clicks = 3;
+        int conversions = 1;
+        double cost = 5.0;
+
+        report.addCost(query, cost);
+        report.addCost(query, cost);
+
+        assertEquals(report.getCost(query), 2*cost);
+
+
+    }
+
+    @Test
+    public void testBasicQueryReportPosition() {
+        QueryReport report = new QueryReport();
+
+        Query query = new Query();
+        String advertiser = "alice";
+        Ad ad = new Ad();
+        double position = 1.0;
+        int impressions = 10;
+        int clicks = 3;
+        int conversions = 1;
+        double cost = 5.0;
+
+        report.setPosition(query,advertiser,position);
+
+        assertEquals(report.getPosition(query,advertiser), position);
+        assertEquals(report.getPosition(null,advertiser), Double.NaN);
+
+        report.setPosition(query,advertiser,position);
+
+        assertEquals(report.getPosition(query,advertiser), position);
+    }
+
+    @Test
+    public void testBasicQueryReportAd() {
+        QueryReport report = new QueryReport();
+
+        Query query = new Query();
+        String advertiser = "alice";
+        Ad ad = new Ad();
+        double position = 1.0;
+        int impressions = 10;
+        int clicks = 3;
+        int conversions = 1;
+        double cost = 5.0;
+
+        report.setAd(query,ad);
+
+        assertEquals(report.getAd(query), ad);
+
+        report.setAd(query,ad);
+
+        assertEquals(report.getAd(query), ad);
+
+        assertNull(report.getAd(null));
+
+        report = new QueryReport();
+
+        report.setAd(query,advertiser,ad);
+
+        assertEquals(report.getAd(query, advertiser), ad);
+
+        assertNull(report.getAd(null, advertiser));
+
+        report.setAd(query,advertiser,ad);
+
+        assertEquals(report.getAd(query, advertiser), ad);
+    }
+
+    @Test
+    public void testBasicQueryReportAdAndPosition() {
+        QueryReport report = new QueryReport();
+
+        Query query = new Query();
+        String advertiser = "alice";
+        Ad ad = new Ad();
+        double position = 1.0;
+        int impressions = 10;
+        int clicks = 3;
+        int conversions = 1;
+        double cost = 5.0;
+
+        report.setAdAndPosition(query,advertiser,ad,position);
+
+        assertEquals(report.getAd(query, advertiser), ad);
+        assertEquals(report.getPosition(query, advertiser), position);
+
+        report.setAdAndPosition(query,advertiser,ad,position);
+
+        assertEquals(report.getAd(query, advertiser), ad);
+        assertEquals(report.getPosition(query, advertiser), position);
+    }
+
+    @Test
+    public void testBasicQueryAdvertiserTransport() throws ParseException {
+        BinaryTransportWriter writer = new BinaryTransportWriter();
+        BinaryTransportReader reader = new BinaryTransportReader();
+        reader.setContext(new AAInfo().createContext());
+
+        Query query = new Query();
+        String alice = "alice";
+        String bob = "bob";
+
+
+        double alicePosition = 2.0;
+        double bobPosition = 3.0;
+
+        Set<String> advertisers = new HashSet<String>(Arrays.asList(alice,bob));
+
+        Ad aliceAd = new Ad();
+        Ad bobAd = new Ad(new Product("m","c"));
+
+        QueryReport report = new QueryReport();
+
+        report.setAdAndPosition(query,alice,aliceAd,alicePosition);
+        report.setAdAndPosition(query,bob,bobAd,bobPosition);
+
+        byte[] buffer = getBytesForTransportable(writer, report);
+        QueryReport received = readFromBytes(reader, buffer, "QueryReport");
+
+        assertEquals(received.getAd(query,alice),aliceAd);
+        assertEquals(received.getAd(query,bob),bobAd);
+
+        assertEquals(received.getPosition(query,alice),alicePosition);
+        assertEquals(received.getPosition(query,bob),bobPosition);
+
+        assertEquals(received.advertisers(query),advertisers);
+        assertEquals(received.advertisers(null), Collections.EMPTY_SET);
     }
 }
