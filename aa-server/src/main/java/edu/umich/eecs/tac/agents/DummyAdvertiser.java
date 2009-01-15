@@ -49,7 +49,6 @@ public class DummyAdvertiser extends Agent {
 
     }
 
-
     protected void messageReceived(Message message) {
         Transportable content = message.getContent();
 

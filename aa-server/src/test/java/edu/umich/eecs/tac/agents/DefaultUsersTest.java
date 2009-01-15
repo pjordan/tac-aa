@@ -1,5 +1,10 @@
 package edu.umich.eecs.tac.agents;
 
+/**
+ * @author Ben Cassell
+ */
+
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;

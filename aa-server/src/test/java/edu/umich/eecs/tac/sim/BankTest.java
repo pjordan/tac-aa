@@ -4,15 +4,13 @@ package edu.umich.eecs.tac.sim;
  * @author Ben Cassell
  */
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import se.sics.isl.util.ConfigManager;
 import se.sics.isl.util.IllegalConfigurationException;
-
-import edu.umich.eecs.tac.props.BankStatus;
 
 public class BankTest {
 
