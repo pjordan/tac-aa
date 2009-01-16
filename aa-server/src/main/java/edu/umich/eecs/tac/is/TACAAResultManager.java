@@ -102,7 +102,7 @@ public class TACAAResultManager extends ResultManager {
 
                 long impressions = player.getImpressions();
                 long clicks = player.getClicks();
-                long conversions = player.getClicks();
+                long conversions = player.getConversions();
 
                 double roi = player.getROI();
                 double cpc = player.getCPC();
