@@ -14,12 +14,14 @@ import static edu.umich.eecs.tac.props.TransportableTestUtils.readFromBytes;
  */
 public class RankingTest {
 
+    int num_ads;
+    
     public RankingTest() {
+        num_ads = 35;
     }
 
     public Ranking getRanking() {
         Ranking ranking = new Ranking();
-        int num_ads = 35;
         for (int i = 0; i < num_ads; i++) {
             Product product = new Product("manufacturer_" + i,"component_" + i);
             AdLink ad = new AdLink(product, "advertiser_" + i);
@@ -33,9 +35,10 @@ public class RankingTest {
         AdLink ad = null;
         Ranking instance = new Ranking();
         instance.add(ad);
+        assertEquals(instance.size(), 1);
 
         instance = getRanking();
-        
+        assertEquals(instance.size(), num_ads);
     }
 
     @Test

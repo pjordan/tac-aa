@@ -143,6 +143,14 @@ public class SalesReportTest {
         assertEquals(report.size(), 1);
         assertTrue(report.containsQuery(new Query()));
 
+        Query query = new Query();
+        query.setComponent("c1");
+        query.setManufacturer("man1");
+        report.addQuery(query, 15, 100.3);
+        assertEquals(report.size(), 2);
+        assertTrue(report.containsQuery(query));
+        assertEquals(report.getRevenue(query), 100.3);
+        assertEquals(report.getConversions(query), 15);
 
         report.addQuery(null);
     }

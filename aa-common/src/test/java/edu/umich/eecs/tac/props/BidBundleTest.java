@@ -40,6 +40,8 @@ public class BidBundleTest {
         double bid2 = 50.5;
         bundle.addQuery(query2, bid2, ad2);
 
+        assertEquals(bundle.size(), 2);
+
         bundle.setCampaignDailySpendLimit(100.5);
         bundle.setDailyLimit(query, 15.0);
         bundle.setDailyLimit(1, 200.0);
