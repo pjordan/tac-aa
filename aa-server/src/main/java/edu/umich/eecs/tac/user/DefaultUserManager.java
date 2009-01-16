@@ -8,10 +8,11 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * @author Patrick Jordan, Ben Cassell
+ * @author Patrick Jordan, Ben Cassell, Lee Callender
  */
 public class DefaultUserManager implements UserManager {
-    protected Logger log = Logger.getLogger(Publisher.class.getName());
+    //protected Logger log = Logger.getLogger(Publisher.class.getName()); This shouldn't be publisher??
+    protected Logger log = Logger.getLogger(DefaultUserManager.class.getName());
 
     private final Object lock;
 
@@ -81,6 +82,7 @@ public class DefaultUserManager implements UserManager {
 
 
     public void initialize(int virtualDays) {
+        log.finer("Running virtual initialization for "+virtualDays+" days.");
         for (int d = virtualDays; d >= 1; d--) {
             transitionManager.nextTimeUnit(-d);
 
