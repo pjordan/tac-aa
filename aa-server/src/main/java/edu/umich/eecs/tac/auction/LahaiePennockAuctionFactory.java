@@ -15,7 +15,7 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
 
     private BidManager bidManager;
 
-    private double squashValue;
+    private PublisherInfo publisherInfo;
 
     private AuctionInfo auctionInfo;
 
@@ -36,7 +36,7 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
             bids[i] = bidManager.getBid(advertisers[i], query);
             qualityScores[i] = bidManager.getQualityScore(advertisers[i], query);
             ads[i] = bidManager.getAdLink(advertisers[i], query);
-            weight[i] = Math.pow(qualityScores[i], squashValue);
+            weight[i] = Math.pow(qualityScores[i], publisherInfo.getSquashingParameter());
             scores[i] = weight[i] * bids[i];
             indices[i] = i;
             //log.finest("Advertiser: "+advertisers[i]+"\tScore: "+scores[i]);
@@ -76,9 +76,7 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
     }
   
     public void configure(ConfigProxy configProxy) {
-        double squashValue = configProxy.getPropertyAsDouble("auctionfactory.squashing", 1.0);
-
-        setSquashValue(squashValue);
+        
     }
 
     public BidManager getBidManager() {
@@ -89,12 +87,12 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         this.bidManager = bidManager;
     }
 
-    public double getSquashValue() {
-        return squashValue;
+    public PublisherInfo getPublisherInfo() {
+        return publisherInfo;
     }
 
-    public void setSquashValue(double squash) {
-        squashValue = squash;
+    public void setPublisherInfo(PublisherInfo publisherInfo) {
+        this.publisherInfo = publisherInfo;
     }
 
     public AuctionInfo getAuctionInfo() {

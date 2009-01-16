@@ -48,6 +48,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
     private String[] advertiserAddresses = new String[numberOfAdvertisers];
     private Map<String, AdvertiserInfo> advertiserInfoMap;
 
+    private Random random;
 
     private Runnable afterTickTarget = new Runnable() {
         public void run() {
@@ -61,6 +62,8 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
 
     public TACAASimulation(ConfigManager config) {
         super(config);
+
+        random = new Random();
     }
 
     public RetailCatalog getRetailCatalog() {
@@ -170,6 +173,8 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
                 Publisher publisherAgent = (Publisher) publisher.getAgent();
                 publisherAgent.simulationSetup(this, publishers[i].getIndex());
                 addTimeListener(publisherAgent);
+
+                publisherAgent.sendPublisherInfoToAll();
             }
         }
 
@@ -178,21 +183,36 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
 
     }
 
+    private double sample(double min, double max) {
+        return min + random.nextDouble()*(max - min);
+    }
+
+    private int sample(int min, int max) {
+        return min + (max>min ? random.nextInt(max - min) : 0);
+    }
+
     private AuctionInfo createAuctionInfo() {
         AuctionInfo auctionInfo = new AuctionInfo();
 
 
         ConfigManager config = getConfig();
 
-        double promotedReserve = config.getPropertyAsDouble("publisher.promoted.reserve", 0.0);
-        int promotedSlots = config.getPropertyAsInt("publisher.promoted.slots", 0);
-        double regularReserve = config.getPropertyAsDouble("publisher.regular.reserve", 0.0);
+        double promotedReserveMin = config.getPropertyAsDouble("publisher.promoted.reserve.min", 0.0);
+        double promotedReserveMax = config.getPropertyAsDouble("publisher.promoted.reserve.max", 0.0);
+        
+        int promotedSlotsMin = config.getPropertyAsInt("publisher.promoted.slots.min", 0);
+        int promotedSlotsMax = config.getPropertyAsInt("publisher.promoted.slots.max", 0);
+
+        double regularReserveMin = config.getPropertyAsDouble("publisher.regular.reserve.min", 0.0);
+        double regularReserveMax = config.getPropertyAsDouble("publisher.regular.reserve.max", 0.0);
+
         int regularSlots = config.getPropertyAsInt("publisher.regular.slots", 0);
         double promotedSlotBonus = config.getPropertyAsDouble("publisher.promoted.slotbonus", 0.0);
 
-        auctionInfo.setPromotedReserve(promotedReserve);
-        auctionInfo.setPromotedSlots(promotedSlots);
-        auctionInfo.setRegularReserve(regularReserve);
+        auctionInfo.setPromotedReserve(sample(promotedReserveMin, promotedReserveMax));
+        auctionInfo.setPromotedSlots(sample(promotedSlotsMin,promotedSlotsMax));
+        auctionInfo.setRegularReserve(sample(regularReserveMin, regularReserveMax));
+
         auctionInfo.setRegularSlots(regularSlots);
         auctionInfo.setPromotedSlotBonus(promotedSlotBonus);
 
@@ -410,7 +430,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
             salesAnalyst.sendSalesReportToAll();
 
             for (SimulationAgent agent : getAgents(PUBLISHER)) {
-                if (agent.getAgent() instanceof Publisher) {
+                if (agent.getAgent() instanceof PublisherInfoSender) {
                     Publisher publisher = (Publisher) agent.getAgent();
                     publisher.sendQueryReportsToAll();
                 }
@@ -653,8 +673,12 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
             sendMessage(new Message(agentAddress, this.retailCatalog));
 
             sendMessage(new Message(agentAddress, advertiserInfoMap.get(agentAddress)));
+
+            for (SimulationAgent publisher : getPublishers()) {
+                Publisher publisherAgent = (Publisher) publisher.getAgent();
+                publisherAgent.sendPublisherInfo(agentAddress);
+            }
         }
-        
     }
 
     /**

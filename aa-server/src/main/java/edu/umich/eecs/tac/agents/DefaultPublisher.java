@@ -58,6 +58,12 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
      */
     private AuctionInfo auctionInfo;
 
+    /**
+     * The basic publisher info
+     */
+    private PublisherInfo publisherInfo;
+
+    private Random random;
 
     public DefaultPublisher() {
 
@@ -78,20 +84,41 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     protected void setup() {
         this.log = Logger.getLogger(DefaultPublisher.class.getName());
 
+
+        random = new Random();
+        
         spendTracker = createSpendTracker();
 
         bidTracker = createBidTracker();
 
+        setPublisherInfo(createPublisherInfo());
+
         auctionFactory = createAuctionFactory();
+        auctionFactory.setPublisherInfo(getPublisherInfo());
+
 
         queryReportManager = createQueryReportManager();
 
+
+        
         addTimeListener(this);
 
         for (SimulationAgent agent : getSimulation().getUsers()) {
             Users users = (Users) agent.getAgent();
             users.addUserEventListener(new ClickMonitor());
         }
+    }
+
+    private PublisherInfo createPublisherInfo() {
+        double squashingMin = getPropertyAsDouble("squashing.min", 0.0);
+        double squashingMax = getPropertyAsDouble("squashing.max", 1.0);
+        double squashing = squashingMin + random.nextDouble() * (squashingMax - squashingMin); 
+
+        PublisherInfo publisherInfo = new PublisherInfo();
+        publisherInfo.setSquashingParameter(squashing);
+        publisherInfo.lock();
+
+        return publisherInfo;
     }
 
     private BidTracker createBidTracker() {
@@ -261,6 +288,8 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
             queryReportManager.sendQueryReportToAll();
     }
 
+    
+
     public Auction runAuction(Query query) {
         //TODO: Check against possible queries
         if (auctionFactory != null) {
@@ -355,4 +384,12 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
         return publisherConfigProxy;
     }
 
+
+    public PublisherInfo getPublisherInfo() {
+        return publisherInfo;
+    }
+
+    void setPublisherInfo(PublisherInfo publisherInfo) {
+        this.publisherInfo = publisherInfo;
+    }
 }

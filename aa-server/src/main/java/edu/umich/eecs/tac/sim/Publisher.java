@@ -7,11 +7,12 @@ package edu.umich.eecs.tac.sim;
 import edu.umich.eecs.tac.props.Auction;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.QueryReport;
+import edu.umich.eecs.tac.props.PublisherInfo;
 import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
 
-public abstract class Publisher extends Builtin implements QueryReportSender, Auctioneer {
+public abstract class Publisher extends Builtin implements QueryReportSender, Auctioneer, PublisherInfoSender {
     private static final String CONF = "publisher.";
 
     protected Logger log = Logger.getLogger(Publisher.class.getName());
@@ -38,5 +39,15 @@ public abstract class Publisher extends Builtin implements QueryReportSender, Au
 
     public void sendQueryReport(String advertiser, QueryReport report) {
         sendMessage(advertiser,report);
+    }
+
+    public void sendPublisherInfo(String advertiser) {
+        sendMessage(advertiser, getPublisherInfo());
+    }
+
+    public void sendPublisherInfoToAll() {
+        for(String advertiser : getAdvertiserAddresses()) {
+            sendPublisherInfo(advertiser);
+        }
     }
 }
