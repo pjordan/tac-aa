@@ -186,7 +186,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
 
         ConfigManager config = getConfig();
 
-        double promotedReserveMin = config.getPropertyAsDouble("publisher.promoted.reserve.min", 0.0);
+
         double promotedReserveMax = config.getPropertyAsDouble("publisher.promoted.reserve.max", 0.0);
         
         int promotedSlotsMin = config.getPropertyAsInt("publisher.promoted.slots.min", 0);
@@ -198,9 +198,10 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         int regularSlots = config.getPropertyAsInt("publisher.regular.slots", 0);
         double promotedSlotBonus = config.getPropertyAsDouble("publisher.promoted.slotbonus", 0.0);
 
-        auctionInfo.setPromotedReserve(sample(promotedReserveMin, promotedReserveMax));
-        auctionInfo.setPromotedSlots(sample(promotedSlotsMin,promotedSlotsMax));
         auctionInfo.setRegularReserve(sample(regularReserveMin, regularReserveMax));
+        auctionInfo.setPromotedReserve(sample(auctionInfo.getRegularReserve(), promotedReserveMax));
+        auctionInfo.setPromotedSlots(sample(promotedSlotsMin,promotedSlotsMax));
+
 
         auctionInfo.setRegularSlots(regularSlots);
         auctionInfo.setPromotedSlotBonus(promotedSlotBonus);
