@@ -45,7 +45,7 @@ public class SpendTrackerImpl implements SpendTracker {
         return advertisersCount++;
     }
 
-    protected void addCost(String advertiser, Query query, double cost) {
+    public void addCost(String advertiser, Query query, double cost) {
         int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, advertiser);
 
         if (index < 0) {

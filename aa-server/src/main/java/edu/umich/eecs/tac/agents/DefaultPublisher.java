@@ -70,7 +70,8 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
     }
 
     public void nextTimeUnit(int date) {
-
+        spendTracker.reset();
+        
         //Auctions should be updated here.
         if (bidManager != null) {
             bidManager.nextTimeUnit(date);
@@ -309,6 +310,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
 
         public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
             DefaultPublisher.this.charge(advertiser, cpc);
+            spendTracker.addCost(advertiser,query,cpc);
         }
 
         public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {

@@ -9,14 +9,14 @@ import edu.umich.eecs.tac.props.Query;
  */
 public interface SpendTracker {
     /**
-     * Add the advertiser
+     * Adds the advertiser
      *
      * @param advertiser the advertiser
      */
     void addAdvertiser(String advertiser);
 
     /**
-     * Get the daily spend the advertiser incurred.
+     * Returns the daily spend the advertiser incurred.
      *
      * @param advertiser the advertiser
      * 
@@ -25,7 +25,7 @@ public interface SpendTracker {
     double getDailyCost(String advertiser);
 
     /**
-     * Get the daily spend the advertiser incurred for a given query.
+     * Returns the daily spend the advertiser incurred for a given query.
      *
      * @param advertiser the advertiser
      * @param query the query
@@ -34,9 +34,18 @@ public interface SpendTracker {
     double getDailyCost(String advertiser, Query query);
 
     /**
-     * Set the current cost to zero for all advertisers.
+     * Sets the current cost to zero for all advertisers.
      */
     void reset();
+
+    /**
+     * Adds the cost to the advertiser and query.
+     *
+     * @param advertiser the advertiser
+     * @param query the query
+     * @param cost the cost to add
+     */
+    void addCost(String advertiser, Query query, double cost);
 
     /**
      * Get the number of advertisers tracked.
