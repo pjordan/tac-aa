@@ -72,7 +72,7 @@ public class AdvertiserCountPanel extends JPanel implements TACAAConstants {
 
 
     private JFreeChart createChart(String s, XYDataset xydataset) {
-        JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", "$", xydataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", "", xydataset, PlotOrientation.VERTICAL, false, true, false);
         jfreechart.setBackgroundPaint(Color.white);
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
         xyplot.setBackgroundPaint(Color.lightGray);

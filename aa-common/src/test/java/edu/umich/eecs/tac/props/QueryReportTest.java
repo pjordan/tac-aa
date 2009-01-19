@@ -152,7 +152,6 @@ public class QueryReportTest {
         buffer = getBytesForTransportable(writer, new QueryReport());
         received = readFromBytes(reader, buffer, "QueryReport");
         assertFalse(received.isLocked());
-
     }
 
     @Test(expected = NullPointerException.class)

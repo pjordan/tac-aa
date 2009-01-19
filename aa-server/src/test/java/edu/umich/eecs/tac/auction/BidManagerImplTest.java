@@ -212,5 +212,9 @@ public class BidManagerImplTest {
         public int size() {
             return 0;
         }
+
+        public void addCost(String advertiser, Query query, double cost) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
 }

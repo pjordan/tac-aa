@@ -50,6 +50,7 @@ public class AuctionInfo extends AbstractTransportable {
     }
 
     public void setRegularSlots(int regularSlots) {
+        lockCheck();
         this.regularSlots = regularSlots;
     }
 
@@ -58,6 +59,7 @@ public class AuctionInfo extends AbstractTransportable {
     }
 
     public void setPromotedSlotBonus(double promotedSlotBonus) {
+        lockCheck();
         this.promotedSlotBonus = promotedSlotBonus;
     }
 

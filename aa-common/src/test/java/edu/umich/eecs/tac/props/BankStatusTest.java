@@ -55,13 +55,13 @@ public class BankStatusTest {
     @Test
     public void testToString() {
         BankStatus instance = new BankStatus();
-        String expResult = "BankStatus[0.0]";
+        String expResult = "BankStatus[0.000000]";
         String result = instance.toString();
         assertEquals(expResult, result);
 
         double b = 10.5;
         instance.setAccountBalance(b);
-        expResult = "BankStatus[10.5]";
+        expResult = "BankStatus[10.500000]";
         result = instance.toString();
         assertEquals(expResult, result);
     }

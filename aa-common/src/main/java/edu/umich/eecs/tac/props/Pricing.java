@@ -61,15 +61,8 @@ public class Pricing extends AbstractTransportable {
     protected void writePriceEntry(TransportWriter writer, Double price, AdLink adLink) {
         writer.node(PRICE_ENTRY_TRANSPORT_NAME);
 
-        int nodeLevel = writer.getNodeLevel();
-
         writer.attr("price", price);
         writer.write(adLink);
-        
-        if (nodeLevel != writer.getNodeLevel()) {
-            throw new IllegalStateException("wrong node level " + writer.getNodeLevel() + " (expected "
-                    + nodeLevel + ") for transportable " + PRICE_ENTRY_TRANSPORT_NAME);
-        }
 
         writer.endNode(PRICE_ENTRY_TRANSPORT_NAME);
     }
@@ -79,13 +72,11 @@ public class Pricing extends AbstractTransportable {
 
         double price = reader.getAttributeAsDouble("price", Double.NaN);
 
-        AdLink adLink = null;
-        if (reader.nextNode(AdLink.class.getSimpleName(), true)) {
-            adLink = (AdLink) reader.readTransportable();
-        }
+        reader.nextNode(AdLink.class.getSimpleName(), true);
 
-        setPrice(adLink, price);
+        AdLink adLink = (AdLink) reader.readTransportable();
         
+        setPrice(adLink, price);
 
         reader.exitNode();
     }

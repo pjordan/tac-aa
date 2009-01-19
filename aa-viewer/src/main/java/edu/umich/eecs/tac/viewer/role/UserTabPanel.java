@@ -131,6 +131,8 @@ public class UserTabPanel extends SimulationTabPanel implements TACAAConstants {
         
         org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot.getRenderer();
 
+        xyitemrenderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
+        
         if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
             XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
             xylineandshaperenderer.setBaseShapesVisible(false);

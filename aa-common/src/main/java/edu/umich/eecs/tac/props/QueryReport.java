@@ -517,9 +517,9 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
                 this.ad = (Ad) reader.readTransportable();
             }
 
-            if (reader.nextNode(DisplayReport.class.getSimpleName(), true)) {
-                this.displayReport = (DisplayReport) reader.readTransportable();
-            }
+            reader.nextNode(DisplayReport.class.getSimpleName(), true);
+            this.displayReport = (DisplayReport) reader.readTransportable();
+
 
 
         }

@@ -104,25 +104,27 @@ public class RetailCatalog extends AbstractKeyedEntryList<Product, RetailCatalog
      *
      * @return the index of the newly added product.
      */
-    public int addProduct(Product product) {
+    public int addProduct(Product product) {        
         return addKey(product);
     }
 
     protected int addEntry(RetailCatalogEntry entry) {
         int index = super.addEntry(entry);
 
-        if (index >= 0) {
-            manufacturers.add(entry.getProduct().getManufacturer());
-            components.add(entry.getProduct().getComponent());                          
-        }
+        manufacturers.add(entry.getProduct().getManufacturer());
+        components.add(entry.getProduct().getComponent());                          
 
         return index;
     }
 
+    @Override
     protected RetailCatalogEntry createEntry(Product key) {
-        RetailCatalogEntry entry = new RetailCatalogEntry();
-        entry.setProduct(key);
-        return entry;
+        return new RetailCatalogEntry(key);
+    }
+
+    @Override
+    protected void removeEntry(int index) {
+        throw new UnsupportedOperationException("Cannot remove retail catalog entry");
     }
 
     protected Class entryClass() {
@@ -133,6 +135,15 @@ public class RetailCatalog extends AbstractKeyedEntryList<Product, RetailCatalog
         private static final long serialVersionUID = -1140097762238141476L;
         
         private double salesProfit;
+
+
+        public RetailCatalogEntry() {
+            super();
+        }
+
+        public RetailCatalogEntry(Product product) {
+            setProduct(product);
+        }
 
         public Product getProduct() {
             return getKey();

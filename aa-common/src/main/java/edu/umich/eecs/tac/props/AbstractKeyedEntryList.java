@@ -103,7 +103,7 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>> extends
      *
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size()).
      */
-    public T getKey(int index) {
+    protected T getKey(int index) {
         return getEntry(index).getKey();
     }
 
@@ -114,7 +114,7 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>> extends
      *
      * @return the entry with the specified key or <code>null</code> if the key is not found.
      */
-    public S getEntry(T key) {
+    protected S getEntry(T key) {
         int index = indexForEntry(key);
 
         if(index < 0) {

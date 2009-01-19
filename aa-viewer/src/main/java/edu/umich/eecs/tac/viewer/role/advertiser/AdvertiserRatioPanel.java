@@ -62,9 +62,7 @@ public class AdvertiserRatioPanel extends JPanel implements TACAAConstants {
         MeterPlot meterplot = new MeterPlot(dataset);
         meterplot.setDialShape(DialShape.CHORD);
         meterplot.setRange(new Range(0.0D, 100D));
-        meterplot.addInterval(new MeterInterval("Normal", new Range(0.0D, 50D), Color.lightGray, new BasicStroke(2.0F), new Color(0, 255, 0, 64)));
-        meterplot.addInterval(new MeterInterval("Warning", new Range(50D, 70D), Color.lightGray, new BasicStroke(2.0F), new Color(255, 255, 0, 64)));
-        meterplot.addInterval(new MeterInterval("Critical", new Range(70D, 100D), Color.lightGray, new BasicStroke(2.0F), new Color(255, 0, 0, 128)));
+        meterplot.addInterval(new MeterInterval("", new Range(0, 100.0D), Color.lightGray, new BasicStroke(2.0F), new Color(0, 255, 0, 64)));
         meterplot.setNeedlePaint(Color.darkGray);
         meterplot.setDialBackgroundPaint(Color.white);
         meterplot.setDialOutlinePaint(Color.gray);
@@ -77,7 +75,7 @@ public class AdvertiserRatioPanel extends JPanel implements TACAAConstants {
         meterplot.setValuePaint(Color.black);
         meterplot.setValueFont(new Font("Dialog", 1, 14));
         meterplot.setUnits("%");
-        return new JFreeChart(s, JFreeChart.DEFAULT_TITLE_FONT, meterplot, true);
+        return new JFreeChart(s, JFreeChart.DEFAULT_TITLE_FONT, meterplot, false);
     }
 
     public int getAgent() {

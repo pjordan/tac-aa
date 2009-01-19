@@ -123,4 +123,9 @@ public class RetailCatalogTest {
         assertEquals(received.size(),1);
         assertTrue(received.isLocked());
     }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testRemoveEntry() {
+        new RetailCatalog().removeEntry(0);
+    }
 }

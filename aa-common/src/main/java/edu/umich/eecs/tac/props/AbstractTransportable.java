@@ -17,12 +17,12 @@ import java.text.ParseException;
  */
 public abstract class AbstractTransportable implements Transportable, Serializable {
     /**
-     * The locked variable designates whether or not the query is mutable.
+     * The locked variable designates whether or not the transportable is mutable.
      */
     private boolean locked;
 
     /**
-     * Make the query immutable.
+     * Make the transportable immutable.
      */
     public void lock() {
         locked = true;

@@ -17,19 +17,17 @@ public abstract class AbstractStringEntry extends AbstractKeyedEntry<String> {
 
     /**
      * Reads in a "key" node and sets the key to the value of the backing attribute.
-     * 
+     *
      * @param reader the reader to read data from.
      * @throws ParseException
      */
     protected void readKey(TransportReader reader) throws ParseException {
 
         // Read in the key node.  The node must exist.
-        if(reader.nextNode(KEY_NODE,true)) {
+        reader.nextNode(KEY_NODE, true);
 
-            // Grab the key attribute value
-            setKey(reader.getAttribute(KEY_ATTRIBUTE, null));
-
-        }
+        // Grab the key attribute value
+        setKey(reader.getAttribute(KEY_ATTRIBUTE, null));
     }
 
     /**

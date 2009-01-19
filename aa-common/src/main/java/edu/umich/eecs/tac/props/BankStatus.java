@@ -11,38 +11,34 @@ import se.sics.isl.transport.Transportable;
 
 public class BankStatus extends AbstractTransportable {
 
-	/**If BankStatus is updated, update the ID
-	 * 
-	 */
-	private static final long serialVersionUID = -6576269032652384128L;
+    /**
+     * If BankStatus is updated, update the ID
+     */
+    private static final long serialVersionUID = -6576269032652384128L;
 
-	private double balance;
+    private double balance;
 
-	public BankStatus(){
-		balance = 0.0;
-	}
-	
-	public BankStatus(double b){
-		balance = b;
-	}
-	
-	public double getAccountBalance(){
-		return balance;
-	}
+    public BankStatus() {
+        balance = 0.0;
+    }
 
-    public void setAccountBalance(double b){
-		lockCheck();
+    public BankStatus(double b) {
+        balance = b;
+    }
+
+    public double getAccountBalance() {
+        return balance;
+    }
+
+    public void setAccountBalance(double b) {
+        lockCheck();
         balance = b;
     }
 
     public String toString() {
-    	StringBuffer sb = new StringBuffer();
-    	sb.append(getTransportName()).append('[')
-    	.append(balance).append(']');
-
-    	return sb.toString();
+        return String.format("%s[%f]", getTransportName(), balance);
     }
-    
+
     // -------------------------------------------------------------------
     //  Transportable (externalization support)
     // -------------------------------------------------------------------
@@ -50,11 +46,11 @@ public class BankStatus extends AbstractTransportable {
 
     protected void readWithLock(TransportReader reader) throws ParseException {
         balance = reader.getAttributeAsDouble("balance", 0.0);
-	}
+    }
 
 
     protected void writeWithLock(TransportWriter writer) {
-        writer.attr("balance", balance);       		
-	}
+        writer.attr("balance", balance);
+    }
 
 }

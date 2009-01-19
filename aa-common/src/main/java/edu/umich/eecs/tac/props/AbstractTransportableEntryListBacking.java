@@ -30,7 +30,7 @@ public abstract class AbstractTransportableEntryListBacking<S extends Transporta
      *
      * @return the number of entries in the list.
      */
-    public final int size() {
+    public int size() {
         return entries.size();
     }
 
@@ -80,7 +80,7 @@ public abstract class AbstractTransportableEntryListBacking<S extends Transporta
      * @return the entry at the specified index.
      * @throws IndexOutOfBoundsException if the index is out of range <code>(index < 0 || index >= size())</code>.
      */
-    protected final S getEntry(int index) {
+    protected S getEntry(int index) {
         return entries.get(index);
     }
 
@@ -92,7 +92,7 @@ public abstract class AbstractTransportableEntryListBacking<S extends Transporta
      *
      * @throws IllegalStateException if the object is locked 
      */
-    protected final void removeEntry(int index) {
+    protected void removeEntry(int index) {
         lockCheck();
 
         entries.remove(index);
@@ -109,10 +109,10 @@ public abstract class AbstractTransportableEntryListBacking<S extends Transporta
     protected int addEntry(S entry) {
         lockCheck();
 
-        if(entries.add(entry))
-            return size()-1;
-        else
-            return -1;
+        // This will always return true for an ArrayList
+        entries.add(entry);
+
+        return size()-1;
     }
 
     /**

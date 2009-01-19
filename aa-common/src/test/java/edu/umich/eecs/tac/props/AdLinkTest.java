@@ -25,6 +25,22 @@ public class AdLinkTest {
     }
 
     @Test
+    public void testConstructor() {
+        AdLink first = new AdLink();
+        AdLink second = new AdLink((Ad)null, null);
+
+        assertEquals(first, second);
+
+        first = new AdLink();
+        first.setProduct(new Product());
+
+        second = new AdLink(new Ad(new Product()), null);
+
+        assertEquals(first, second);
+    }
+
+
+    @Test
     public void testEmptyTransport() throws ParseException {
         BinaryTransportWriter writer = new BinaryTransportWriter();
         BinaryTransportReader reader = new BinaryTransportReader();

@@ -47,6 +47,7 @@ public class BidBundleTest {
         bundle.setDailyLimit(1, 200.0);
 
         int index = 0;
+        assertEquals(bundle.getQuery(index), query);
         assertEquals(bundle.getBid(query), bid);
         assertEquals(bundle.getBid(index), bid);
         assertEquals(bundle.getAd(query), ad);
@@ -159,6 +160,9 @@ public class BidBundleTest {
         assertNotNull(received);
         assertEquals(received.size(),2);
 
+        assertEquals(bundle.getEntry(0).toString(), received.getEntry(0).toString());
+        assertEquals(bundle.toString(), received.toString());
+
     }
 
     @Test
@@ -186,5 +190,35 @@ public class BidBundleTest {
         assertNotNull(bundle);
         assertNotNull(received);
         assertEquals(received.size(),0);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testRemoveEntry() {
+        BidBundle bundle = new BidBundle();
+
+        assertEquals(bundle.size(),0);
+
+        bundle.addQuery(new Query());
+
+        assertEquals(bundle.size(),1);
+
+        bundle.removeEntry(0);
+
+        assertEquals(bundle.size(),0);
+
+
+        bundle.addQuery(new Query());
+        bundle.lock();
+
+        bundle.removeEntry(0);
+    }
+
+    @Test
+    public void testGetEntry() {
+        BidBundle bundle = new BidBundle();
+        bundle.addQuery(new Query());
+
+        assertNotNull(bundle.getEntry(new Query()));
+        assertNull(bundle.getEntry(null));
     }
 }
