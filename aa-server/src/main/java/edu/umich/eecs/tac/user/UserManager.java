@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.user;
 import edu.umich.eecs.tac.sim.Auctioneer;
 import edu.umich.eecs.tac.props.UserClickModel;
 import se.sics.tasim.aw.TimeListener;
+import se.sics.tasim.aw.Message;
 
 /**
  * UserManager provides a public interface for triggering and managing agent behavior.  Listeners may be added and
@@ -27,4 +28,6 @@ public interface UserManager extends TimeListener {
     public UserClickModel getUserClickModel();
 
     public void setUserClickModel(UserClickModel userClickModel);
+
+    public void messageReceived(Message message);
 }

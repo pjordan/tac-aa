@@ -7,11 +7,13 @@ import edu.umich.eecs.tac.sim.Auctioneer;
 import java.util.*;
 import java.util.logging.Logger;
 
+import se.sics.tasim.aw.Message;
+import se.sics.isl.transport.Transportable;
+
 /**
  * @author Patrick Jordan, Ben Cassell, Lee Callender
  */
 public class DefaultUserManager implements UserManager {
-    //protected Logger log = Logger.getLogger(Publisher.class.getName()); This shouldn't be publisher??
     protected Logger log = Logger.getLogger(DefaultUserManager.class.getName());
 
     private final Object lock;
@@ -28,10 +30,11 @@ public class DefaultUserManager implements UserManager {
 
     private UserClickModel userClickModel;
 
+    private UsersInitializer usersInitializer;
+
     public DefaultUserManager(RetailCatalog retailCatalog, UserTransitionManager transitionManager, UserQueryManager queryManager, UserViewManager viewManager, int populationSize) {
         this(retailCatalog, transitionManager, queryManager, viewManager, populationSize, new Random());
     }
-
 
     public DefaultUserManager(RetailCatalog retailCatalog, UserTransitionManager transitionManager, UserQueryManager queryManager, UserViewManager viewManager, int populationSize, Random random) {
         lock = new Object();
@@ -64,6 +67,7 @@ public class DefaultUserManager implements UserManager {
         this.transitionManager = transitionManager;
         this.queryManager = queryManager;
         this.viewManager = viewManager;
+        this.usersInitializer = new DefaultUsersInitializer(transitionManager);
 
         users = buildUsers(retailCatalog, populationSize);
     }
@@ -82,14 +86,7 @@ public class DefaultUserManager implements UserManager {
 
 
     public void initialize(int virtualDays) {
-        log.finer("Running virtual initialization for "+virtualDays+" days.");
-        for (int d = virtualDays; d >= 1; d--) {
-            transitionManager.nextTimeUnit(-d);
-
-            for (User user : users) {
-                user.setState(transitionManager.transition(user.getState(), false));
-            }
-        }
+        usersInitializer.initialize(users, virtualDays);
     }
 
     public void triggerBehavior(Auctioneer auctioneer) {
@@ -113,15 +110,15 @@ public class DefaultUserManager implements UserManager {
     }
 
     private boolean handleSearch(User user, Auctioneer auctioneer) {
+
         boolean transacted = false;
 
-
         Query query = generateQuery(user);
+
         if (query != null) {
             Auction auction = auctioneer.runAuction(query);
 
             transacted = handleImpression(query, auction, user);
-
         }
 
         return transacted;
@@ -185,5 +182,13 @@ public class DefaultUserManager implements UserManager {
     public void setUserClickModel(UserClickModel userClickModel) {
         this.userClickModel = userClickModel;
         viewManager.setUserClickModel(userClickModel);
+    }
+
+    public void messageReceived(Message message) {
+        Transportable content = message.getContent();
+
+        if (content instanceof UserClickModel) {
+            setUserClickModel((UserClickModel) content);
+        }
     }
 }

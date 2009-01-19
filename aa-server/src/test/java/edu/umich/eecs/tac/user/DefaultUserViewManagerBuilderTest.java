@@ -128,6 +128,10 @@ public class DefaultUserViewManagerBuilderTest {
                 return salesAnalyst;
             }
 
+            public int getNumberOfAdvertisers() {
+                return advertiserInfo.size();
+            }
+
             public AuctionInfo getAuctionInfo() {
                 return auctionInfo;
             }

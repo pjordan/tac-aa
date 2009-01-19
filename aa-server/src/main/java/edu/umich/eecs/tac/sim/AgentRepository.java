@@ -55,4 +55,10 @@ public interface AgentRepository {
      * @return the sales analyst.
      */
     SalesAnalyst getSalesAnalyst();
+
+    /**
+     * Returns the number of advertisers in the simulation.
+     * @return the number of advertisers in the simulation.
+     */
+    int getNumberOfAdvertisers();
 }

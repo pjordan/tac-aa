@@ -814,7 +814,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
     // API to TACSCM builtin agents (trusted components)
     // -------------------------------------------------------------------
 
-    final int getNumberOfAdvertisers() {
+    public final int getNumberOfAdvertisers() {
         return numberOfAdvertisers;
     }
 

@@ -128,6 +128,11 @@ public class DefaultUserTransitionManagerBuilderTest {
             public AuctionInfo getAuctionInfo() {
                 return auctionInfo;
             }
+
+
+            public int getNumberOfAdvertisers() {
+                return advertiserInfo.size();
+            }
         };
 
         random = new Random();

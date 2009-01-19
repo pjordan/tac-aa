@@ -102,6 +102,11 @@ public class DefaultSalesAnalystTest {
         public AuctionInfo getAuctionInfo() {
             return auctionInfo;
         }
+
+
+        public int getNumberOfAdvertisers() {
+            return advertiserInfo.size();
+        }
     }
 
     public class SimpleSalesReportSender implements SalesReportSender {
