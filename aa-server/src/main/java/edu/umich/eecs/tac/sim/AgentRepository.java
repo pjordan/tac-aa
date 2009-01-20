@@ -61,4 +61,10 @@ public interface AgentRepository {
      * @return the number of advertisers in the simulation.
      */
     int getNumberOfAdvertisers();
+
+    /**
+     * Returns the addresses of advertisers in the simulation.
+     * @return the addresses of advertisers in the simulation.
+     */
+    String[] getAdvertiserAddresses();
 }

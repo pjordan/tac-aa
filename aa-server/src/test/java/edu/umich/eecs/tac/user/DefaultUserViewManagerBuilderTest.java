@@ -33,14 +33,14 @@ public class DefaultUserViewManagerBuilderTest {
     public void setup() {
         catalog = new RetailCatalog();
         advertiserInfo = new HashMap<String, AdvertiserInfo>();
-        
+
         builder = new DefaultUserViewManagerBuilder();
 
         auctionInfo = new AuctionInfo();
-        
+
         salesAnalyst = new SalesAnalyst() {
 
-            public void addAccount(String name) {                
+            public void addAccount(String name) {
             }
 
             public void sendSalesReportToAll() {
@@ -135,6 +135,10 @@ public class DefaultUserViewManagerBuilderTest {
             public AuctionInfo getAuctionInfo() {
                 return auctionInfo;
             }
+
+            public String[] getAdvertiserAddresses() {
+                return advertiserInfo.keySet().toArray(new String[0]);
+            }
         };
 
         random = new Random();
@@ -142,7 +146,7 @@ public class DefaultUserViewManagerBuilderTest {
 
     @Test
     public void testConstructor() {
-        assertNotNull(builder);    
+        assertNotNull(builder);
     }
 
     @Test

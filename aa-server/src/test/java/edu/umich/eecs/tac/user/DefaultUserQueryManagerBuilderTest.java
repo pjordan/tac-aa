@@ -35,7 +35,7 @@ public class DefaultUserQueryManagerBuilderTest {
         builder = new DefaultUserQueryManagerBuilder();
 
         auctionInfo = new AuctionInfo();
-        
+
         salesAnalyst = new SalesAnalyst() {
 
             public void addAccount(String name) {
@@ -133,6 +133,10 @@ public class DefaultUserQueryManagerBuilderTest {
 
             public AuctionInfo getAuctionInfo() {
                 return auctionInfo;
+            }
+
+            public String[] getAdvertiserAddresses() {
+                return advertiserInfo.keySet().toArray(new String[0]);
             }
         };
 

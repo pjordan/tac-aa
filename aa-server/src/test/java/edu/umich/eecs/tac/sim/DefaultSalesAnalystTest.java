@@ -107,6 +107,11 @@ public class DefaultSalesAnalystTest {
         public int getNumberOfAdvertisers() {
             return advertiserInfo.size();
         }
+
+
+        public String[] getAdvertiserAddresses() {
+            return advertiserInfo.keySet().toArray(new String[0]);
+        }
     }
 
     public class SimpleSalesReportSender implements SalesReportSender {

@@ -826,7 +826,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         return getAgents(USERS);
     }
 
-    final String[] getAdvertiserAddresses() {
+    public final String[] getAdvertiserAddresses() {
         return advertiserAddresses;
     }
 

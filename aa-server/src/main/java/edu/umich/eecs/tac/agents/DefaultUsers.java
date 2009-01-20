@@ -143,5 +143,10 @@ public class DefaultUsers extends Users implements TACAAConstants {
         public int getNumberOfAdvertisers() {
             return getSimulation().getNumberOfAdvertisers();
         }
+
+
+        public String[] getAdvertiserAddresses() {
+            return getSimulation().getAdvertiserAddresses();
+        }
     }
 }

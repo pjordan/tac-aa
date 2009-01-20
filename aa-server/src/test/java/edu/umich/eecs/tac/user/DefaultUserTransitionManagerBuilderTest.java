@@ -34,7 +34,7 @@ public class DefaultUserTransitionManagerBuilderTest {
         builder = new DefaultUserTransitionManagerBuilder();
 
         auctionInfo = new AuctionInfo();
-        
+
         salesAnalyst = new SalesAnalyst() {
 
             public void addAccount(String name) {
@@ -133,6 +133,10 @@ public class DefaultUserTransitionManagerBuilderTest {
             public int getNumberOfAdvertisers() {
                 return advertiserInfo.size();
             }
+
+            public String[] getAdvertiserAddresses() {
+                return advertiserInfo.keySet().toArray(new String[0]);
+            }
         };
 
         random = new Random();
@@ -140,7 +144,7 @@ public class DefaultUserTransitionManagerBuilderTest {
 
     @Test
     public void testConstructor() {
-        assertNotNull(builder);    
+        assertNotNull(builder);
     }
 
     @Test
