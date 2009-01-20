@@ -11,7 +11,7 @@ import java.util.HashMap;
 import se.sics.tasim.sim.SimulationAgent;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Ben Cassell
  */
 public class DefaultSalesAnalystTest {
     DefaultSalesAnalyst salesAnalyst;

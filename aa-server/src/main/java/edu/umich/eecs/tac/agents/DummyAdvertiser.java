@@ -4,17 +4,23 @@ package edu.umich.eecs.tac.agents;
  * @author Lee Callender, Patrick Jordan
  */
 
-import se.sics.tasim.aw.Agent;
-import se.sics.tasim.aw.Message;
-import se.sics.tasim.props.StartInfo;
-import se.sics.tasim.props.SimulationStatus;
-import se.sics.isl.transport.Transportable;
-
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.*;
 
-import edu.umich.eecs.tac.props.*;
+import se.sics.isl.transport.Transportable;
+import se.sics.tasim.aw.Agent;
+import se.sics.tasim.aw.Message;
+import se.sics.tasim.props.SimulationStatus;
+import edu.umich.eecs.tac.props.Ad;
+import edu.umich.eecs.tac.props.AdvertiserInfo;
+import edu.umich.eecs.tac.props.BidBundle;
+import edu.umich.eecs.tac.props.Product;
+import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.props.QueryReport;
+import edu.umich.eecs.tac.props.RetailCatalog;
+import edu.umich.eecs.tac.props.SalesReport;
 
 public class DummyAdvertiser extends Agent {
 
