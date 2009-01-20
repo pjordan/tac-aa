@@ -35,12 +35,20 @@ public class DefaultUsersBehaviorTest {
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void testDefaultUsersBehaviorNPE() {
+	public void testDefaultUsersBehaviorNPEA() {
 		dub = new DefaultUsersBehavior(null, new AgentRepositoryProxy(), new UsersTransactorProxy());
-		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(), null, new UsersTransactorProxy());
-		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(), new AgentRepositoryProxy(), null);
 	}
 
+	@Test(expected = NullPointerException.class)
+	public void testDefaultUsersBehaviorNPEB() {
+		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(), null, new UsersTransactorProxy());
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testDefaultUsersBehaviorNPEC() {
+		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(), new AgentRepositoryProxy(), null);
+	}	
+	
 	@Test
 	public void testNextTimeUnit() {
 		dub.nextTimeUnit(0);
