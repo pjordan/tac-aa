@@ -10,6 +10,7 @@ import se.sics.tasim.props.StartInfo;
 import se.sics.tasim.props.SimulationStatus;
 import se.sics.isl.transport.Transportable;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.*;
 
@@ -48,7 +49,7 @@ public class DummyAdvertiser extends Agent {
             }
     	}
     	catch(NullPointerException e){
-    		System.err.println("Null message");
+    		this.log.log(Level.SEVERE, "Null Message received.");
     		return;
     	}
     }
