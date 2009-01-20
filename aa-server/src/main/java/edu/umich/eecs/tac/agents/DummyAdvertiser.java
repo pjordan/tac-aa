@@ -33,19 +33,24 @@ public class DummyAdvertiser extends Agent {
     }
 
     protected void messageReceived(Message message) {
-        Transportable content = message.getContent();
-
-        if (content instanceof QueryReport) {
-            handleQueryReport((QueryReport) content);
-        } else if (content instanceof SalesReport) {
-            handleSalesReport((SalesReport) content);
-        } else if (content instanceof SimulationStatus) {
-            handleSimulationStatus((SimulationStatus) content);
-        } else if (content instanceof RetailCatalog) {
-            handleRetailCatalog((RetailCatalog) content);
-        } else if (content instanceof AdvertiserInfo) {
-            handleAdvertiserInfo((AdvertiserInfo) content);
-        }
+    	try {
+    		Transportable content = message.getContent();
+            if (content instanceof QueryReport) {
+                handleQueryReport((QueryReport) content);
+            } else if (content instanceof SalesReport) {
+                handleSalesReport((SalesReport) content);
+            } else if (content instanceof SimulationStatus) {
+                handleSimulationStatus((SimulationStatus) content);
+            } else if (content instanceof RetailCatalog) {
+                handleRetailCatalog((RetailCatalog) content);
+            } else if (content instanceof AdvertiserInfo) {
+                handleAdvertiserInfo((AdvertiserInfo) content);
+            }
+    	}
+    	catch(NullPointerException e){
+    		System.err.println("Null message");
+    		return;
+    	}
     }
 
     private void handleSimulationStatus(SimulationStatus simulationStatus) {
