@@ -3,24 +3,43 @@ package edu.umich.eecs.tac.user;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.Mockery;
+import org.jmock.Expectations;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.Ad;
+import edu.umich.eecs.tac.props.AdLink;
 
 /**
  * @author Patrick Jordan
  */
+@RunWith(JMock.class)
 public class UserEventSupportTest {
-    private UserEventSupport support;
-    private UserEventSupport emptySupport;
-    private UserEventListener listener;
+    private Mockery context;
 
+    private UserEventListener listener;
+    Query query;
+    String advertiser;
+    AdLink ad;
+    double cpc;
+    int slot;
+    double salesProfit;
+
+    
     @Before
     public void setup() {
-        support = new UserEventSupport();
-        listener = new SimpleUserEventListener();
-        support.addUserEventListener(listener);
-        emptySupport = new UserEventSupport();
+        context = new JUnit4Mockery();
+        listener = context.mock(UserEventListener.class);
+        query = new Query();
+        advertiser = "alice";
+        ad = new AdLink(new Ad(), advertiser);
+        cpc = 1.0;
+        slot = 2;
+        salesProfit = 3.0;
     }
+
     @Test
     public void testConstructor() {
         assertNotNull(new UserEventSupport());
@@ -29,7 +48,7 @@ public class UserEventSupportTest {
     @Test
     public void testAddListener() {
         UserEventSupport support = new UserEventSupport();
-        
+
         assertFalse(support.containsUserEventListener(listener));
         support.addUserEventListener(listener);
         assertTrue(support.containsUserEventListener(listener));
@@ -37,6 +56,10 @@ public class UserEventSupportTest {
 
     @Test
     public void testRemoveListener() {
+        UserEventSupport support = new UserEventSupport();
+
+        support.addUserEventListener(listener);
+        
         assertTrue(support.containsUserEventListener(listener));
 
         support.removeUserEventListener(listener);
@@ -44,45 +67,61 @@ public class UserEventSupportTest {
         assertFalse(support.containsUserEventListener(listener));
     }
 
-    @Test(expected=RuntimeException.class)
+
+    @Test
     public void testFireQueryIssued() {
-        emptySupport.fireQueryIssued(null);
+        UserEventSupport support = new UserEventSupport();
+
+        support.addUserEventListener(listener);
+        
+        context.checking(new Expectations() {{
+            oneOf(listener).queryIssued(null);
+        }});
+
         support.fireQueryIssued(null);
     }
 
-    @Test(expected=RuntimeException.class)
+
+    @Test
     public void testFireAdViewed() {
-        emptySupport.fireAdViewed(null, null, 0);
-        support.fireAdViewed(null, null, 0);
+
+        UserEventSupport support = new UserEventSupport();
+
+        support.addUserEventListener(listener);
+
+        context.checking(new Expectations() {{
+            oneOf(listener).viewed(query,ad,slot,advertiser);
+        }});
+
+        support.fireAdViewed(query, ad, slot);
     }
 
-    @Test(expected=RuntimeException.class)
+
+    @Test
     public void testFfireAdClicked() {
-        emptySupport.fireAdClicked(null, null, 0, 0);
-        support.fireAdClicked(null, null, 0, 0);
+
+        UserEventSupport support = new UserEventSupport();
+
+        support.addUserEventListener(listener);
+
+        context.checking(new Expectations() {{
+            oneOf(listener).clicked(query,ad,slot,cpc,advertiser);
+        }});
+
+        support.fireAdClicked(query, ad, slot, cpc);
     }
 
-    @Test(expected=RuntimeException.class)
+    @Test
     public void testFireAdConverted() {
-        emptySupport.fireAdConverted(null, null, 0, 0);
-        support.fireAdConverted(null, null, 0, 0);
-    }
+        UserEventSupport support = new UserEventSupport();
 
-    public class SimpleUserEventListener implements UserEventListener {
-        public void queryIssued(Query query) {
-            throw new RuntimeException("Query issued");
-        }
 
-        public void viewed(Query query, Ad ad, int slot, String advertiser) {
-            throw new RuntimeException("Ad viewed");
-        }
+        support.addUserEventListener(listener);
 
-        public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
-            throw new RuntimeException("Ad clicked");
-        }
+        context.checking(new Expectations() {{
+            oneOf(listener).converted(query,ad,slot,salesProfit,advertiser);
+        }});
 
-        public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {
-            throw new RuntimeException("Ad converted");
-        }
+        support.fireAdConverted(query, ad, slot, salesProfit);
     }
 }
