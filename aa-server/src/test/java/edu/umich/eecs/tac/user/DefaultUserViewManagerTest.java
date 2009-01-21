@@ -35,7 +35,7 @@ public class DefaultUserViewManagerTest {
 
     private Map<String, AdvertiserInfo> advertiserInfo;
 
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
 
     private Query query;
 
@@ -76,7 +76,7 @@ public class DefaultUserViewManagerTest {
         retailCatalog.setSalesProfit(product,1.0);
 
 
-        auctionInfo = new AuctionInfo();
+        slotInfo = new SlotInfo();
 
         recentConversionsTracker = context.mock(RecentConversionsTracker.class);
 
@@ -108,34 +108,34 @@ public class DefaultUserViewManagerTest {
         userClickModel.setAdvertiserEffect(0,1,1.0);
         userClickModel.setAdvertiserEffect(0,2,1.0);
 
-        userViewManager = new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, auctionInfo, random);
+        userViewManager = new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, slotInfo, random);
         userViewManager.setUserClickModel(userClickModel);        
     }
 
     @Test
     public void testConstructors() {
         assertNotNull(userViewManager);
-        assertNotNull(new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, auctionInfo));
+        assertNotNull(new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, slotInfo));
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorRetailCatalogNull() {
-        new DefaultUserViewManager(null, recentConversionsTracker, advertiserInfo, auctionInfo);
+        new DefaultUserViewManager(null, recentConversionsTracker, advertiserInfo, slotInfo);
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorTrackerNull() {
-        new DefaultUserViewManager(retailCatalog, null, advertiserInfo, auctionInfo);
+        new DefaultUserViewManager(retailCatalog, null, advertiserInfo, slotInfo);
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorInfoNull() {
-        new DefaultUserViewManager(retailCatalog, recentConversionsTracker, null, auctionInfo);
+        new DefaultUserViewManager(retailCatalog, recentConversionsTracker, null, slotInfo);
     }
 
     @Test(expected = NullPointerException.class)
     public void testConstructorRandomNull() {
-        new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, auctionInfo, null);
+        new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, slotInfo, null);
     }
 
     @Test(expected = NullPointerException.class)

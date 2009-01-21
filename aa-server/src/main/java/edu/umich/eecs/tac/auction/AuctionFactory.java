@@ -1,12 +1,7 @@
 package edu.umich.eecs.tac.auction;
 
-import edu.umich.eecs.tac.props.Auction;
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.AuctionInfo;
-import edu.umich.eecs.tac.props.PublisherInfo;
-import edu.umich.eecs.tac.sim.Publisher;
+import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.util.config.ConfigProxy;
-import se.sics.isl.util.ConfigManager;
 
 /**
  * @author Patrick Jordan
@@ -23,9 +18,13 @@ public interface AuctionFactory {
 
     public void setBidManager(BidManager bidManager);
 
-    public AuctionInfo getAuctionInfo();
+    public SlotInfo getSlotInfo();
 
-    public void setAuctionInfo(AuctionInfo auctionInfo);
+    public void setSlotInfo(SlotInfo slotInfo);
+
+    public ReserveInfo getReserveInfo();
+
+    public void setReserveInfo(ReserveInfo reserveInfo);
 
     public void configure(ConfigProxy configProxy);
 }

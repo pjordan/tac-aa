@@ -11,7 +11,7 @@ import se.sics.tasim.sim.SimulationAgent;
 
 import edu.umich.eecs.tac.agents.DefaultPublisher;
 import edu.umich.eecs.tac.props.AdvertiserInfo;
-import edu.umich.eecs.tac.props.AuctionInfo;
+import edu.umich.eecs.tac.props.SlotInfo;
 import edu.umich.eecs.tac.props.BankStatus;
 import edu.umich.eecs.tac.props.Product;
 import edu.umich.eecs.tac.props.RetailCatalog;
@@ -20,7 +20,7 @@ import edu.umich.eecs.tac.props.SalesReport;
 public class DummyTACAASimulation implements BankStatusSender {
 
 	private RetailCatalog rc;
-	private AuctionInfo ai;
+	private SlotInfo ai;
 	private SalesAnalyst sa;
     private Map<String, AdvertiserInfo> advertiserInfo = new HashMap<String, AdvertiserInfo>();
     private SimulationAgent[] ps;
@@ -32,7 +32,7 @@ public class DummyTACAASimulation implements BankStatusSender {
 	public final void setup() {
 		rc = new RetailCatalog();
 		rc.addProduct(new Product("man", "com"));
-		ai = new AuctionInfo();
+		ai = new SlotInfo();
         SimpleAgentRepository repository = new SimpleAgentRepository();
         SimpleSalesReportSender salesReportSender = new SimpleSalesReportSender();
 		sa = new DefaultSalesAnalyst(repository, salesReportSender, 1);
@@ -44,7 +44,7 @@ public class DummyTACAASimulation implements BankStatusSender {
 		return rc;
 	}
 
-	public AuctionInfo getAuctionInfo() {
+	public SlotInfo getAuctionInfo() {
 		return ai;
 	}
 
@@ -95,7 +95,7 @@ public class DummyTACAASimulation implements BankStatusSender {
             return sa;
         }
 
-        public AuctionInfo getAuctionInfo() {
+        public SlotInfo getAuctionInfo() {
             return ai;
         }
 

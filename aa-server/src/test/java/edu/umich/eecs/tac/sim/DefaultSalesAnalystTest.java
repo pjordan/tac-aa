@@ -22,11 +22,11 @@ public class DefaultSalesAnalystTest {
 
     String alice;
 
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
 
     @Before
     public void setup() {
-        auctionInfo = new AuctionInfo();
+        slotInfo = new SlotInfo();
         
         repository = new SimpleAgentRepository();
         salesReportSender = new SimpleSalesReportSender();
@@ -99,8 +99,8 @@ public class DefaultSalesAnalystTest {
             return salesAnalyst;
         }
 
-        public AuctionInfo getAuctionInfo() {
-            return auctionInfo;
+        public SlotInfo getAuctionInfo() {
+            return slotInfo;
         }
 
 

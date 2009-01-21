@@ -14,51 +14,37 @@ import java.text.ParseException;
  * @author Patrick Jordan
  */
 public class AuctionInfoTest {
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
 
     @Before
     public void setup() {
-        auctionInfo = new AuctionInfo();
+        slotInfo = new SlotInfo();
     }
 
     @Test
     public void testConstructor() {
-        assertNotNull(auctionInfo);
+        assertNotNull(slotInfo);
     }
 
     @Test
     public void testPromotedSlots() {
-        assertEquals(auctionInfo.getPromotedSlots(),0);
-        auctionInfo.setPromotedSlots(1);
-        assertEquals(auctionInfo.getPromotedSlots(),1);
+        assertEquals(slotInfo.getPromotedSlots(),0);
+        slotInfo.setPromotedSlots(1);
+        assertEquals(slotInfo.getPromotedSlots(),1);
     }
 
     @Test
     public void testRegularSlots() {
-        assertEquals(auctionInfo.getRegularSlots(),0);
-        auctionInfo.setRegularSlots(1);
-        assertEquals(auctionInfo.getRegularSlots(),1);
-    }
-
-    @Test
-    public void testPromotedReserve() {
-        assertEquals(auctionInfo.getPromotedReserve(),0.0);
-        auctionInfo.setPromotedReserve(1.0);
-        assertEquals(auctionInfo.getPromotedReserve(),1.0);
-    }
-
-    @Test
-    public void testRegularReserve() {
-        assertEquals(auctionInfo.getRegularReserve(),0.0);
-        auctionInfo.setRegularReserve(1.0);
-        assertEquals(auctionInfo.getRegularReserve(),1.0);
+        assertEquals(slotInfo.getRegularSlots(),0);
+        slotInfo.setRegularSlots(1);
+        assertEquals(slotInfo.getRegularSlots(),1);
     }
 
     @Test
     public void testPromotedSlotBonus() {
-        assertEquals(auctionInfo.getPromotedSlotBonus(),0.0);
-        auctionInfo.setPromotedSlotBonus(1.0);
-        assertEquals(auctionInfo.getPromotedSlotBonus(),1.0);
+        assertEquals(slotInfo.getPromotedSlotBonus(),0.0);
+        slotInfo.setPromotedSlotBonus(1.0);
+        assertEquals(slotInfo.getPromotedSlotBonus(),1.0);
     }
 
     @Test
@@ -67,51 +53,38 @@ public class AuctionInfoTest {
         BinaryTransportReader reader = new BinaryTransportReader();
         reader.setContext(new AAInfo().createContext());
 
-        byte[] buffer = getBytesForTransportable(writer, auctionInfo);
-        AuctionInfo received = readFromBytes(reader, buffer, "AuctionInfo");
+        byte[] buffer = getBytesForTransportable(writer, slotInfo);
+        SlotInfo received = readFromBytes(reader, buffer, "SlotInfo");
 
         assertNotNull(received);
-        assertEquals(received,auctionInfo);
+        assertEquals(received, slotInfo);
     }
 
     @Test
     public void testEquals() {
-        AuctionInfo other = new AuctionInfo();
-
-        other.setPromotedReserve(1.0);
-        assertFalse(auctionInfo.equals(other));
-
-        other = new AuctionInfo();
-        other.setRegularReserve(1.0);
-        assertFalse(auctionInfo.equals(other));
-
-        other = new AuctionInfo();
+        SlotInfo other = new SlotInfo();
         other.setPromotedSlotBonus(1.0);
-        assertFalse(auctionInfo.equals(other));
+        assertFalse(slotInfo.equals(other));
         
-        other = new AuctionInfo();
+        other = new SlotInfo();
         other.setRegularSlots(1);
-        assertFalse(auctionInfo.equals(other));
+        assertFalse(slotInfo.equals(other));
 
-        other = new AuctionInfo();
+        other = new SlotInfo();
         other.setPromotedSlots(1);
-        assertFalse(auctionInfo.equals(other));
+        assertFalse(slotInfo.equals(other));
 
-        assertEquals(auctionInfo,auctionInfo);
-        assertFalse(auctionInfo.equals(null));
-        assertFalse(auctionInfo.equals(""));
+        assertEquals(slotInfo, slotInfo);
+        assertFalse(slotInfo.equals(null));
+        assertFalse(slotInfo.equals(""));
 
-        other = new AuctionInfo();
-        assertEquals(auctionInfo.hashCode(), other.hashCode());
+        other = new SlotInfo();
+        assertEquals(slotInfo.hashCode(), other.hashCode());
 
-        auctionInfo.setPromotedReserve(1.0);
-        auctionInfo.setRegularReserve(1.0);
-        auctionInfo.setPromotedSlotBonus(1.0);
+        slotInfo.setPromotedSlotBonus(1.0);
 
-        other.setPromotedReserve(1.0);
-        other.setRegularReserve(1.0);
         other.setPromotedSlotBonus(1.0);
 
-        assertEquals(auctionInfo.hashCode(), other.hashCode());
+        assertEquals(slotInfo.hashCode(), other.hashCode());
     }
 }

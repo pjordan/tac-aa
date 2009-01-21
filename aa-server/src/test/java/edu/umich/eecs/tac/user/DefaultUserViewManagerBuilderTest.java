@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.Before;
 import edu.umich.eecs.tac.util.config.ConfigProxy;
 import edu.umich.eecs.tac.sim.AgentRepository;
-import edu.umich.eecs.tac.sim.DefaultSalesAnalyst;
 import edu.umich.eecs.tac.sim.SalesAnalyst;
 import edu.umich.eecs.tac.props.*;
 
@@ -27,7 +26,7 @@ public class DefaultUserViewManagerBuilderTest {
     private RetailCatalog catalog;
     private SalesAnalyst salesAnalyst;
     private Map<String, AdvertiserInfo> advertiserInfo;
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
 
     @Before
     public void setup() {
@@ -36,7 +35,7 @@ public class DefaultUserViewManagerBuilderTest {
 
         builder = new DefaultUserViewManagerBuilder();
 
-        auctionInfo = new AuctionInfo();
+        slotInfo = new SlotInfo();
 
         salesAnalyst = new SalesAnalyst() {
 
@@ -132,8 +131,8 @@ public class DefaultUserViewManagerBuilderTest {
                 return advertiserInfo.size();
             }
 
-            public AuctionInfo getAuctionInfo() {
-                return auctionInfo;
+            public SlotInfo getAuctionInfo() {
+                return slotInfo;
             }
 
             public String[] getAdvertiserAddresses() {

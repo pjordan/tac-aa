@@ -25,7 +25,7 @@ public class DefaultUserQueryManagerBuilderTest {
     private RetailCatalog catalog;
     private SalesAnalyst salesAnalyst;
     private Map<String, AdvertiserInfo> advertiserInfo;
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
 
     @Before
     public void setup() {
@@ -34,7 +34,7 @@ public class DefaultUserQueryManagerBuilderTest {
 
         builder = new DefaultUserQueryManagerBuilder();
 
-        auctionInfo = new AuctionInfo();
+        slotInfo = new SlotInfo();
 
         salesAnalyst = new SalesAnalyst() {
 
@@ -131,8 +131,8 @@ public class DefaultUserQueryManagerBuilderTest {
                 return advertiserInfo.size();
             }
 
-            public AuctionInfo getAuctionInfo() {
-                return auctionInfo;
+            public SlotInfo getAuctionInfo() {
+                return slotInfo;
             }
 
             public String[] getAdvertiserAddresses() {

@@ -24,7 +24,7 @@ public class DefaultUserTransitionManagerBuilderTest {
     private RetailCatalog catalog;
     private SalesAnalyst salesAnalyst;
     private Map<String, AdvertiserInfo> advertiserInfo;
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
 
     @Before
     public void setup() {
@@ -33,7 +33,7 @@ public class DefaultUserTransitionManagerBuilderTest {
 
         builder = new DefaultUserTransitionManagerBuilder();
 
-        auctionInfo = new AuctionInfo();
+        slotInfo = new SlotInfo();
 
         salesAnalyst = new SalesAnalyst() {
 
@@ -125,8 +125,8 @@ public class DefaultUserTransitionManagerBuilderTest {
                 return salesAnalyst;
             }
 
-            public AuctionInfo getAuctionInfo() {
-                return auctionInfo;
+            public SlotInfo getAuctionInfo() {
+                return slotInfo;
             }
 
 

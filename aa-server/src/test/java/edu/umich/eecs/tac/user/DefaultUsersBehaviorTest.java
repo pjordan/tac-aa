@@ -4,8 +4,6 @@ package edu.umich.eecs.tac.user;
  * @author Ben Cassell
  */
 
-import static org.junit.Assert.*;
-
 import java.util.Map;
 
 import org.junit.Before;
@@ -14,7 +12,7 @@ import org.junit.Test;
 import se.sics.tasim.sim.SimulationAgent;
 
 import edu.umich.eecs.tac.props.AdvertiserInfo;
-import edu.umich.eecs.tac.props.AuctionInfo;
+import edu.umich.eecs.tac.props.SlotInfo;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.sim.AgentRepository;
 import edu.umich.eecs.tac.sim.DummyTACAASimulation;
@@ -170,7 +168,7 @@ public class DefaultUsersBehaviorTest {
             return dts.getRetailCatalog();
         }
 
-        public AuctionInfo getAuctionInfo() {
+        public SlotInfo getAuctionInfo() {
             return dts.getAuctionInfo();
         }
 

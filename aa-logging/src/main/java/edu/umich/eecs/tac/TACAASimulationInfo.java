@@ -3,7 +3,6 @@ package edu.umich.eecs.tac;
 import se.sics.tasim.logtool.ParticipantInfo;
 import se.sics.tasim.logtool.LogReader;
 import se.sics.tasim.props.ServerConfig;
-import se.sics.tasim.props.StartInfo;
 import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import edu.umich.eecs.tac.props.RetailCatalog;
-import edu.umich.eecs.tac.props.AuctionInfo;
+import edu.umich.eecs.tac.props.SlotInfo;
 import com.botbox.util.ArrayUtils;
 
 /**
@@ -35,7 +34,7 @@ public class TACAASimulationInfo extends Parser {
 
     private ServerConfig serverConfig;
 
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
     private RetailCatalog retailCatalog;
 
     private Participant[] participants;
@@ -240,8 +239,8 @@ public class TACAASimulationInfo extends Parser {
     }
 
     protected void dataUpdated(int type, Transportable object) {
-        if (object instanceof AuctionInfo) {
-            this.auctionInfo = (AuctionInfo) object;
+        if (object instanceof SlotInfo) {
+            this.slotInfo = (SlotInfo) object;
         } else if (object instanceof RetailCatalog) {
             this.retailCatalog = (RetailCatalog) object;
         }

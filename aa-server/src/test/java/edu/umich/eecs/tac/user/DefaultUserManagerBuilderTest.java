@@ -25,7 +25,7 @@ public class DefaultUserManagerBuilderTest {
     private RetailCatalog catalog;
     private SalesAnalyst salesAnalyst;
     private Map<String, AdvertiserInfo> advertiserInfo;
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
 
     @Before
     public void setup() {
@@ -34,7 +34,7 @@ public class DefaultUserManagerBuilderTest {
 
         builder = new DefaultUserManagerBuilder();
 
-        auctionInfo = new AuctionInfo();
+        slotInfo = new SlotInfo();
 
         salesAnalyst = new SalesAnalyst() {
 
@@ -127,8 +127,8 @@ public class DefaultUserManagerBuilderTest {
             }
 
 
-            public AuctionInfo getAuctionInfo() {
-                return auctionInfo;
+            public SlotInfo getAuctionInfo() {
+                return slotInfo;
             }
 
 

@@ -41,7 +41,8 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
     private int nextPingReport = 0;
 
     private RetailCatalog retailCatalog;
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
+    private ReserveInfo reserveInfo;
     private UserClickModel userClickModel;
     private String[] manufacturers;
     private String[] components;
@@ -123,7 +124,8 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         log.info("Created " + (publishers == null ? 0 : publishers.length) + " publishers");
 
         this.retailCatalog = createRetailCatalog();
-        this.auctionInfo = createAuctionInfo();
+        this.slotInfo = createSlotInfo();
+        this.reserveInfo = createReserveInfo();
         this.manufacturers = createManufacturers();
         this.components = createComponents();
 
@@ -180,15 +182,35 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         return min + (max>min ? random.nextInt(max - min) : 0);
     }
 
-    private AuctionInfo createAuctionInfo() {
-        AuctionInfo auctionInfo = new AuctionInfo();
+    private SlotInfo createSlotInfo() {
+        SlotInfo slotInfo = new SlotInfo();
+
+
+        ConfigManager config = getConfig();
+
+        int promotedSlotsMin = config.getPropertyAsInt("publisher.promoted.slots.min", 0);
+        int promotedSlotsMax = config.getPropertyAsInt("publisher.promoted.slots.max", 0);
+        int regularSlots = config.getPropertyAsInt("publisher.regular.slots", 0);
+        double promotedSlotBonus = config.getPropertyAsDouble("publisher.promoted.slotbonus", 0.0);
+
+        slotInfo.setPromotedSlots(sample(promotedSlotsMin,promotedSlotsMax));
+
+
+        slotInfo.setRegularSlots(regularSlots);
+        slotInfo.setPromotedSlotBonus(promotedSlotBonus);
+
+        return slotInfo;
+    }
+
+    private ReserveInfo createReserveInfo() {
+        ReserveInfo reserveInfo = new ReserveInfo();
 
 
         ConfigManager config = getConfig();
 
 
         double promotedReserveMax = config.getPropertyAsDouble("publisher.promoted.reserve.max", 0.0);
-        
+
         int promotedSlotsMin = config.getPropertyAsInt("publisher.promoted.slots.min", 0);
         int promotedSlotsMax = config.getPropertyAsInt("publisher.promoted.slots.max", 0);
 
@@ -198,17 +220,12 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         int regularSlots = config.getPropertyAsInt("publisher.regular.slots", 0);
         double promotedSlotBonus = config.getPropertyAsDouble("publisher.promoted.slotbonus", 0.0);
 
-        auctionInfo.setRegularReserve(sample(regularReserveMin, regularReserveMax));
-        auctionInfo.setPromotedReserve(sample(auctionInfo.getRegularReserve(), promotedReserveMax));
-        auctionInfo.setPromotedSlots(sample(promotedSlotsMin,promotedSlotsMax));
+        reserveInfo.setRegularReserve(sample(regularReserveMin, regularReserveMax));
+        reserveInfo.setPromotedReserve(sample(reserveInfo.getRegularReserve(), promotedReserveMax));
 
 
-        auctionInfo.setRegularSlots(regularSlots);
-        auctionInfo.setPromotedSlotBonus(promotedSlotBonus);
-
-        return auctionInfo;
+        return reserveInfo;
     }
-
 
     private void initializeAdvertisers() {
         ConfigManager config = getConfig();
@@ -342,12 +359,14 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
         sendToRole(USERS, this.retailCatalog);
         sendToRole(ADVERTISER, this.retailCatalog);
 
-        sendToRole(PUBLISHER, this.auctionInfo);
-        sendToRole(USERS, this.auctionInfo);
-        sendToRole(ADVERTISER, this.auctionInfo);
+        sendToRole(PUBLISHER, this.slotInfo);
+        sendToRole(USERS, this.slotInfo);
+        sendToRole(ADVERTISER, this.slotInfo);
 
         sendToRole(PUBLISHER, this.userClickModel);
         sendToRole(USERS, this.userClickModel);
+        sendToRole(PUBLISHER, this.reserveInfo);
+        sendToRole(USERS, this.reserveInfo);
 
         for (Map.Entry<String, AdvertiserInfo> entry : advertiserInfoMap.entrySet()) {
             sendMessage(entry.getKey(), entry.getValue());
@@ -658,7 +677,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
             
             sendMessage(new Message(agentAddress, info));
 
-            sendMessage(new Message(agentAddress, this.auctionInfo));
+            sendMessage(new Message(agentAddress, this.slotInfo));
 
             sendMessage(new Message(agentAddress, this.retailCatalog));
 
@@ -899,11 +918,11 @@ public class TACAASimulation extends Simulation implements TACAAConstants, Agent
     }
 
 
-    public AuctionInfo getAuctionInfo() {
-        return auctionInfo;
+    public SlotInfo getAuctionInfo() {
+        return slotInfo;
     }
 
-    public void setAuctionInfo(AuctionInfo auctionInfo) {
-        this.auctionInfo = auctionInfo;
+    public void setAuctionInfo(SlotInfo slotInfo) {
+        this.slotInfo = slotInfo;
     }
 }

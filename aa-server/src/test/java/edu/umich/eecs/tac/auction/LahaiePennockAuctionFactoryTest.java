@@ -19,7 +19,8 @@ import java.util.HashSet;
 public class LahaiePennockAuctionFactoryTest {
     private LahaiePennockAuctionFactory auctionFactory;
     private BidManager bidManager;
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
+    private ReserveInfo reserveInfo;
     private PublisherInfo publisherInfo;
 
     @Before
@@ -30,15 +31,17 @@ public class LahaiePennockAuctionFactoryTest {
 
         bidManager = new SimpleBidManager(advertisers, bids, qualityScore);
 
-        auctionInfo = new AuctionInfo();
-        auctionInfo.setRegularSlots(4);
+        slotInfo = new SlotInfo();
+        slotInfo.setRegularSlots(4);
+        reserveInfo = new ReserveInfo();
 
         publisherInfo = new PublisherInfo();
         publisherInfo.setSquashingParameter(0.8);
 
         auctionFactory = new LahaiePennockAuctionFactory();
         auctionFactory.setBidManager(bidManager);
-        auctionFactory.setAuctionInfo(auctionInfo);
+        auctionFactory.setSlotInfo(slotInfo);
+        auctionFactory.setReserveInfo(reserveInfo);
         auctionFactory.setPublisherInfo(publisherInfo);
     }
 
@@ -50,8 +53,9 @@ public class LahaiePennockAuctionFactoryTest {
     @Test
     public void testGetSet() {
         auctionFactory.setBidManager(bidManager);
-        auctionFactory.setAuctionInfo(auctionInfo);
-        assertEquals(auctionFactory.getAuctionInfo(), auctionInfo);
+        auctionFactory.setSlotInfo(slotInfo);
+        assertEquals(auctionFactory.getSlotInfo(), slotInfo);
+        assertEquals(auctionFactory.getReserveInfo(), reserveInfo);
         assertEquals(auctionFactory.getBidManager(), bidManager);
         assertEquals(auctionFactory.getPublisherInfo(), publisherInfo);
     }
@@ -72,7 +76,7 @@ public class LahaiePennockAuctionFactoryTest {
         assertEquals(ranking.get(0), bidManager.getAdLink("eve", null));
 
         //Fewer participants than slots available
-        AuctionInfo ac = auctionFactory.getAuctionInfo();
+        SlotInfo ac = auctionFactory.getSlotInfo();
         ac.setRegularSlots(6);
         auction = auctionFactory.runAuction(new Query("apples", "seeds"));
         assertNotNull(ranking);

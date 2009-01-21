@@ -2,7 +2,7 @@ package edu.umich.eecs.tac.sim;
 
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.AdvertiserInfo;
-import edu.umich.eecs.tac.props.AuctionInfo;
+import edu.umich.eecs.tac.props.SlotInfo;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public interface AgentRepository {
      *
      * @return the auction info
      */
-    AuctionInfo getAuctionInfo();
+    SlotInfo getAuctionInfo();
 
     /**
      * Get the advertiser information mapping.

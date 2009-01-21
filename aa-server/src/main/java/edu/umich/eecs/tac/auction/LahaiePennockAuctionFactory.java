@@ -17,7 +17,9 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
 
     private PublisherInfo publisherInfo;
 
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
+
+    private ReserveInfo reserveInfo;
 
     private Logger log = Logger.getLogger(LahaiePennockAuctionFactory.class.getName());
 
@@ -46,12 +48,12 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         //This currently runs for an infinite loop if scores are NaN
         hardSort(scores, indices);
 
-        generalizedSecondPrice( indices, weight, bids, cpc, promoted, auctionInfo.getPromotedSlots(), auctionInfo.getPromotedReserve(), auctionInfo.getRegularSlots(), auctionInfo.getRegularReserve() );
+        generalizedSecondPrice( indices, weight, bids, cpc, promoted, slotInfo.getPromotedSlots(), reserveInfo.getPromotedReserve(), slotInfo.getRegularSlots(), reserveInfo.getRegularReserve() );
 
         Ranking ranking = new Ranking();
         Pricing pricing = new Pricing();
 
-        for (int i = 0; i < indices.length && i < auctionInfo.getRegularSlots(); i++) {
+        for (int i = 0; i < indices.length && i < slotInfo.getRegularSlots(); i++) {
             if (ads[indices[i]] != null && !Double.isNaN( cpc[indices[i]] ) ) {
                 AdLink ad = ads[indices[i]];
                 double price = cpc[indices[i]];
@@ -95,11 +97,19 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
         this.publisherInfo = publisherInfo;
     }
 
-    public AuctionInfo getAuctionInfo() {
-        return auctionInfo;
+    public SlotInfo getSlotInfo() {
+        return slotInfo;
     }
 
-    public void setAuctionInfo(AuctionInfo auctionInfo) {
-        this.auctionInfo = auctionInfo;
+    public void setSlotInfo(SlotInfo slotInfo) {
+        this.slotInfo = slotInfo;
+    }
+
+    public ReserveInfo getReserveInfo() {
+        return reserveInfo;
+    }
+
+    public void setReserveInfo(ReserveInfo reserveInfo) {
+        this.reserveInfo = reserveInfo;
     }
 }

@@ -19,7 +19,7 @@ public class DefaultUserViewManager implements UserViewManager {
 
     private Map<String, AdvertiserInfo> advertiserInfo;
 
-    private AuctionInfo auctionInfo; 
+    private SlotInfo slotInfo;
 
     private RetailCatalog catalog;
 
@@ -29,16 +29,16 @@ public class DefaultUserViewManager implements UserViewManager {
 
     private RecentConversionsTracker recentConversionsTracker;
 
-    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo, AuctionInfo auctionInfo) {
-        this(catalog, recentConversionsTracker, advertiserInfo, auctionInfo, new Random());
+    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo, SlotInfo slotInfo) {
+        this(catalog, recentConversionsTracker, advertiserInfo, slotInfo, new Random());
     }
 
-    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo, AuctionInfo auctionInfo, Random random) {
+    public DefaultUserViewManager(RetailCatalog catalog, RecentConversionsTracker recentConversionsTracker, Map<String, AdvertiserInfo> advertiserInfo, SlotInfo slotInfo, Random random) {
         if(catalog==null) {
             throw new NullPointerException("Retail catalog cannot be null");
         }
 
-        if(auctionInfo==null) {
+        if(slotInfo ==null) {
             throw new NullPointerException("Auction info cannot be null");
         }
 
@@ -58,7 +58,7 @@ public class DefaultUserViewManager implements UserViewManager {
         this.random = random;
         this.recentConversionsTracker = recentConversionsTracker;
         this.advertiserInfo = advertiserInfo;
-        this.auctionInfo = auctionInfo;
+        this.slotInfo = slotInfo;
         eventSupport = new UserEventSupport();
     }
 
@@ -99,7 +99,7 @@ public class DefaultUserViewManager implements UserViewManager {
 
                 AdvertiserInfo info = advertiserInfo.get(ad.getAdvertiser());
 
-                double promotionEffect = ranking.isPromoted(i) ? auctionInfo.getPromotedSlotBonus() : 0.0;
+                double promotionEffect = ranking.isPromoted(i) ? slotInfo.getPromotedSlotBonus() : 0.0;
 
                 double clickProbability = calculateClickProbability(user, ad, info.getTargetEffect(), promotionEffect, findAdvertiserEffect(query, ad, userClickModel));
 

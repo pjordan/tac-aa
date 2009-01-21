@@ -4,16 +4,10 @@ import edu.umich.eecs.tac.sim.*;
 import edu.umich.eecs.tac.user.*;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.util.config.ConfigProxy;
-import edu.umich.eecs.tac.util.config.ConfigProxyUtils;
 import edu.umich.eecs.tac.props.*;
 import se.sics.tasim.aw.Message;
-import se.sics.tasim.is.EventWriter;
 import se.sics.tasim.sim.SimulationAgent;
-import se.sics.isl.transport.Transportable;
 
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Random;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -120,7 +114,7 @@ public class DefaultUsers extends Users implements TACAAConstants {
             return getSimulation().getRetailCatalog();
         }
 
-        public AuctionInfo getAuctionInfo() {
+        public SlotInfo getAuctionInfo() {
             return getSimulation().getAuctionInfo();
         }
 

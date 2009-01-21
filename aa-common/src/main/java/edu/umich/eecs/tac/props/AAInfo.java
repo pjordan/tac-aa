@@ -52,7 +52,8 @@ public class AAInfo implements ContextFactory {
         context.addTransportable(new AdminContent());
         context.addTransportable(new SimulationStatus());
         context.addTransportable(new StartInfo());
-        context.addTransportable(new AuctionInfo());
+        context.addTransportable(new SlotInfo());
+        context.addTransportable(new ReserveInfo());
         context.addTransportable(new PublisherInfo());
         context.addTransportable(new ServerConfig());
         context.addTransportable(new Query());

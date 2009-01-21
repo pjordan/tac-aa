@@ -5,7 +5,6 @@ import edu.umich.eecs.tac.util.config.ConfigProxy;
 import edu.umich.eecs.tac.sim.Users;
 import edu.umich.eecs.tac.sim.AgentRepository;
 import edu.umich.eecs.tac.sim.QueryReportSender;
-import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.user.UserEventListener;
 
 import java.util.Set;
@@ -16,7 +15,6 @@ import java.util.logging.Level;
 
 import se.sics.tasim.aw.Message;
 import se.sics.tasim.sim.SimulationAgent;
-import se.sics.tasim.is.EventWriter;
 import se.sics.isl.transport.Transportable;
 
 /**
@@ -59,9 +57,14 @@ public class DefaultPublisherBehavior implements PublisherBehavior {
     private ConfigProxy publisherConfigProxy;
 
     /**
-     * The basic auction information
+     * The basic slot information
      */
-    private AuctionInfo auctionInfo;
+    private SlotInfo slotInfo;
+
+    /**
+     * The basic reserve information
+     */
+    private ReserveInfo reserveInfo;
 
     /**
      * The basic publisher info
@@ -237,16 +240,26 @@ public class DefaultPublisherBehavior implements PublisherBehavior {
             handleUserClickModel((UserClickModel) content);
         } else if (content instanceof RetailCatalog) {
             handleRetailCatalog((RetailCatalog) content);
-        } else if (content instanceof AuctionInfo) {
-            handleAuctionInfo((AuctionInfo) content);
+        } else if (content instanceof SlotInfo) {
+            handleSlotInfo((SlotInfo) content);
+        } else if (content instanceof ReserveInfo) {
+            handleReserveInfo((ReserveInfo) content);
         }
     }
 
-    private void handleAuctionInfo(AuctionInfo auctionInfo) {
-        this.auctionInfo = auctionInfo;
+    private void handleSlotInfo(SlotInfo slotInfo) {
+        this.slotInfo = slotInfo;
 
         if (auctionFactory != null) {
-            auctionFactory.setAuctionInfo(auctionInfo);
+            auctionFactory.setSlotInfo(slotInfo);
+        }
+    }
+
+    private void handleReserveInfo(ReserveInfo reserveInfo) {
+        this.reserveInfo = reserveInfo;
+
+        if (auctionFactory != null) {
+            auctionFactory.setReserveInfo(reserveInfo);
         }
     }
 

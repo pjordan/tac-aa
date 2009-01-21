@@ -1,18 +1,14 @@
 package edu.umich.eecs.tac.agents;
 
 import edu.umich.eecs.tac.sim.Publisher;
-import edu.umich.eecs.tac.sim.Users;
 import edu.umich.eecs.tac.sim.AgentRepository;
 import edu.umich.eecs.tac.sim.SalesAnalyst;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.util.config.ConfigProxy;
-import edu.umich.eecs.tac.user.UserEventListener;
 import edu.umich.eecs.tac.auction.*;
 import edu.umich.eecs.tac.props.*;
-import se.sics.tasim.is.EventWriter;
 import se.sics.tasim.aw.Message;
 import se.sics.tasim.sim.SimulationAgent;
-import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
 import java.util.*;
@@ -123,7 +119,7 @@ public class DefaultPublisher extends Publisher implements TACAAConstants {
             return getSimulation().getRetailCatalog();
         }
 
-        public AuctionInfo getAuctionInfo() {
+        public SlotInfo getAuctionInfo() {
             return getSimulation().getAuctionInfo();
         }
 
