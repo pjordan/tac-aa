@@ -13,7 +13,7 @@ import java.util.Map;
 import se.sics.tasim.is.EventWriter;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class DefaultSalesAnalyst implements SalesAnalyst {
     private AgentRepository agentRepository;
@@ -137,7 +137,7 @@ public class DefaultSalesAnalyst implements SalesAnalyst {
     public void queryIssued(Query query) {
     }
 
-    public void viewed(Query query, Ad ad, int slot, String advertiser) {
+    public void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted) {
     }
 
     public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
@@ -146,7 +146,6 @@ public class DefaultSalesAnalyst implements SalesAnalyst {
     public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {
         addConversions(advertiser, query, 1, salesProfit);
     }
-
 
     protected Map<String, AdvertiserInfo> getAdvertiserInfo() {
         return agentRepository.getAdvertiserInfo();

@@ -12,7 +12,7 @@ import se.sics.tasim.aw.Message;
 import se.sics.tasim.is.EventWriter;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class DefaultUsersBehavior implements UsersBehavior {
 
@@ -86,7 +86,7 @@ public class DefaultUsersBehavior implements UsersBehavior {
         public void queryIssued(Query query) {
         }
 
-        public void viewed(Query query, Ad ad, int slot, String advertiser) {
+        public void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted) {
         }
 
         public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {

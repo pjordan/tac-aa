@@ -8,7 +8,7 @@ import edu.umich.eecs.tac.props.Ad;
  */
 public interface UserEventListener {
     void queryIssued(Query query);
-    void viewed(Query query, Ad ad, int slot, String advertiser);
+    void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted);
     void clicked(Query query, Ad ad, int slot, double cpc, String advertiser);
     void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser);
 }

@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import static edu.umich.eecs.tac.user.UserUtils.*;
 
 /**
- * @author Patrick Jordan, Ben Cassell
+ * @author Patrick Jordan, Ben Cassell, Lee Callender
  */
 public class DefaultUserViewManager implements UserViewManager {
     private Logger log = Logger.getLogger(DefaultUserViewManager.class.getName());
@@ -91,8 +91,9 @@ public class DefaultUserViewManager implements UserViewManager {
         for (int i = 0; i < ranking.size(); i++) {
 
             AdLink ad = ranking.get(i);
+            boolean isPromoted = ranking.isPromoted(i);
 
-            fireAdViewed(query, ad, i + 1);
+            fireAdViewed(query, ad, i + 1, isPromoted); 
 
             // If the user is still considering clicks, process the attempt
             if (clicking) {
@@ -147,8 +148,8 @@ public class DefaultUserViewManager implements UserViewManager {
         eventSupport.fireQueryIssued(query);
     }
 
-    private void fireAdViewed(Query query, AdLink ad, int slot) {
-        eventSupport.fireAdViewed(query, ad, slot);
+    private void fireAdViewed(Query query, AdLink ad, int slot, boolean isPromoted) {
+        eventSupport.fireAdViewed(query, ad, slot, isPromoted);
     }
 
     private void fireAdClicked(Query query, AdLink ad, int slot, double cpc) {

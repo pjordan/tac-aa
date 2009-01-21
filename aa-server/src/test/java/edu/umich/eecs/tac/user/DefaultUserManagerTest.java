@@ -183,7 +183,7 @@ public class DefaultUserManagerTest {
 
         }
 
-        public void viewed(Query query, Ad ad, int slot, String advertiser) {
+        public void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted) {
 
         }
 

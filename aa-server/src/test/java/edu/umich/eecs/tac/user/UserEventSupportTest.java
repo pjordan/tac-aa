@@ -90,10 +90,10 @@ public class UserEventSupportTest {
         support.addUserEventListener(listener);
 
         context.checking(new Expectations() {{
-            oneOf(listener).viewed(query,ad,slot,advertiser);
+            oneOf(listener).viewed(query,ad,slot,advertiser, false);
         }});
 
-        support.fireAdViewed(query, ad, slot);
+        support.fireAdViewed(query, ad, slot, false);
     }
 
 

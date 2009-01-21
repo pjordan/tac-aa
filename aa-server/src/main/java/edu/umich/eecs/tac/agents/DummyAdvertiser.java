@@ -80,7 +80,7 @@ public class DummyAdvertiser extends Agent {
 
             int index = queryReport.indexForEntry(query);
             if(index >= 0) {
-                impressions[i] += queryReport.getImpressions(index);
+                impressions[i] += queryReport.getImpressions(index, false);
                 clicks[i] += queryReport.getClicks(index);
             }
         }

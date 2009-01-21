@@ -47,7 +47,7 @@ public class DefaultUserQueryManagerBuilderTest {
             public void queryIssued(Query query) {
             }
 
-            public void viewed(Query query, Ad ad, int slot, String advertiser) {
+            public void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted) {
             }
 
             public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {

@@ -41,9 +41,17 @@ public class QueryReportTest {
         entry.setQuery(new Query());
         assertNotNull(entry.getQuery());
 
-        assertEquals(entry.getImpressions(), 0);
-        entry.setImpressions(1);
-        assertEquals(entry.getImpressions(), 1);
+        assertEquals(entry.getImpressions(false), 0);
+        assertEquals(entry.getImpressions(true), 0);
+        entry.setImpressions(1,0);
+        assertEquals(entry.getImpressions(false), 1);
+        assertEquals(entry.getImpressions(true), 0);
+        entry.setImpressions(0,1);
+        assertEquals(entry.getImpressions(false), 0);
+        assertEquals(entry.getImpressions(true), 1);
+        entry.setImpressions(1,1);
+        assertEquals(entry.getImpressions(false), 1);
+        assertEquals(entry.getImpressions(true), 1);
 
         assertEquals(entry.getClicks(), 0);
         entry.setClicks(2);
@@ -56,10 +64,10 @@ public class QueryReportTest {
 
         assertEquals(entry.getPosition(), 0.0);
         entry.addPosition(4.0);
-        assertEquals(entry.getPosition(), 4.0);
+        assertEquals(entry.getPosition(), 4.0);       
 
         assertEquals(entry.getTransportName(), "QueryReportEntry");
-        assertEquals(entry.toString(), "((Query (null,null)) impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000 advertisers: (DisplayReport))");
+        assertEquals(entry.toString(), "((Query (null,null)) impr: 1 prom_impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000 advertisers: (DisplayReport))");
 
     }
 
@@ -72,7 +80,7 @@ public class QueryReportTest {
 
         QueryReport.QueryReportEntry entry = new QueryReport.QueryReportEntry();
         entry.setQuery(new Query());
-        entry.setImpressions(1);
+        entry.setImpressions(1,1);
         entry.setClicks(2);
         entry.setCost(3.0);
         entry.addPosition(4.0);
@@ -85,7 +93,8 @@ public class QueryReportTest {
         assertNotNull(received);
 
         assertEquals(received.getQuery(), new Query());
-        assertEquals(received.getImpressions(), 1);
+        assertEquals(received.getImpressions(false), 1);
+        assertEquals(received.getImpressions(true), 1);
         assertEquals(received.getClicks(), 2);
         assertEquals(received.getCost(), 3.0);
         assertEquals(received.getCPC(), 1.5);
@@ -103,7 +112,7 @@ public class QueryReportTest {
 
 
         QueryReport.QueryReportEntry entry = new QueryReport.QueryReportEntry();
-        entry.setImpressions(1);
+        entry.setImpressions(1,1);
         entry.setClicks(2);
         entry.setCost(3.0);
         entry.addPosition(4.0);
@@ -116,14 +125,15 @@ public class QueryReportTest {
         assertNotNull(received);
 
         assertNull(received.getQuery());
-        assertEquals(received.getImpressions(), 1);
+        assertEquals(received.getImpressions(false), 1);
+        assertEquals(received.getImpressions(true), 1);
         assertEquals(received.getClicks(), 2);
         assertEquals(received.getCost(), 3.0);
         assertEquals(received.getCPC(), 1.5);
         assertEquals(received.getPosition(), 4.0);
 
         assertEquals(received.getTransportName(), "QueryReportEntry");
-        assertEquals(received.toString(), "(null impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000 advertisers: (DisplayReport))");
+        assertEquals(received.toString(), "(null impr: 1 prom_impr: 1 clicks: 2 pos: 4.000000 cpc: 1.500000 advertisers: (DisplayReport))");
     }
 
     @Test
@@ -165,7 +175,7 @@ public class QueryReportTest {
 
         Query q = new Query();
         q.setComponent("c1");
-        report.addQuery(q, 10, 100, 40.0, 4.0);
+        report.addQuery(q, 10, 5, 100, 40.0, 4.0);
         assertEquals(report.size(), 2);
         assertTrue(report.containsQuery(q));
 
@@ -177,16 +187,20 @@ public class QueryReportTest {
         QueryReport report = new QueryReport();
         assertEquals(report.size(), 0);
 
-        report.setImpressions(new Query(), 1);
+        report.setImpressions(new Query(), 2, 1);
         assertEquals(report.size(), 1);
         assertTrue(report.containsQuery(new Query()));
-        assertEquals(report.getImpressions(new Query()), 1);
+        assertEquals(report.getImpressions(new Query(), false), 2);
+        assertEquals(report.getImpressions(new Query(), true), 1);
 
-        report.setImpressions(new Query(), 3);
+
+        report.setImpressions(new Query(), 3, 2);
         assertEquals(report.size(), 1);
-        assertEquals(report.getImpressions(new Query()), 3);
+        assertEquals(report.getImpressions(new Query(), false), 3);
+        assertEquals(report.getImpressions(new Query(), true), 2);
 
-        report.setImpressions(null, 2);
+
+        report.setImpressions(null, 2, 2);
     }
 
     @Test(expected = NullPointerException.class)
@@ -212,7 +226,8 @@ public class QueryReportTest {
         QueryReport report = new QueryReport();
         assertEquals(report.size(), 0);
 
-        assertEquals(report.getImpressions(null), 0);
+        assertEquals(report.getImpressions(null, false), 0);
+        assertEquals(report.getImpressions(null, true), 0);
         assertEquals(report.getClicks(null), 0);
         assertEquals(report.getCost(null), 0.0);
         assertEquals(report.getCPC(null), Double.NaN);
@@ -223,7 +238,7 @@ public class QueryReportTest {
     public void testQueryReportToString() {
         QueryReport report = new QueryReport();
         report.addQuery(new Query());
-        assertEquals(report.toString(), "(QueryReport ((Query (null,null)) impr: 0 clicks: 0 pos: NaN cpc: NaN advertisers: (DisplayReport)))");
+        assertEquals(report.toString(), "(QueryReport ((Query (null,null)) impr: 0 prom_impr: 0 clicks: 0 pos: NaN cpc: NaN advertisers: (DisplayReport)))");
     }
 
     @Test
@@ -232,22 +247,26 @@ public class QueryReportTest {
 
         Query query = new Query();
 
-        assertEquals(report.getImpressions(query), 0);
+        assertEquals(report.getImpressions(query,false), 0);
+        assertEquals(report.getImpressions(query,true), 0);
         assertEquals(report.getCPC(query), Double.NaN);
-        report.addImpressions(query, 2);
+        report.addImpressions(query, 3, 2);
         report.addClicks(query, 3);
-        assertEquals(report.getImpressions(query), 2);
+        assertEquals(report.getImpressions(query,false), 5);
+        assertEquals(report.getImpressions(query,true), 2);
         assertEquals(report.getClicks(query), 3);
-        report.addImpressions(query, 2);
+        report.addImpressions(query, 2, 3);
         report.addClicks(query, 3);
-        assertEquals(report.getImpressions(query), 4);
+        assertEquals(report.getImpressions(query,false), 10);
+        assertEquals(report.getImpressions(query,true), 5);
         assertEquals(report.getClicks(query), 6);
 
         report = new QueryReport();
         report.addClicks(query, 3);
-        report.addImpressions(query, 10);
+        report.addImpressions(query, 10, 1);
         assertEquals(report.getClicks(query), 3);
-        assertEquals(report.getImpressions(query), 10);
+        assertEquals(report.getImpressions(query, false), 11);
+        assertEquals(report.getImpressions(query, true), 1);
     }
 
     @Test
@@ -260,7 +279,7 @@ public class QueryReportTest {
         Query q = new Query();
         q.setComponent("c1");
         instance.setPositionSum(q, 4.0);
-        instance.setImpressions(q, 1);
+        instance.setImpressions(q, 1, 1);
         assertEquals(instance.getPosition(q), 4.0);
 
         instance.setPositionSum(q, 2.0);
@@ -408,19 +427,22 @@ public class QueryReportTest {
         Ad ad = new Ad();
         double position = 1.0;
         int impressions = 10;
+        int promotedImpressions = 5;
         int clicks = 3;
         int conversions = 1;
 
-        report.setImpressions(query, impressions, ad, position);
+        report.setImpressions(query, impressions, promotedImpressions, ad, position);
 
         assertEquals(report.getAd(query), ad);
-        assertEquals(report.getImpressions(query), impressions);
+        assertEquals(report.getImpressions(query, false), impressions);
+        assertEquals(report.getImpressions(query, true), promotedImpressions);
         assertEquals(report.getPosition(query), position);
 
-        report.setImpressions(query, impressions, ad, position);
+        report.setImpressions(query, impressions, promotedImpressions, ad, position);
 
         assertEquals(report.getAd(query), ad);
-        assertEquals(report.getImpressions(query), impressions);
+        assertEquals(report.getImpressions(query, false), impressions);
+        assertEquals(report.getImpressions(query, true), promotedImpressions);
         assertEquals(report.getPosition(query), position);
     }
 
@@ -433,14 +455,16 @@ public class QueryReportTest {
         Ad ad = new Ad();
         double position = 1.0;
         int impressions = 10;
+        int promotedImpressions = 5;
         int clicks = 3;
         int conversions = 1;
 
-        report.addImpressions(query, impressions, ad, position);
-        report.addImpressions(query, impressions, ad, position);
+        report.addImpressions(query, (impressions-promotedImpressions), promotedImpressions,  ad, position);
+        report.addImpressions(query, (impressions-promotedImpressions), promotedImpressions, ad, position);
 
         assertEquals(report.getAd(query), ad);
-        assertEquals(report.getImpressions(query), 2*impressions);
+        assertEquals(report.getImpressions(query, false), 2*impressions);
+        assertEquals(report.getImpressions(query, true), 2*promotedImpressions);
         assertEquals(report.getPosition(query), position);
     }
 
@@ -453,12 +477,13 @@ public class QueryReportTest {
         Ad ad = new Ad();
         double position = 1.0;
         int impressions = 10;
+        int promotedImpressions = 5;
         int clicks = 3;
         int conversions = 1;
         double cost = 5.0;
 
         report.setClicks(query, clicks, cost);
-        report.setImpressions(query, impressions, ad, position);
+        report.setImpressions(query, impressions, promotedImpressions, ad, position);
 
 
         assertEquals(report.getClicks(query), clicks);
@@ -481,13 +506,14 @@ public class QueryReportTest {
         Ad ad = new Ad();
         double position = 1.0;
         int impressions = 10;
+        int promotedImpressions = 5;
         int clicks = 3;
         int conversions = 1;
         double cost = 5.0;
 
         report.addClicks(query, clicks, cost);
         report.addClicks(query, clicks, cost);
-        report.setImpressions(query, impressions, ad, position);
+        report.setImpressions(query, impressions, promotedImpressions, ad, position);
 
 
         assertEquals(report.getClicks(query), 2*clicks);

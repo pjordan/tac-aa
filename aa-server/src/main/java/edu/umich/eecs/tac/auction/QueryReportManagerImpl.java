@@ -9,7 +9,7 @@ import edu.umich.eecs.tac.user.UserEventListener;
 import com.botbox.util.ArrayUtils;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class QueryReportManagerImpl implements QueryReportManager {
 
@@ -83,7 +83,7 @@ public class QueryReportManagerImpl implements QueryReportManager {
         queryReports[index].addClicks(query, clicks, cost);
     }
 
-    protected void addImpressions(String name, Query query, int impression, Ad ad, double positionSum) {
+    protected void addImpressions(String name, Query query, int nonPromoted, int promoted, Ad ad, double positionSum) {
         int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, name);
         if (index < 0) {
             index = doAddAccount(name);
@@ -93,7 +93,7 @@ public class QueryReportManagerImpl implements QueryReportManager {
             queryReports[index] = new QueryReport();
         }
 
-        queryReports[index].addImpressions(query, impression, ad, positionSum);
+        queryReports[index].addImpressions(query, nonPromoted, promoted, ad, positionSum);
     }
 
     /**
@@ -145,8 +145,12 @@ public class QueryReportManagerImpl implements QueryReportManager {
     public void queryIssued(Query query) {
     }
 
-    public void viewed(Query query, Ad ad, int slot, String advertiser) {
-        addImpressions(advertiser, query, 1, ad, slot);
+    public void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted) {
+        if(isPromoted){
+          addImpressions(advertiser, query, 0, 1, ad, slot);
+        }else{
+          addImpressions(advertiser, query, 1, 0, ad, slot); 
+        }
     }
 
     public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {

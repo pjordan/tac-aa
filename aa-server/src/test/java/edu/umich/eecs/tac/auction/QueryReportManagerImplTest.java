@@ -57,15 +57,15 @@ public class QueryReportManagerImplTest {
         Ad ad = new Ad();
 
         queryReportManager.queryIssued(query);
-        queryReportManager.viewed(query,ad,1,alice);
+        queryReportManager.viewed(query,ad,1,alice,false);
         queryReportManager.clicked(query,ad,1,1.0,alice);
         queryReportManager.converted(query,ad,1,2.0,alice);
 
         queryReportManager.sendQueryReportToAll();
 
         queryReportManager.addClicks("c",query,1,1.0);
-        queryReportManager.addImpressions("d",query,1,null,1);
-        queryReportManager.addImpressions("c",query,1,null,1);
+        queryReportManager.addImpressions("d",query,1,0,null,1);
+        queryReportManager.addImpressions("c",query,0,1,null,1);
     }
 
 

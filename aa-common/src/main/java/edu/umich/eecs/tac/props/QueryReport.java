@@ -8,12 +8,11 @@ import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
 
 /**
- * @author Ben Cassell, Patrick Jordan
+ * @author Ben Cassell, Patrick Jordan, Lee Callender
  */
 public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryReport.QueryReportEntry> {
 
     private static final long serialVersionUID = -7957495904471250085L;
-
 
     protected QueryReportEntry createEntry(Query query) {
         QueryReportEntry entry = new QueryReportEntry();
@@ -28,12 +27,12 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
     public QueryReport() {
     }
 
-    public void addQuery(Query query, int impressions, int clicks, double cost, double positionSum) {
+    public void addQuery(Query query, int impressions, int promotedImpressions, int clicks, double cost, double positionSum) {
         lockCheck();
 
         int index = addQuery(query);
         QueryReportEntry entry = getEntry(index);
-        entry.setImpressions(impressions);
+        entry.setImpressions(impressions, promotedImpressions);
         entry.setClicks(clicks);
         entry.setCost(cost);
         entry.setPositionSum(positionSum);
@@ -75,7 +74,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
         getEntry(index).setCost(cost);
     }
 
-    public void setImpressions(Query query, int impressions) {
+    public void setImpressions(Query query, int impressions, int promotedImpressions) {
         lockCheck();
 
         int index = indexForEntry(query);
@@ -84,11 +83,11 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
             index = addQuery(query);
         }
 
-        setImpressions(index, impressions);
+        setImpressions(index, impressions, promotedImpressions);
 
     }
 
-    public void setImpressions(Query query, int impressions, Ad ad, double position) {
+    public void setImpressions(Query query, int impressions, int promotedImpressions, Ad ad, double position) {
         lockCheck();
 
         int index = indexForEntry(query);
@@ -97,61 +96,62 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
             index = addQuery(query);
         }
 
-        setImpressions(index, impressions, ad, position);
+        setImpressions(index, impressions, promotedImpressions, ad, position);
 
     }
-    public void addImpressions(Query query, int impressions) {
+
+    public void addImpressions(Query query, int nonPromoted, int promoted) {
         lockCheck();
 
         int index = indexForEntry(query);
 
         if (index < 0) {
-            setImpressions(query, impressions);
+            setImpressions(query, (nonPromoted+promoted), promoted);
         } else {
-            addImpressions(index, impressions);
+            addImpressions(index, nonPromoted, promoted);
         }
     }
 
-    public void addImpressions(Query query, int impressions, Ad ad, double position) {
+    public void addImpressions(Query query, int nonPromoted, int promoted, Ad ad, double position) {
         lockCheck();
 
         int index = indexForEntry(query);
 
         if (index < 0) {
-            setImpressions(query, impressions, ad, position);
+            setImpressions(query, (nonPromoted+promoted), promoted, ad, position);
         } else {
-            addImpressions(index, impressions, ad, position);
+            addImpressions(index, nonPromoted, promoted, ad, position);
         }
     }
 
-    public void addImpressions(int index,int impressions) {
+    public void addImpressions(int index,int nonPromoted, int promoted) {
         lockCheck();
 
 
-        getEntry(index).addImpressions(impressions);
+        getEntry(index).addImpressions(nonPromoted, promoted);
 
     }
 
-    public void addImpressions(int index, int impressions, Ad ad, double position) {
+    public void addImpressions(int index, int nonPromoted, int promoted, Ad ad, double position) {
         lockCheck();
 
-        getEntry(index).addImpressions(impressions);
+        getEntry(index).addImpressions(nonPromoted, promoted);
         getEntry(index).setAd(ad);
-        getEntry(index).addPosition(impressions*position);
+        getEntry(index).addPosition((nonPromoted+promoted)*position);
     }
 
-    public void setImpressions(int index, int impressions) {
+    public void setImpressions(int index, int impressions, int promotedImpressions) {
         lockCheck();
-        getEntry(index).setImpressions(impressions);
+        getEntry(index).setImpressions(impressions, promotedImpressions);
     }
 
-    public void setImpressions(int index, int impressions, Ad ad, double position) {
+    public void setImpressions(int index, int impressions, int promotedImpressions, Ad ad, double position) {
         lockCheck();
-        getEntry(index).setImpressions(impressions);
+        getEntry(index).setImpressions(impressions, promotedImpressions);
         getEntry(index).setPositionSum(impressions*position);
         getEntry(index).setAd(ad);
     }
-
+  
     public void setClicks(Query query, int clicks) {
         lockCheck();
 
@@ -260,14 +260,15 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
         return getEntry(index).getCPC();
     }
 
-    public int getImpressions(Query query) {
+    //getImpressions will return total impressions with promoted set to false
+    public int getImpressions(Query query, boolean promoted) {
         int index = indexForEntry(query);
 
-        return index < 0 ? 0 : getImpressions(index);
+        return index < 0 ? 0 : getImpressions(index, promoted);
     }
 
-    public int getImpressions(int index) {
-        return getEntry(index).getImpressions();
+    public int getImpressions(int index, boolean promoted) {
+        return getEntry(index).getImpressions(promoted);
     }
 
     public int getClicks(Query query) {
@@ -404,10 +405,11 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
 
     /**
      *
-     * @author Patrick Jordan
+     * @author Patrick Jordan, Lee Callender
      */
     public static class QueryReportEntry extends AbstractQueryEntry {
-        private int impressions;
+        private int promotedImpressions;
+        private int impressions;  //The total value of impressions includes promoted and non-promoted impressions
         private int clicks;
         private double cost;
         private double positionSum;
@@ -421,16 +423,19 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
             displayReport = new DisplayReport();
         }
 
-        public int getImpressions() {
-            return impressions;
+        //If promoted is false, getImpressions returns the total number of impressions
+        public int getImpressions(boolean promoted) {
+            return promoted ? promotedImpressions:impressions;
         }
 
-        void setImpressions(int impressions) {
-            this.impressions = impressions;
+        void setImpressions(int impressions, int promotedImpressions) {
+            this.impressions = impressions; 
+            this.promotedImpressions = promotedImpressions;
         }
 
-        void addImpressions(int impressions) {
-            this.impressions += impressions;
+        void addImpressions(int nonPromoted, int promoted) {
+            this.impressions += (nonPromoted + promoted);
+            this.promotedImpressions += promoted;
         }
 
         public int getClicks() {
@@ -509,6 +514,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
 
         protected void readEntry(TransportReader reader) throws ParseException {
             this.impressions = reader.getAttributeAsInt("impressions", 0);
+            this.promotedImpressions = reader.getAttributeAsInt("promotedImpressions", 0);
             this.clicks = reader.getAttributeAsInt("clicks", 0);
             this.positionSum = reader.getAttributeAsDouble("positionSum", 0.0);
             this.cost = reader.getAttributeAsDouble("cost", 0.0);
@@ -527,6 +533,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
 
         protected void writeEntry(TransportWriter writer) {
             writer.attr("impressions", impressions);
+            writer.attr("promotedImpressions", promotedImpressions);
             writer.attr("clicks", clicks);
             writer.attr("positionSum", positionSum);
             writer.attr("cost", cost);
@@ -540,7 +547,7 @@ public class QueryReport extends AbstractQueryKeyedReportTransportable<QueryRepo
 
 
         public String toString() {
-            return String.format("(%s impr: %d clicks: %d pos: %f cpc: %f advertisers: %s)", getQuery(), impressions, clicks, getPosition(), getCPC(), displayReport);
+            return String.format("(%s impr: %d prom_impr: %d clicks: %d pos: %f cpc: %f advertisers: %s)", getQuery(), impressions, promotedImpressions, clicks, getPosition(), getCPC(), displayReport);
         }
     }
 

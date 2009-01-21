@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class UserEventSupport {
 
@@ -35,9 +35,9 @@ public class UserEventSupport {
         }
     }
 
-    public void fireAdViewed(Query query, AdLink ad, int slot) {
+    public void fireAdViewed(Query query, AdLink ad, int slot, boolean isPromoted) {
         for (UserEventListener listener : listeners) {
-            listener.viewed(query, ad, slot, ad.getAdvertiser());
+            listener.viewed(query, ad, slot, ad.getAdvertiser(), isPromoted);
         }
     }
 
