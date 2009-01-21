@@ -26,16 +26,16 @@ public class QueryReportManagerImplTest {
 
         queryReportManager.addAdvertiser(advertiser);
 
-        assertEquals(queryReportManager.size(),1);
+        assertEquals(queryReportManager.size(),1, 0);
 
         queryReportManager.addAdvertiser(advertiser);
 
-        assertEquals(queryReportManager.size(),1);
+        assertEquals(queryReportManager.size(),1, 0);
 
 
         for(int i = 0; i < 8; i++) {
             queryReportManager.addAdvertiser(""+i);
-            assertEquals(queryReportManager.size(),i+2);
+            assertEquals(queryReportManager.size(),i+2, 0);
         }
     }
 
@@ -48,7 +48,7 @@ public class QueryReportManagerImplTest {
 
         queryReportManager.addAdvertiser(alice);
         queryReportManager.addAdvertiser(bob);
-        assertEquals(queryReportManager.size(),2);
+        assertEquals(queryReportManager.size(),2, 0);
 
         queryReportManager.sendQueryReportToAll();
 

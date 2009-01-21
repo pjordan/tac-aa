@@ -3,6 +3,11 @@ package edu.umich.eecs.tac.user;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.Mockery;
+import org.jmock.Expectations;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -12,7 +17,10 @@ import edu.umich.eecs.tac.props.Product;
 /**
  * @author Patrick Jordan
  */
+@RunWith(JMock.class)
 public class DefaultUsersInitializerTest {
+    private Mockery context;
+    
     private UserTransitionManager userTransitionManager;
 
     private DefaultUsersInitializer initializer;
@@ -21,7 +29,9 @@ public class DefaultUsersInitializerTest {
 
     @Before
     public void setup() {
-        userTransitionManager = new SimpleUserTransitionManager();
+        context = new JUnit4Mockery();
+        
+        userTransitionManager = context.mock(UserTransitionManager.class);
         
         initializer = new DefaultUsersInitializer(userTransitionManager);
 
@@ -40,6 +50,10 @@ public class DefaultUsersInitializerTest {
 
     @Test
     public void testInitialized() {
+        context.checking(new Expectations() {{
+            atLeast(1).of(userTransitionManager).nextTimeUnit(-1);
+            atLeast(1).of(userTransitionManager).transition(QueryState.NON_SEARCHING, false); will(returnValue(QueryState.INFORMATIONAL_SEARCH));
+        }});
 
         for(User user : users) {
             assertEquals(user.getState(),QueryState.NON_SEARCHING);
@@ -49,16 +63,6 @@ public class DefaultUsersInitializerTest {
 
         for(User user : users) {
             assertEquals(user.getState(),QueryState.INFORMATIONAL_SEARCH);
-        }
-    }
-
-    private static class SimpleUserTransitionManager implements UserTransitionManager {
-
-        public QueryState transition(QueryState queryState, boolean transacted) {
-            return QueryState.INFORMATIONAL_SEARCH;
-        }
-
-        public void nextTimeUnit(int timeUnit) {
         }
     }
 }

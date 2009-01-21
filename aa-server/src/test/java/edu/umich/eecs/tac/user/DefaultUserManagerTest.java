@@ -110,9 +110,9 @@ public class DefaultUserManagerTest {
         int[] distribution = userManager.getStateDistribution();
 
         assertNotNull(distribution);
-        assertEquals(distribution[0],populationSize);
+        assertEquals(distribution[0],populationSize,0);
         for(int i = 1; i < distribution.length; i++) {
-            assertEquals(distribution[i],0);
+            assertEquals(distribution[i],0,0);
         }
     }
 

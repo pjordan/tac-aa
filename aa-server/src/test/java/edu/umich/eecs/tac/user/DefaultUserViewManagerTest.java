@@ -3,6 +3,11 @@ package edu.umich.eecs.tac.user;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.Mockery;
+import org.jmock.Expectations;
 
 import java.util.Random;
 import java.util.Map;
@@ -14,7 +19,10 @@ import edu.umich.eecs.tac.sim.RecentConversionsTracker;
 /**
  * @author Patrick Jordan
  */
+@RunWith(JMock.class)
 public class DefaultUserViewManagerTest {
+    private Mockery context;
+    
     private Random random;
 
     private RetailCatalog retailCatalog;
@@ -45,6 +53,8 @@ public class DefaultUserViewManagerTest {
 
     @Before
     public void setup() {
+        context = new JUnit4Mockery();
+        
         random = new Random(103);
 
         alice = "alice";
@@ -68,7 +78,7 @@ public class DefaultUserViewManagerTest {
 
         auctionInfo = new AuctionInfo();
 
-        recentConversionsTracker = new SimpleRecentConversionsTracker();
+        recentConversionsTracker = context.mock(RecentConversionsTracker.class);
 
         AdvertiserInfo aliceInfo = new AdvertiserInfo();
 
@@ -128,6 +138,11 @@ public class DefaultUserViewManagerTest {
         new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, auctionInfo, null);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testConstructorAuctionInfoNull() {
+        new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, null);
+    }
+
     @Test
     public void testUserClickModel() {
         assertSame(userViewManager.getUserClickModel(), userClickModel);
@@ -135,13 +150,10 @@ public class DefaultUserViewManagerTest {
 
     @Test
     public void testUserEventSupport() {
-        UserEventListener listener = new SimpleUserEventListener();
+        UserEventListener listener = context.mock(UserEventListener.class);
 
         assertTrue(userViewManager.addUserEventListener(listener));
         assertTrue(userViewManager.containsUserEventListener(listener));
-
-        
-        
         assertTrue(userViewManager.removeUserEventListener(listener));
         assertFalse(userViewManager.containsUserEventListener(listener));
     }
@@ -170,29 +182,18 @@ public class DefaultUserViewManagerTest {
         auction.setRanking(ranking);
 
         userViewManager.nextTimeUnit(0);
-        
+
+        context.checking(new Expectations() {{
+            atLeast(1).of(recentConversionsTracker).getRecentConversions(bob); will(returnValue(0.0));
+            atLeast(1).of(recentConversionsTracker).getRecentConversions(eve); will(returnValue(0.0));
+        }});
+
         assertTrue(userViewManager.processImpression(user, query, auction));
 
         assertFalse(userViewManager.processImpression(user, new Query(), auction));
     }
     
-    private class SimpleRecentConversionsTracker implements RecentConversionsTracker {
-        public double getRecentConversions(String name) {
-            return 0;
-        }
-    }
 
-    public class SimpleUserEventListener implements UserEventListener {
-        public void queryIssued(Query query) {
-        }
 
-        public void viewed(Query query, Ad ad, int slot, String advertiser) {
-        }
 
-        public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
-        }
-
-        public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {            
-        }
-    }
 }

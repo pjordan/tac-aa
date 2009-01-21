@@ -68,7 +68,7 @@ public class LahaiePennockAuctionFactoryTest {
         assertNotNull(auction);
         Ranking ranking = auction.getRanking();
         assertNotNull(ranking);
-        assertEquals(ranking.size(), 4);
+        assertEquals(ranking.size(), 4, 0);
         assertEquals(ranking.get(0), bidManager.getAdLink("eve", null));
 
         //Fewer participants than slots available
@@ -78,7 +78,7 @@ public class LahaiePennockAuctionFactoryTest {
         assertNotNull(ranking);
         ranking = auction.getRanking();
         assertNotNull(ranking);
-        assertEquals(ranking.size(), 5);
+        assertEquals(ranking.size(), 5,0);
         assertEquals(ranking.get(0), bidManager.getAdLink("eve", null));
     }
 

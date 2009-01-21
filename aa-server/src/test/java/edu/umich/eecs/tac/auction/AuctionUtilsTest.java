@@ -15,10 +15,10 @@ public class AuctionUtilsTest {
 
         hardSort(scores, indices);
 
-        assertEquals(indices[0],1);
-        assertEquals(indices[1],0);
-        assertEquals(indices[2],3);
-        assertEquals(indices[3],2);
+        assertEquals(indices[0],1,0);
+        assertEquals(indices[1],0,0);
+        assertEquals(indices[2],3,0);
+        assertEquals(indices[3],2,0);
     }
 
     @Test
@@ -31,16 +31,16 @@ public class AuctionUtilsTest {
 
         generalizedSecondPrice(indices, scores, bids, cpc, promoted, 1,0.05,4,0.01);
 
-        assertEquals(cpc[0],0.25/0.5);
-        assertEquals(cpc[1],0.5);
+        assertEquals(cpc[0],0.25/0.5,0.0);
+        assertEquals(cpc[1],0.5,0.0);
         assertTrue(Double.isNaN(cpc[2]));
-        assertEquals(cpc[3],0.01/0.25);
+        assertEquals(cpc[3],0.01/0.25,0.0);
     }
 
     @Test
     public void testCalculateSecondPriceWithReservee() {
-        assertEquals(calculateSecondPriceWithReserve(1.0,0.5,1.0,0.1),0.5);
-        assertEquals(calculateSecondPriceWithReserve(1.0,0.5,0.0,0.1),0.1);
-        assertEquals(calculateSecondPriceWithReserve(1.0,0.5,Double.NaN,0.1),0.1);
+        assertEquals(calculateSecondPriceWithReserve(1.0,0.5,1.0,0.1),0.5,0.0);
+        assertEquals(calculateSecondPriceWithReserve(1.0,0.5,0.0,0.1),0.1,0.0);
+        assertEquals(calculateSecondPriceWithReserve(1.0,0.5,Double.NaN,0.1),0.1,0.0);
     }
 }

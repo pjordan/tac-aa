@@ -20,12 +20,12 @@ public class UserEventSupportTest {
     private Mockery context;
 
     private UserEventListener listener;
-    Query query;
-    String advertiser;
-    AdLink ad;
-    double cpc;
-    int slot;
-    double salesProfit;
+    private Query query;
+    private String advertiser;
+    private AdLink ad;
+    private double cpc;
+    private int slot;
+    private double salesProfit;
 
     
     @Before

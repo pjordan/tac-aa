@@ -22,16 +22,16 @@ public class SpendTrackerImplTest {
 
         String advertiser = "Alice";
 
-        assertEquals(spendTracker.size(),0);
+        assertEquals(spendTracker.size(),0,0);
         spendTracker.addAdvertiser(advertiser);
-        assertEquals(spendTracker.size(),1);
+        assertEquals(spendTracker.size(),1,0);
         spendTracker.addAdvertiser(advertiser);
-        assertEquals(spendTracker.size(),1);
+        assertEquals(spendTracker.size(),1,0);
 
 
         for(int i = 0; i < 8; i++) {
             spendTracker.addAdvertiser(""+i);
-            assertEquals(spendTracker.size(),i+2);
+            assertEquals(spendTracker.size(),i+2,0);
         }
     }
 
@@ -46,28 +46,28 @@ public class SpendTrackerImplTest {
         spendTracker.addCost(advertiser,query,cost);
 
 
-        assertEquals(spendTracker.getDailyCost(advertiser),cost);
-        assertEquals(spendTracker.getDailyCost(advertiser,query),cost);
-        assertEquals(spendTracker.size(),1);
+        assertEquals(spendTracker.getDailyCost(advertiser),cost,0.0);
+        assertEquals(spendTracker.getDailyCost(advertiser,query),cost,0.0);
+        assertEquals(spendTracker.size(),1,0);
 
         spendTracker.addCost(advertiser,query,cost);
 
-        assertEquals(spendTracker.getDailyCost(advertiser),2*cost);
-        assertEquals(spendTracker.getDailyCost(advertiser,query),2*cost);
-        assertEquals(spendTracker.size(),1);
+        assertEquals(spendTracker.getDailyCost(advertiser),2*cost,0.0);
+        assertEquals(spendTracker.getDailyCost(advertiser,query),2*cost,0.0);
+        assertEquals(spendTracker.size(),1,0);
 
-        assertEquals(spendTracker.getDailyCost("notAlice"),0.0);
-        assertEquals(spendTracker.getDailyCost(advertiser,new Query("a","")),0.0);
-        assertEquals(spendTracker.getDailyCost("notAlice",query),0.0);
+        assertEquals(spendTracker.getDailyCost("notAlice"),0.0,0.0);
+        assertEquals(spendTracker.getDailyCost(advertiser,new Query("a","")),0.0,0.0);
+        assertEquals(spendTracker.getDailyCost("notAlice",query),0.0,0.0);
 
         spendTracker.addAdvertiser("bob");
-        assertEquals(spendTracker.getDailyCost("bob",query),0.0);
+        assertEquals(spendTracker.getDailyCost("bob",query),0.0,0.0);
 
         spendTracker.addAdvertiser("bobbob");
-        assertEquals(spendTracker.getDailyCost("bobbob"),0.0);
+        assertEquals(spendTracker.getDailyCost("bobbob"),0.0,0.0);
 
         spendTracker.reset();
-        assertEquals(spendTracker.getDailyCost(advertiser),0.0);
+        assertEquals(spendTracker.getDailyCost(advertiser),0.0,0.0);
 
         for(int i = 0; i < 8; i++) {
             spendTracker.addCost(advertiser,new Query(""+i,""),cost);

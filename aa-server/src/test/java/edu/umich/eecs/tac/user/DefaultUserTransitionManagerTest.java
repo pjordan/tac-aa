@@ -53,13 +53,13 @@ public class DefaultUserTransitionManagerTest {
             }
         }
 
-        assertEquals(bursts, 295);
-        assertEquals(regulars, 705);
+        assertEquals(bursts, 295, 0);
+        assertEquals(regulars, 705, 0);
     }
 
     @Test
     public void testTransitions() {
-        assertEquals(userTransitionManager.getBurstProbability(), 0.3);
+        assertEquals(userTransitionManager.getBurstProbability(), 0.3, 0.00001);
 
         boolean burst = userTransitionManager.isBurst();
 
@@ -81,11 +81,11 @@ public class DefaultUserTransitionManagerTest {
         }
 
         if(burst) {
-            assertEquals(nsCount, 600);
-            assertEquals(isCount, 400);
+            assertEquals(nsCount, 600, 0);
+            assertEquals(isCount, 400, 0);
         } else {
-            assertEquals(nsCount, 809);
-            assertEquals(isCount, 191);
+            assertEquals(nsCount, 809, 0);
+            assertEquals(isCount, 191, 0);
         }
 
 
@@ -110,11 +110,11 @@ public class DefaultUserTransitionManagerTest {
         }
 
         if(!burst) {
-            assertEquals(nsCount, 594);
-            assertEquals(isCount, 406);
+            assertEquals(nsCount, 594, 0);
+            assertEquals(isCount, 406, 0);
         } else {
-            assertEquals(nsCount, 800);
-            assertEquals(isCount, 200);
+            assertEquals(nsCount, 800, 0);
+            assertEquals(isCount, 200, 0);
         }
 
         assertEquals(userTransitionManager.transition(QueryState.NON_SEARCHING, true), QueryState.TRANSACTED);

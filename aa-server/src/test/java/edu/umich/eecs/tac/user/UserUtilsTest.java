@@ -59,42 +59,42 @@ public class UserUtilsTest {
 
     @Test
     public void testModifyOdds() {
-        assertEquals(modifyOdds(0.5, 2.0), 2.0 / 3.0);
+        assertEquals(modifyOdds(0.5, 2.0), 2.0 / 3.0, 0.000001);
     }
 
     @Test
     public void testModifySalesProfitForManufacturerSpecialty() {
-        assertEquals(modifySalesProfitForManufacturerSpecialty(user, manufacturer, 0.5, 1.0), 1.5);
-        assertEquals(modifySalesProfitForManufacturerSpecialty(user, "not" + manufacturer, 0.5, 1.0), 1.0);
+        assertEquals(modifySalesProfitForManufacturerSpecialty(user, manufacturer, 0.5, 1.0), 1.5, 0.0000001);
+        assertEquals(modifySalesProfitForManufacturerSpecialty(user, "not" + manufacturer, 0.5, 1.0), 1.0, 0.0000001);
     }
 
     @Test
     public void testModifyOddsForComponentSpecialty() {
-        assertEquals(modifyOddsForComponentSpecialty(user, component, 1.0, 0.5), 2.0 / 3.0);
-        assertEquals(modifyOddsForComponentSpecialty(user, "not" + component, 1.0, 0.5), 0.5);
+        assertEquals(modifyOddsForComponentSpecialty(user, component, 1.0, 0.5), 2.0 / 3.0, 0.0000001);
+        assertEquals(modifyOddsForComponentSpecialty(user, "not" + component, 1.0, 0.5), 0.5, 0.0000001);
     }
 
     @Test
     public void testCalculateConversionProbability() {
-        assertEquals(calculateConversionProbability(user, query, advertiserInfo, 1.0), 0.75);
+        assertEquals(calculateConversionProbability(user, query, advertiserInfo, 1.0), 0.75, 0.0000001);
     }
 
     @Test
     public void testCalculateClickProbability() {
-        assertEquals(calculateClickProbability(user, genericAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.8);
-        assertEquals(calculateClickProbability(user, focusedAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.8571428571428572);
-        assertEquals(calculateClickProbability(user, focusedWrongAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.7272727272727273);
+        assertEquals(calculateClickProbability(user, genericAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.8, 0.0000001);
+        assertEquals(calculateClickProbability(user, focusedAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.8571428571428572, 0.0000001);
+        assertEquals(calculateClickProbability(user, focusedWrongAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.7272727272727273, 0.0000001);
 
-        assertEquals(calculateClickProbability(user, genericAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.8571428571428572);
-        assertEquals(calculateClickProbability(user, focusedAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.9);
-        assertEquals(calculateClickProbability(user, focusedWrongAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.8);
+        assertEquals(calculateClickProbability(user, genericAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.8571428571428572, 0.0000001);
+        assertEquals(calculateClickProbability(user, focusedAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.9, 0.0000001);
+        assertEquals(calculateClickProbability(user, focusedWrongAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.8, 0.0000001);
     }
 
     @Test
     public void testFindAdvertiserEffect() {
 
-        assertEquals(findAdvertiserEffect(query, genericAdLink, userClickModel), 0.8);
-        assertEquals(findAdvertiserEffect(query, new AdLink(product, "bob"), userClickModel), 0.0);
-        assertEquals(findAdvertiserEffect(new Query("a", "b"), genericAdLink, userClickModel), 0.0);
+        assertEquals(findAdvertiserEffect(query, genericAdLink, userClickModel), 0.8, 0.0000001);
+        assertEquals(findAdvertiserEffect(query, new AdLink(product, "bob"), userClickModel), 0.0, 0.0000001);
+        assertEquals(findAdvertiserEffect(new Query("a", "b"), genericAdLink, userClickModel), 0.0, 0.0000001);
     }
 }

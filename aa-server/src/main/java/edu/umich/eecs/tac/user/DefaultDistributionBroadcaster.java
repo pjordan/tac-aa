@@ -21,7 +21,9 @@ public class DefaultDistributionBroadcaster implements DistributionBroadcaster {
 
     public void broadcastUserDistribution(int usersIndex, EventWriter eventWriter) {
         int[] distribution = userManager.getStateDistribution();
+
         QueryState[] states = QueryState.values();
+
         for (int i = 0; i < distribution.length; i++) {
             switch (states[i]) {
                 case NON_SEARCHING:

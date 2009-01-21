@@ -50,32 +50,32 @@ public class DefaultSalesAnalystTest {
 
     @Test
     public void testAddAccount() {
-        assertEquals(salesAnalyst.size(), 0);
+        assertEquals(salesAnalyst.size(), 0, 0);
         salesAnalyst.addAccount(alice);
-        assertEquals(salesAnalyst.size(), 1);
+        assertEquals(salesAnalyst.size(), 1, 0);
     }
 
     @Test
     public void testConversions() {
         salesAnalyst.addAccount(alice);
 
-        assertEquals(salesAnalyst.getRecentConversions(alice),0.0);
+        assertEquals(salesAnalyst.getRecentConversions(alice),0.0, 0.0);
 
         salesAnalyst.addConversions(alice,new Query(),7,2.0);
 
-        assertEquals(salesAnalyst.getRecentConversions(alice),7.0);
+        assertEquals(salesAnalyst.getRecentConversions(alice),7.0, 0.0);
 
         salesAnalyst.sendSalesReportToAll();
 
-        assertEquals(salesAnalyst.getRecentConversions(alice),7.0);
+        assertEquals(salesAnalyst.getRecentConversions(alice),7.0, 0.0);
 
         salesAnalyst.addConversions(alice,new Query(),5,2.0);
 
-        assertEquals(salesAnalyst.getRecentConversions(alice),12.0);
+        assertEquals(salesAnalyst.getRecentConversions(alice),12.0, 0.0);
 
         salesAnalyst.sendSalesReportToAll();
         
-        assertEquals(salesAnalyst.getRecentConversions(alice),5.0);
+        assertEquals(salesAnalyst.getRecentConversions(alice),5.0, 0.0);
     }
 
     public class SimpleAgentRepository implements AgentRepository {

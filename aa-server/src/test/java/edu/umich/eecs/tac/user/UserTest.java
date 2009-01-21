@@ -43,7 +43,7 @@ public class UserTest {
         assertFalse(user.equals(new User()));
         assertFalse(new User().equals(user));
         assertFalse(new User(null, new Product()).equals(user));
-        assertEquals(new User(QueryState.FOCUS_LEVEL_ONE, new Product()).hashCode(), user.hashCode());
+        assertEquals(new User(QueryState.FOCUS_LEVEL_ONE, new Product()).hashCode(), user.hashCode(),0);
         assertEquals(new User(QueryState.FOCUS_LEVEL_ONE, new Product()), user);
 
 
