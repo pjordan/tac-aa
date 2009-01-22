@@ -4,7 +4,6 @@ import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
 
 import java.text.ParseException;
-import java.util.Map;
 import java.util.List;
 import java.util.LinkedList;
 

@@ -2,12 +2,9 @@
 
 package edu.umich.eecs.tac.props;
 
-import java.io.Serializable;
 import java.text.ParseException;
-
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
-import se.sics.isl.transport.Transportable;
 
 public class BankStatus extends AbstractTransportable {
 

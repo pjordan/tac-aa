@@ -2,7 +2,6 @@ package edu.umich.eecs.tac.props;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
-import se.sics.isl.transport.Transportable;
 
 import java.text.ParseException;
 
@@ -12,7 +11,7 @@ import java.text.ParseException;
  * 
  * @author Patrick Jordan
  */
-public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
+public abstract class AbstractKeyedEntry < T > implements KeyedEntry < T > {
 	private T key;
 
 	/**

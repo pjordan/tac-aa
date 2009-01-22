@@ -1,7 +1,5 @@
 package edu.umich.eecs.tac.props;
 
-import se.sics.isl.transport.Transportable;
-
 import java.util.Iterator;
 
 /**

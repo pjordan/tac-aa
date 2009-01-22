@@ -1,9 +1,5 @@
 package edu.umich.eecs.tac.props;
 
-import se.sics.isl.transport.Transportable;
-
-import java.io.Serializable;
-
 /**
  * 
  * This interface designates a {@link edu.umich.eecs.tac.props.KeyedEntry keyed

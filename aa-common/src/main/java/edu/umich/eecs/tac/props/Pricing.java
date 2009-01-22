@@ -2,9 +2,6 @@ package edu.umich.eecs.tac.props;
 
 import se.sics.isl.transport.TransportReader;
 import se.sics.isl.transport.TransportWriter;
-import se.sics.isl.transport.Transportable;
-
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;

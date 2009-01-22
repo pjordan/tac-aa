@@ -1,10 +1,5 @@
 package edu.umich.eecs.tac.props;
 
-import se.sics.isl.transport.TransportReader;
-import se.sics.isl.transport.TransportWriter;
-
-import java.text.ParseException;
-
 /**
  * This class provides a skeletal implementation of the {@link AdvertiserEntry}
  * interface.
