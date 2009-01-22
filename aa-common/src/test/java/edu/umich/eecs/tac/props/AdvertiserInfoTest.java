@@ -31,7 +31,7 @@ public class AdvertiserInfoTest {
 		info.setManufacturerBonus(2.0);
 		info.setManufacturerSpecialty("c");
 		info.setPublisherId("d");
-		info.setDecayRate(3.0);
+		info.setDistributionCapacityDiscounter(3.0);
 		info.setDistributionWindow(4);
 		info.setTargetEffect(3.3);
 
@@ -46,7 +46,7 @@ public class AdvertiserInfoTest {
 		assertEquals(info.getManufacturerBonus(), 2.0);
 		assertEquals(info.getManufacturerSpecialty(), "c");
 		assertEquals(info.getPublisherId(), "d");
-		assertEquals(info.getDecayRate(), 3.0);
+		assertEquals(info.getDistributionCapacityDiscounter(), 3.0);
 		assertEquals(info.getDistributionWindow(), 4);
 		assertEquals(info.getTargetEffect(), 3.3);
 
@@ -92,7 +92,7 @@ public class AdvertiserInfoTest {
 			thrown++;
 		}
 		try {
-			info.setDecayRate(3.0);
+			info.setDistributionCapacityDiscounter(3.0);
 		} catch (IllegalStateException e) {
 			thrown++;
 		}
@@ -192,7 +192,7 @@ public class AdvertiserInfoTest {
 		instance.setComponentSpecialty("cs");
 		instance.setPublisherId("pub");
 		instance.setAdvertiserId("advertiser");
-		instance.setDecayRate(10.5);
+		instance.setDistributionCapacityDiscounter(10.5);
 		instance.setDistributionCapacity(5);
 		instance.setDistributionWindow(4);
 		instance.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO, 0.4);
@@ -209,7 +209,7 @@ public class AdvertiserInfoTest {
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(instance.getComponentBonus());
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(instance.getDecayRate());
+		temp = Double.doubleToLongBits(instance.getDistributionCapacityDiscounter());
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		result = 31 * result + instance.getPublisherId().hashCode();
 		result = 31 * result + instance.getDistributionCapacity();
@@ -255,9 +255,9 @@ public class AdvertiserInfoTest {
 		assertFalse(instance.equals(that));
 		instance.setComponentBonus(componentBonus);
 
-		that.setDecayRate(decayRate);
+		that.setDistributionCapacityDiscounter(decayRate);
 		assertFalse(instance.equals(that));
-		instance.setDecayRate(decayRate);
+		instance.setDistributionCapacityDiscounter(decayRate);
 
 		that.setDistributionCapacity(distributionCapacity);
 		assertFalse(instance.equals(that));

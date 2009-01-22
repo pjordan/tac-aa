@@ -317,7 +317,7 @@ public class TACAASimulation extends Simulation implements TACAAConstants,
 				advertiserInfo.setAdvertiserId(agentAddress);
 				advertiserInfo.setPublisherId(publisherAddress);
 				advertiserInfo.setDistributionCapacity(capacities[i]);
-				advertiserInfo.setDecayRate(decayRate);
+				advertiserInfo.setDistributionCapacityDiscounter(decayRate);
 				advertiserInfo.setComponentSpecialty(components[r
 						.nextInt(components.length)]);
 				advertiserInfo.setComponentBonus(componentBonus);

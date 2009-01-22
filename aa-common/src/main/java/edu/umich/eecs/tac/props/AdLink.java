@@ -7,13 +7,22 @@ import java.text.ParseException;
 
 /**
  * This class represents an ad link. It contains the {@link Product} of the
- * {@link Ad} as well as a string for the advertiser's address.
+ * {@link Ad} as well as a string for the advertiser's address. Note that
+ * AdLinks are created by the publisher from ads specified in an advertiser's
+ * bid bundle and thus are not directly used by the advertiser.
+ *
+ *  
  *
  * @author Lee Callender
  */
+
 public class AdLink extends Ad {
     protected String advertiser;
 
+    /**
+     * Creates a generic ad link. Advertiser's address is initialized
+     * to <code> null </code>.
+     */
     public AdLink() {
     }
 
@@ -22,6 +31,9 @@ public class AdLink extends Ad {
         this.advertiser = advertiser;
     }
 
+    /**
+     * Creates an ad link from a given ad. 
+     */
     public AdLink(Ad ad, String advertiser) {
         this(ad == null ? null : ad.getProduct(), advertiser);
     }
@@ -30,6 +42,14 @@ public class AdLink extends Ad {
         return advertiser;
     }
 
+    /**
+   * Specify and advertiser's address for this ad link.
+   *
+   * @param advertiser
+   *  the advertiser's address contained in the ad link.
+   *
+   * @throws IllegalStateException if the ad link is locked.
+   */
     public void setAdvertiser(String advertiser) {
         lockCheck();
         this.advertiser = advertiser;

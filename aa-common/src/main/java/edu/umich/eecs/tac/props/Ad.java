@@ -8,6 +8,9 @@ import java.text.ParseException;
 /**
  * This class represents an advertisement in the TAC/AA scenario. Advertisements
  * can be generic or targeted depending on whether the ad specifies a product.
+ * Advertisers will primarily use this class with {@link BidBundle} in specifying
+ * which advertisements to display for individual queries.
+ * 
  *
  * @author Patrick Jordan, Lee Callender
  */
@@ -21,7 +24,7 @@ public class Ad extends AbstractTransportable {
     }
 
     /**
-     * Creates a targeted ad if <code>product</code> is not null. The add is
+     * Creates a targeted ad if <code>product</code> is not null. The ad is
      * generic if the <code>product</code> is null.
      */
     public Ad(Product product) {

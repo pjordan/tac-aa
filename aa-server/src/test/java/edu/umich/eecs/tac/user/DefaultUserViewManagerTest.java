@@ -81,15 +81,15 @@ public class DefaultUserViewManagerTest {
 
 		AdvertiserInfo aliceInfo = new AdvertiserInfo();
 
-		aliceInfo.setDecayRate(0.0);
+		aliceInfo.setDistributionCapacityDiscounter(0.0);
 
 		AdvertiserInfo bobInfo = new AdvertiserInfo();
 
-		bobInfo.setDecayRate(0.0);
+		bobInfo.setDistributionCapacityDiscounter(0.0);
 
 		AdvertiserInfo eveInfo = new AdvertiserInfo();
 
-		eveInfo.setDecayRate(1.0);
+		eveInfo.setDistributionCapacityDiscounter(1.0);
 		eveInfo.setFocusEffects(query.getType(), 1.0);
 		eveInfo.setManufacturerSpecialty(manufacturer);
 

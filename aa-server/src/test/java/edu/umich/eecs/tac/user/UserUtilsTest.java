@@ -36,7 +36,7 @@ public class UserUtilsTest {
 		advertiserInfo = new AdvertiserInfo();
 		advertiserInfo.setDistributionCapacity(2);
 		advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO, 0.5);
-		advertiserInfo.setDecayRate(0.5);
+		advertiserInfo.setDistributionCapacityDiscounter(0.5);
 		advertiserInfo.setComponentBonus(2.0);
 		advertiserInfo.setComponentSpecialty(component);
 		advertiserInfo.setTargetEffect(0.5);

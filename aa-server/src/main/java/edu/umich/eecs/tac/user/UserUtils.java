@@ -39,7 +39,7 @@ public class UserUtils {
 		double criticalSales = advertiserInfo.getDistributionCapacity();
 
 		double probability = advertiserInfo.getFocusEffects(query.getType())
-				* Math.pow(advertiserInfo.getDecayRate(), Math.max(0.0, sales
+				* Math.pow(advertiserInfo.getDistributionCapacityDiscounter(), Math.max(0.0, sales
 						- criticalSales));
 
 		probability = modifyOddsForComponentSpecialty(user, advertiserInfo
