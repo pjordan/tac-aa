@@ -47,6 +47,16 @@
       <url>http://www.eecs.umich.edu/~asleep</url>
       <organization>University of Michigan AI Laboratory</organization>
       <timezone>-5</timezone>
+    </developer>
+     <developer>
+      <id>bcassell</id>
+      <name>Ben Cassell</name>
+      <email>bcassell [at] umich.edu</email>
+      <roles>
+        <role>Pseudo Research Scientist</role>
+      </roles>
+      <organization>University of Michigan AI Laboratory</organization>
+      <timezone>-5</timezone>
     </developer>             
   </developers>	
   <modules>
