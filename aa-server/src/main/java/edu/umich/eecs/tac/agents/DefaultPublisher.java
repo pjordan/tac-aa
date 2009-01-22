@@ -18,148 +18,152 @@ import java.util.*;
  */
 public class DefaultPublisher extends Publisher implements TACAAConstants {
 
-    /**
-     * The publisher behavior
-     */
-    private PublisherBehavior publisherBehavior;
+	/**
+	 * The publisher behavior
+	 */
+	private PublisherBehavior publisherBehavior;
 
-    public DefaultPublisher() {
-        publisherBehavior = new DefaultPublisherBehavior(new PublisherConfigProxy(), new AgentRepositoryProxy(), this, new ClickChargerProxy(), new BidBundleWriterProxy());
-    }
+	public DefaultPublisher() {
+		publisherBehavior = new DefaultPublisherBehavior(
+				new PublisherConfigProxy(), new AgentRepositoryProxy(), this,
+				new ClickChargerProxy(), new BidBundleWriterProxy());
+	}
 
-    public void nextTimeUnit(int date) {
-        publisherBehavior.nextTimeUnit(date);
-    }
+	public void nextTimeUnit(int date) {
+		publisherBehavior.nextTimeUnit(date);
+	}
 
-    protected void setup() {
-        this.log = Logger.getLogger(DefaultPublisher.class.getName());
+	protected void setup() {
+		this.log = Logger.getLogger(DefaultPublisher.class.getName());
 
-        publisherBehavior.setup();
+		publisherBehavior.setup();
 
-        addTimeListener(this);
-    }
+		addTimeListener(this);
+	}
 
-    protected void stopped() {
-        removeTimeListener(this);
+	protected void stopped() {
+		removeTimeListener(this);
 
-        publisherBehavior.stopped();
-    }
+		publisherBehavior.stopped();
+	}
 
-    protected void shutdown() {
-        publisherBehavior.stopped();
-    }
+	protected void shutdown() {
+		publisherBehavior.stopped();
+	}
 
-    protected void messageReceived(Message message) {
-        publisherBehavior.messageReceived(message);
-    }
+	protected void messageReceived(Message message) {
+		publisherBehavior.messageReceived(message);
+	}
 
-    public PublisherInfo getPublisherInfo() {
-        return publisherBehavior.getPublisherInfo();
-    }
+	public PublisherInfo getPublisherInfo() {
+		return publisherBehavior.getPublisherInfo();
+	}
 
-    void setPublisherInfo(PublisherInfo publisherInfo) {
-        publisherBehavior.setPublisherInfo(publisherInfo);
-    }
+	void setPublisherInfo(PublisherInfo publisherInfo) {
+		publisherBehavior.setPublisherInfo(publisherInfo);
+	}
 
+	public void sendQueryReportsToAll() {
+		publisherBehavior.sendQueryReportsToAll();
+	}
 
-    public void sendQueryReportsToAll() {
-        publisherBehavior.sendQueryReportsToAll();
-    }
+	public Auction runAuction(Query query) {
+		return publisherBehavior.runAuction(query);
+	}
 
+	protected class PublisherConfigProxy implements ConfigProxy {
 
-    public Auction runAuction(Query query) {
-        return publisherBehavior.runAuction(query);
-    }
+		public String getProperty(String name) {
+			return DefaultPublisher.this.getProperty(name);
+		}
 
-    protected class PublisherConfigProxy implements ConfigProxy {
+		public String getProperty(String name, String defaultValue) {
+			return DefaultPublisher.this.getProperty(name, defaultValue);
+		}
 
-        public String getProperty(String name) {
-            return DefaultPublisher.this.getProperty(name);
-        }
+		public String[] getPropertyAsArray(String name) {
+			return DefaultPublisher.this.getPropertyAsArray(name);
+		}
 
-        public String getProperty(String name, String defaultValue) {
-            return DefaultPublisher.this.getProperty(name, defaultValue);
-        }
+		public String[] getPropertyAsArray(String name, String defaultValue) {
+			return DefaultPublisher.this.getPropertyAsArray(name, defaultValue);
+		}
 
-        public String[] getPropertyAsArray(String name) {
-            return DefaultPublisher.this.getPropertyAsArray(name);
-        }
+		public int getPropertyAsInt(String name, int defaultValue) {
+			return DefaultPublisher.this.getPropertyAsInt(name, defaultValue);
+		}
 
-        public String[] getPropertyAsArray(String name, String defaultValue) {
-            return DefaultPublisher.this.getPropertyAsArray(name, defaultValue);
-        }
+		public int[] getPropertyAsIntArray(String name) {
+			return DefaultPublisher.this.getPropertyAsIntArray(name);
+		}
 
-        public int getPropertyAsInt(String name, int defaultValue) {
-            return DefaultPublisher.this.getPropertyAsInt(name, defaultValue);
-        }
+		public int[] getPropertyAsIntArray(String name, String defaultValue) {
+			return DefaultPublisher.this.getPropertyAsIntArray(name,
+					defaultValue);
+		}
 
-        public int[] getPropertyAsIntArray(String name) {
-            return DefaultPublisher.this.getPropertyAsIntArray(name);
-        }
+		public long getPropertyAsLong(String name, long defaultValue) {
+			return DefaultPublisher.this.getPropertyAsLong(name, defaultValue);
+		}
 
-        public int[] getPropertyAsIntArray(String name, String defaultValue) {
-            return DefaultPublisher.this.getPropertyAsIntArray(name, defaultValue);
-        }
+		public float getPropertyAsFloat(String name, float defaultValue) {
+			return DefaultPublisher.this.getPropertyAsFloat(name, defaultValue);
+		}
 
-        public long getPropertyAsLong(String name, long defaultValue) {
-            return DefaultPublisher.this.getPropertyAsLong(name, defaultValue);
-        }
+		public double getPropertyAsDouble(String name, double defaultValue) {
+			return DefaultPublisher.this
+					.getPropertyAsDouble(name, defaultValue);
+		}
+	}
 
-        public float getPropertyAsFloat(String name, float defaultValue) {
-            return DefaultPublisher.this.getPropertyAsFloat(name, defaultValue);
-        }
+	protected class AgentRepositoryProxy implements AgentRepository {
+		public RetailCatalog getRetailCatalog() {
+			return getSimulation().getRetailCatalog();
+		}
 
-        public double getPropertyAsDouble(String name, double defaultValue) {
-            return DefaultPublisher.this.getPropertyAsDouble(name, defaultValue);
-        }
-    }
+		public SlotInfo getAuctionInfo() {
+			return getSimulation().getAuctionInfo();
+		}
 
-    protected class AgentRepositoryProxy implements AgentRepository {
-        public RetailCatalog getRetailCatalog() {
-            return getSimulation().getRetailCatalog();
-        }
+		public Map<String, AdvertiserInfo> getAdvertiserInfo() {
+			return getSimulation().getAdvertiserInfo();
+		}
 
-        public SlotInfo getAuctionInfo() {
-            return getSimulation().getAuctionInfo();
-        }
+		public SimulationAgent[] getPublishers() {
+			return getSimulation().getPublishers();
+		}
 
-        public Map<String, AdvertiserInfo> getAdvertiserInfo() {
-            return getSimulation().getAdvertiserInfo();
-        }
+		public SimulationAgent[] getUsers() {
+			return getSimulation().getUsers();
+		}
 
-        public SimulationAgent[] getPublishers() {
-            return getSimulation().getPublishers();
-        }
+		public SalesAnalyst getSalesAnalyst() {
+			return getSimulation().getSalesAnalyst();
+		}
 
-        public SimulationAgent[] getUsers() {
-            return getSimulation().getUsers();
-        }
+		public int getNumberOfAdvertisers() {
+			return getSimulation().getNumberOfAdvertisers();
+		}
 
-        public SalesAnalyst getSalesAnalyst() {
-            return getSimulation().getSalesAnalyst();
-        }
+		public String[] getAdvertiserAddresses() {
+			return getSimulation().getAdvertiserAddresses();
+		}
+	}
 
-        public int getNumberOfAdvertisers() {
-            return getSimulation().getNumberOfAdvertisers();
-        }
+	protected class ClickChargerProxy implements ClickCharger {
+		public void charge(String advertiser, double cpc) {
+			DefaultPublisher.this.charge(advertiser, cpc);
+		}
+	}
 
-        public String[] getAdvertiserAddresses() {
-            return getSimulation().getAdvertiserAddresses();
-        }
-    }
+	protected class BidBundleWriterProxy implements BidBundleWriter {
+		public void writeBundle(String advertiser, BidBundle bundle) {
 
-    protected class ClickChargerProxy implements ClickCharger {
-        public void charge(String advertiser, double cpc) {
-            DefaultPublisher.this.charge(advertiser, cpc);
-        }
-    }
+			int agentIndex = DefaultPublisher.this.getSimulation().agentIndex(
+					advertiser);
 
-    protected class BidBundleWriterProxy implements BidBundleWriter {
-        public void writeBundle(String advertiser, BidBundle bundle) {
-
-            int agentIndex = DefaultPublisher.this.getSimulation().agentIndex(advertiser);
-
-            DefaultPublisher.this.getEventWriter().dataUpdated(agentIndex, TACAAConstants.DU_BIDS, bundle);
-        }
-    }
+			DefaultPublisher.this.getEventWriter().dataUpdated(agentIndex,
+					TACAAConstants.DU_BIDS, bundle);
+		}
+	}
 }

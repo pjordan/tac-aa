@@ -29,81 +29,72 @@
  */
 package se.sics.isl.transport;
 
-public abstract class TransportWriter
-{
-  
-  /**
-   * Notify the writer that this string value should be regarded as a constant
-   * that probably will be used many times. The implementation might use this
-   * for optimization.
-   * 
-   * @param constant
-   *          the value that should be regarded as a constant.
-   */
-  public void addConstant(String constant)
-  {}
-  
-  public abstract int getNodeLevel();
-  
-  public abstract TransportWriter node(String name);
-  
-  public abstract TransportWriter endNode(String name);
-  
-  public TransportWriter attr(String name, int value)
-  {
-    return attr(name, Integer.toString(value));
-  }
-  
-  public TransportWriter attr(String name, long value)
-  {
-    return attr(name, Long.toString(value));
-  }
-  
-  public TransportWriter attr(String name, float value)
-  {
-    return attr(name, Float.toString(value));
-  }
+public abstract class TransportWriter {
 
-  //Added by Lee Callender
-  public TransportWriter attr(String name, double value)
-  {
-    return attr(name, Double.toString(value));
-  }
+	/**
+	 * Notify the writer that this string value should be regarded as a constant
+	 * that probably will be used many times. The implementation might use this
+	 * for optimization.
+	 * 
+	 * @param constant
+	 *            the value that should be regarded as a constant.
+	 */
+	public void addConstant(String constant) {
+	}
 
-  public TransportWriter attr(String name, int[] value)
-  {
-    // This stuff can not be parsed yet...
-    StringBuffer sb = new StringBuffer();
-    sb.append('[');
-    for (int j = 0, m = value.length; j < m; j++)
-    {
-      if (j > 0)
-      {
-        sb.append(',');
-      }
-      sb.append("" + value[j]);
-    }
-    sb.append(']');
-    return attr(name, sb.toString());
-  }
-  
-  public abstract TransportWriter attr(String name, String value);
-  
-  public TransportWriter write(Transportable object)
-  {
-    String nodeName = object.getTransportName();
-    node(nodeName);
-    
-    int nodeLevel = getNodeLevel();
-    object.write(this);
-    if (nodeLevel != getNodeLevel())
-    {
-      throw new IllegalStateException("wrong node level " + getNodeLevel() + " (expected "
-          + nodeLevel + ") for transportable " + object.getClass().getName());
-    }
-    
-    endNode(nodeName);
-    return this;
-  }
-  
+	public abstract int getNodeLevel();
+
+	public abstract TransportWriter node(String name);
+
+	public abstract TransportWriter endNode(String name);
+
+	public TransportWriter attr(String name, int value) {
+		return attr(name, Integer.toString(value));
+	}
+
+	public TransportWriter attr(String name, long value) {
+		return attr(name, Long.toString(value));
+	}
+
+	public TransportWriter attr(String name, float value) {
+		return attr(name, Float.toString(value));
+	}
+
+	// Added by Lee Callender
+	public TransportWriter attr(String name, double value) {
+		return attr(name, Double.toString(value));
+	}
+
+	public TransportWriter attr(String name, int[] value) {
+		// This stuff can not be parsed yet...
+		StringBuffer sb = new StringBuffer();
+		sb.append('[');
+		for (int j = 0, m = value.length; j < m; j++) {
+			if (j > 0) {
+				sb.append(',');
+			}
+			sb.append("" + value[j]);
+		}
+		sb.append(']');
+		return attr(name, sb.toString());
+	}
+
+	public abstract TransportWriter attr(String name, String value);
+
+	public TransportWriter write(Transportable object) {
+		String nodeName = object.getTransportName();
+		node(nodeName);
+
+		int nodeLevel = getNodeLevel();
+		object.write(this);
+		if (nodeLevel != getNodeLevel()) {
+			throw new IllegalStateException("wrong node level "
+					+ getNodeLevel() + " (expected " + nodeLevel
+					+ ") for transportable " + object.getClass().getName());
+		}
+
+		endNode(nodeName);
+		return this;
+	}
+
 } // TransportWriter

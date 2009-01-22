@@ -17,111 +17,115 @@ import edu.umich.eecs.tac.props.AdLink;
  */
 @RunWith(JMock.class)
 public class UserEventSupportTest {
-    private Mockery context;
+	private Mockery context;
 
-    private UserEventListener listener;
-    private Query query;
-    private String advertiser;
-    private AdLink ad;
-    private double cpc;
-    private int slot;
-    private double salesProfit;
+	private UserEventListener listener;
+	private Query query;
+	private String advertiser;
+	private AdLink ad;
+	private double cpc;
+	private int slot;
+	private double salesProfit;
 
-    
-    @Before
-    public void setup() {
-        context = new JUnit4Mockery();
-        listener = context.mock(UserEventListener.class);
-        query = new Query();
-        advertiser = "alice";
-        ad = new AdLink(new Ad(), advertiser);
-        cpc = 1.0;
-        slot = 2;
-        salesProfit = 3.0;
-    }
+	@Before
+	public void setup() {
+		context = new JUnit4Mockery();
+		listener = context.mock(UserEventListener.class);
+		query = new Query();
+		advertiser = "alice";
+		ad = new AdLink(new Ad(), advertiser);
+		cpc = 1.0;
+		slot = 2;
+		salesProfit = 3.0;
+	}
 
-    @Test
-    public void testConstructor() {
-        assertNotNull(new UserEventSupport());
-    }
+	@Test
+	public void testConstructor() {
+		assertNotNull(new UserEventSupport());
+	}
 
-    @Test
-    public void testAddListener() {
-        UserEventSupport support = new UserEventSupport();
+	@Test
+	public void testAddListener() {
+		UserEventSupport support = new UserEventSupport();
 
-        assertFalse(support.containsUserEventListener(listener));
-        support.addUserEventListener(listener);
-        assertTrue(support.containsUserEventListener(listener));
-    }
+		assertFalse(support.containsUserEventListener(listener));
+		support.addUserEventListener(listener);
+		assertTrue(support.containsUserEventListener(listener));
+	}
 
-    @Test
-    public void testRemoveListener() {
-        UserEventSupport support = new UserEventSupport();
+	@Test
+	public void testRemoveListener() {
+		UserEventSupport support = new UserEventSupport();
 
-        support.addUserEventListener(listener);
-        
-        assertTrue(support.containsUserEventListener(listener));
+		support.addUserEventListener(listener);
 
-        support.removeUserEventListener(listener);
+		assertTrue(support.containsUserEventListener(listener));
 
-        assertFalse(support.containsUserEventListener(listener));
-    }
+		support.removeUserEventListener(listener);
 
+		assertFalse(support.containsUserEventListener(listener));
+	}
 
-    @Test
-    public void testFireQueryIssued() {
-        UserEventSupport support = new UserEventSupport();
+	@Test
+	public void testFireQueryIssued() {
+		UserEventSupport support = new UserEventSupport();
 
-        support.addUserEventListener(listener);
-        
-        context.checking(new Expectations() {{
-            oneOf(listener).queryIssued(null);
-        }});
+		support.addUserEventListener(listener);
 
-        support.fireQueryIssued(null);
-    }
+		context.checking(new Expectations() {
+			{
+				oneOf(listener).queryIssued(null);
+			}
+		});
 
+		support.fireQueryIssued(null);
+	}
 
-    @Test
-    public void testFireAdViewed() {
+	@Test
+	public void testFireAdViewed() {
 
-        UserEventSupport support = new UserEventSupport();
+		UserEventSupport support = new UserEventSupport();
 
-        support.addUserEventListener(listener);
+		support.addUserEventListener(listener);
 
-        context.checking(new Expectations() {{
-            oneOf(listener).viewed(query,ad,slot,advertiser, false);
-        }});
+		context.checking(new Expectations() {
+			{
+				oneOf(listener).viewed(query, ad, slot, advertiser, false);
+			}
+		});
 
-        support.fireAdViewed(query, ad, slot, false);
-    }
+		support.fireAdViewed(query, ad, slot, false);
+	}
 
+	@Test
+	public void testFfireAdClicked() {
 
-    @Test
-    public void testFfireAdClicked() {
+		UserEventSupport support = new UserEventSupport();
 
-        UserEventSupport support = new UserEventSupport();
+		support.addUserEventListener(listener);
 
-        support.addUserEventListener(listener);
+		context.checking(new Expectations() {
+			{
+				oneOf(listener).clicked(query, ad, slot, cpc, advertiser);
+			}
+		});
 
-        context.checking(new Expectations() {{
-            oneOf(listener).clicked(query,ad,slot,cpc,advertiser);
-        }});
+		support.fireAdClicked(query, ad, slot, cpc);
+	}
 
-        support.fireAdClicked(query, ad, slot, cpc);
-    }
+	@Test
+	public void testFireAdConverted() {
+		UserEventSupport support = new UserEventSupport();
 
-    @Test
-    public void testFireAdConverted() {
-        UserEventSupport support = new UserEventSupport();
+		support.addUserEventListener(listener);
 
+		context.checking(new Expectations() {
+			{
+				oneOf(listener).converted(query, ad, slot, salesProfit,
+						advertiser);
+			}
+		});
 
-        support.addUserEventListener(listener);
-
-        context.checking(new Expectations() {{
-            oneOf(listener).converted(query,ad,slot,salesProfit,advertiser);
-        }});
-
-        support.fireAdConverted(query, ad, slot, salesProfit);
-    }
+		support.fireAdConverted(query, ad, slot, salesProfit);
+	}
 }

@@ -15,235 +15,230 @@ import java.text.ParseException;
  */
 public class SalesReportTest {
 
-    @Test
-    public void testEmptySalesReportEntry() {
-        SalesReport.SalesReportEntry entry = new SalesReport.SalesReportEntry();
-        assertNotNull(entry);
-    }
+	@Test
+	public void testEmptySalesReportEntry() {
+		SalesReport.SalesReportEntry entry = new SalesReport.SalesReportEntry();
+		assertNotNull(entry);
+	}
 
-    @Test
-    public void testEmptySalesReport() {
-        SalesReport report = new SalesReport();
-        assertNotNull(report);
-        assertFalse(report.containsQuery(new Query()));
-    }
+	@Test
+	public void testEmptySalesReport() {
+		SalesReport report = new SalesReport();
+		assertNotNull(report);
+		assertFalse(report.containsQuery(new Query()));
+	}
 
-    @Test
-    public void testBasicSalesReportEntry() {
-        SalesReport.SalesReportEntry entry = new SalesReport.SalesReportEntry();
-        assertNotNull(entry);
+	@Test
+	public void testBasicSalesReportEntry() {
+		SalesReport.SalesReportEntry entry = new SalesReport.SalesReportEntry();
+		assertNotNull(entry);
 
-        assertNull(entry.getQuery());
-        entry.setQuery(new Query());
-        assertNotNull(entry.getQuery());
+		assertNull(entry.getQuery());
+		entry.setQuery(new Query());
+		assertNotNull(entry.getQuery());
 
-        assertEquals(entry.getConversions(), 0);
-        entry.setConversions(1);
-        assertEquals(entry.getConversions(), 1);
+		assertEquals(entry.getConversions(), 0);
+		entry.setConversions(1);
+		assertEquals(entry.getConversions(), 1);
 
-        assertEquals(entry.getRevenue(), 0.0);
-        entry.setRevenue(1.5);
-        assertEquals(entry.getRevenue(), 1.5);
+		assertEquals(entry.getRevenue(), 0.0);
+		entry.setRevenue(1.5);
+		assertEquals(entry.getRevenue(), 1.5);
 
+		assertEquals(entry.getTransportName(), "SalesReportEntry");
+		assertEquals(entry.toString(),
+				"((Query (null,null)) conv: 1 rev: 1.500000)");
 
-        assertEquals(entry.getTransportName(), "SalesReportEntry");
-        assertEquals(entry.toString(), "((Query (null,null)) conv: 1 rev: 1.500000)");
+	}
 
-    }
+	@Test
+	public void testValidTransportOfSalesReportEntry() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-    @Test
-    public void testValidTransportOfSalesReportEntry() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+		SalesReport.SalesReportEntry entry = new SalesReport.SalesReportEntry();
+		entry.setQuery(new Query());
+		entry.setConversions(1);
+		entry.setRevenue(1.5);
 
+		byte[] buffer = getBytesForTransportable(writer, entry);
+		SalesReport.SalesReportEntry received = readFromBytes(reader, buffer,
+				"SalesReportEntry");
 
-        SalesReport.SalesReportEntry entry = new SalesReport.SalesReportEntry();
-        entry.setQuery(new Query());
-        entry.setConversions(1);
-        entry.setRevenue(1.5);
+		assertNotNull(entry);
+		assertNotNull(received);
 
-        byte[] buffer = getBytesForTransportable(writer, entry);
-        SalesReport.SalesReportEntry received = readFromBytes(reader, buffer, "SalesReportEntry");
+		assertEquals(received.getQuery(), new Query());
+		assertEquals(received.getConversions(), 1);
+		assertEquals(received.getRevenue(), 1.5);
+		assertEquals(entry.getTransportName(), "SalesReportEntry");
 
+	}
 
-        assertNotNull(entry);
-        assertNotNull(received);
+	@Test
+	public void testValidTransportOfNullQuerySalesReportEntry()
+			throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-        assertEquals(received.getQuery(), new Query());
-        assertEquals(received.getConversions(), 1);
-        assertEquals(received.getRevenue(), 1.5);
-        assertEquals(entry.getTransportName(), "SalesReportEntry");
+		SalesReport.SalesReportEntry entry = new SalesReport.SalesReportEntry();
+		entry.setConversions(1);
+		entry.setRevenue(1.5);
 
+		byte[] buffer = getBytesForTransportable(writer, entry);
+		SalesReport.SalesReportEntry received = readFromBytes(reader, buffer,
+				"SalesReportEntry");
 
-    }
+		assertNotNull(entry);
+		assertNotNull(received);
 
-    @Test
-    public void testValidTransportOfNullQuerySalesReportEntry() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+		assertNull(received.getQuery());
+		assertEquals(received.getConversions(), 1);
+		assertEquals(received.getRevenue(), 1.5);
 
+		assertEquals(received.getTransportName(), "SalesReportEntry");
+		assertEquals(received.toString(), "(null conv: 1 rev: 1.500000)");
+	}
 
-        SalesReport.SalesReportEntry entry = new SalesReport.SalesReportEntry();
-        entry.setConversions(1);
-        entry.setRevenue(1.5);
+	@Test
+	public void testValidTransportOfSalesReport() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-        byte[] buffer = getBytesForTransportable(writer, entry);
-        SalesReport.SalesReportEntry received = readFromBytes(reader, buffer, "SalesReportEntry");
+		SalesReport report = new SalesReport();
+		report.setConversions(new Query(), 2);
+		report.lock();
 
+		byte[] buffer = getBytesForTransportable(writer, report);
+		SalesReport received = readFromBytes(reader, buffer, "SalesReport");
 
-        assertNotNull(entry);
-        assertNotNull(received);
+		assertNotNull(report);
+		assertNotNull(received);
+		assertEquals(report.size(), 1);
+		assertEquals(received.size(), 1);
+		assertEquals(received.getConversions(new Query()), 2);
 
-        assertNull(received.getQuery());
-        assertEquals(received.getConversions(), 1);
-        assertEquals(received.getRevenue(), 1.5);
+		assertEquals(report.getTransportName(), "SalesReport");
 
+		buffer = getBytesForTransportable(writer, new SalesReport());
+		received = readFromBytes(reader, buffer, "SalesReport");
+		assertFalse(received.isLocked());
 
-        assertEquals(received.getTransportName(), "SalesReportEntry");
-        assertEquals(received.toString(), "(null conv: 1 rev: 1.500000)");
-    }
+	}
 
-    @Test
-    public void testValidTransportOfSalesReport() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+	@Test(expected = NullPointerException.class)
+	public void testAddQueryToSalesReport() {
+		SalesReport report = new SalesReport();
+		assertEquals(report.size(), 0);
 
+		report.addQuery(new Query());
+		assertEquals(report.size(), 1);
+		assertTrue(report.containsQuery(new Query()));
 
-        SalesReport report = new SalesReport();
-        report.setConversions(new Query(), 2);
-        report.lock();
-        
-        byte[] buffer = getBytesForTransportable(writer, report);
-        SalesReport received = readFromBytes(reader, buffer, "SalesReport");
+		Query query = new Query();
+		query.setComponent("c1");
+		query.setManufacturer("man1");
+		report.addQuery(query, 15, 100.3);
+		assertEquals(report.size(), 2);
+		assertTrue(report.containsQuery(query));
+		assertEquals(report.getRevenue(query), 100.3);
+		assertEquals(report.getConversions(query), 15);
 
+		report.addQuery(null);
+	}
 
-        assertNotNull(report);
-        assertNotNull(received);
-        assertEquals(report.size(),1);
-        assertEquals(received.size(),1);
-        assertEquals(received.getConversions(new Query()),2);
+	@Test(expected = NullPointerException.class)
+	public void testSetConversions() {
+		SalesReport report = new SalesReport();
+		assertEquals(report.size(), 0);
 
-        assertEquals(report.getTransportName(), "SalesReport");
+		report.setConversions(new Query(), 1);
+		assertEquals(report.size(), 1);
+		assertTrue(report.containsQuery(new Query()));
+		assertEquals(report.getConversions(new Query()), 1);
 
-        buffer = getBytesForTransportable(writer, new SalesReport());
-        received = readFromBytes(reader, buffer, "SalesReport");
-        assertFalse(received.isLocked());
+		report.setConversions(new Query(), 3);
+		assertEquals(report.size(), 1);
+		assertEquals(report.getConversions(new Query()), 3);
 
-    }
+		report.setConversions(null, 2);
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testAddQueryToSalesReport() {
-        SalesReport report = new SalesReport();
-        assertEquals(report.size(), 0);
+	@Test(expected = NullPointerException.class)
+	public void testSetRevenue() {
+		SalesReport report = new SalesReport();
+		assertEquals(report.size(), 0);
 
-        report.addQuery(new Query());
-        assertEquals(report.size(), 1);
-        assertTrue(report.containsQuery(new Query()));
+		report.setRevenue(new Query(), 1.0);
+		assertEquals(report.size(), 1);
+		assertTrue(report.containsQuery(new Query()));
+		assertEquals(report.getRevenue(new Query()), 1.0);
 
-        Query query = new Query();
-        query.setComponent("c1");
-        query.setManufacturer("man1");
-        report.addQuery(query, 15, 100.3);
-        assertEquals(report.size(), 2);
-        assertTrue(report.containsQuery(query));
-        assertEquals(report.getRevenue(query), 100.3);
-        assertEquals(report.getConversions(query), 15);
+		report.setRevenue(new Query(), 3.0);
+		assertEquals(report.size(), 1);
+		assertEquals(report.getRevenue(new Query()), 3.0);
 
-        report.addQuery(null);
-    }
+		report.setRevenue(null, 2);
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testSetConversions() {
-        SalesReport report = new SalesReport();
-        assertEquals(report.size(), 0);
+	@Test(expected = NullPointerException.class)
+	public void testSetConversionsAndRevenue() {
+		SalesReport report = new SalesReport();
+		assertEquals(report.size(), 0);
 
-        report.setConversions(new Query(), 1);
-        assertEquals(report.size(), 1);
-        assertTrue(report.containsQuery(new Query()));
-        assertEquals(report.getConversions(new Query()), 1);
+		report.setConversionsAndRevenue(new Query(), 1, 2.0);
+		assertEquals(report.size(), 1);
+		assertTrue(report.containsQuery(new Query()));
+		assertEquals(report.getConversions(new Query()), 1);
+		assertEquals(report.getRevenue(new Query()), 2.0);
 
-        report.setConversions(new Query(), 3);
-        assertEquals(report.size(), 1);
-        assertEquals(report.getConversions(new Query()), 3);
+		report.setConversionsAndRevenue(new Query(), 3, 4.0);
+		assertEquals(report.size(), 1);
+		assertEquals(report.getConversions(new Query()), 3);
+		assertEquals(report.getRevenue(new Query()), 4.0);
 
-        report.setConversions(null, 2);
-    }
+		report.setConversionsAndRevenue(null, 2, 3.0);
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testSetRevenue() {
-        SalesReport report = new SalesReport();
-        assertEquals(report.size(), 0);
+	@Test
+	public void testSalesReportGettersForEmptyQueries() {
+		SalesReport report = new SalesReport();
+		assertEquals(report.size(), 0);
 
-        report.setRevenue(new Query(), 1.0);
-        assertEquals(report.size(), 1);
-        assertTrue(report.containsQuery(new Query()));
-        assertEquals(report.getRevenue(new Query()), 1.0);
+		assertEquals(report.getConversions(null), 0);
+		assertEquals(report.getRevenue(null), 0.0);
+	}
 
+	@Test
+	public void testSalesReportToString() {
+		SalesReport report = new SalesReport();
+		report.addQuery(new Query());
+		assertEquals(report.toString(),
+				"(SalesReport ((Query (null,null)) conv: 0 rev: 0.000000))");
+	}
 
-        report.setRevenue(new Query(), 3.0);
-        assertEquals(report.size(), 1);
-        assertEquals(report.getRevenue(new Query()), 3.0);
+	@Test
+	public void testSalesReportAdders() {
+		SalesReport report = new SalesReport();
 
-        report.setRevenue(null, 2);
-    }
+		Query query = new Query();
 
-    @Test(expected = NullPointerException.class)
-    public void testSetConversionsAndRevenue() {
-        SalesReport report = new SalesReport();
-        assertEquals(report.size(), 0);
+		assertEquals(report.getConversions(query), 0);
+		assertEquals(report.getRevenue(query), 0.0);
+		report.addConversions(query, 2);
+		report.addRevenue(query, 3.0);
+		assertEquals(report.getConversions(query), 2);
+		assertEquals(report.getRevenue(query), 3.0);
+		report.addConversions(query, 2);
+		report.addRevenue(query, 3.0);
+		assertEquals(report.getConversions(query), 4);
+		assertEquals(report.getRevenue(query), 6.0);
 
-        report.setConversionsAndRevenue(new Query(), 1, 2.0);
-        assertEquals(report.size(), 1);
-        assertTrue(report.containsQuery(new Query()));
-        assertEquals(report.getConversions(new Query()), 1);
-        assertEquals(report.getRevenue(new Query()), 2.0);
-
-        report.setConversionsAndRevenue(new Query(), 3, 4.0);
-        assertEquals(report.size(), 1);
-        assertEquals(report.getConversions(new Query()), 3);
-        assertEquals(report.getRevenue(new Query()), 4.0);
-
-        report.setConversionsAndRevenue(null, 2, 3.0);
-    }
-
-    @Test
-    public void testSalesReportGettersForEmptyQueries() {
-        SalesReport report = new SalesReport();
-        assertEquals(report.size(), 0);
-
-        assertEquals(report.getConversions(null), 0);
-        assertEquals(report.getRevenue(null), 0.0);
-    }
-
-    @Test
-    public void testSalesReportToString() {
-        SalesReport report = new SalesReport();
-        report.addQuery(new Query());
-        assertEquals(report.toString(),"(SalesReport ((Query (null,null)) conv: 0 rev: 0.000000))");
-    }
-
-    @Test
-    public void testSalesReportAdders() {
-        SalesReport report = new SalesReport();
-
-        Query query = new Query();
-
-        assertEquals(report.getConversions(query), 0);
-        assertEquals(report.getRevenue(query), 0.0);
-        report.addConversions(query, 2);
-        report.addRevenue(query, 3.0);
-        assertEquals(report.getConversions(query), 2);
-        assertEquals(report.getRevenue(query), 3.0);
-        report.addConversions(query, 2);
-        report.addRevenue(query, 3.0);
-        assertEquals(report.getConversions(query), 4);
-        assertEquals(report.getRevenue(query), 6.0);
-
-        report = new SalesReport();
-        report.addRevenue(query, 3.0);
-        assertEquals(report.getRevenue(query), 3.0);
-    }
+		report = new SalesReport();
+		report.addRevenue(query, 3.0);
+		assertEquals(report.getRevenue(query), 3.0);
+	}
 }

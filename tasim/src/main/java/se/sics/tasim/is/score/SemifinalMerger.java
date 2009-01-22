@@ -44,10 +44,10 @@ package se.sics.tasim.is.score;
  */
 public class SemifinalMerger extends MinAvgZeroScoreMerger {
 
-  public SemifinalMerger() {
-    setAgentsToAdvance(3);
-    setAdvanceColor("#f0f0a0");
-    setShowingAllAgents(true);
-  }
+	public SemifinalMerger() {
+		setAgentsToAdvance(3);
+		setAdvanceColor("#f0f0a0");
+		setShowingAllAgents(true);
+	}
 
 } // SemifinalGenerator

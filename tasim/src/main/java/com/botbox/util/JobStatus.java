@@ -19,15 +19,15 @@ package com.botbox.util;
  * @author Joakim Eriksson (joakim.eriksson@botbox.com)
  * @author Niclas Finne (niclas.finne@botbox.com)
  * @author Sverker Janson (sverker.janson@botbox.com)
- * @version $Revision: 3765 $, $Date: 2008-02-24 11:03:02 -0600 (Sun, 24 Feb 2008) $
+ * @version $Revision: 3765 $, $Date: 2008-02-24 11:03:02 -0600 (Sun, 24 Feb
+ *          2008) $
  */
-public interface JobStatus
-{
-  
-  public String getDescription();
-  
-  public void setDescription(String description);
-  
-  public void stillAlive();
-  
+public interface JobStatus {
+
+	public String getDescription();
+
+	public void setDescription(String description);
+
+	public void stillAlive();
+
 } // JobStatus

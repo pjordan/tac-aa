@@ -10,21 +10,21 @@ import edu.umich.eecs.tac.props.PublisherInfo;
  */
 public interface PublisherBehavior {
 
-    void nextTimeUnit(int date);
+	void nextTimeUnit(int date);
 
-    void setup();
+	void setup();
 
-    void stopped();
+	void stopped();
 
-    void shutdown();
+	void shutdown();
 
-    void messageReceived(Message message);
+	void messageReceived(Message message);
 
-    void sendQueryReportsToAll();
+	void sendQueryReportsToAll();
 
-    public Auction runAuction(Query query);
+	public Auction runAuction(Query query);
 
-    PublisherInfo getPublisherInfo();
+	PublisherInfo getPublisherInfo();
 
-    void setPublisherInfo(PublisherInfo publisherInfo);
+	void setPublisherInfo(PublisherInfo publisherInfo);
 }

@@ -39,6 +39,7 @@
  *           $Revision: 1.6 $
  */
 package se.sics.tasim.is.score;
+
 import java.util.Comparator;
 import java.util.logging.Logger;
 
@@ -49,26 +50,26 @@ import se.sics.tasim.is.common.ScoreMerger;
  */
 public class MinAvgZeroScoreMerger extends ScoreMerger {
 
-  private static final Logger log =
-    Logger.getLogger(MinAvgZeroScoreMerger.class.getName());
+	private static final Logger log = Logger
+			.getLogger(MinAvgZeroScoreMerger.class.getName());
 
-  public MinAvgZeroScoreMerger() {
-    setShowingAllAgents(true);
-    setShowingZeroGameAgents(true);
-    setShowingAverageScoreWithoutZeroGames(true);
-    setShowingWeightedAverageScoreWithoutZeroGames(true);
-  }
+	public MinAvgZeroScoreMerger() {
+		setShowingAllAgents(true);
+		setShowingZeroGameAgents(true);
+		setShowingAverageScoreWithoutZeroGames(true);
+		setShowingWeightedAverageScoreWithoutZeroGames(true);
+	}
 
-  protected Comparator getComparator(boolean isWeightUsed) {
-    return isWeightUsed
-      ? CompetitionParticipant.getMinAvgZeroWeightedComparator()
-      : CompetitionParticipant.getMinAvgZeroComparator();
-  }
+	protected Comparator getComparator(boolean isWeightUsed) {
+		return isWeightUsed ? CompetitionParticipant
+				.getMinAvgZeroWeightedComparator() : CompetitionParticipant
+				.getMinAvgZeroComparator();
+	}
 
-  protected void addPostInfo(StringBuffer page) {
-    page.append("<em>Agents are ranked by the lowest of average score and "
-		+ "average score without zero games.</em><br>");
-    super.addPostInfo(page);
-  }
+	protected void addPostInfo(StringBuffer page) {
+		page.append("<em>Agents are ranked by the lowest of average score and "
+				+ "average score without zero games.</em><br>");
+		super.addPostInfo(page);
+	}
 
 } // MinAvgZeroScoreMerger

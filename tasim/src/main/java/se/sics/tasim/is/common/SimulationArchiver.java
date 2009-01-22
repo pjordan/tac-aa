@@ -34,74 +34,59 @@ package se.sics.tasim.is.common;
 import java.util.logging.Logger;
 import com.botbox.util.ArrayQueue;
 
-public class SimulationArchiver implements Runnable
-{
-  
-  private static final Logger log = Logger.getLogger(SimulationArchiver.class
-      .getName());
-  
-  private ArrayQueue simulationQueue = new ArrayQueue();
-  private boolean isRunning = false;
-  
-  public SimulationArchiver()
-  {}
-  
-  public synchronized void addSimulation(SimServer simServer, int simulationID)
-  {
-    simulationQueue.add(simServer);
-    simulationQueue.add(new Integer(simulationID));
-    if (!isRunning)
-    {
-      isRunning = true;
-      new Thread(this, "gameArchiver").start();
-    }
-    else
-    {
-      notify();
-    }
-  }
-  
-  public void run()
-  {
-    try
-    {
-      do
-      {
-        SimServer simServer;
-        int simulationID;
-        synchronized (this)
-        {
-          while (simulationQueue.size() == 0)
-          {
-            try
-            {
-              wait();
-            }
-            catch (InterruptedException e)
-            {}
-          }
-          simServer = (SimServer) simulationQueue.remove(0);
-          if (simServer == null)
-          {
-            // Time to stop this thread
-            break;
-          }
-          simulationID = ((Integer) simulationQueue.remove(0)).intValue();
-        }
-        
-        generateResults(simServer, simulationID);
-      } while (true);
-      
-    }
-    finally
-    {
-      isRunning = false;
-    }
-  }
-  
-  private void generateResults(SimServer simServer, int simulationID)
-  {
-    simServer.generateResults(simulationID, true);
-  }
-  
+public class SimulationArchiver implements Runnable {
+
+	private static final Logger log = Logger.getLogger(SimulationArchiver.class
+			.getName());
+
+	private ArrayQueue simulationQueue = new ArrayQueue();
+	private boolean isRunning = false;
+
+	public SimulationArchiver() {
+	}
+
+	public synchronized void addSimulation(SimServer simServer, int simulationID) {
+		simulationQueue.add(simServer);
+		simulationQueue.add(new Integer(simulationID));
+		if (!isRunning) {
+			isRunning = true;
+			new Thread(this, "gameArchiver").start();
+		} else {
+			notify();
+		}
+	}
+
+	public void run() {
+		try {
+			do {
+				SimServer simServer;
+				int simulationID;
+				synchronized (this) {
+					while (simulationQueue.size() == 0) {
+						try {
+							wait();
+						} catch (InterruptedException e) {
+						}
+					}
+					simServer = (SimServer) simulationQueue.remove(0);
+					if (simServer == null) {
+						// Time to stop this thread
+						break;
+					}
+					simulationID = ((Integer) simulationQueue.remove(0))
+							.intValue();
+				}
+
+				generateResults(simServer, simulationID);
+			} while (true);
+
+		} finally {
+			isRunning = false;
+		}
+	}
+
+	private void generateResults(SimServer simServer, int simulationID) {
+		simServer.generateResults(simulationID, true);
+	}
+
 } // SimulationArchiver

@@ -6,9 +6,9 @@ import edu.umich.eecs.tac.props.PublisherInfo;
  * @author Patrick Jordan
  */
 public interface PublisherInfoSender {
-    void sendPublisherInfoToAll();
+	void sendPublisherInfoToAll();
 
-    PublisherInfo getPublisherInfo();
+	PublisherInfo getPublisherInfo();
 
-    void sendPublisherInfo(String advertiser);
+	void sendPublisherInfo(String advertiser);
 }

@@ -39,6 +39,7 @@
  *           $Revision: 1.3 $
  */
 package se.sics.tasim.is.score;
+
 import java.util.Comparator;
 
 import se.sics.tasim.is.common.CompetitionParticipant;
@@ -48,21 +49,22 @@ import se.sics.tasim.is.common.DefaultScoreGenerator;
  */
 public class MinAvgZeroScoreGenerator extends DefaultScoreGenerator {
 
-  public MinAvgZeroScoreGenerator() {
-    setShowingZeroGameAgents(true);
-    setShowingAverageScoreWithoutZeroGames(true);
-    setShowingWeightedAverageScoreWithoutZeroGames(true);
-  }
+	public MinAvgZeroScoreGenerator() {
+		setShowingZeroGameAgents(true);
+		setShowingAverageScoreWithoutZeroGames(true);
+		setShowingWeightedAverageScoreWithoutZeroGames(true);
+	}
 
-  protected Comparator getComparator(boolean isWeightUsed) {
-    return isWeightUsed
-      ? CompetitionParticipant.getMinAvgZeroWeightedComparator()
-      : CompetitionParticipant.getMinAvgZeroComparator();
-  }
+	protected Comparator getComparator(boolean isWeightUsed) {
+		return isWeightUsed ? CompetitionParticipant
+				.getMinAvgZeroWeightedComparator() : CompetitionParticipant
+				.getMinAvgZeroComparator();
+	}
 
-  protected void addPostInfo(StringBuffer page) {
-    page.append("<br><em>Agents are ranked by the lowest of average score and "
-		+ "average score without zero games.</em>");
-  }
+	protected void addPostInfo(StringBuffer page) {
+		page
+				.append("<br><em>Agents are ranked by the lowest of average score and "
+						+ "average score without zero games.</em>");
+	}
 
 } // MinAvgZeroScoreGenerator

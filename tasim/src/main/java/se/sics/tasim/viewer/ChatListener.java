@@ -30,6 +30,6 @@ package se.sics.tasim.viewer;
 
 public interface ChatListener {
 
-  public void sendChatMessage(String message);
+	public void sendChatMessage(String message);
 
 } // ChatListener

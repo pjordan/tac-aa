@@ -25,6 +25,7 @@
  *           $Revision: 4728 $
  */
 package se.sics.tasim.viewer.applet;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JApplet;
@@ -36,141 +37,141 @@ import se.sics.isl.transport.ContextFactory;
 //MODIFIED BY-Lee Callender
 public class ViewerApplet extends JApplet implements ChatListener {
 
-  private static final Logger log =
-    Logger.getLogger(ViewerApplet.class.getName());
+	private static final Logger log = Logger.getLogger(ViewerApplet.class
+			.getName());
 
-  public static final String VERSION = "0.8.19";
+	public static final String VERSION = "0.8.19";
 
-  private String serverName;
-  private int serverPort = 4042;
-  private String userName;
-  private ContextFactory contextFactory;
-  private ViewerPanel mainPanel;
+	private String serverName;
+	private int serverPort = 4042;
+	private String userName;
+	private ContextFactory contextFactory;
+	private ViewerPanel mainPanel;
 
-  private AppletConnection connection;
+	private AppletConnection connection;
 
-  public ViewerApplet() {
-  }
+	public ViewerApplet() {
+	}
 
-  /**
-   * Applet info.
-   */
-  public String getAppletInfo() {
-    return "TAC SIM Game Viewer v" + VERSION + ", by SICS";
-  }
+	/**
+	 * Applet info.
+	 */
+	public String getAppletInfo() {
+		return "TAC SIM Game Viewer v" + VERSION + ", by SICS";
+	}
 
-  /**
-   * Applet parameter info.
-   */
-  public String[][] getParameterInfo() {
-    String[][] info = {
-      {"user",		"name",		"the user name"},
-      {"port",		"int",		"the viewer connection port"},
-      {"serverName",	"name",		"the server name"},
-      {"contextFactory",	"name",		"the context factory class"},
-    };
-    return info;
-  }
+	/**
+	 * Applet parameter info.
+	 */
+	public String[][] getParameterInfo() {
+		String[][] info = { { "user", "name", "the user name" },
+				{ "port", "int", "the viewer connection port" },
+				{ "serverName", "name", "the server name" },
+				{ "contextFactory", "name", "the context factory class" }, };
+		return info;
+	}
 
-  public void init() {
-    this.serverName = getParameter("serverName");
-    this.userName = getParameter("user");
+	public void init() {
+		this.serverName = getParameter("serverName");
+		this.userName = getParameter("user");
 
-    if (serverName == null) {
-      throw new IllegalArgumentException("no server name specified");
-    }
-    if (userName == null) {
-      throw new IllegalArgumentException("no user name specified");
-    }
+		if (serverName == null) {
+			throw new IllegalArgumentException("no server name specified");
+		}
+		if (userName == null) {
+			throw new IllegalArgumentException("no user name specified");
+		}
 
-    String portDesc = getParameter("port");
-    if (portDesc != null) {
-      try {
-	      this.serverPort = Integer.parseInt(portDesc);
-      } catch (Exception e) {
-	      log.log(Level.SEVERE, "could not parse server port '" + portDesc
-		    + '\'', e);
-      }
-    }
+		String portDesc = getParameter("port");
+		if (portDesc != null) {
+			try {
+				this.serverPort = Integer.parseInt(portDesc);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, "could not parse server port '"
+						+ portDesc + '\'', e);
+			}
+		}
 
-    //TODO-contextFactory must be passed in, should be the same as in TACTGateway
-    String contextFactoryClassName =  getParameter("contextFactory");
-    if (contextFactoryClassName == null){
-        throw new IllegalArgumentException("no contextFactory specified");
-    }
-    
+		// TODO-contextFactory must be passed in, should be the same as in
+		// TACTGateway
+		String contextFactoryClassName = getParameter("contextFactory");
+		if (contextFactoryClassName == null) {
+			throw new IllegalArgumentException("no contextFactory specified");
+		}
 
-    try {
-      contextFactory = (ContextFactory)Class.forName(contextFactoryClassName).newInstance();
-    } catch (ClassNotFoundException e) {
-      log.severe("unable to load context factory: Class not found");
-    } catch (InstantiationException e) {
-      log.severe("unable to load context factory: Class cannot be instantiated");
-    } catch (IllegalAccessException e) {
-      log.severe("unable to load context factory: Illegal access exception");
-    }
+		try {
+			contextFactory = (ContextFactory) Class.forName(
+					contextFactoryClassName).newInstance();
+		} catch (ClassNotFoundException e) {
+			log.severe("unable to load context factory: Class not found");
+		} catch (InstantiationException e) {
+			log
+					.severe("unable to load context factory: Class cannot be instantiated");
+		} catch (IllegalAccessException e) {
+			log
+					.severe("unable to load context factory: Illegal access exception");
+		}
 
-    /*if (contextFactory == null) {
-      throw new IllegalArgumentException("no context factory specified");
-    }*/
+		/*
+		 * if (contextFactory == null) { throw new
+		 * IllegalArgumentException("no context factory specified"); }
+		 */
 
-    mainPanel = new ViewerPanel(userName, serverName);
-    mainPanel.setChatListener(this);
-    getContentPane().add(mainPanel.getComponent());
-  }
+		mainPanel = new ViewerPanel(userName, serverName);
+		mainPanel.setChatListener(this);
+		getContentPane().add(mainPanel.getComponent());
+	}
 
-  public void start() {
-    connection = new AppletConnection(this, mainPanel);
-    connection.start();
-  }
+	public void start() {
+		connection = new AppletConnection(this, mainPanel);
+		connection.start();
+	}
 
-  public void stop() {
-    connection.stop();
-  }
+	public void stop() {
+		connection.stop();
+	}
 
-  public void destroy() {
-  }
+	public void destroy() {
+	}
 
+	// -------------------------------------------------------------------
+	// API towards AppletConnection & Chat area
+	// -------------------------------------------------------------------
 
+	public String getServerName() {
+		return serverName;
+	}
 
-  // -------------------------------------------------------------------
-  // API towards AppletConnection & Chat area
-  // -------------------------------------------------------------------
+	public int getServerPort() {
+		return serverPort;
+	}
 
-  public String getServerName() {
-    return serverName;
-  }
+	public String getUserName() {
+		return userName;
+	}
 
-  public int getServerPort() {
-    return serverPort;
-  }
+	public ContextFactory getContextFactory() {
+		return contextFactory;
+	}
 
-  public String getUserName() {
-    return userName;
-  }
+	// -------------------------------------------------------------------
+	// Chat handling
+	// -------------------------------------------------------------------
 
-  public ContextFactory getContextFactory() {
-    return contextFactory;
-  }
+	public void addChatMessage(long time, String serverName, String userName,
+			String message) {
+		mainPanel.addChatMessage(time, serverName, userName, message);
+	}
 
-    // -------------------------------------------------------------------
-  // Chat handling
-  // -------------------------------------------------------------------
+	public void setStatusMessage(String message) {
+		mainPanel.setStatusMessage(message);
+	}
 
-  public void addChatMessage(long time, String serverName,
-			     String userName, String message) {
-    mainPanel.addChatMessage(time, serverName, userName, message);
-  }
-
-  public void setStatusMessage(String message) {
-    mainPanel.setStatusMessage(message);
-  }
-
-  public void sendChatMessage(String message) {
-    AppletConnection connection = this.connection;
-    if (connection != null) {
-      connection.sendChatMessage(message);
-    }
-  }
+	public void sendChatMessage(String message) {
+		AppletConnection connection = this.connection;
+		if (connection != null) {
+			connection.sendChatMessage(message);
+		}
+	}
 
 } // ViewerApplet

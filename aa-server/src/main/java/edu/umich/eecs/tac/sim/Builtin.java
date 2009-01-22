@@ -39,195 +39,196 @@ import se.sics.tasim.is.EventWriter;
  */
 public abstract class Builtin extends Agent implements TimeListener {
 
-  private final String baseConfigName;
-  private ConfigManager config;
-  private String configName;
+	private final String baseConfigName;
+	private ConfigManager config;
+	private String configName;
 
-  private TACAASimulation simulation;
-  private int index;
+	private TACAASimulation simulation;
+	private int index;
 
-  protected Builtin(String baseConfigName) {
-    this.baseConfigName = baseConfigName;
-  }
+	protected Builtin(String baseConfigName) {
+		this.baseConfigName = baseConfigName;
+	}
 
-  protected TACAASimulation getSimulation() {
-    return simulation;
-  }
+	protected TACAASimulation getSimulation() {
+		return simulation;
+	}
 
-  // Only for debug and testing purposes.
-  protected void setConfig(ConfigManager config, String configName) {
-    if (this.config != null) {
-      throw new IllegalStateException("config already set");
-    }
-    this.config = config;
-    this.configName = configName;
-  }
+	// Only for debug and testing purposes.
+	protected void setConfig(ConfigManager config, String configName) {
+		if (this.config != null) {
+			throw new IllegalStateException("config already set");
+		}
+		this.config = config;
+		this.configName = configName;
+	}
 
-  protected int getIndex() {
-    return index;
-  }
+	protected int getIndex() {
+		return index;
+	}
 
-  protected final void simulationSetup() {
-  }
+	protected final void simulationSetup() {
+	}
 
-  final void simulationSetup(TACAASimulation simulation, int index) {
-    this.index = index;
-    this.simulation = simulation;
-    this.config = simulation.getConfig();
-    this.configName = getName();
-    setup();
-  }
+	final void simulationSetup(TACAASimulation simulation, int index) {
+		this.index = index;
+		this.simulation = simulation;
+		this.config = simulation.getConfig();
+		this.configName = getName();
+		setup();
+	}
 
-  protected final void simulationStopped() {
-    stopped();
-  }
+	protected final void simulationStopped() {
+		stopped();
+	}
 
-  protected final void simulationFinished() {
-    try {
-      shutdown();
-    } finally {
-      simulation = null;
-    }
-  }
+	protected final void simulationFinished() {
+		try {
+			shutdown();
+		} finally {
+			simulation = null;
+		}
+	}
 
-  // Note: for the properties to be stored in the server configuration
-  // that is saved in the simulation log all properties must be
-  // accessed during simulation setup!
-  protected String getProperty(String name) {
-    return getProperty(name, null);
-  }
+	// Note: for the properties to be stored in the server configuration
+	// that is saved in the simulation log all properties must be
+	// accessed during simulation setup!
+	protected String getProperty(String name) {
+		return getProperty(name, null);
+	}
 
-  // Note: for the properties to be stored in the server configuration
-  // that is saved in the simulation log all properties must be
-  // accessed during simulation setup!
-  protected String getProperty(String name, String defaultValue) {
-    String value =
-      config.getProperty(baseConfigName + configName + '.' + name);
-    if (value == null) {
-      value = config.getProperty(baseConfigName + name, defaultValue);
-    }
-    return value;
-  }
+	// Note: for the properties to be stored in the server configuration
+	// that is saved in the simulation log all properties must be
+	// accessed during simulation setup!
+	protected String getProperty(String name, String defaultValue) {
+		String value = config.getProperty(baseConfigName + configName + '.'
+				+ name);
+		if (value == null) {
+			value = config.getProperty(baseConfigName + name, defaultValue);
+		}
+		return value;
+	}
 
-  protected String[] getPropertyAsArray(String name) {
-    return getPropertyAsArray(name, null);
-  }
+	protected String[] getPropertyAsArray(String name) {
+		return getPropertyAsArray(name, null);
+	}
 
-  protected String[] getPropertyAsArray(String name, String defaultValue) {
-    String[] value =
-      config.getPropertyAsArray(baseConfigName + configName + '.' + name);
-    if (value == null) {
-      value = config.getPropertyAsArray(baseConfigName + name, defaultValue);
-    }
-    return value;
-  }
+	protected String[] getPropertyAsArray(String name, String defaultValue) {
+		String[] value = config.getPropertyAsArray(baseConfigName + configName
+				+ '.' + name);
+		if (value == null) {
+			value = config.getPropertyAsArray(baseConfigName + name,
+					defaultValue);
+		}
+		return value;
+	}
 
-  // Note: for the properties to be stored in the server configuration
-  // that is saved in the simulation log all properties must be
-  // accessed during simulation setup!
-  protected int getPropertyAsInt(String name, int defaultValue) {
-    String property = baseConfigName + name;
-    int value = config.getPropertyAsInt(property, defaultValue);
+	// Note: for the properties to be stored in the server configuration
+	// that is saved in the simulation log all properties must be
+	// accessed during simulation setup!
+	protected int getPropertyAsInt(String name, int defaultValue) {
+		String property = baseConfigName + name;
+		int value = config.getPropertyAsInt(property, defaultValue);
 
-    property = baseConfigName + configName + '.' + name;
-    value = config.getPropertyAsInt(property, value);
+		property = baseConfigName + configName + '.' + name;
+		value = config.getPropertyAsInt(property, value);
 
-    return value;
-  }
+		return value;
+	}
 
-  protected int[] getPropertyAsIntArray(String name) {
-    return getPropertyAsIntArray(name, null);
-  }
+	protected int[] getPropertyAsIntArray(String name) {
+		return getPropertyAsIntArray(name, null);
+	}
 
-  protected int[] getPropertyAsIntArray(String name, String defaultValue) {
-    String[] value = getPropertyAsArray(name, defaultValue);
-    if (value != null) {
-      int[] intValue = new int[value.length];
-      for (int i = 0, n = value.length; i < n; i++) {
-	intValue[i] = Integer.parseInt(value[i]);
-      }
-      return intValue;
-    }
-    return null;
-  }
+	protected int[] getPropertyAsIntArray(String name, String defaultValue) {
+		String[] value = getPropertyAsArray(name, defaultValue);
+		if (value != null) {
+			int[] intValue = new int[value.length];
+			for (int i = 0, n = value.length; i < n; i++) {
+				intValue[i] = Integer.parseInt(value[i]);
+			}
+			return intValue;
+		}
+		return null;
+	}
 
-  // Note: for the properties to be stored in the server configuration
-  // that is saved in the simulation log all properties must be
-  // accessed during simulation setup!
-  protected long getPropertyAsLong(String name, long defaultValue) {
-    String property = baseConfigName + name;
-    long value = config.getPropertyAsLong(property, defaultValue);
+	// Note: for the properties to be stored in the server configuration
+	// that is saved in the simulation log all properties must be
+	// accessed during simulation setup!
+	protected long getPropertyAsLong(String name, long defaultValue) {
+		String property = baseConfigName + name;
+		long value = config.getPropertyAsLong(property, defaultValue);
 
-    property = baseConfigName + configName + '.' + name;
-    value = config.getPropertyAsLong(property, value);
+		property = baseConfigName + configName + '.' + name;
+		value = config.getPropertyAsLong(property, value);
 
-    return value;
-  }
+		return value;
+	}
 
-  // Note: for the properties to be stored in the server configuration
-  // that is saved in the simulation log all properties must be
-  // accessed during simulation setup!
-  protected float getPropertyAsFloat(String name, float defaultValue) {
-    String property = baseConfigName + name;
-    float value = config.getPropertyAsFloat(property, defaultValue);
+	// Note: for the properties to be stored in the server configuration
+	// that is saved in the simulation log all properties must be
+	// accessed during simulation setup!
+	protected float getPropertyAsFloat(String name, float defaultValue) {
+		String property = baseConfigName + name;
+		float value = config.getPropertyAsFloat(property, defaultValue);
 
-    property = baseConfigName + configName + '.' + name;
-    value = config.getPropertyAsFloat(property, value);
+		property = baseConfigName + configName + '.' + name;
+		value = config.getPropertyAsFloat(property, value);
 
-    return value;
-  }
+		return value;
+	}
 
-  // Note: for the properties to be stored in the server configuration
-  // that is saved in the simulation log all properties must be
-  // accessed during simulation setup!
-  protected double getPropertyAsDouble(String name, double defaultValue) {
-    String property = baseConfigName + name;
-    double value = config.getPropertyAsDouble(property, defaultValue);
+	// Note: for the properties to be stored in the server configuration
+	// that is saved in the simulation log all properties must be
+	// accessed during simulation setup!
+	protected double getPropertyAsDouble(String name, double defaultValue) {
+		String property = baseConfigName + name;
+		double value = config.getPropertyAsDouble(property, defaultValue);
 
-    property = baseConfigName + configName + '.' + name;
-    value = config.getPropertyAsDouble(property, value);
+		property = baseConfigName + configName + '.' + name;
+		value = config.getPropertyAsDouble(property, value);
 
-    return value;
-  }
+		return value;
+	}
 
-  protected int getNumberOfAdvertisers() {
-    return simulation.getNumberOfAdvertisers();
-  }
+	protected int getNumberOfAdvertisers() {
+		return simulation.getNumberOfAdvertisers();
+	}
 
-  protected Random getRandom() {
-    return simulation.getRandom();
-  }
+	protected Random getRandom() {
+		return simulation.getRandom();
+	}
 
-  protected String getAgentName(String agentAddress) {
-    return simulation.getAgentName(agentAddress);
-  }
+	protected String getAgentName(String agentAddress) {
+		return simulation.getAgentName(agentAddress);
+	}
 
-  protected EventWriter getEventWriter() {
-    return simulation.getEventWriter();
-  }
+	protected EventWriter getEventWriter() {
+		return simulation.getEventWriter();
+	}
 
-  protected void sendEvent(String message) {
-    simulation.getEventWriter()
-      .dataUpdated(index, TACAASimulation.TYPE_MESSAGE, message);
-  }
+	protected void sendEvent(String message) {
+		simulation.getEventWriter().dataUpdated(index,
+				TACAASimulation.TYPE_MESSAGE, message);
+	}
 
-  protected void sendWarningEvent(String message) {
-    simulation.getEventWriter()
-      .dataUpdated(index, TACAASimulation.TYPE_WARNING, message);
-  }
+	protected void sendWarningEvent(String message) {
+		simulation.getEventWriter().dataUpdated(index,
+				TACAASimulation.TYPE_WARNING, message);
+	}
 
-  protected String[] getAdvertiserAddresses(){
-    return simulation.getAdvertiserAddresses();
-  }
+	protected String[] getAdvertiserAddresses() {
+		return simulation.getAdvertiserAddresses();
+	}
 
-  final void sendMessage(String sender, String receiver, Transportable content){
-    
-  }
+	final void sendMessage(String sender, String receiver, Transportable content) {
 
-  protected abstract void setup();
+	}
 
-  protected abstract void stopped();
+	protected abstract void setup();
 
-  protected abstract void shutdown();
+	protected abstract void stopped();
+
+	protected abstract void shutdown();
 
 } // Builtin

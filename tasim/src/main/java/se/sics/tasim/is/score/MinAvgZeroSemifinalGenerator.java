@@ -44,10 +44,10 @@ package se.sics.tasim.is.score;
  */
 public class MinAvgZeroSemifinalGenerator extends MinAvgZeroScoreGenerator {
 
-  public MinAvgZeroSemifinalGenerator() {
-    setAgentsToAdvance(3);
-    setAdvanceColor("#f0f0a0");
-    setShowingAllAgents(true);
-  }
+	public MinAvgZeroSemifinalGenerator() {
+		setAgentsToAdvance(3);
+		setAdvanceColor("#f0f0a0");
+		setShowingAllAgents(true);
+	}
 
 } // MinAvgZeroSemifinalGenerator

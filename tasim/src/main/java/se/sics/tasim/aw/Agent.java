@@ -51,191 +51,177 @@ import se.sics.isl.transport.Transportable;
  * inherited methods! The agent is initialized by a call to
  * <code>simulationSetup</code>.
  */
-public abstract class Agent
-{
-  
-  /** The address to the simulation coordinator */
-  public static final String COORDINATOR = "coordinator";
-  
-  /** The address to the server administrator */
-  public static final String ADMIN = "admin";
-  
-  private static int lastID = 0;
-  
-  private synchronized int generateNextID()
-  {
-    return lastID++;
-  }
-  
-  private AgentService service;
-  
-  protected Agent()
-  {}
-  
-  /**
-   * Initializes this agent.
-   * <p>
-   * 
-   * This method is package protected to ensure that only AgentService can call
-   * it.
-   * 
-   * @param service
-   *          the <code>AgentService</code> to use for this agent
-   */
-  final void init(AgentService service)
-  {
-    if (this.service != null)
-    {
-      throw new IllegalStateException("already initialized");
-    }
-    this.service = service;
-  }
-  
-  // -------------------------------------------------------------------
-  // Information retrieval
-  // -------------------------------------------------------------------
-  
-  /**
-   * Returns the name of this agent
-   */
-  public String getName()
-  {
-    return service.getName();
-  }
-  
-  /**
-   * Returns the address of this agent
-   */
-  public String getAddress()
-  {
-    return service.getAddress();
-  }
-  
-  /**
-   * Returns the server time. Note that this is an approximation when agent is
-   * not executing as "built-in".
-   */
-  protected long getServerTime()
-  {
-    return service.getServerTime();
-  }
-  
-  /**
-   * Returns a unique ID for use in various messages
-   */
-  protected int getNextID()
-  {
-    return generateNextID();
-  }
-  
-  // -------------------------------------------------------------------
-  // Time support
-  // -------------------------------------------------------------------
-  
-  /**
-   * Adds the specified time listener to receive notifications about time units.
-   * 
-   * @param listener
-   *          the time listener
-   */
-  protected void addTimeListener(TimeListener listener)
-  {
-    service.addTimeListener(listener);
-  }
-  
-  /**
-   * Removes the specified time listener so that it no longer receives
-   * notifications about time units.
-   * 
-   * @param listener
-   *          the time listener
-   */
-  protected void removeTimeListener(TimeListener listener)
-  {
-    service.removeTimeListener(listener);
-  }
-  
-  // -------------------------------------------------------------------
-  // Communication with server
-  // -------------------------------------------------------------------
-  
-  /**
-   * Send a message to another agent in a game/simulation
-   * 
-   * @param message
-   *          to send
-   */
-  protected void sendMessage(Message message)
-  {
-    service.sendMessage(message);
-  }
-  
-  /**
-   * Create and send a message to another agent in a game/simulation
-   * 
-   * @param receiver
-   *          of the message
-   * @param content
-   *          of the message
-   */
-  protected void sendMessage(String receiver, Transportable content)
-  {
-    service.sendMessage(new Message(receiver, content));
-  }
-  
-  /**
-   * Extract all receivers and message contents from the hash table and sends
-   * them.
-   * 
-   * @param messageTable
-   *          a <code>Hashtable</code> mapping agent addresses (receivers)
-   *          with Transportable objects (message contents)
-   */
-  protected void sendMessages(Hashtable messageTable)
-  {
-    Enumeration enumeration = messageTable.keys();
-    while (enumeration.hasMoreElements())
-    {
-      String receiver = (String) enumeration.nextElement();
-      Transportable content = (Transportable) messageTable.get(receiver);
-      sendMessage(receiver, content);
-    }
-  }
-  
-  protected void sendToRole(int role, Transportable content)
-  {
-    service.sendToRole(role, content);
-  }
-  
-  /**
-   * messageReceived is called when a message to the agent is received.
-   * 
-   * @param message
-   *          the received message
-   */
-  protected abstract void messageReceived(Message message);
-  
-  // -------------------------------------------------------------------
-  // Agent management APIs
-  // -------------------------------------------------------------------
-  
-  /**
-   * Called when a game/simulation is starting and the agent should initialize
-   */
-  protected abstract void simulationSetup();
-  
-  /**
-   * Called when a game/simulation is in the process of being stopped. The agent
-   * might still receive messages after this call has been made but can not send
-   * messages itself.
-   */
-  protected void simulationStopped()
-  {}
-  
-  /**
-   * Called when a game/simulation is finished and the agent should free its
-   * resources.
-   */
-  protected abstract void simulationFinished();
-  
+public abstract class Agent {
+
+	/** The address to the simulation coordinator */
+	public static final String COORDINATOR = "coordinator";
+
+	/** The address to the server administrator */
+	public static final String ADMIN = "admin";
+
+	private static int lastID = 0;
+
+	private synchronized int generateNextID() {
+		return lastID++;
+	}
+
+	private AgentService service;
+
+	protected Agent() {
+	}
+
+	/**
+	 * Initializes this agent.
+	 * <p>
+	 * 
+	 * This method is package protected to ensure that only AgentService can
+	 * call it.
+	 * 
+	 * @param service
+	 *            the <code>AgentService</code> to use for this agent
+	 */
+	final void init(AgentService service) {
+		if (this.service != null) {
+			throw new IllegalStateException("already initialized");
+		}
+		this.service = service;
+	}
+
+	// -------------------------------------------------------------------
+	// Information retrieval
+	// -------------------------------------------------------------------
+
+	/**
+	 * Returns the name of this agent
+	 */
+	public String getName() {
+		return service.getName();
+	}
+
+	/**
+	 * Returns the address of this agent
+	 */
+	public String getAddress() {
+		return service.getAddress();
+	}
+
+	/**
+	 * Returns the server time. Note that this is an approximation when agent is
+	 * not executing as "built-in".
+	 */
+	protected long getServerTime() {
+		return service.getServerTime();
+	}
+
+	/**
+	 * Returns a unique ID for use in various messages
+	 */
+	protected int getNextID() {
+		return generateNextID();
+	}
+
+	// -------------------------------------------------------------------
+	// Time support
+	// -------------------------------------------------------------------
+
+	/**
+	 * Adds the specified time listener to receive notifications about time
+	 * units.
+	 * 
+	 * @param listener
+	 *            the time listener
+	 */
+	protected void addTimeListener(TimeListener listener) {
+		service.addTimeListener(listener);
+	}
+
+	/**
+	 * Removes the specified time listener so that it no longer receives
+	 * notifications about time units.
+	 * 
+	 * @param listener
+	 *            the time listener
+	 */
+	protected void removeTimeListener(TimeListener listener) {
+		service.removeTimeListener(listener);
+	}
+
+	// -------------------------------------------------------------------
+	// Communication with server
+	// -------------------------------------------------------------------
+
+	/**
+	 * Send a message to another agent in a game/simulation
+	 * 
+	 * @param message
+	 *            to send
+	 */
+	protected void sendMessage(Message message) {
+		service.sendMessage(message);
+	}
+
+	/**
+	 * Create and send a message to another agent in a game/simulation
+	 * 
+	 * @param receiver
+	 *            of the message
+	 * @param content
+	 *            of the message
+	 */
+	protected void sendMessage(String receiver, Transportable content) {
+		service.sendMessage(new Message(receiver, content));
+	}
+
+	/**
+	 * Extract all receivers and message contents from the hash table and sends
+	 * them.
+	 * 
+	 * @param messageTable
+	 *            a <code>Hashtable</code> mapping agent addresses (receivers)
+	 *            with Transportable objects (message contents)
+	 */
+	protected void sendMessages(Hashtable messageTable) {
+		Enumeration enumeration = messageTable.keys();
+		while (enumeration.hasMoreElements()) {
+			String receiver = (String) enumeration.nextElement();
+			Transportable content = (Transportable) messageTable.get(receiver);
+			sendMessage(receiver, content);
+		}
+	}
+
+	protected void sendToRole(int role, Transportable content) {
+		service.sendToRole(role, content);
+	}
+
+	/**
+	 * messageReceived is called when a message to the agent is received.
+	 * 
+	 * @param message
+	 *            the received message
+	 */
+	protected abstract void messageReceived(Message message);
+
+	// -------------------------------------------------------------------
+	// Agent management APIs
+	// -------------------------------------------------------------------
+
+	/**
+	 * Called when a game/simulation is starting and the agent should initialize
+	 */
+	protected abstract void simulationSetup();
+
+	/**
+	 * Called when a game/simulation is in the process of being stopped. The
+	 * agent might still receive messages after this call has been made but can
+	 * not send messages itself.
+	 */
+	protected void simulationStopped() {
+	}
+
+	/**
+	 * Called when a game/simulation is finished and the agent should free its
+	 * resources.
+	 */
+	protected abstract void simulationFinished();
+
 } // Agent

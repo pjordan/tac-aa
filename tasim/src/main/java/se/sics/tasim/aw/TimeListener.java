@@ -30,9 +30,8 @@ package se.sics.tasim.aw;
 /**
  * Defines the interface for an object that listens on time units.
  */
-public interface TimeListener
-{
-  
-  public void nextTimeUnit(int timeUnit);
-  
+public interface TimeListener {
+
+	public void nextTimeUnit(int timeUnit);
+
 } // TimeListener

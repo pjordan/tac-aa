@@ -6,5 +6,5 @@ import se.sics.tasim.is.EventWriter;
  * @author Patrick Jordan
  */
 public interface DistributionBroadcaster {
-    void broadcastUserDistribution(int usersIndex, EventWriter eventWriter);
+	void broadcastUserDistribution(int usersIndex, EventWriter eventWriter);
 }

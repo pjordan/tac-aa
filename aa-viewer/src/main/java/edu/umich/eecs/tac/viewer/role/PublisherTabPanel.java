@@ -15,127 +15,136 @@ import java.awt.*;
  * @author Patrick Jordan
  */
 public class PublisherTabPanel extends SimulationTabPanel {
-    private RetailCatalog catalog;
-    private Map<Query, AuctionPanel> auctionPanels;
-    private AgentSupport agentSupport;
+	private RetailCatalog catalog;
+	private Map<Query, AuctionPanel> auctionPanels;
+	private AgentSupport agentSupport;
 
-    public PublisherTabPanel(TACAASimulationPanel simulationPanel) {
-        super(simulationPanel);
+	public PublisherTabPanel(TACAASimulationPanel simulationPanel) {
+		super(simulationPanel);
 
-        agentSupport = new AgentSupport();
+		agentSupport = new AgentSupport();
 
-        simulationPanel.addViewListener(new BidBundleListener());
-        simulationPanel.addViewListener(agentSupport);
-        
-        initialize();
-    }
+		simulationPanel.addViewListener(new BidBundleListener());
+		simulationPanel.addViewListener(agentSupport);
 
-    private void initialize() {
-        auctionPanels = new HashMap<Query,AuctionPanel>();
-    }
+		initialize();
+	}
 
-    private void handleRetailCatalog(RetailCatalog retailCatalog) {
-        this.catalog = retailCatalog;
+	private void initialize() {
+		auctionPanels = new HashMap<Query, AuctionPanel>();
+	}
 
-        this.removeAll();
-        auctionPanels.clear();
+	private void handleRetailCatalog(RetailCatalog retailCatalog) {
+		this.catalog = retailCatalog;
 
-        for(Product product : retailCatalog) {
-            // Create f0
-            Query f0 = new Query();
+		this.removeAll();
+		auctionPanels.clear();
 
-            // Create f1's
-            Query f1_manufacturer = new Query(product.getManufacturer(), null);
-            Query f1_component = new Query(null, product.getComponent());
+		for (Product product : retailCatalog) {
+			// Create f0
+			Query f0 = new Query();
 
-            // Create f2
-            Query f2 = new Query(product.getManufacturer(), product.getComponent());
+			// Create f1's
+			Query f1_manufacturer = new Query(product.getManufacturer(), null);
+			Query f1_component = new Query(null, product.getComponent());
 
-            if(!auctionPanels.containsKey(f0)) {
-                auctionPanels.put(f0,new AuctionPanel(f0,this));
-            }
-            if(!auctionPanels.containsKey(f1_manufacturer)) {
-                auctionPanels.put(f1_manufacturer,new AuctionPanel(f1_manufacturer,this));
-            }
-            if(!auctionPanels.containsKey(f1_component)) {
-                auctionPanels.put(f1_component,new AuctionPanel(f1_component,this));
-            }
-            if(!auctionPanels.containsKey(f2)) {
-                auctionPanels.put(f2,new AuctionPanel(f2,this));
-            }            
-        }
+			// Create f2
+			Query f2 = new Query(product.getManufacturer(), product
+					.getComponent());
 
-        int panelCount = auctionPanels.size();
-        int sideCount = (int)Math.ceil(Math.sqrt(panelCount));
+			if (!auctionPanels.containsKey(f0)) {
+				auctionPanels.put(f0, new AuctionPanel(f0, this));
+			}
+			if (!auctionPanels.containsKey(f1_manufacturer)) {
+				auctionPanels.put(f1_manufacturer, new AuctionPanel(
+						f1_manufacturer, this));
+			}
+			if (!auctionPanels.containsKey(f1_component)) {
+				auctionPanels.put(f1_component, new AuctionPanel(f1_component,
+						this));
+			}
+			if (!auctionPanels.containsKey(f2)) {
+				auctionPanels.put(f2, new AuctionPanel(f2, this));
+			}
+		}
 
-        setLayout(new GridLayout(sideCount, sideCount));
+		int panelCount = auctionPanels.size();
+		int sideCount = (int) Math.ceil(Math.sqrt(panelCount));
 
-        for(Query query : auctionPanels.keySet()) {
-            add(auctionPanels.get(query));
-        }
-    }
+		setLayout(new GridLayout(sideCount, sideCount));
 
-    
-    private class BidBundleListener implements ViewListener {
+		for (Query query : auctionPanels.keySet()) {
+			add(auctionPanels.get(query));
+		}
+	}
 
-        public void dataUpdated(int agent, int type, int value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+	private class BidBundleListener implements ViewListener {
 
-        public void dataUpdated(int agent, int type, long value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, int value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int agent, int type, float value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, long value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int agent, int type, double value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, float value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int agent, int type, String value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, double value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int agent, int type, Transportable value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, String value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int type, Transportable value) {
-            Class valueType = value.getClass();
-            if (valueType == RetailCatalog.class) {
-                handleRetailCatalog((RetailCatalog)value);
-            }
-        }
+		public void dataUpdated(int agent, int type, Transportable value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void participant(int agent, int role, String name, int participantID) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-    }
+		public void dataUpdated(int type, Transportable value) {
+			Class valueType = value.getClass();
+			if (valueType == RetailCatalog.class) {
+				handleRetailCatalog((RetailCatalog) value);
+			}
+		}
 
+		public void participant(int agent, int role, String name,
+				int participantID) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
+	}
 
-    public int getAgentCount() {
-        return agentSupport.size();
-    }
+	public int getAgentCount() {
+		return agentSupport.size();
+	}
 
-    public int getAgent(int index) {
-        return agentSupport.agent(index);
-    }
+	public int getAgent(int index) {
+		return agentSupport.agent(index);
+	}
 
-    public int getRole(int index) {
-        return agentSupport.role(index);
-    }
+	public int getRole(int index) {
+		return agentSupport.role(index);
+	}
 
-    public int getParticipant(int index) {
-        return agentSupport.participant(index);
-    }
+	public int getParticipant(int index) {
+		return agentSupport.participant(index);
+	}
 
-    public int indexOfAgent(int agent) {
-        return agentSupport.indexOfAgent(agent);
-    }
+	public int indexOfAgent(int agent) {
+		return agentSupport.indexOfAgent(agent);
+	}
 
-    public String getAgentName(int index) {
-        return agentSupport.name(index);
-    }
+	public String getAgentName(int index) {
+		return agentSupport.name(index);
+	}
 }

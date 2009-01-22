@@ -11,21 +11,21 @@ import edu.umich.eecs.tac.sim.Auctioneer;
  * @author Patrick Jordan
  */
 public interface UsersBehavior extends DistributionBroadcaster {
-    void nextTimeUnit(int date);
+	void nextTimeUnit(int date);
 
-    void setup();
+	void setup();
 
-    void stopped();
+	void stopped();
 
-    void shutdown();
+	void shutdown();
 
-    void messageReceived(Message message);
+	void messageReceived(Message message);
 
-    Ranking getRanking(Query query, Auctioneer auctioneer);
+	Ranking getRanking(Query query, Auctioneer auctioneer);
 
-    boolean addUserEventListener(UserEventListener listener);
+	boolean addUserEventListener(UserEventListener listener);
 
-    boolean containsUserEventListener(UserEventListener listener);
+	boolean containsUserEventListener(UserEventListener listener);
 
-    boolean removeUserEventListener(UserEventListener listener);
+	boolean removeUserEventListener(UserEventListener listener);
 }

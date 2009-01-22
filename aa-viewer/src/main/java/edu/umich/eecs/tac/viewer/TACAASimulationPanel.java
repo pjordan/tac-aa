@@ -20,294 +20,298 @@ import edu.umich.eecs.tac.viewer.role.UserTabPanel;
 /**
  * @author Patrick Jordan
  */
-public class TACAASimulationPanel extends JPanel implements TickListener, TACAAConstants, ViewListener {
-    private Object lock;
+public class TACAASimulationPanel extends JPanel implements TickListener,
+		TACAAConstants, ViewListener {
+	private Object lock;
 
-    private Icon[] backgroundIcons;
-    private int[] backgroundIconInfo;
-    private int iconCount;
+	private Icon[] backgroundIcons;
+	private int[] backgroundIconInfo;
+	private int iconCount;
 
-    private TACAAAgentView[] agentViews = new TACAAAgentView[10];
-    private int participants;
-    private int lastTimeUnit = 0;
+	private TACAAAgentView[] agentViews = new TACAAAgentView[10];
+	private int participants;
+	private int lastTimeUnit = 0;
 
-    private JTabbedPane tabbedPane;
+	private JTabbedPane tabbedPane;
 
-    private ViewerPanel viewerPanel;
+	private ViewerPanel viewerPanel;
 
-    private boolean isRunning;
+	private boolean isRunning;
 
-    private List<ViewListener> viewListeners;
-    private List<TickListener> tickListeners;
+	private List<ViewListener> viewListeners;
+	private List<TickListener> tickListeners;
 
-    public TACAASimulationPanel(ViewerPanel viewerPanel) {
-        super(null);
-        this.viewerPanel = viewerPanel;
-        viewListeners = new CopyOnWriteArrayList<ViewListener>();
-        tickListeners = new CopyOnWriteArrayList<TickListener>();
-        lock = new Object();
-        initialize();
-    }
+	public TACAASimulationPanel(ViewerPanel viewerPanel) {
+		super(null);
+		this.viewerPanel = viewerPanel;
+		viewListeners = new CopyOnWriteArrayList<ViewListener>();
+		tickListeners = new CopyOnWriteArrayList<TickListener>();
+		lock = new Object();
+		initialize();
+	}
 
-    protected void initialize() {
-        setLayout(new BorderLayout());
-        tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+	protected void initialize() {
+		setLayout(new BorderLayout());
+		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 
-        add(tabbedPane, BorderLayout.CENTER);
-    }
+		add(tabbedPane, BorderLayout.CENTER);
+	}
 
-    protected void createTabs() {
-        tabbedPane.addTab("Overview", new OverviewTabPanel(this));
-        tabbedPane.addTab("Advertisers", null, new AdvertiserTabPanel(this), "Click to view Advertisers");
-        tabbedPane.addTab("Publisher", null, new PublisherTabPanel(this), "Click to view Publisher");
-        tabbedPane.addTab("Users", null, new UserTabPanel(this), "Click to view Users");
-    }
+	protected void createTabs() {
+		tabbedPane.addTab("Overview", new OverviewTabPanel(this));
+		tabbedPane.addTab("Advertisers", null, new AdvertiserTabPanel(this),
+				"Click to view Advertisers");
+		tabbedPane.addTab("Publisher", null, new PublisherTabPanel(this),
+				"Click to view Publisher");
+		tabbedPane.addTab("Users", null, new UserTabPanel(this),
+				"Click to view Users");
+	}
 
-    public TACAAAgentView getAgentView(int agentID) {
-        return agentID < participants ? agentViews[agentID] : null;
-    }
+	public TACAAAgentView getAgentView(int agentID) {
+		return agentID < participants ? agentViews[agentID] : null;
+	}
 
-    public String getAgentName(int agentIndex) {
-        TACAAAgentView view = getAgentView(agentIndex);
-        return view != null ? view.getName() : Integer.toString(agentIndex);
-    }
+	public String getAgentName(int agentIndex) {
+		TACAAAgentView view = getAgentView(agentIndex);
+		return view != null ? view.getName() : Integer.toString(agentIndex);
+	}
 
-    public int getHighestAgentIndex() {
-        return participants;
-    }
+	public int getHighestAgentIndex() {
+		return participants;
+	}
 
-    public void addAgentView(TACAAAgentView view, int index, String name,
-                             int role, String roleName, int container) {
-    }
+	public void addAgentView(TACAAAgentView view, int index, String name,
+			int role, String roleName, int container) {
+	}
 
-    public void removeAgentView(TACAAAgentView view) {
-    }
+	public void removeAgentView(TACAAAgentView view) {
+	}
 
-    /**
-     * ******************************************************************
-     * setup and time handling
-     * ********************************************************************
-     */
+	/**
+	 * ****************************************************************** setup
+	 * and time handling
+	 * ********************************************************************
+	 */
 
-    public void simulationStarted(long startTime, long endTime,
-                                  int timeUnitCount) {
-        // Clear any old items before start a new simulation
-        clear();
+	public void simulationStarted(long startTime, long endTime,
+			int timeUnitCount) {
+		// Clear any old items before start a new simulation
+		clear();
 
-        createTabs();
+		createTabs();
 
-        if (!isRunning) {
-            viewerPanel.addTickListener(this);
-            isRunning = true;
-        }
-    }
+		if (!isRunning) {
+			viewerPanel.addTickListener(this);
+			isRunning = true;
+		}
+	}
 
-    public void simulationStopped() {
-        isRunning = false;
-        viewerPanel.removeTickListener(this);
+	public void simulationStopped() {
+		isRunning = false;
+		viewerPanel.removeTickListener(this);
 
-        repaint();
-    }
+		repaint();
+	}
 
-    public void clear() {
-        int participants = this.participants;
-        this.participants = 0;
-        for (int i = 0, n = participants; i < n; i++) {
-            agentViews[i] = null;
-        }
+	public void clear() {
+		int participants = this.participants;
+		this.participants = 0;
+		for (int i = 0, n = participants; i < n; i++) {
+			agentViews[i] = null;
+		}
 
+		tabbedPane.removeAll();
 
-        tabbedPane.removeAll();
+		clearViewListeners();
+		clearTickListeners();
 
-        clearViewListeners();
-        clearTickListeners();
+		// This must be done with event dispatch thread. FIX THIS!!!
+		repaint();
+	}
 
-        // This must be done with event dispatch thread. FIX THIS!!!
-        repaint();
-    }
+	public void nextTimeUnit(int timeUnit) {
 
-    public void nextTimeUnit(int timeUnit) {
+	}
 
-    }
+	/**
+	 * ******************************************************************
+	 * TickListener interface
+	 * ********************************************************************
+	 */
 
+	public void tick(long serverTime) {
+		fireTick(serverTime);
+	}
 
-    /**
-     * ******************************************************************
-     * TickListener interface
-     * ********************************************************************
-     */
+	public void simulationTick(long serverTime, int timeUnit) {
+		fireSimulationTick(serverTime, timeUnit);
+	}
 
-    public void tick(long serverTime) {
-        fireTick(serverTime);
-    }
+	/**
+	 * ****************************************************************** API
+	 * towards the agent views
+	 * ********************************************************************
+	 */
 
-    public void simulationTick(long serverTime, int timeUnit) {
-        fireSimulationTick(serverTime, timeUnit);
-    }
+	ConfigManager getConfig() {
+		return viewerPanel.getConfig();
+	}
 
+	Icon getIcon(String name) {
+		return viewerPanel.getIcon(name);
+	}
 
-    /**
-     * ******************************************************************
-     * API towards the agent views
-     * ********************************************************************
-     */
+	void showDialog(JComponent dialog) {
+		viewerPanel.showDialog(dialog);
+	}
 
-    ConfigManager getConfig() {
-        return viewerPanel.getConfig();
-    }
+	public void addViewListener(ViewListener listener) {
+		synchronized (lock) {
+			viewListeners.add(listener);
+		}
+	}
 
-    Icon getIcon(String name) {
-        return viewerPanel.getIcon(name);
-    }
+	public void removeViewListener(ViewListener listener) {
+		synchronized (lock) {
+			viewListeners.remove(listener);
+		}
+	}
 
-    void showDialog(JComponent dialog) {
-        viewerPanel.showDialog(dialog);
-    }
+	protected void clearViewListeners() {
+		synchronized (lock) {
+			viewListeners.clear();
+		}
+	}
 
-    public void addViewListener(ViewListener listener) {
-        synchronized(lock) {
-            viewListeners.add(listener);
-        }
-    }
+	public void addTickListener(TickListener listener) {
+		synchronized (lock) {
+			tickListeners.add(listener);
+		}
+	}
 
-    public void removeViewListener(ViewListener listener) {
-        synchronized ( lock ) {
-            viewListeners.remove(listener);
-        }
-    }
+	public void removeTickListener(TickListener listener) {
+		synchronized (lock) {
+			tickListeners.remove(listener);
+		}
+	}
 
-    protected void clearViewListeners() {
-        synchronized(lock) {
-            viewListeners.clear();
-        }
-    }
+	protected void clearTickListeners() {
+		synchronized (lock) {
+			tickListeners.clear();
+		}
+	}
 
-    public void addTickListener(TickListener listener) {
-        synchronized(lock) {
-            tickListeners.add(listener);
-        }
-    }
+	public void dataUpdated(int agent, int type, int value) {
+		fireDataUpdated(agent, type, value);
+	}
 
-    public void removeTickListener(TickListener listener) {
-        synchronized(lock) {
-            tickListeners.remove(listener);
-        }
-    }
+	public void dataUpdated(int agent, int type, long value) {
+		fireDataUpdated(agent, type, value);
+	}
 
-    protected void clearTickListeners() {
-        synchronized(lock) {
-            tickListeners.clear();
-        }
-    }
+	public void dataUpdated(int agent, int type, float value) {
+		fireDataUpdated(agent, type, value);
+	}
 
-    public void dataUpdated(int agent, int type, int value) {
-        fireDataUpdated(agent, type, value);
-    }
+	public void dataUpdated(int agent, int type, double value) {
+		fireDataUpdated(agent, type, value);
+	}
 
-    public void dataUpdated(int agent, int type, long value) {
-        fireDataUpdated(agent, type, value);
-    }
+	public void dataUpdated(int agent, int type, String value) {
+		fireDataUpdated(agent, type, value);
+	}
 
-    public void dataUpdated(int agent, int type, float value) {
-        fireDataUpdated(agent, type, value);
-    }
+	public void dataUpdated(int agent, int type, Transportable value) {
+		fireDataUpdated(agent, type, value);
+	}
 
-    public void dataUpdated(int agent, int type, double value) {
-        fireDataUpdated(agent, type, value);
-    }
+	public void dataUpdated(int type, Transportable value) {
+		fireDataUpdated(type, value);
+	}
 
-    public void dataUpdated(int agent, int type, String value) {
-        fireDataUpdated(agent, type, value);
-    }
+	public void participant(int agent, int role, String name, int participantID) {
+		fireParticipant(agent, role, name, participantID);
+	}
 
-    public void dataUpdated(int agent, int type, Transportable value) {
-        fireDataUpdated(agent, type, value);
-    }
+	protected void fireParticipant(int agent, int role, String name,
+			int participantID) {
+		synchronized (lock) {
+			for (ViewListener listener : viewListeners) {
+				listener.participant(agent, role, name, participantID);
+			}
+		}
+	}
 
-    public void dataUpdated(int type, Transportable value) {
-        fireDataUpdated(type, value);
-    }
+	protected void fireDataUpdated(int agent, int type, int value) {
+		synchronized (lock) {
+			for (ViewListener listener : viewListeners) {
+				listener.dataUpdated(agent, type, value);
+			}
+		}
+	}
 
-    public void participant(int agent, int role, String name, int participantID) {
-        fireParticipant(agent, role, name, participantID);
-    }
+	protected void fireDataUpdated(int agent, int type, long value) {
+		synchronized (lock) {
+			for (ViewListener listener : viewListeners) {
+				listener.dataUpdated(agent, type, value);
+			}
+		}
+	}
 
-    protected void fireParticipant(int agent, int role, String name, int participantID) {
-        synchronized (lock) {
-            for (ViewListener listener : viewListeners) {
-                listener.participant(agent, role, name, participantID);
-            }
-        }
-    }
+	protected void fireDataUpdated(int agent, int type, float value) {
+		synchronized (lock) {
+			for (ViewListener listener : viewListeners) {
+				listener.dataUpdated(agent, type, value);
+			}
+		}
+	}
 
-    protected void fireDataUpdated(int agent, int type, int value) {
-        synchronized (lock) {
-            for (ViewListener listener : viewListeners) {
-                listener.dataUpdated(agent, type, value);
-            }
-        }
-    }
+	protected void fireDataUpdated(int agent, int type, double value) {
+		for (ViewListener listener : viewListeners) {
+			listener.dataUpdated(agent, type, value);
+		}
+	}
 
-    protected void fireDataUpdated(int agent, int type, long value) {
-        synchronized (lock) {
-            for (ViewListener listener : viewListeners) {
-                listener.dataUpdated(agent, type, value);
-            }
-        }
-    }
+	protected void fireDataUpdated(int agent, int type, String value) {
+		synchronized (lock) {
+			for (ViewListener listener : viewListeners) {
+				listener.dataUpdated(agent, type, value);
+			}
+		}
+	}
 
-    protected void fireDataUpdated(int agent, int type, float value) {
-        synchronized (lock) {
-            for (ViewListener listener : viewListeners) {
-                listener.dataUpdated(agent, type, value);
-            }
-        }
-    }
+	protected void fireDataUpdated(int agent, int type, Transportable value) {
+		synchronized (lock) {
+			for (ViewListener listener : viewListeners) {
+				listener.dataUpdated(agent, type, value);
+			}
+		}
+	}
 
-    protected void fireDataUpdated(int agent, int type, double value) {
-        for (ViewListener listener : viewListeners) {
-            listener.dataUpdated(agent, type, value);
-        }
-    }
+	protected void fireDataUpdated(int type, Transportable value) {
+		synchronized (lock) {
+			for (ViewListener listener : viewListeners) {
+				listener.dataUpdated(type, value);
+			}
+		}
 
-    protected void fireDataUpdated(int agent, int type, String value) {
-        synchronized (lock) {
-            for (ViewListener listener : viewListeners) {
-                listener.dataUpdated(agent, type, value);
-            }
-        }
-    }
+	}
 
-    protected void fireDataUpdated(int agent, int type, Transportable value) {
-        synchronized (lock) {
-            for (ViewListener listener : viewListeners) {
-                listener.dataUpdated(agent, type, value);
-            }
-        }
-    }
+	protected void fireTick(long serverTime) {
+		synchronized (lock) {
+			for (TickListener listener : (List<TickListener>) new CopyOnWriteArrayList(
+					tickListeners)) {
+				listener.tick(serverTime);
+			}
+		}
+	}
 
-    protected void fireDataUpdated(int type, Transportable value) {
-        synchronized (lock) {
-            for (ViewListener listener : viewListeners) {
-                listener.dataUpdated(type, value);
-            }
-        }
-
-    }
-
-    protected void fireTick(long serverTime) {
-        synchronized (lock) {
-            for (TickListener listener : (List<TickListener>)new CopyOnWriteArrayList(tickListeners)) {
-                listener.tick(serverTime);
-            }
-        }
-    }
-
-    protected void fireSimulationTick(long serverTime, int timeUnit) {
-        synchronized (lock) {
-            for (TickListener listener : (List<TickListener>)new CopyOnWriteArrayList(tickListeners)) {
-                listener.simulationTick(serverTime, timeUnit);
-            }
-        }
-    }
+	protected void fireSimulationTick(long serverTime, int timeUnit) {
+		synchronized (lock) {
+			for (TickListener listener : (List<TickListener>) new CopyOnWriteArrayList(
+					tickListeners)) {
+				listener.simulationTick(serverTime, timeUnit);
+			}
+		}
+	}
 }

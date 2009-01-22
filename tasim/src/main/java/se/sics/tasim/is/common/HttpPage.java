@@ -33,11 +33,10 @@ import org.mortbay.http.HttpResponse;
 
 /**
  */
-public abstract class HttpPage
-{
-  
-  public abstract void handle(String pathInContext, String pathParams,
-      HttpRequest request, HttpResponse response) throws HttpException,
-      IOException;
-  
+public abstract class HttpPage {
+
+	public abstract void handle(String pathInContext, String pathParams,
+			HttpRequest request, HttpResponse response) throws HttpException,
+			IOException;
+
 } // HttpPage

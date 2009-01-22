@@ -28,58 +28,48 @@ package se.sics.isl.db;
 
 /**
  */
-public class EmptyDBResult extends DBResult
-{
-  
-  public EmptyDBResult()
-  {}
-  
-  public int getFieldCount()
-  {
-    return 0;
-  }
-  
-  public DBField getField(int index)
-  {
-    throw new IndexOutOfBoundsException("index=" + index + ",size=" + 0);
-  }
-  
-  public int getInt(String name)
-  {
-    throw new IllegalStateException("no more results");
-  }
-  
-  public long getLong(String name)
-  {
-    throw new IllegalStateException("no more results");
-  }
-  
-  public double getDouble(String name)
-  {
-    throw new IllegalStateException("no more results");
-  }
-  
-  public String getString(String name)
-  {
-    throw new IllegalStateException("no more results");
-  }
-  
-  public Object getObject(String name)
-  {
-    throw new IllegalStateException("no more results");
-  }
-  
-  public long getTimestamp(String name)
-  {
-    throw new IllegalStateException("no more results");
-  }
-  
-  public boolean next()
-  {
-    return false;
-  }
-  
-  public void close()
-  {}
-  
+public class EmptyDBResult extends DBResult {
+
+	public EmptyDBResult() {
+	}
+
+	public int getFieldCount() {
+		return 0;
+	}
+
+	public DBField getField(int index) {
+		throw new IndexOutOfBoundsException("index=" + index + ",size=" + 0);
+	}
+
+	public int getInt(String name) {
+		throw new IllegalStateException("no more results");
+	}
+
+	public long getLong(String name) {
+		throw new IllegalStateException("no more results");
+	}
+
+	public double getDouble(String name) {
+		throw new IllegalStateException("no more results");
+	}
+
+	public String getString(String name) {
+		throw new IllegalStateException("no more results");
+	}
+
+	public Object getObject(String name) {
+		throw new IllegalStateException("no more results");
+	}
+
+	public long getTimestamp(String name) {
+		throw new IllegalStateException("no more results");
+	}
+
+	public boolean next() {
+		return false;
+	}
+
+	public void close() {
+	}
+
 } // EmptyDBResult

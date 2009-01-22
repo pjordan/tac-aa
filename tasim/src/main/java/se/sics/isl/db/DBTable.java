@@ -26,82 +26,74 @@
  */
 package se.sics.isl.db;
 
-public abstract class DBTable
-{
-  
-  protected final String name;
-  
-  public DBTable(String name)
-  {
-    if (name == null)
-    {
-      throw new NullPointerException();
-    }
-    this.name = name;
-  }
-  
-  public String getName()
-  {
-    return name;
-  }
-  
-  public abstract boolean hasField(String name);
-  
-  public DBField createField(String name, int type, int size, int flags)
-  {
-    return createField(name, type, size, flags, null);
-  }
-  
-  public abstract DBField createField(String name, int type, int size, int flags,
-      Object defaultValue);
-  
-  public abstract void drop();
-  
-  public abstract int getFieldCount();
-  
-  public abstract DBField getField(int index);
-  
-  public abstract int getObjectCount();
-  
-  public abstract void insert(DBObject object);
-  
-  public abstract int update(DBMatcher matcher, DBObject value);
-  
-  // protected abstract boolean update(Object key, DBObject object);
-  
-  public abstract int remove(DBMatcher matcher);
-  
-  // protected abstract boolean remove(Object key, DBObject object);
-  
-  public abstract DBResult select();
-  
-  public abstract DBResult select(DBMatcher matcher);
-  
-  public void flush()
-  {}
-  
-  // -------------------------------------------------------------------
-  // Utilities
-  // -------------------------------------------------------------------
-  
-  public static int indexOf(DBTable[] tables, int start, int end, String name)
-  {
-    for (int i = start; i < end; i++)
-    {
-    	// MLB - 20080411 - SQLite has some issues
-    	// with converting the table names to 
-    	// uppercase. If we change this line to
-    	// ignore case, then it fixes the problem,
-    	// but we now need to worry about having
-    	// multiple tables with the same name, but
-    	// different case. I don't think that would
-    	// ever happen.
-      if (name.equalsIgnoreCase(tables[i].name))
-      {
-        return i;
-      }
-    }
-    return -1;
-  }
-  
+public abstract class DBTable {
+
+	protected final String name;
+
+	public DBTable(String name) {
+		if (name == null) {
+			throw new NullPointerException();
+		}
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public abstract boolean hasField(String name);
+
+	public DBField createField(String name, int type, int size, int flags) {
+		return createField(name, type, size, flags, null);
+	}
+
+	public abstract DBField createField(String name, int type, int size,
+			int flags, Object defaultValue);
+
+	public abstract void drop();
+
+	public abstract int getFieldCount();
+
+	public abstract DBField getField(int index);
+
+	public abstract int getObjectCount();
+
+	public abstract void insert(DBObject object);
+
+	public abstract int update(DBMatcher matcher, DBObject value);
+
+	// protected abstract boolean update(Object key, DBObject object);
+
+	public abstract int remove(DBMatcher matcher);
+
+	// protected abstract boolean remove(Object key, DBObject object);
+
+	public abstract DBResult select();
+
+	public abstract DBResult select(DBMatcher matcher);
+
+	public void flush() {
+	}
+
+	// -------------------------------------------------------------------
+	// Utilities
+	// -------------------------------------------------------------------
+
+	public static int indexOf(DBTable[] tables, int start, int end, String name) {
+		for (int i = start; i < end; i++) {
+			// MLB - 20080411 - SQLite has some issues
+			// with converting the table names to
+			// uppercase. If we change this line to
+			// ignore case, then it fixes the problem,
+			// but we now need to worry about having
+			// multiple tables with the same name, but
+			// different case. I don't think that would
+			// ever happen.
+			if (name.equalsIgnoreCase(tables[i].name)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 } // DBTable

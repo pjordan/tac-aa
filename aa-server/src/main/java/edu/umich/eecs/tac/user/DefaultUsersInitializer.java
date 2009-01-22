@@ -8,31 +8,35 @@ import java.util.logging.Logger;
  */
 public class DefaultUsersInitializer implements UsersInitializer {
 
-    protected Logger log = Logger.getLogger(DefaultUsersInitializer.class.getName());
+	protected Logger log = Logger.getLogger(DefaultUsersInitializer.class
+			.getName());
 
-    private UserTransitionManager userTransitionManager;
+	private UserTransitionManager userTransitionManager;
 
-    public DefaultUsersInitializer(UserTransitionManager userTransitionManager) {
+	public DefaultUsersInitializer(UserTransitionManager userTransitionManager) {
 
-        if(userTransitionManager==null) {
-            throw new NullPointerException("user transition manager cannot be null");
-        }
+		if (userTransitionManager == null) {
+			throw new NullPointerException(
+					"user transition manager cannot be null");
+		}
 
-        this.userTransitionManager = userTransitionManager;
-    }
+		this.userTransitionManager = userTransitionManager;
+	}
 
-    public void initialize(Collection<? extends User> users, int virtualDays) {
-        
-        log.finer("Running virtual initialization for "+virtualDays+" days.");
+	public void initialize(Collection<? extends User> users, int virtualDays) {
 
-        for (int d = virtualDays; d >= 1; d--) {
+		log.finer("Running virtual initialization for " + virtualDays
+				+ " days.");
 
-            userTransitionManager.nextTimeUnit(-d);
+		for (int d = virtualDays; d >= 1; d--) {
 
-            for (User user : users) {
-                user.setState(userTransitionManager.transition(user.getState(), false));
-            }
-            
-        }
-    }
+			userTransitionManager.nextTimeUnit(-d);
+
+			for (User user : users) {
+				user.setState(userTransitionManager.transition(user.getState(),
+						false));
+			}
+
+		}
+	}
 }

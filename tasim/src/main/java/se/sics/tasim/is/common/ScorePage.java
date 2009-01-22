@@ -40,46 +40,40 @@ import org.mortbay.http.HttpResponse;
 import org.mortbay.util.ByteArrayISO8859Writer;
 import org.mortbay.util.URI;
 
-public class ScorePage extends HttpPage
-{
-  
-  private static final Logger log = Logger.getLogger(ScorePage.class.getName());
-  
-  private final SimServer simServer;
-  private final String gamePath;
-  
-  public ScorePage(SimServer simServer, String gamePath)
-  {
-    this.simServer = simServer;
-    if (gamePath != null && !gamePath.endsWith("/"))
-    {
-      gamePath += '/';
-    }
-    this.gamePath = gamePath;
-  }
-  
-  public void handle(String pathInContext, String pathParams,
-      HttpRequest request, HttpResponse response) throws HttpException,
-      IOException
-  {
-    Competition competition = simServer.getCurrentCompetition();
-    String scorePath = (competition != null) ? ("competition/"
-        + competition.getID() + "/") : "default/";
-    
-    String location;
-    if (gamePath != null)
-    {
-      location = gamePath + scorePath;
-    }
-    else
-    {
-      // This is only possible when used stand alone
-      StringBuffer buf = request.getRequestURL();
-      location = URI.addPaths(buf.toString(), "../history/" + scorePath);
-    }
-    response.setField(HttpFields.__Location, location);
-    response.setStatus(302);
-    request.setHandled(true);
-  }
-  
+public class ScorePage extends HttpPage {
+
+	private static final Logger log = Logger.getLogger(ScorePage.class
+			.getName());
+
+	private final SimServer simServer;
+	private final String gamePath;
+
+	public ScorePage(SimServer simServer, String gamePath) {
+		this.simServer = simServer;
+		if (gamePath != null && !gamePath.endsWith("/")) {
+			gamePath += '/';
+		}
+		this.gamePath = gamePath;
+	}
+
+	public void handle(String pathInContext, String pathParams,
+			HttpRequest request, HttpResponse response) throws HttpException,
+			IOException {
+		Competition competition = simServer.getCurrentCompetition();
+		String scorePath = (competition != null) ? ("competition/"
+				+ competition.getID() + "/") : "default/";
+
+		String location;
+		if (gamePath != null) {
+			location = gamePath + scorePath;
+		} else {
+			// This is only possible when used stand alone
+			StringBuffer buf = request.getRequestURL();
+			location = URI.addPaths(buf.toString(), "../history/" + scorePath);
+		}
+		response.setField(HttpFields.__Location, location);
+		response.setStatus(302);
+		request.setHandled(true);
+	}
+
 } // ScorePage

@@ -35,44 +35,38 @@ import org.mortbay.http.HttpResponse;
 
 /**
  */
-public class RedirectPage extends HttpPage
-{
-  
-  private String redirectPath;
-  private boolean appendPath;
-  
-  public RedirectPage()
-  {}
-  
-  public void setRedirectPath(String redirectPath, boolean appendPath)
-  {
-    if (redirectPath != null && !redirectPath.startsWith("/"))
-    {
-      redirectPath = '/' + redirectPath;
-    }
-    this.redirectPath = redirectPath;
-    this.appendPath = appendPath;
-  }
-  
-  public void handle(String pathInContext, String pathParams,
-      HttpRequest request, HttpResponse response) throws HttpException,
-      IOException
-  {
-    String redirectPath = this.redirectPath;
-    if (redirectPath != null)
-    {
-      StringBuffer buf = request.getRootURL();
-      buf.append(redirectPath);
-      if (appendPath)
-      {
-        buf.append(request.getPath());
-      }
-      
-      String location = buf.toString();
-      response.setField(HttpFields.__Location, location);
-      response.setStatus(302);
-      request.setHandled(true);
-    }
-  }
-  
+public class RedirectPage extends HttpPage {
+
+	private String redirectPath;
+	private boolean appendPath;
+
+	public RedirectPage() {
+	}
+
+	public void setRedirectPath(String redirectPath, boolean appendPath) {
+		if (redirectPath != null && !redirectPath.startsWith("/")) {
+			redirectPath = '/' + redirectPath;
+		}
+		this.redirectPath = redirectPath;
+		this.appendPath = appendPath;
+	}
+
+	public void handle(String pathInContext, String pathParams,
+			HttpRequest request, HttpResponse response) throws HttpException,
+			IOException {
+		String redirectPath = this.redirectPath;
+		if (redirectPath != null) {
+			StringBuffer buf = request.getRootURL();
+			buf.append(redirectPath);
+			if (appendPath) {
+				buf.append(request.getPath());
+			}
+
+			String location = buf.toString();
+			response.setField(HttpFields.__Location, location);
+			response.setStatus(302);
+			request.setHandled(true);
+		}
+	}
+
 } // RedirectPage

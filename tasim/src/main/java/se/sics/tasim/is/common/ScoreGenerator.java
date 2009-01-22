@@ -28,79 +28,68 @@ package se.sics.tasim.is.common;
 
 import java.io.File;
 
-public abstract class ScoreGenerator
-{
-  
-  private String serverName;
-  private String competitionPath;
-  
-  public final void init(String serverName, String competitionPath)
-  {
-    if (this.serverName != null)
-    {
-      throw new IllegalStateException("already initialized");
-    }
-    this.serverName = serverName;
-    this.competitionPath = competitionPath;
-  }
-  
-  protected String getServerName()
-  {
-    return serverName;
-  }
-  
-  // protected String getCompetitionPath() {
-  // return competitionPath;
-  // }
-  
-  protected String getScoreFileName()
-  {
-    return competitionPath + File.separatorChar + "index.html";
-  }
-  
-  /**
-   * Returns all participants in the specified competition with respect to any
-   * parent competition.
-   */
-  protected CompetitionParticipant[] getCombinedParticipants(
-      Competition competition)
-  {
-    
-    CompetitionParticipant[] parts = competition.getParticipants();
-    if (!competition.hasParentCompetition() || parts == null)
-    {
-      return parts;
-    }
-    
-    CompetitionParticipant[] participants = new CompetitionParticipant[parts.length];
-    // This "lowest" competition should shield all other parent
-    // competitions with regard to the agents
-    for (int i = 0, n = parts.length; i < n; i++)
-    {
-      // Create cache object so we can change it freely
-      participants[i] = new CompetitionParticipant(parts[i]);
-    }
-    
-    Competition parentCompetition = competition.getParentCompetition();
-    while (parentCompetition != null)
-    {
-      for (int i = 0, n = participants.length; i < n; i++)
-      {
-        CompetitionParticipant cpart = parentCompetition
-            .getParticipantByID(participants[i].getID());
-        if (cpart != null)
-        {
-          participants[i].addScore(cpart);
-        }
-      }
-      // Continue and add scores from all parent competitions
-      parentCompetition = parentCompetition.getParentCompetition();
-    }
-    
-    return participants;
-  }
-  
-  public abstract boolean createScoreTable(Competition competition,
-      int simulationID);
-  
+public abstract class ScoreGenerator {
+
+	private String serverName;
+	private String competitionPath;
+
+	public final void init(String serverName, String competitionPath) {
+		if (this.serverName != null) {
+			throw new IllegalStateException("already initialized");
+		}
+		this.serverName = serverName;
+		this.competitionPath = competitionPath;
+	}
+
+	protected String getServerName() {
+		return serverName;
+	}
+
+	// protected String getCompetitionPath() {
+	// return competitionPath;
+	// }
+
+	protected String getScoreFileName() {
+		return competitionPath + File.separatorChar + "index.html";
+	}
+
+	/**
+	 * Returns all participants in the specified competition with respect to any
+	 * parent competition.
+	 */
+	protected CompetitionParticipant[] getCombinedParticipants(
+			Competition competition) {
+
+		CompetitionParticipant[] parts = competition.getParticipants();
+		if (!competition.hasParentCompetition() || parts == null) {
+			return parts;
+		}
+
+		CompetitionParticipant[] participants = new CompetitionParticipant[parts.length];
+		// This "lowest" competition should shield all other parent
+		// competitions with regard to the agents
+		for (int i = 0, n = parts.length; i < n; i++) {
+			// Create cache object so we can change it freely
+			participants[i] = new CompetitionParticipant(parts[i]);
+		}
+
+		Competition parentCompetition = competition.getParentCompetition();
+		while (parentCompetition != null) {
+			for (int i = 0, n = participants.length; i < n; i++) {
+				CompetitionParticipant cpart = parentCompetition
+						.getParticipantByID(participants[i].getID());
+				if (cpart != null) {
+					participants[i].addScore(cpart);
+				}
+			}
+			// Continue and add scores from all parent competitions
+			parentCompetition = parentCompetition.getParentCompetition();
+		}
+
+		return participants;
+	}
+
+	public abstract boolean createScoreTable(Competition competition,
+			int simulationID);
+
 }

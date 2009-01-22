@@ -30,16 +30,15 @@ package se.sics.tasim.sim;
 
 import se.sics.isl.transport.Transportable;
 
-public interface MessageListener
-{
-  
-  public void messageReceived(SimulationAgent receivingAgent, String sender,
-      Transportable content);
-  
-  public void messageSent(SimulationAgent sendingAgent, String receiver,
-      Transportable content);
-  
-  public void messageSent(SimulationAgent sendingAgent, int role,
-      Transportable content);
-  
+public interface MessageListener {
+
+	public void messageReceived(SimulationAgent receivingAgent, String sender,
+			Transportable content);
+
+	public void messageSent(SimulationAgent sendingAgent, String receiver,
+			Transportable content);
+
+	public void messageSent(SimulationAgent sendingAgent, int role,
+			Transportable content);
+
 } // MessageListener

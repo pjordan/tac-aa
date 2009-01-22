@@ -12,27 +12,29 @@ import javax.swing.*;
  * @author Patrick Jordan
  */
 public class AdvertiserTabPanel extends SimulationTabPanel {
-    private JTabbedPane tabbedPane;
+	private JTabbedPane tabbedPane;
 
-    private AdvertiserRatioTabPanel advertiserRatioTabPanel;
-    private AdvertiserCountTabPanel advertiserCountTabPanel;
+	private AdvertiserRatioTabPanel advertiserRatioTabPanel;
+	private AdvertiserCountTabPanel advertiserCountTabPanel;
 
-    public AdvertiserTabPanel(TACAASimulationPanel simulationPanel) {
-        super(simulationPanel);
+	public AdvertiserTabPanel(TACAASimulationPanel simulationPanel) {
+		super(simulationPanel);
 
-        initialize();
-    }
+		initialize();
+	}
 
-    private void initialize() {
-        setLayout(new BorderLayout());
-        tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+	private void initialize() {
+		setLayout(new BorderLayout());
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
-        add(tabbedPane, BorderLayout.CENTER);
+		add(tabbedPane, BorderLayout.CENTER);
 
-        advertiserRatioTabPanel = new AdvertiserRatioTabPanel(getSimulationPanel());
-        tabbedPane.addTab("Ratio Metrics", advertiserRatioTabPanel);
+		advertiserRatioTabPanel = new AdvertiserRatioTabPanel(
+				getSimulationPanel());
+		tabbedPane.addTab("Ratio Metrics", advertiserRatioTabPanel);
 
-        advertiserCountTabPanel = new AdvertiserCountTabPanel(getSimulationPanel());
-        tabbedPane.addTab("Raw Metrics", advertiserCountTabPanel);
-    }
+		advertiserCountTabPanel = new AdvertiserCountTabPanel(
+				getSimulationPanel());
+		tabbedPane.addTab("Raw Metrics", advertiserCountTabPanel);
+	}
 }

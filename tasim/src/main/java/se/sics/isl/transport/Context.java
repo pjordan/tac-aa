@@ -30,50 +30,44 @@ package se.sics.isl.transport;
 
 import java.util.Hashtable;
 
-public class Context
-{
-  
-  private Context parent;
-  private String name;
-  private Hashtable registry = new Hashtable();
-  
-  public Context(String name)
-  {
-    this(name, null);
-  }
-  
-  public Context(String name, Context parent)
-  {
-    if (name == null)
-      throw new NullPointerException();
-    this.name = name;
-    this.parent = parent;
-  }
-  
-  public String getName()
-  {
-    return name;
-  }
-  
-  public Context getParent()
-  {
-    return parent;
-  }
-  
-  public String lookupClass(String transportName)
-  {
-    String className = (String) registry.get(transportName);
-    return className == null && parent != null ? parent.lookupClass(transportName) : className;
-  }
-  
-  public void addTransportable(String transportName, String className)
-  {
-    registry.put(transportName, className);
-  }
-  
-  public void addTransportable(Transportable instance)
-  {
-    registry.put(instance.getTransportName(), instance.getClass().getName());
-  }
-  
+public class Context {
+
+	private Context parent;
+	private String name;
+	private Hashtable registry = new Hashtable();
+
+	public Context(String name) {
+		this(name, null);
+	}
+
+	public Context(String name, Context parent) {
+		if (name == null)
+			throw new NullPointerException();
+		this.name = name;
+		this.parent = parent;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Context getParent() {
+		return parent;
+	}
+
+	public String lookupClass(String transportName) {
+		String className = (String) registry.get(transportName);
+		return className == null && parent != null ? parent
+				.lookupClass(transportName) : className;
+	}
+
+	public void addTransportable(String transportName, String className) {
+		registry.put(transportName, className);
+	}
+
+	public void addTransportable(Transportable instance) {
+		registry
+				.put(instance.getTransportName(), instance.getClass().getName());
+	}
+
 } // Context

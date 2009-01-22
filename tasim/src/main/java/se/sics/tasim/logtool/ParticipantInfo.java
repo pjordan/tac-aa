@@ -29,53 +29,45 @@ package se.sics.tasim.logtool;
 /**
  * Utility for parsing server logs (not used by the AgentWare).
  */
-public class ParticipantInfo
-{
-  
-  private int index;
-  private String address;
-  private int id;
-  private String name;
-  private int role;
-  
-  public ParticipantInfo(int index, String address, int id, String name,
-      int role)
-  {
-    this.index = index;
-    this.address = address;
-    this.id = id;
-    this.name = name == null ? address : name;
-    this.role = role;
-  }
-  
-  public int getIndex()
-  {
-    return index;
-  }
-  
-  public String getAddress()
-  {
-    return address;
-  }
-  
-  public String getName()
-  {
-    return name;
-  }
-  
-  public boolean isBuiltinAgent()
-  {
-    return id < 0;
-  }
-  
-  public int getUserID()
-  {
-    return id;
-  }
-  
-  public int getRole()
-  {
-    return role;
-  }
-  
+public class ParticipantInfo {
+
+	private int index;
+	private String address;
+	private int id;
+	private String name;
+	private int role;
+
+	public ParticipantInfo(int index, String address, int id, String name,
+			int role) {
+		this.index = index;
+		this.address = address;
+		this.id = id;
+		this.name = name == null ? address : name;
+		this.role = role;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public boolean isBuiltinAgent() {
+		return id < 0;
+	}
+
+	public int getUserID() {
+		return id;
+	}
+
+	public int getRole() {
+		return role;
+	}
+
 } // ParticipantInfo

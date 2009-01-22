@@ -30,84 +30,69 @@ package se.sics.isl.gui;
 
 import javax.swing.AbstractListModel;
 
-public class MessageModel extends AbstractListModel
-{
-  
-  public static final int NONE = 0;
-  public static final int WARNING = 1;
-  
-  private String[] messages;
-  private int[] messageFlag;
-  private int messagePos = 0;
-  private int size = 0;
-  
-  public MessageModel(int messageCount)
-  {
-    messages = new String[messageCount];
-    messageFlag = new int[messageCount];
-  }
-  
-  public void addMessage(String message)
-  {
-    addMessage(message, NONE);
-  }
-  
-  public void addMessage(String message, int flag)
-  {
-    if (size < messages.length)
-    {
-      int index = size++;
-      messageFlag[index] = flag;
-      messages[index] = message;
-      fireIntervalAdded(this, index, index);
-    }
-    else
-    {
-      messages[messagePos] = message;
-      messageFlag[messagePos] = flag;
-      messagePos = (messagePos + 1) % size;
-      // \TODO Should be optimized.
-      fireContentsChanged(this, 0, size);
-    }
-  }
-  
-  public void clear()
-  {
-    if (size > 0)
-    {
-      int oldSize = size;
-      fireIntervalRemoved(this, 0, size - 1);
-      size = 0;
-      for (int i = 0; i < oldSize; i++)
-      {
-        messages[i] = null;
-      }
-    }
-  }
-  
-  public Object getElementAt(int index)
-  {
-    if (index >= size)
-    {
-      throw new ArrayIndexOutOfBoundsException(index + " >= " + size);
-    }
-    index = (messagePos + index) % size;
-    return messages[index];
-  }
-  
-  public int getFlagAt(int index)
-  {
-    if (index >= size)
-    {
-      throw new ArrayIndexOutOfBoundsException(index + " >= " + size);
-    }
-    index = (messagePos + index) % size;
-    return messageFlag[index];
-  }
-  
-  public int getSize()
-  {
-    return size;
-  }
-  
+public class MessageModel extends AbstractListModel {
+
+	public static final int NONE = 0;
+	public static final int WARNING = 1;
+
+	private String[] messages;
+	private int[] messageFlag;
+	private int messagePos = 0;
+	private int size = 0;
+
+	public MessageModel(int messageCount) {
+		messages = new String[messageCount];
+		messageFlag = new int[messageCount];
+	}
+
+	public void addMessage(String message) {
+		addMessage(message, NONE);
+	}
+
+	public void addMessage(String message, int flag) {
+		if (size < messages.length) {
+			int index = size++;
+			messageFlag[index] = flag;
+			messages[index] = message;
+			fireIntervalAdded(this, index, index);
+		} else {
+			messages[messagePos] = message;
+			messageFlag[messagePos] = flag;
+			messagePos = (messagePos + 1) % size;
+			// \TODO Should be optimized.
+			fireContentsChanged(this, 0, size);
+		}
+	}
+
+	public void clear() {
+		if (size > 0) {
+			int oldSize = size;
+			fireIntervalRemoved(this, 0, size - 1);
+			size = 0;
+			for (int i = 0; i < oldSize; i++) {
+				messages[i] = null;
+			}
+		}
+	}
+
+	public Object getElementAt(int index) {
+		if (index >= size) {
+			throw new ArrayIndexOutOfBoundsException(index + " >= " + size);
+		}
+		index = (messagePos + index) % size;
+		return messages[index];
+	}
+
+	public int getFlagAt(int index) {
+		if (index >= size) {
+			throw new ArrayIndexOutOfBoundsException(index + " >= " + size);
+		}
+		index = (messagePos + index) % size;
+		return messageFlag[index];
+	}
+
+	public int getSize() {
+		return size;
+	}
+
 } // MessageModel

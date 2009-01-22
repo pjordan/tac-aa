@@ -19,50 +19,54 @@ import edu.umich.eecs.tac.props.Product;
  */
 @RunWith(JMock.class)
 public class DefaultUsersInitializerTest {
-    private Mockery context;
-    
-    private UserTransitionManager userTransitionManager;
+	private Mockery context;
 
-    private DefaultUsersInitializer initializer;
+	private UserTransitionManager userTransitionManager;
 
-    private List<User> users;
+	private DefaultUsersInitializer initializer;
 
-    @Before
-    public void setup() {
-        context = new JUnit4Mockery();
-        
-        userTransitionManager = context.mock(UserTransitionManager.class);
-        
-        initializer = new DefaultUsersInitializer(userTransitionManager);
+	private List<User> users;
 
-        users = new LinkedList<User>();
+	@Before
+	public void setup() {
+		context = new JUnit4Mockery();
 
-        for(int i = 0; i < 2; i++) {
-            users.add(new User(QueryState.NON_SEARCHING,new Product()));
-        }
-    }
+		userTransitionManager = context.mock(UserTransitionManager.class);
 
-    @Test(expected=NullPointerException.class)
-    public void testConstructor() {
-        assertNotNull(initializer);
-        new DefaultUsersInitializer(null);
-    }
+		initializer = new DefaultUsersInitializer(userTransitionManager);
 
-    @Test
-    public void testInitialized() {
-        context.checking(new Expectations() {{
-            atLeast(1).of(userTransitionManager).nextTimeUnit(-1);
-            atLeast(1).of(userTransitionManager).transition(QueryState.NON_SEARCHING, false); will(returnValue(QueryState.INFORMATIONAL_SEARCH));
-        }});
+		users = new LinkedList<User>();
 
-        for(User user : users) {
-            assertEquals(user.getState(),QueryState.NON_SEARCHING);
-        }
+		for (int i = 0; i < 2; i++) {
+			users.add(new User(QueryState.NON_SEARCHING, new Product()));
+		}
+	}
 
-        initializer.initialize(users,1);
+	@Test(expected = NullPointerException.class)
+	public void testConstructor() {
+		assertNotNull(initializer);
+		new DefaultUsersInitializer(null);
+	}
 
-        for(User user : users) {
-            assertEquals(user.getState(),QueryState.INFORMATIONAL_SEARCH);
-        }
-    }
+	@Test
+	public void testInitialized() {
+		context.checking(new Expectations() {
+			{
+				atLeast(1).of(userTransitionManager).nextTimeUnit(-1);
+				atLeast(1).of(userTransitionManager).transition(
+						QueryState.NON_SEARCHING, false);
+				will(returnValue(QueryState.INFORMATIONAL_SEARCH));
+			}
+		});
+
+		for (User user : users) {
+			assertEquals(user.getState(), QueryState.NON_SEARCHING);
+		}
+
+		initializer.initialize(users, 1);
+
+		for (User user : users) {
+			assertEquals(user.getState(), QueryState.INFORMATIONAL_SEARCH);
+		}
+	}
 }

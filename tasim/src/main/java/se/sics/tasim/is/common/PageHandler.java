@@ -38,45 +38,39 @@ import org.mortbay.util.Code;
 
 /**
  */
-public class PageHandler extends AbstractHttpHandler
-{
-  
-  private PathMap pathMap = new PathMap();
-  
-  public PageHandler()
-  {}
-  
-  public void addPage(String pathSpec, HttpPage page)
-  {
-    if (!pathSpec.startsWith("/") && !pathSpec.startsWith("*"))
-    {
-      Code.warning("pathSpec should start with '/' or '*' : " + pathSpec);
-      pathSpec = "/" + pathSpec;
-    }
-    
-    pathMap.put(pathSpec, page);
-  }
-  
-  public Map.Entry getPageEntry(String pathInContext)
-  {
-    return pathMap.getMatch(pathInContext);
-  }
-  
-  public void handle(String pathInContext, String pathParams,
-      HttpRequest request, HttpResponse response) throws HttpException,
-      IOException
-  {
-    if (!isStarted())
-    {
-      return;
-    }
-    
-    Map.Entry pageEntry = getPageEntry(pathInContext);
-    HttpPage page = pageEntry == null ? null : (HttpPage) pageEntry.getValue();
-    if (page != null)
-    {
-      page.handle(pathInContext, pathParams, request, response);
-    }
-  }
-  
+public class PageHandler extends AbstractHttpHandler {
+
+	private PathMap pathMap = new PathMap();
+
+	public PageHandler() {
+	}
+
+	public void addPage(String pathSpec, HttpPage page) {
+		if (!pathSpec.startsWith("/") && !pathSpec.startsWith("*")) {
+			Code.warning("pathSpec should start with '/' or '*' : " + pathSpec);
+			pathSpec = "/" + pathSpec;
+		}
+
+		pathMap.put(pathSpec, page);
+	}
+
+	public Map.Entry getPageEntry(String pathInContext) {
+		return pathMap.getMatch(pathInContext);
+	}
+
+	public void handle(String pathInContext, String pathParams,
+			HttpRequest request, HttpResponse response) throws HttpException,
+			IOException {
+		if (!isStarted()) {
+			return;
+		}
+
+		Map.Entry pageEntry = getPageEntry(pathInContext);
+		HttpPage page = pageEntry == null ? null : (HttpPage) pageEntry
+				.getValue();
+		if (page != null) {
+			page.handle(pathInContext, pathParams, request, response);
+		}
+	}
+
 } // PageHandler

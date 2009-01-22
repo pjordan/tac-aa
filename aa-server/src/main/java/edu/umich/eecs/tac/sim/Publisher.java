@@ -12,42 +12,43 @@ import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
 
-public abstract class Publisher extends Builtin implements QueryReportSender, Auctioneer, PublisherInfoSender {
-    private static final String CONF = "publisher.";
+public abstract class Publisher extends Builtin implements QueryReportSender,
+		Auctioneer, PublisherInfoSender {
+	private static final String CONF = "publisher.";
 
-    protected Logger log = Logger.getLogger(Publisher.class.getName());
+	protected Logger log = Logger.getLogger(Publisher.class.getName());
 
-    public Publisher() {
-        super(CONF);
-    }
+	public Publisher() {
+		super(CONF);
+	}
 
-    protected void sendToAdvertisers(Transportable content){
-      sendToRole(TACAASimulation.ADVERTISER,  content);
-    }
+	protected void sendToAdvertisers(Transportable content) {
+		sendToRole(TACAASimulation.ADVERTISER, content);
+	}
 
-    public abstract void sendQueryReportsToAll();
+	public abstract void sendQueryReportsToAll();
 
-    // DEBUG FINALIZE REMOVE THIS!!! REMOVE THIS!!!
-    protected void finalize() throws Throwable {
-        Logger.global.info("PUBLISHER " + getName() + " IS BEING GARBAGED");
-        super.finalize();
-    }
+	// DEBUG FINALIZE REMOVE THIS!!! REMOVE THIS!!!
+	protected void finalize() throws Throwable {
+		Logger.global.info("PUBLISHER " + getName() + " IS BEING GARBAGED");
+		super.finalize();
+	}
 
-    protected void charge(String advertiser, double amount) {
-        getSimulation().transaction(advertiser, getAddress(), amount);
-    }
+	protected void charge(String advertiser, double amount) {
+		getSimulation().transaction(advertiser, getAddress(), amount);
+	}
 
-    public void sendQueryReport(String advertiser, QueryReport report) {
-        sendMessage(advertiser,report);
-    }
+	public void sendQueryReport(String advertiser, QueryReport report) {
+		sendMessage(advertiser, report);
+	}
 
-    public void sendPublisherInfo(String advertiser) {
-        sendMessage(advertiser, getPublisherInfo());
-    }
+	public void sendPublisherInfo(String advertiser) {
+		sendMessage(advertiser, getPublisherInfo());
+	}
 
-    public void sendPublisherInfoToAll() {
-        for(String advertiser : getAdvertiserAddresses()) {
-            sendPublisherInfo(advertiser);
-        }
-    }
+	public void sendPublisherInfoToAll() {
+		for (String advertiser : getAdvertiserAddresses()) {
+			sendPublisherInfo(advertiser);
+		}
+	}
 }

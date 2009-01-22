@@ -9,15 +9,15 @@ import se.sics.tasim.aw.TimeListener;
  * @author Patrick Jordan
  */
 public interface UserViewManager extends TimeListener {
-    public boolean processImpression(User user, Query query, Auction auction);
+	public boolean processImpression(User user, Query query, Auction auction);
 
-    public boolean addUserEventListener(UserEventListener listener);
+	public boolean addUserEventListener(UserEventListener listener);
 
-    public boolean containsUserEventListener(UserEventListener listener);
+	public boolean containsUserEventListener(UserEventListener listener);
 
-    public boolean removeUserEventListener(UserEventListener listener);
+	public boolean removeUserEventListener(UserEventListener listener);
 
-    public UserClickModel getUserClickModel();
+	public UserClickModel getUserClickModel();
 
-    public void setUserClickModel(UserClickModel userClickModel);
+	public void setUserClickModel(UserClickModel userClickModel);
 }

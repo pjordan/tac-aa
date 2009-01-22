@@ -28,85 +28,74 @@
  */
 package se.sics.isl.db;
 
-public abstract class DBField
-{
-  
-  public final static int INTEGER = 0;
-  public final static int LONG = 1;
-  public final static int TIMESTAMP = 2;
-  public final static int DOUBLE = 3;
-  public final static int STRING = 4;
-  public final static int BYTE = 5;
-  
-  public final static int UNIQUE = 1;
-  public final static int AUTOINCREMENT = 2;
-  public final static int INDEX = 4;
-  public final static int MAY_BE_NULL = 8;
-  public final static int PRIMARY = 16;
-  
-  protected final String name;
-  protected final int type;
-  protected final int size;
-  protected final int flags;
-  protected final Object defaultValue;
-  
-  protected DBField(String name, int type, int size, int flags, Object defaultValue)
-  {
-    if (name == null)
-    {
-      throw new NullPointerException();
-    }
-    this.name = name;
-    this.type = type;
-    this.size = size;
-    this.flags = flags;
-    this.defaultValue = defaultValue;
-  }
-  
-  public String getName()
-  {
-    return name;
-  }
-  
-  public int getType()
-  {
-    return type;
-  }
-  
-  public int getSize()
-  {
-    return size;
-  }
-  
-  public int getFlags()
-  {
-    return flags;
-  }
-  
-  public Object getDefaultValue()
-  {
-    return defaultValue;
-  }
-  
-  public boolean isUnique()
-  {
-    return (flags & UNIQUE) != 0;
-  }
-  
-  // -------------------------------------------------------------------
-  // Utilities
-  // -------------------------------------------------------------------
-  
-  public static int indexOf(DBField[] fields, int start, int end, String name)
-  {
-    for (int i = start; i < end; i++)
-    {
-      if (name.equals(fields[i].name))
-      {
-        return i;
-      }
-    }
-    return -1;
-  }
-  
+public abstract class DBField {
+
+	public final static int INTEGER = 0;
+	public final static int LONG = 1;
+	public final static int TIMESTAMP = 2;
+	public final static int DOUBLE = 3;
+	public final static int STRING = 4;
+	public final static int BYTE = 5;
+
+	public final static int UNIQUE = 1;
+	public final static int AUTOINCREMENT = 2;
+	public final static int INDEX = 4;
+	public final static int MAY_BE_NULL = 8;
+	public final static int PRIMARY = 16;
+
+	protected final String name;
+	protected final int type;
+	protected final int size;
+	protected final int flags;
+	protected final Object defaultValue;
+
+	protected DBField(String name, int type, int size, int flags,
+			Object defaultValue) {
+		if (name == null) {
+			throw new NullPointerException();
+		}
+		this.name = name;
+		this.type = type;
+		this.size = size;
+		this.flags = flags;
+		this.defaultValue = defaultValue;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public int getFlags() {
+		return flags;
+	}
+
+	public Object getDefaultValue() {
+		return defaultValue;
+	}
+
+	public boolean isUnique() {
+		return (flags & UNIQUE) != 0;
+	}
+
+	// -------------------------------------------------------------------
+	// Utilities
+	// -------------------------------------------------------------------
+
+	public static int indexOf(DBField[] fields, int start, int end, String name) {
+		for (int i = start; i < end; i++) {
+			if (name.equals(fields[i].name)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 } // DBField

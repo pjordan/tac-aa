@@ -34,169 +34,141 @@ import se.sics.isl.util.IllegalConfigurationException;
 import se.sics.tasim.is.InfoConnection;
 import se.sics.tasim.is.SimulationInfo;
 
-public class InfoConnectionImpl extends InfoConnection
-{
-  
-  private SimServer simServer;
-  
-  public InfoConnectionImpl()
-  {}
-  
-  public void init(ConfigManager config) throws IllegalConfigurationException,
-      IOException
-  {}
-  
-  public void close()
-  {
-    if (simServer != null)
-    {
-      simServer.close();
-    }
-  }
-  
-  public void setSimServer(SimServer simServer)
-  {
-    if (simServer == null)
-    {
-      throw new NullPointerException();
-    }
-    this.simServer = simServer;
-  }
-  
-  // -------------------------------------------------------------------
-  // Information
-  // -------------------------------------------------------------------
-  
-  public void requestSuccessful(int operation, int id)
-  {
-    simServer.requestSuccessful(operation, id);
-  }
-  
-  public void requestFailed(int operation, int id, String reason)
-  {
-    simServer.requestFailed(operation, id, reason);
-  }
-  
-  public void checkUser(String userName)
-  {
-    simServer.checkUser(userName);
-  }
-  
-  // MLB 20080411 - Added to allow non-pre-registered agents to play,
-  //  for use in experimental work
-  public int addUser(String name, String password, String email)
-  {
-    return simServer.addUser(name, password, email);
-  }
-  
-  public void dataUpdated(int type, int value)
-  {
-    simServer.dataUpdated(type, value);
-  }
-  
-  public void simulationCreated(SimulationInfo info)
-  {
-    simServer.simulationCreated(info);
-  }
-  
-  public void simulationCreated(SimulationInfo info, int competitionID)
-  {
-    simServer.simulationCreated(info, competitionID);
-  }
-  
-  public void simulationRemoved(int simulationUniqID, String msg)
-  {
-    simServer.simulationRemoved(simulationUniqID, msg);
-  }
-  
-  public void simulationJoined(int simulationUniqID, int agentID, int role)
-  {
-    simServer.simulationJoined(simulationUniqID, agentID, role);
-  }
-  
-  public void simulationLocked(int simulationUniqID, int simID)
-  {
-    simServer.simulationLocked(simulationUniqID, simID);
-  }
-  
-  public void simulationStarted(int simulationUniqID, String timeUnitName,
-      int timeUnitCount)
-  {
-    simServer.simulationStarted(simulationUniqID, timeUnitName, timeUnitCount);
-  }
-  
-  public void simulationStopped(int simulationUniqID, int simulationID,
-      boolean error)
-  {
-    simServer.simulationStopped(simulationUniqID, simulationID, error);
-  }
-  
-  public void sendChatMessage(long time, String message)
-  {
-    simServer.sendChatMessage(time, message);
-  }
-  
-  // -------------------------------------------------------------------
-  // Viewer information
-  // -------------------------------------------------------------------
-  
-  public void nextTimeUnit(int timeUnit)
-  {
-    simServer.nextTimeUnit(timeUnit);
-  }
-  
-  public void participant(int id, int role, String name, int participantID)
-  {
-    simServer.participant(id, role, name, participantID);
-  }
-  
-  public void dataUpdated(int agent, int type, int value)
-  {
-    simServer.dataUpdated(agent, type, value);
-  }
-  
-  public void dataUpdated(int agent, int type, long value)
-  {
-    simServer.dataUpdated(agent, type, value);
-  }
-  
-  public void dataUpdated(int agent, int type, float value)
-  {
-    simServer.dataUpdated(agent, type, value);
-  }
+public class InfoConnectionImpl extends InfoConnection {
 
-  public void dataUpdated(int agent, int type, double value)
-  {
-    simServer.dataUpdated(agent, type, value);
-  }
+	private SimServer simServer;
 
-  public void dataUpdated(int agent, int type, String value)
-  {
-    simServer.dataUpdated(agent, type, value);
-  }
-  
-  public void dataUpdated(int agent, int type, Transportable value)
-  {
-    simServer.dataUpdated(agent, type, value);
-  }
-  
-  public void dataUpdated(int type, Transportable value)
-  {
-    simServer.dataUpdated(type, value);
-  }
-  
-  public void interaction(int fromAgent, int toAgent, int type)
-  {
-    simServer.interaction(fromAgent, toAgent, type);
-  }
-  
-  public void interactionWithRole(int fromAgent, int role, int type)
-  {
-    simServer.interactionWithRole(fromAgent, role, type);
-  }
-  
-  // Only from simServer to viewers... Ignore here????
-  public void intCache(int agent, int type, int[] cache)
-  {}
-  
+	public InfoConnectionImpl() {
+	}
+
+	public void init(ConfigManager config)
+			throws IllegalConfigurationException, IOException {
+	}
+
+	public void close() {
+		if (simServer != null) {
+			simServer.close();
+		}
+	}
+
+	public void setSimServer(SimServer simServer) {
+		if (simServer == null) {
+			throw new NullPointerException();
+		}
+		this.simServer = simServer;
+	}
+
+	// -------------------------------------------------------------------
+	// Information
+	// -------------------------------------------------------------------
+
+	public void requestSuccessful(int operation, int id) {
+		simServer.requestSuccessful(operation, id);
+	}
+
+	public void requestFailed(int operation, int id, String reason) {
+		simServer.requestFailed(operation, id, reason);
+	}
+
+	public void checkUser(String userName) {
+		simServer.checkUser(userName);
+	}
+
+	// MLB 20080411 - Added to allow non-pre-registered agents to play,
+	// for use in experimental work
+	public int addUser(String name, String password, String email) {
+		return simServer.addUser(name, password, email);
+	}
+
+	public void dataUpdated(int type, int value) {
+		simServer.dataUpdated(type, value);
+	}
+
+	public void simulationCreated(SimulationInfo info) {
+		simServer.simulationCreated(info);
+	}
+
+	public void simulationCreated(SimulationInfo info, int competitionID) {
+		simServer.simulationCreated(info, competitionID);
+	}
+
+	public void simulationRemoved(int simulationUniqID, String msg) {
+		simServer.simulationRemoved(simulationUniqID, msg);
+	}
+
+	public void simulationJoined(int simulationUniqID, int agentID, int role) {
+		simServer.simulationJoined(simulationUniqID, agentID, role);
+	}
+
+	public void simulationLocked(int simulationUniqID, int simID) {
+		simServer.simulationLocked(simulationUniqID, simID);
+	}
+
+	public void simulationStarted(int simulationUniqID, String timeUnitName,
+			int timeUnitCount) {
+		simServer.simulationStarted(simulationUniqID, timeUnitName,
+				timeUnitCount);
+	}
+
+	public void simulationStopped(int simulationUniqID, int simulationID,
+			boolean error) {
+		simServer.simulationStopped(simulationUniqID, simulationID, error);
+	}
+
+	public void sendChatMessage(long time, String message) {
+		simServer.sendChatMessage(time, message);
+	}
+
+	// -------------------------------------------------------------------
+	// Viewer information
+	// -------------------------------------------------------------------
+
+	public void nextTimeUnit(int timeUnit) {
+		simServer.nextTimeUnit(timeUnit);
+	}
+
+	public void participant(int id, int role, String name, int participantID) {
+		simServer.participant(id, role, name, participantID);
+	}
+
+	public void dataUpdated(int agent, int type, int value) {
+		simServer.dataUpdated(agent, type, value);
+	}
+
+	public void dataUpdated(int agent, int type, long value) {
+		simServer.dataUpdated(agent, type, value);
+	}
+
+	public void dataUpdated(int agent, int type, float value) {
+		simServer.dataUpdated(agent, type, value);
+	}
+
+	public void dataUpdated(int agent, int type, double value) {
+		simServer.dataUpdated(agent, type, value);
+	}
+
+	public void dataUpdated(int agent, int type, String value) {
+		simServer.dataUpdated(agent, type, value);
+	}
+
+	public void dataUpdated(int agent, int type, Transportable value) {
+		simServer.dataUpdated(agent, type, value);
+	}
+
+	public void dataUpdated(int type, Transportable value) {
+		simServer.dataUpdated(type, value);
+	}
+
+	public void interaction(int fromAgent, int toAgent, int type) {
+		simServer.interaction(fromAgent, toAgent, type);
+	}
+
+	public void interactionWithRole(int fromAgent, int role, int type) {
+		simServer.interactionWithRole(fromAgent, role, type);
+	}
+
+	// Only from simServer to viewers... Ignore here????
+	public void intCache(int agent, int type, int[] cache) {
+	}
+
 } // InfoConnectionImpl

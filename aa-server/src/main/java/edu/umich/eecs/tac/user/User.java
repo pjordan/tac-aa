@@ -8,57 +8,62 @@ import edu.umich.eecs.tac.props.Product;
  * @author Patrick Jordan
  */
 public class User {
-    private QueryState state;
-    private Product product;
+	private QueryState state;
+	private Product product;
 
-    public User() {
-    }
+	public User() {
+	}
 
-    public User(QueryState state, Product product) {
-        this.state = state;
-        this.product = product;
-    }
+	public User(QueryState state, Product product) {
+		this.state = state;
+		this.product = product;
+	}
 
-    public QueryState getState() {
-        return state;
-    }
+	public QueryState getState() {
+		return state;
+	}
 
-    public void setState(QueryState state) {
-        this.state = state;
-    }
+	public void setState(QueryState state) {
+		this.state = state;
+	}
 
-    public Product getProduct() {
-        return product;
-    }
+	public Product getProduct() {
+		return product;
+	}
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 
-    public boolean isSearching() {
-        return state.isSearching();
-    }
+	public boolean isSearching() {
+		return state.isSearching();
+	}
 
-    public boolean isTransacting() {
-        return state.isTransacting();
-    }
+	public boolean isTransacting() {
+		return state.isTransacting();
+	}
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
-        User user = (User) o;
+		User user = (User) o;
 
-        if (product != null ? !product.equals(user.product) : user.product != null) return false;
-        if (state != user.state) return false;
+		if (product != null ? !product.equals(user.product)
+				: user.product != null)
+			return false;
+		if (state != user.state)
+			return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    public int hashCode() {
-        int result;
-        result = (state != null ? state.hashCode() : 0);
-        result = 31 * result + (product != null ? product.hashCode() : 0);
-        return result;
-    }
+	public int hashCode() {
+		int result;
+		result = (state != null ? state.hashCode() : 0);
+		result = 31 * result + (product != null ? product.hashCode() : 0);
+		return result;
+	}
 }

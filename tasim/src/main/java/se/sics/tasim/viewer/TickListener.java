@@ -30,20 +30,23 @@ package se.sics.tasim.viewer;
 
 public interface TickListener {
 
-  /**
-   * Tick notification.  Usually called once per second.
-   *
-   * @param serverTime the current server time in milliseconds
-   */
-  public void tick(long serverTime);
+	/**
+	 * Tick notification. Usually called once per second.
+	 * 
+	 * @param serverTime
+	 *            the current server time in milliseconds
+	 */
+	public void tick(long serverTime);
 
-  /**
-   * Simulation tick notification.  Only called when a simulation is
-   * running and usually several times per second.
-   *
-   * @param serverTime the current server time
-   * @param simulationDate the current simulation date
-   */
-  public void simulationTick(long serverTime, int simulationDate);
+	/**
+	 * Simulation tick notification. Only called when a simulation is running
+	 * and usually several times per second.
+	 * 
+	 * @param serverTime
+	 *            the current server time
+	 * @param simulationDate
+	 *            the current simulation date
+	 */
+	public void simulationTick(long serverTime, int simulationDate);
 
 } // TickListener

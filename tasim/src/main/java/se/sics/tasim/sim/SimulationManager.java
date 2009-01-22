@@ -31,105 +31,96 @@ import java.io.File;
 import se.sics.isl.util.ConfigManager;
 import se.sics.tasim.is.SimulationInfo;
 
-public abstract class SimulationManager
-{
-  
-  private String name;
-  private Admin admin;
-  
-  protected SimulationManager()
-  {}
-  
-  final void init(Admin admin, String name)
-  {
-    if (name == null || admin == null)
-    {
-      throw new NullPointerException();
-    }
-    this.name = name;
-    this.admin = admin;
-    init();
-  }
-  
-  protected String getName()
-  {
-    return name;
-  }
-  
-  protected ConfigManager getConfig()
-  {
-    return admin.getConfig();
-  }
-  
-  protected ConfigManager loadSimulationConfig(String simulationType)
-  {
-    checkSimulationType(simulationType);
-    
-    ConfigManager config = getConfig();
-    String configFile = config.getProperty("manager." + getName() + '.'
-        + simulationType + ".config", simulationType + "_sim.conf");
-    config = new ConfigManager(config);
-    config.loadConfiguration(new File(admin.getConfigDirectory(), configFile)
-        .getAbsolutePath());
-    return config;
-  }
-  
-  protected void checkSimulationType(String simulationType)
-  {
-    for (int i = 0, n = simulationType.length(); i < n; i++)
-    {
-      char c = simulationType.charAt(i);
-      if (!Character.isLetterOrDigit(c))
-      {
-        throw new IllegalArgumentException("simulation type may only include "
-            + "letters and digits: " + simulationType);
-      }
-    }
-  }
-  
-  // -------------------------------------------------------------------
-  // Utilities
-  // -------------------------------------------------------------------
-  
-  /**
-   * Register the specified simulation type.
-   * 
-   * @param type
-   *          the simulation type to register
-   */
-  protected void registerType(String type)
-  {
-    checkSimulationType(type);
-    admin.addSimulationManager(type, this);
-  }
-  
-  protected SimulationInfo createSimulationInfo(String type, String params,
-      int length)
-  {
-    return new SimulationInfo(admin.getNextUniqueSimulationID(), type, params,
-        length);
-  }
-  
-  // -------------------------------------------------------------------
-  // Methods for SimulationManager sub classes
-  // -------------------------------------------------------------------
-  
-  /**
-   * Initializes this simulation manager. Recommended actions is to register all
-   * supported simulation types.
-   */
-  protected abstract void init();
-  
-  public abstract SimulationInfo createSimulationInfo(String type, String params);
-  
-  public abstract boolean join(int agent, int role, SimulationInfo info);
-  
-  public abstract String getSimulationRoleName(String type, int simRole);
-  
-  public abstract int getSimulationRoleID(String type, String simRole);
-  
-  public abstract int getSimulationLength(String type, String params);
-  
-  public abstract Simulation createSimulation(SimulationInfo info);
-  
+public abstract class SimulationManager {
+
+	private String name;
+	private Admin admin;
+
+	protected SimulationManager() {
+	}
+
+	final void init(Admin admin, String name) {
+		if (name == null || admin == null) {
+			throw new NullPointerException();
+		}
+		this.name = name;
+		this.admin = admin;
+		init();
+	}
+
+	protected String getName() {
+		return name;
+	}
+
+	protected ConfigManager getConfig() {
+		return admin.getConfig();
+	}
+
+	protected ConfigManager loadSimulationConfig(String simulationType) {
+		checkSimulationType(simulationType);
+
+		ConfigManager config = getConfig();
+		String configFile = config.getProperty("manager." + getName() + '.'
+				+ simulationType + ".config", simulationType + "_sim.conf");
+		config = new ConfigManager(config);
+		config.loadConfiguration(new File(admin.getConfigDirectory(),
+				configFile).getAbsolutePath());
+		return config;
+	}
+
+	protected void checkSimulationType(String simulationType) {
+		for (int i = 0, n = simulationType.length(); i < n; i++) {
+			char c = simulationType.charAt(i);
+			if (!Character.isLetterOrDigit(c)) {
+				throw new IllegalArgumentException(
+						"simulation type may only include "
+								+ "letters and digits: " + simulationType);
+			}
+		}
+	}
+
+	// -------------------------------------------------------------------
+	// Utilities
+	// -------------------------------------------------------------------
+
+	/**
+	 * Register the specified simulation type.
+	 * 
+	 * @param type
+	 *            the simulation type to register
+	 */
+	protected void registerType(String type) {
+		checkSimulationType(type);
+		admin.addSimulationManager(type, this);
+	}
+
+	protected SimulationInfo createSimulationInfo(String type, String params,
+			int length) {
+		return new SimulationInfo(admin.getNextUniqueSimulationID(), type,
+				params, length);
+	}
+
+	// -------------------------------------------------------------------
+	// Methods for SimulationManager sub classes
+	// -------------------------------------------------------------------
+
+	/**
+	 * Initializes this simulation manager. Recommended actions is to register
+	 * all supported simulation types.
+	 */
+	protected abstract void init();
+
+	public abstract SimulationInfo createSimulationInfo(String type,
+			String params);
+
+	public abstract boolean join(int agent, int role, SimulationInfo info);
+
+	public abstract String getSimulationRoleName(String type, int simRole);
+
+	public abstract int getSimulationRoleID(String type, String simRole);
+
+	public abstract int getSimulationLength(String type, String params);
+
+	public abstract Simulation createSimulation(SimulationInfo info);
+
 } // SimulationManager

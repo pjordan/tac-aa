@@ -28,30 +28,29 @@ package se.sics.isl.transport;
 
 import java.text.ParseException;
 
-public interface Transportable
-{
-  
-  /**
-   * Returns the transport name used for externalization.
-   */
-  public String getTransportName();
-  
-  /**
-   * Reads the state for this transportable from the specified reader.
-   * 
-   * @param reader
-   *          the reader to read data from
-   * @throws ParseException
-   *           if a parse error occurs
-   */
-  public void read(TransportReader reader) throws ParseException;
-  
-  /**
-   * Writes the state for this transportable to the specified writer.
-   * 
-   * @param writer
-   *          the writer to write data to
-   */
-  public void write(TransportWriter writer);
-  
+public interface Transportable {
+
+	/**
+	 * Returns the transport name used for externalization.
+	 */
+	public String getTransportName();
+
+	/**
+	 * Reads the state for this transportable from the specified reader.
+	 * 
+	 * @param reader
+	 *            the reader to read data from
+	 * @throws ParseException
+	 *             if a parse error occurs
+	 */
+	public void read(TransportReader reader) throws ParseException;
+
+	/**
+	 * Writes the state for this transportable to the specified writer.
+	 * 
+	 * @param writer
+	 *            the writer to write data to
+	 */
+	public void write(TransportWriter writer);
+
 } // Transportable

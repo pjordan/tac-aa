@@ -9,320 +9,323 @@ import static edu.umich.eecs.tac.props.TransportableTestUtils.getBytesForTranspo
 import static edu.umich.eecs.tac.props.TransportableTestUtils.readFromBytes;
 
 /**
- *
+ * 
  * @author Kemal Eren
  */
 public class RankingTest {
 
-    int num_ads;
-    
-    public RankingTest() {
-        num_ads = 35;
-    }
+	int num_ads;
 
-    public Ranking getRanking() {
-        Ranking ranking = new Ranking();
-        for (int i = 0; i < num_ads; i++) {
-            Product product = new Product("manufacturer_" + i,"component_" + i);
-            AdLink ad = new AdLink(product, "advertiser_" + i);
-            ranking.add(ad, i % 2 == 1);
-        }
-        return ranking;
-    }
+	public RankingTest() {
+		num_ads = 35;
+	}
 
-    @Test
-    public void testAdd() {
-        AdLink ad = null;
-        Ranking instance = new Ranking();
-        instance.add(ad);
-        assertEquals(instance.size(), 1);
+	public Ranking getRanking() {
+		Ranking ranking = new Ranking();
+		for (int i = 0; i < num_ads; i++) {
+			Product product = new Product("manufacturer_" + i, "component_" + i);
+			AdLink ad = new AdLink(product, "advertiser_" + i);
+			ranking.add(ad, i % 2 == 1);
+		}
+		return ranking;
+	}
 
-        instance = getRanking();
-        assertEquals(instance.size(), num_ads);
-    }
+	@Test
+	public void testAdd() {
+		AdLink ad = null;
+		Ranking instance = new Ranking();
+		instance.add(ad);
+		assertEquals(instance.size(), 1);
 
-    @Test
-    public void testSet() {
-        int position = 0;
-        AdLink ad = null;
-        Ranking instance = new Ranking();
+		instance = getRanking();
+		assertEquals(instance.size(), num_ads);
+	}
 
-        boolean promoted = false;
+	@Test
+	public void testSet() {
+		int position = 0;
+		AdLink ad = null;
+		Ranking instance = new Ranking();
 
-        boolean thrown = false;
-        try {
-            instance.set(position, ad, promoted);
-        } catch (IndexOutOfBoundsException e) {
-            thrown = true;
-        }
-        if (!thrown) {
-            fail("Expected IndexOutOfBoundsException");
-        }
-               
-        instance = getRanking();
+		boolean promoted = false;
 
-        Product product = new Product("manufacturer_111", "component_111");
-        ad = new AdLink(product, "advertiser_111");
-        instance.set(0, ad, promoted);
+		boolean thrown = false;
+		try {
+			instance.set(position, ad, promoted);
+		} catch (IndexOutOfBoundsException e) {
+			thrown = true;
+		}
+		if (!thrown) {
+			fail("Expected IndexOutOfBoundsException");
+		}
 
-        product = new Product("manufacturer_222", "component_222");
-        ad = new AdLink(product, "advertiser_333");
-        instance.set(17, ad, promoted);
+		instance = getRanking();
 
-        product = new Product("manufacturer_333", "component_333");
-        ad = new AdLink(product, "advertiser_333");
-        instance.set(34, ad, promoted);
+		Product product = new Product("manufacturer_111", "component_111");
+		ad = new AdLink(product, "advertiser_111");
+		instance.set(0, ad, promoted);
 
-        thrown = false;
-        try {
-            instance.set(35, ad, promoted);
-        } catch (IndexOutOfBoundsException e) {
-            thrown = true;
-        }
-        if (!thrown) {
-            fail("Expected IndexOutOfBoundsException");
-        }
-        
-        thrown = false;
-        try {
-            instance.set(-1, ad, promoted);
-        } catch (IndexOutOfBoundsException e) {
-            thrown = true;
-        }
-        if (!thrown) {
-            fail("Expected IndexOutOfBoundsException");
-        }
-    }
+		product = new Product("manufacturer_222", "component_222");
+		ad = new AdLink(product, "advertiser_333");
+		instance.set(17, ad, promoted);
 
+		product = new Product("manufacturer_333", "component_333");
+		ad = new AdLink(product, "advertiser_333");
+		instance.set(34, ad, promoted);
 
-    @Test
-    public void testGet() {
-        int position = 0;
-        Ranking instance = new Ranking();
-        AdLink expResult = null;
+		thrown = false;
+		try {
+			instance.set(35, ad, promoted);
+		} catch (IndexOutOfBoundsException e) {
+			thrown = true;
+		}
+		if (!thrown) {
+			fail("Expected IndexOutOfBoundsException");
+		}
 
-        AdLink result;
-        boolean thrown = false;
-        try {
-            result = instance.get(position);
-        } catch (IndexOutOfBoundsException e) {
-            thrown = true;
-        }
-        if (!thrown) {
-            fail("Expected IndexOutOfBoundsException");
-        }
-        
-        
-        instance = getRanking();
-        
-        Product product = new Product("manufacturer_0", "component_0");
-        expResult = new AdLink(product, "advertiser_0");
-        result = instance.get(position);
-        assertEquals(result, expResult);
-        assertFalse(instance.isPromoted(position));
+		thrown = false;
+		try {
+			instance.set(-1, ad, promoted);
+		} catch (IndexOutOfBoundsException e) {
+			thrown = true;
+		}
+		if (!thrown) {
+			fail("Expected IndexOutOfBoundsException");
+		}
+	}
 
-        position = 13;
-        product = new Product("manufacturer_13", "component_13");
-        expResult = new AdLink(product, "advertiser_13");
-        result = instance.get(position);
-        assertEquals(result, expResult);
+	@Test
+	public void testGet() {
+		int position = 0;
+		Ranking instance = new Ranking();
+		AdLink expResult = null;
 
-        position = -1;
-        thrown = false;
-        try {
-            result = instance.get(position);
-        } catch (IndexOutOfBoundsException e) {
-            thrown = true;
-        }
-        if (!thrown) {
-            fail("Expected IndexOutOfBoundsException");
-        }
+		AdLink result;
+		boolean thrown = false;
+		try {
+			result = instance.get(position);
+		} catch (IndexOutOfBoundsException e) {
+			thrown = true;
+		}
+		if (!thrown) {
+			fail("Expected IndexOutOfBoundsException");
+		}
 
-        position = 35;
-        thrown = false;
-        try {
-            result = instance.get(position);
-        } catch (IndexOutOfBoundsException e) {
-            thrown = true;
-        }
-        if (!thrown) {
-            fail("Expected IndexOutOfBoundsException");
-        }
-    }
+		instance = getRanking();
 
-    @Test
-    public void testPositionForAd() {
-        Product product = new Product("manufacturer_0", "component_0");
-        AdLink ad = new AdLink(product, "advertiser_0");
-        Ranking instance = getRanking();
-        int expResult = 0;
-        int result = instance.positionForAd(ad);
-        assertEquals(expResult, result);
+		Product product = new Product("manufacturer_0", "component_0");
+		expResult = new AdLink(product, "advertiser_0");
+		result = instance.get(position);
+		assertEquals(result, expResult);
+		assertFalse(instance.isPromoted(position));
 
-        product = new Product("manufacturer_9", "component_9");
-        ad = new AdLink(product, "advertiser_9");
-        instance = getRanking();
-        expResult = 9;
-        result = instance.positionForAd(ad);
-        assertEquals(expResult, result);
-        
-        product = new Product("manufacturer_34", "component_34");
-        ad = new AdLink(product, "advertiser_34");
-        instance = getRanking();
-        expResult = 34;
-        result = instance.positionForAd(ad);
-        assertEquals(expResult, result);
+		position = 13;
+		product = new Product("manufacturer_13", "component_13");
+		expResult = new AdLink(product, "advertiser_13");
+		result = instance.get(position);
+		assertEquals(result, expResult);
 
-        product = new Product("manufacturer_9", "component_9");
-        ad = new AdLink(product, "advertiser_10");
-        instance = getRanking();
-        expResult = -1;
-        result = instance.positionForAd(ad);
-        assertEquals(expResult, result);
+		position = -1;
+		thrown = false;
+		try {
+			result = instance.get(position);
+		} catch (IndexOutOfBoundsException e) {
+			thrown = true;
+		}
+		if (!thrown) {
+			fail("Expected IndexOutOfBoundsException");
+		}
 
-        product = new Product("", "");
-        ad = new AdLink(product, "");
-        instance = getRanking();
-        expResult = -1;
-        result = instance.positionForAd(ad);
-        assertEquals(expResult, result);
+		position = 35;
+		thrown = false;
+		try {
+			result = instance.get(position);
+		} catch (IndexOutOfBoundsException e) {
+			thrown = true;
+		}
+		if (!thrown) {
+			fail("Expected IndexOutOfBoundsException");
+		}
+	}
 
-        product = new Product(null, null);
-        ad = new AdLink(product, null);
-        instance = getRanking();
-        expResult = -1;
-        result = instance.positionForAd(ad);
-        assertEquals(expResult, result);
-    }
+	@Test
+	public void testPositionForAd() {
+		Product product = new Product("manufacturer_0", "component_0");
+		AdLink ad = new AdLink(product, "advertiser_0");
+		Ranking instance = getRanking();
+		int expResult = 0;
+		int result = instance.positionForAd(ad);
+		assertEquals(expResult, result);
 
-    @Test
-    public void testSize() {
-        Ranking instance = new Ranking();
-        int expResult = 0;
-        int result = instance.size();
-        assertEquals(expResult, result);
+		product = new Product("manufacturer_9", "component_9");
+		ad = new AdLink(product, "advertiser_9");
+		instance = getRanking();
+		expResult = 9;
+		result = instance.positionForAd(ad);
+		assertEquals(expResult, result);
 
-        instance = getRanking();
-        expResult = 35;
-        result = instance.size();
-        assertEquals(expResult, result);
-    }
+		product = new Product("manufacturer_34", "component_34");
+		ad = new AdLink(product, "advertiser_34");
+		instance = getRanking();
+		expResult = 34;
+		result = instance.positionForAd(ad);
+		assertEquals(expResult, result);
 
-    @Test
-    public void testToString() {
-        Ranking instance = new Ranking();
-        String expResult = "[]";
-        String result = instance.toString();
-        assertEquals(expResult, result);
+		product = new Product("manufacturer_9", "component_9");
+		ad = new AdLink(product, "advertiser_10");
+		instance = getRanking();
+		expResult = -1;
+		result = instance.positionForAd(ad);
+		assertEquals(expResult, result);
 
-        int num_ads = 3;
-        for (int i = 0; i < num_ads; i++) {
-            Product product = new Product("manufacturer_" + i,"component_" + i);
-            AdLink ad = new AdLink(product, "advertiser_" + i);
-            instance.add(ad);
-        }
+		product = new Product("", "");
+		ad = new AdLink(product, "");
+		instance = getRanking();
+		expResult = -1;
+		result = instance.positionForAd(ad);
+		assertEquals(expResult, result);
 
-        expResult = "[[0: (AdLink advertiser:advertiser_0 generic:false product:(Product (manufacturer_0,component_0)))][1: (AdLink advertiser:advertiser_1 generic:false product:(Product (manufacturer_1,component_1)))][2: (AdLink advertiser:advertiser_2 generic:false product:(Product (manufacturer_2,component_2)))]]";
-        result = instance.toString();
-        assertEquals(expResult, result);
-    }
+		product = new Product(null, null);
+		ad = new AdLink(product, null);
+		instance = getRanking();
+		expResult = -1;
+		result = instance.positionForAd(ad);
+		assertEquals(expResult, result);
+	}
 
-    @Test
-    public void testEmptyTransport() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+	@Test
+	public void testSize() {
+		Ranking instance = new Ranking();
+		int expResult = 0;
+		int result = instance.size();
+		assertEquals(expResult, result);
 
-        Ranking instance = new Ranking();
+		instance = getRanking();
+		expResult = 35;
+		result = instance.size();
+		assertEquals(expResult, result);
+	}
 
-        byte[] buffer = getBytesForTransportable(writer, instance);
-        Ranking received = readFromBytes(reader, buffer, "Ranking");
+	@Test
+	public void testToString() {
+		Ranking instance = new Ranking();
+		String expResult = "[]";
+		String result = instance.toString();
+		assertEquals(expResult, result);
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(0, received.size());
+		int num_ads = 3;
+		for (int i = 0; i < num_ads; i++) {
+			Product product = new Product("manufacturer_" + i, "component_" + i);
+			AdLink ad = new AdLink(product, "advertiser_" + i);
+			instance.add(ad);
+		}
 
-        instance.lock();
-        buffer = getBytesForTransportable(writer, instance);
-        received = readFromBytes(reader, buffer, "Ranking");
+		expResult = "[[0: (AdLink advertiser:advertiser_0 generic:false product:(Product (manufacturer_0,component_0)))][1: (AdLink advertiser:advertiser_1 generic:false product:(Product (manufacturer_1,component_1)))][2: (AdLink advertiser:advertiser_2 generic:false product:(Product (manufacturer_2,component_2)))]]";
+		result = instance.toString();
+		assertEquals(expResult, result);
+	}
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(0, received.size());
-    }
-        @Test
-    public void testValidTransport() throws ParseException, IndexOutOfBoundsException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+	@Test
+	public void testEmptyTransport() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-        Ranking instance = getRanking();
+		Ranking instance = new Ranking();
 
-        byte[] buffer = getBytesForTransportable(writer, instance);
-        Ranking received = readFromBytes(reader, buffer, "Ranking");
+		byte[] buffer = getBytesForTransportable(writer, instance);
+		Ranking received = readFromBytes(reader, buffer, "Ranking");
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.get(0).getAdvertiser(), received.get(0).getAdvertiser());
-        assertEquals(instance.size(), received.size());
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(0, received.size());
 
-        instance.lock();
-        buffer = getBytesForTransportable(writer, instance);
-        received = readFromBytes(reader, buffer, "Ranking");
+		instance.lock();
+		buffer = getBytesForTransportable(writer, instance);
+		received = readFromBytes(reader, buffer, "Ranking");
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.get(0).getAdvertiser(), received.get(0).getAdvertiser());
-        assertEquals(instance.size(), received.size());
-    }
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(0, received.size());
+	}
 
-    @Test
-    public void testWriteToLocked() {
-        Ranking instance = new Ranking();
-        instance.lock();
+	@Test
+	public void testValidTransport() throws ParseException,
+			IndexOutOfBoundsException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-        Product product = new Product("manufacturer_1", "component_1");
-        String advertisor = "advertisor_1";
-        AdLink ad = new AdLink(product, advertisor);
+		Ranking instance = getRanking();
 
-        int thrown = 0;
-        try {
-            instance.add(ad);
-        } catch (IllegalStateException e) {
-            thrown++;
-        } try {
-            instance.set(0, ad, false);
-        } catch (IllegalStateException e) {
-            thrown++;
-        }
-        if (thrown != 2) {
-            fail("Modified locked instance");
-        }
-    }
+		byte[] buffer = getBytesForTransportable(writer, instance);
+		Ranking received = readFromBytes(reader, buffer, "Ranking");
 
-    @Test
-    public void testEmptySlotTransport() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.get(0).getAdvertiser(), received.get(0)
+				.getAdvertiser());
+		assertEquals(instance.size(), received.size());
 
-        Ranking.Slot instance = new Ranking.Slot();
+		instance.lock();
+		buffer = getBytesForTransportable(writer, instance);
+		received = readFromBytes(reader, buffer, "Ranking");
 
-        byte[] buffer = getBytesForTransportable(writer, instance);
-        Ranking.Slot received = readFromBytes(reader, buffer, "Slot");
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.get(0).getAdvertiser(), received.get(0)
+				.getAdvertiser());
+		assertEquals(instance.size(), received.size());
+	}
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.isPromoted(), received.isPromoted());
-        assertEquals(instance.getAdLink(), received.getAdLink());
+	@Test
+	public void testWriteToLocked() {
+		Ranking instance = new Ranking();
+		instance.lock();
 
-        instance.setAdLink(new AdLink());
-        instance.setPromoted(true);
+		Product product = new Product("manufacturer_1", "component_1");
+		String advertisor = "advertisor_1";
+		AdLink ad = new AdLink(product, advertisor);
 
-        buffer = getBytesForTransportable(writer, instance);
-        received = readFromBytes(reader, buffer, "Slot");
+		int thrown = 0;
+		try {
+			instance.add(ad);
+		} catch (IllegalStateException e) {
+			thrown++;
+		}
+		try {
+			instance.set(0, ad, false);
+		} catch (IllegalStateException e) {
+			thrown++;
+		}
+		if (thrown != 2) {
+			fail("Modified locked instance");
+		}
+	}
 
-        assertEquals(instance.isPromoted(), received.isPromoted());
-        assertEquals(instance.getAdLink(), received.getAdLink());
-    }
+	@Test
+	public void testEmptySlotTransport() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
+
+		Ranking.Slot instance = new Ranking.Slot();
+
+		byte[] buffer = getBytesForTransportable(writer, instance);
+		Ranking.Slot received = readFromBytes(reader, buffer, "Slot");
+
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.isPromoted(), received.isPromoted());
+		assertEquals(instance.getAdLink(), received.getAdLink());
+
+		instance.setAdLink(new AdLink());
+		instance.setPromoted(true);
+
+		buffer = getBytesForTransportable(writer, instance);
+		received = readFromBytes(reader, buffer, "Slot");
+
+		assertEquals(instance.isPromoted(), received.isPromoted());
+		assertEquals(instance.getAdLink(), received.getAdLink());
+	}
 }

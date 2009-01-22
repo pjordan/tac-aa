@@ -27,12 +27,13 @@
  *
  */
 package se.sics.tasim.viewer;
+
 import javax.swing.JComponent;
 
 public abstract class SimulationViewer extends ViewerConnection {
 
-  public abstract void init(ViewerPanel panel);
+	public abstract void init(ViewerPanel panel);
 
-  public abstract JComponent getComponent();
+	public abstract JComponent getComponent();
 
 } // SimulationViewer

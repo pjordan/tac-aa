@@ -13,106 +13,105 @@ import se.sics.tasim.aw.Message;
  */
 public class BidManagerImpl implements BidManager {
 
-    //TODO: Discuss 'security' issues, test, add quality score update
-    //TODO: getBid, getQualityScore, etc. should remain constant throughout the day.
-    private Logger log = Logger.getLogger(BidManagerImpl.class.getName());
+	// TODO: Discuss 'security' issues, test, add quality score update
+	// TODO: getBid, getQualityScore, etc. should remain constant throughout the
+	// day.
+	private Logger log = Logger.getLogger(BidManagerImpl.class.getName());
 
-    private Set<String> advertisers;
+	private Set<String> advertisers;
 
-    private Set<String> advertisersView;
+	private Set<String> advertisersView;
 
-    private List<Message> bidBundleList;
+	private List<Message> bidBundleList;
 
-    private UserClickModel userClickModel;
+	private UserClickModel userClickModel;
 
-    private BidTracker bidTracker;
+	private BidTracker bidTracker;
 
-    private SpendTracker spendTracker;
+	private SpendTracker spendTracker;
 
+	public BidManagerImpl(UserClickModel userClickModel, BidTracker bidTracker,
+			SpendTracker spendTracker) {
+		if (userClickModel == null)
+			throw new NullPointerException("user click model cannot be null");
 
-    public BidManagerImpl(UserClickModel userClickModel, BidTracker bidTracker, SpendTracker spendTracker) {
-        if(userClickModel==null)
-            throw new NullPointerException("user click model cannot be null");
+		this.userClickModel = userClickModel;
 
-        this.userClickModel = userClickModel;
+		if (bidTracker == null)
+			throw new NullPointerException("bid tracker cannot be null");
 
-        if(bidTracker==null)
-            throw new NullPointerException("bid tracker cannot be null");
+		this.bidTracker = bidTracker;
 
-        this.bidTracker = bidTracker;
+		if (spendTracker == null)
+			throw new NullPointerException("spend tracker cannot be null");
 
-        if(spendTracker==null)
-            throw new NullPointerException("spend tracker cannot be null");
-        
-        this.spendTracker = spendTracker;
+		this.spendTracker = spendTracker;
 
+		advertisers = new HashSet<String>();
+		advertisersView = Collections.unmodifiableSet(advertisers);
+		bidBundleList = new ArrayList<Message>();
+	}
 
-        advertisers = new HashSet<String>();
-        advertisersView = Collections.unmodifiableSet(advertisers);
-        bidBundleList = new ArrayList<Message>();
-    }
+	/**
+	 * NOTE: isOverspent will only function correctly in this instance if
+	 * auctions are computed for EVERY query and not cached.
+	 */
+	public double getBid(String advertiser, Query query) {
+		double bid = bidTracker.getBid(advertiser, query);
 
+		if (isOverspent(bid, advertiser, query))
+			return 0.0;
+		else
+			return bid;
+	}
 
-  /**
-   * NOTE: isOverspent will only function correctly in this instance
-   * if auctions are computed for EVERY query and not cached.
-   */
-    public double getBid(String advertiser, Query query) {
-        double bid = bidTracker.getBid(advertiser, query);
+	public double getQualityScore(String advertiser, Query query) {
+		int advertiserIndex = userClickModel.advertiserIndex(advertiser);
+		int queryIndex = userClickModel.queryIndex(query);
 
-        if(isOverspent(bid, advertiser, query))
-            return 0.0;
-        else
-            return bid;
-    }
+		if (advertiserIndex < 0 || queryIndex < 0)
+			return 1.0;
+		else
+			return userClickModel.getAdvertiserEffect(queryIndex,
+					advertiserIndex);
+	}
 
+	public AdLink getAdLink(String advertiser, Query query) {
+		return bidTracker.getAdLink(advertiser, query);
+	}
 
-    public double getQualityScore(String advertiser, Query query) {
-        int advertiserIndex = userClickModel.advertiserIndex(advertiser);
-        int queryIndex = userClickModel.queryIndex(query);
+	public void updateBids(String advertiser, BidBundle bundle) {
 
-        if(advertiserIndex<0 || queryIndex<0)
-            return 1.0;
-        else
-            return userClickModel.getAdvertiserEffect(queryIndex,advertiserIndex);
-    }
+		// Store all of the BidBundles until nextTimeUnit.
+		// We'll call actualUpdateBids method there.
+		Message m = new Message(advertiser, advertiser, bundle);
 
+		bidBundleList.add(m);
+	}
 
-    public AdLink getAdLink(String advertiser, Query query) {
-        return bidTracker.getAdLink(advertiser,query);
-    }
+	public Set<String> advertisers() {
+		return advertisersView;
+	}
 
+	public void nextTimeUnit(int timeUnit) {
 
-    public void updateBids(String advertiser, BidBundle bundle) {
+		for (Message m : bidBundleList) {
+			bidTracker.updateBids(m.getSender(), (BidBundle) m.getContent());
+		}
 
-        //Store all of the BidBundles until nextTimeUnit.
-        //We'll call actualUpdateBids method there.
-        Message m = new Message(advertiser, advertiser, bundle);
+		bidBundleList.clear();
+	}
 
-        bidBundleList.add(m);
-    }
+	public void addAdvertiser(String advertiser) {
+		advertisers.add(advertiser);
+		bidTracker.addAdvertiser(advertiser);
+		spendTracker.addAdvertiser(advertiser);
+	}
 
-    public Set<String> advertisers() {
-        return advertisersView;
-    }
-
-    public void nextTimeUnit(int timeUnit) {
-
-        for (Message m : bidBundleList) {
-            bidTracker.updateBids(m.getSender(), (BidBundle) m.getContent());
-        }
-
-        bidBundleList.clear();
-    }
-
-    public void addAdvertiser(String advertiser) {
-        advertisers.add(advertiser);
-        bidTracker.addAdvertiser(advertiser);
-        spendTracker.addAdvertiser(advertiser);
-    }
-
-    private boolean isOverspent(double bid, String advertiser, Query query) {
-        return (bid >= bidTracker.getDailySpendLimit(advertiser,query) - spendTracker.getDailyCost(advertiser,query)) ||
-               (bid >= bidTracker.getDailySpendLimit(advertiser) - spendTracker.getDailyCost(advertiser));
-    }
+	private boolean isOverspent(double bid, String advertiser, Query query) {
+		return (bid >= bidTracker.getDailySpendLimit(advertiser, query)
+				- spendTracker.getDailyCost(advertiser, query))
+				|| (bid >= bidTracker.getDailySpendLimit(advertiser)
+						- spendTracker.getDailyCost(advertiser));
+	}
 }

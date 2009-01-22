@@ -8,8 +8,12 @@ import java.util.Random;
 /**
  * @author Patrick Jordan
  */
-public class DefaultUserViewManagerBuilder implements UserBehaviorBuilder<UserViewManager> {
-    public UserViewManager build(ConfigProxy userConfigProxy, AgentRepository repository, Random random) {
-        return new DefaultUserViewManager(repository.getRetailCatalog(), repository.getSalesAnalyst(), repository.getAdvertiserInfo(), repository.getAuctionInfo(), random);
-    }
+public class DefaultUserViewManagerBuilder implements
+		UserBehaviorBuilder<UserViewManager> {
+	public UserViewManager build(ConfigProxy userConfigProxy,
+			AgentRepository repository, Random random) {
+		return new DefaultUserViewManager(repository.getRetailCatalog(),
+				repository.getSalesAnalyst(), repository.getAdvertiserInfo(),
+				repository.getAuctionInfo(), random);
+	}
 }

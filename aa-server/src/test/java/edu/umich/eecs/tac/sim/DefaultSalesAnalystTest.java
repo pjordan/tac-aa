@@ -14,112 +14,109 @@ import se.sics.tasim.sim.SimulationAgent;
  * @author Patrick Jordan, Ben Cassell
  */
 public class DefaultSalesAnalystTest {
-    DefaultSalesAnalyst salesAnalyst;
-    AgentRepository repository;
-    SalesReportSender salesReportSender;
-    Map<String, AdvertiserInfo> advertiserInfo;
+	DefaultSalesAnalyst salesAnalyst;
+	AgentRepository repository;
+	SalesReportSender salesReportSender;
+	Map<String, AdvertiserInfo> advertiserInfo;
 
+	String alice;
 
-    String alice;
+	private SlotInfo slotInfo;
 
-    private SlotInfo slotInfo;
+	@Before
+	public void setup() {
+		slotInfo = new SlotInfo();
 
-    @Before
-    public void setup() {
-        slotInfo = new SlotInfo();
-        
-        repository = new SimpleAgentRepository();
-        salesReportSender = new SimpleSalesReportSender();
+		repository = new SimpleAgentRepository();
+		salesReportSender = new SimpleSalesReportSender();
 
-        advertiserInfo = new HashMap<String, AdvertiserInfo>();
-        AdvertiserInfo info  = new AdvertiserInfo();
-        info.setDistributionWindow(2);
-        info.setDistributionCapacity(10);
-        
-        alice = "alice";
-        advertiserInfo.put(alice, info);
+		advertiserInfo = new HashMap<String, AdvertiserInfo>();
+		AdvertiserInfo info = new AdvertiserInfo();
+		info.setDistributionWindow(2);
+		info.setDistributionCapacity(10);
 
-        salesAnalyst = new DefaultSalesAnalyst(repository, salesReportSender, 1);
+		alice = "alice";
+		advertiserInfo.put(alice, info);
 
-    }
+		salesAnalyst = new DefaultSalesAnalyst(repository, salesReportSender, 1);
 
-    @Test
-    public void testConstructor() {
-        assertNotNull(salesAnalyst);
-    }
+	}
 
-    @Test
-    public void testAddAccount() {
-        assertEquals(salesAnalyst.size(), 0, 0);
-        salesAnalyst.addAccount(alice);
-        assertEquals(salesAnalyst.size(), 1, 0);
-    }
+	@Test
+	public void testConstructor() {
+		assertNotNull(salesAnalyst);
+	}
 
-    @Test
-    public void testConversions() {
-        salesAnalyst.addAccount(alice);
+	@Test
+	public void testAddAccount() {
+		assertEquals(salesAnalyst.size(), 0, 0);
+		salesAnalyst.addAccount(alice);
+		assertEquals(salesAnalyst.size(), 1, 0);
+	}
 
-        assertEquals(salesAnalyst.getRecentConversions(alice),0.0, 0.0);
+	@Test
+	public void testConversions() {
+		salesAnalyst.addAccount(alice);
 
-        salesAnalyst.addConversions(alice,new Query(),7,2.0);
+		assertEquals(salesAnalyst.getRecentConversions(alice), 0.0, 0.0);
 
-        assertEquals(salesAnalyst.getRecentConversions(alice),7.0, 0.0);
+		salesAnalyst.addConversions(alice, new Query(), 7, 2.0);
 
-        salesAnalyst.sendSalesReportToAll();
+		assertEquals(salesAnalyst.getRecentConversions(alice), 7.0, 0.0);
 
-        assertEquals(salesAnalyst.getRecentConversions(alice),7.0, 0.0);
+		salesAnalyst.sendSalesReportToAll();
 
-        salesAnalyst.addConversions(alice,new Query(),5,2.0);
+		assertEquals(salesAnalyst.getRecentConversions(alice), 7.0, 0.0);
 
-        assertEquals(salesAnalyst.getRecentConversions(alice),12.0, 0.0);
+		salesAnalyst.addConversions(alice, new Query(), 5, 2.0);
 
-        salesAnalyst.sendSalesReportToAll();
-        
-        assertEquals(salesAnalyst.getRecentConversions(alice),5.0, 0.0);
-    }
+		assertEquals(salesAnalyst.getRecentConversions(alice), 12.0, 0.0);
 
-    public class SimpleAgentRepository implements AgentRepository {
-        public RetailCatalog getRetailCatalog() {
-            return null;
-        }
+		salesAnalyst.sendSalesReportToAll();
 
-        public Map<String, AdvertiserInfo> getAdvertiserInfo() {
-            return advertiserInfo;
-        }
+		assertEquals(salesAnalyst.getRecentConversions(alice), 5.0, 0.0);
+	}
 
-        public SimulationAgent[] getPublishers() {
-            return new SimulationAgent[0];
-        }
+	public class SimpleAgentRepository implements AgentRepository {
+		public RetailCatalog getRetailCatalog() {
+			return null;
+		}
 
-        public SimulationAgent[] getUsers() {
-            return new SimulationAgent[0];
-        }
+		public Map<String, AdvertiserInfo> getAdvertiserInfo() {
+			return advertiserInfo;
+		}
 
-        public SalesAnalyst getSalesAnalyst() {
-            return salesAnalyst;
-        }
+		public SimulationAgent[] getPublishers() {
+			return new SimulationAgent[0];
+		}
 
-        public SlotInfo getAuctionInfo() {
-            return slotInfo;
-        }
+		public SimulationAgent[] getUsers() {
+			return new SimulationAgent[0];
+		}
 
+		public SalesAnalyst getSalesAnalyst() {
+			return salesAnalyst;
+		}
 
-        public int getNumberOfAdvertisers() {
-            return advertiserInfo.size();
-        }
+		public SlotInfo getAuctionInfo() {
+			return slotInfo;
+		}
 
+		public int getNumberOfAdvertisers() {
+			return advertiserInfo.size();
+		}
 
-        public String[] getAdvertiserAddresses() {
-            return advertiserInfo.keySet().toArray(new String[0]);
-        }
-    }
+		public String[] getAdvertiserAddresses() {
+			return advertiserInfo.keySet().toArray(new String[0]);
+		}
+	}
 
-    public class SimpleSalesReportSender implements SalesReportSender {
-        public void sendSalesReport(String advertiser, SalesReport report) {
-        }
+	public class SimpleSalesReportSender implements SalesReportSender {
+		public void sendSalesReport(String advertiser, SalesReport report) {
+		}
 
-       public void broadcastConversions(String advertiser, int conversions) {
-//           assertEquals(conversions,1);
-        }
-    }
+		public void broadcastConversions(String advertiser, int conversions) {
+			// assertEquals(conversions,1);
+		}
+	}
 }

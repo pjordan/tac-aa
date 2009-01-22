@@ -37,75 +37,65 @@ import se.sics.isl.transport.Transportable;
  * also to measure network response times.
  * 
  * <p>
- * <b>Warning:</b> serialized objects of this class might not be compatible
- * with future versions. Only use serialization of this class for temporary
- * storage or RMI using the same version of the class.
+ * <b>Warning:</b> serialized objects of this class might not be compatible with
+ * future versions. Only use serialization of this class for temporary storage
+ * or RMI using the same version of the class.
  */
-public class Ping implements Transportable, java.io.Serializable
-{
-  
-  private static final long serialVersionUID = 5214670517699777053L;
-  
-  public static final int PONG = 1 << 0;
-  public static final int PING = 1 << 1;
-  
-  private int flags;
-  
-  public Ping()
-  {
-    this.flags = PING;
-  }
-  
-  /**
-   * @deprecated use Ping() instead for ping and createPong for pong
-   */
-  public Ping(int flags)
-  {
-    this.flags = flags;
-  }
-  
-  public boolean isPing()
-  {
-    return (flags & PING) != 0;
-  }
-  
-  public boolean isPong()
-  {
-    return (flags & PONG) != 0;
-  }
-  
-  public Ping createPong()
-  {
-    return new Ping(PONG);
-  }
-  
-  public String toString()
-  {
-    StringBuffer buf = new StringBuffer().append(getTransportName())
-        .append('[').append(flags);
-    return buf.append(']').toString();
-  }
-  
-  // -------------------------------------------------------------------
-  // Transportable (externalization support)
-  // -------------------------------------------------------------------
-  
-  /**
-   * Returns the transport name used for externalization.
-   */
-  public String getTransportName()
-  {
-    return "ping";
-  }
-  
-  public void read(TransportReader reader) throws ParseException
-  {
-    flags = reader.getAttributeAsInt("flags");
-  }
-  
-  public void write(TransportWriter writer)
-  {
-    writer.attr("flags", flags);
-  }
-  
+public class Ping implements Transportable, java.io.Serializable {
+
+	private static final long serialVersionUID = 5214670517699777053L;
+
+	public static final int PONG = 1 << 0;
+	public static final int PING = 1 << 1;
+
+	private int flags;
+
+	public Ping() {
+		this.flags = PING;
+	}
+
+	/**
+	 * @deprecated use Ping() instead for ping and createPong for pong
+	 */
+	public Ping(int flags) {
+		this.flags = flags;
+	}
+
+	public boolean isPing() {
+		return (flags & PING) != 0;
+	}
+
+	public boolean isPong() {
+		return (flags & PONG) != 0;
+	}
+
+	public Ping createPong() {
+		return new Ping(PONG);
+	}
+
+	public String toString() {
+		StringBuffer buf = new StringBuffer().append(getTransportName())
+				.append('[').append(flags);
+		return buf.append(']').toString();
+	}
+
+	// -------------------------------------------------------------------
+	// Transportable (externalization support)
+	// -------------------------------------------------------------------
+
+	/**
+	 * Returns the transport name used for externalization.
+	 */
+	public String getTransportName() {
+		return "ping";
+	}
+
+	public void read(TransportReader reader) throws ParseException {
+		flags = reader.getAttributeAsInt("flags");
+	}
+
+	public void write(TransportWriter writer) {
+		writer.attr("flags", flags);
+	}
+
 } // Ping

@@ -35,113 +35,96 @@ import se.sics.isl.util.ConfigManager;
 
 /**
  */
-public class DatabaseUtils
-{
-  
-  private static final Logger log = Logger.getLogger(DatabaseUtils.class
-      .getName());
-  
-  // Prevent instances of this class
-  private DatabaseUtils()
-  {}
-  
-  public static Database createDatabase(ConfigManager config,
-      String configPrefix)
-  {
-    // Database names must match [a-z][a-z0-9_]*
-    String databaseName = config.getProperty(configPrefix + "database",
-        "infodb");
-    return createDatabase(config, configPrefix, databaseName.toLowerCase());
-  }
-  
-  public static Database createUserDatabase(ConfigManager config,
-      String configPrefix, Database parentDatabase)
-  {
-    String userDatabaseName = config
-        .getProperty(configPrefix + "user.database");
-    return (userDatabaseName != null) ? createDatabase(config, configPrefix
-        + "user.", userDatabaseName.toLowerCase()) : parentDatabase;
-  }
-  
-  public static Database createChildDatabase(ConfigManager config,
-      String configPrefix, String databasePrefix, Database parentDatabase)
-  {
-    return new PrefixDatabase(createDatabasePrefix(databasePrefix),
-        parentDatabase, config, configPrefix);
-  }
-  
-  private static String createDatabasePrefix(String databasePrefix)
-  {
-    // A database name must match [a-z][a-z0-9_]*. All illegal
-    // characters are replaced with '_' or their lower case
-    // correspondence.
-    databasePrefix = databasePrefix.toLowerCase();
-    
-    // Server names are always at least one character
-    StringBuffer sb = null;
-    char c = databasePrefix.charAt(0);
-    if ((c < 'a') || (c > 'z'))
-    {
-      // Database names must start with a lower case character
-      sb = new StringBuffer().append('s');
-    }
-    
-    for (int i = 0, n = databasePrefix.length(); i < n; i++)
-    {
-      c = databasePrefix.charAt(i);
-      if (((c < 'a') || (c > 'z')) && ((c < '0') || (c > '9')) && (c != '_'))
-      {
-        if (sb == null)
-        {
-          sb = new StringBuffer();
-          if (i > 0)
-            sb.append(databasePrefix.substring(0, i));
-        }
-        sb.append('_');
-      }
-      else if (sb != null)
-      {
-        sb.append(c);
-      }
-    }
-    if (sb != null)
-    {
-      return sb.append('_').toString();
-    }
-    else
-    {
-      return databasePrefix + '_';
-    }
-  }
-  
-  private static Database createDatabase(ConfigManager config,
-      String configPrefix, String databaseName)
-  {
-    String databaseDriver = config.getProperty(
-        configPrefix + "database.driver", "se.sics.isl.db.file.FileDatabase");
-    Database database = null;
-    do
-    {
-      try
-      {
-        Database base = (Database) Class.forName(databaseDriver).newInstance();
-        base.init(databaseName, config, configPrefix + "database.");
-        database = base;
-      }
-      catch (Exception e)
-      {
-        log.log(Level.SEVERE, "could not create database driver of type '"
-            + databaseDriver + '\'', e);
-        log.severe("will retry database " + databaseName + " in 60 seconds...");
-        try
-        {
-          Thread.sleep(60000);
-        }
-        catch (InterruptedException e2)
-        {}
-      }
-    } while (database == null);
-    return database;
-  }
-  
+public class DatabaseUtils {
+
+	private static final Logger log = Logger.getLogger(DatabaseUtils.class
+			.getName());
+
+	// Prevent instances of this class
+	private DatabaseUtils() {
+	}
+
+	public static Database createDatabase(ConfigManager config,
+			String configPrefix) {
+		// Database names must match [a-z][a-z0-9_]*
+		String databaseName = config.getProperty(configPrefix + "database",
+				"infodb");
+		return createDatabase(config, configPrefix, databaseName.toLowerCase());
+	}
+
+	public static Database createUserDatabase(ConfigManager config,
+			String configPrefix, Database parentDatabase) {
+		String userDatabaseName = config.getProperty(configPrefix
+				+ "user.database");
+		return (userDatabaseName != null) ? createDatabase(config, configPrefix
+				+ "user.", userDatabaseName.toLowerCase()) : parentDatabase;
+	}
+
+	public static Database createChildDatabase(ConfigManager config,
+			String configPrefix, String databasePrefix, Database parentDatabase) {
+		return new PrefixDatabase(createDatabasePrefix(databasePrefix),
+				parentDatabase, config, configPrefix);
+	}
+
+	private static String createDatabasePrefix(String databasePrefix) {
+		// A database name must match [a-z][a-z0-9_]*. All illegal
+		// characters are replaced with '_' or their lower case
+		// correspondence.
+		databasePrefix = databasePrefix.toLowerCase();
+
+		// Server names are always at least one character
+		StringBuffer sb = null;
+		char c = databasePrefix.charAt(0);
+		if ((c < 'a') || (c > 'z')) {
+			// Database names must start with a lower case character
+			sb = new StringBuffer().append('s');
+		}
+
+		for (int i = 0, n = databasePrefix.length(); i < n; i++) {
+			c = databasePrefix.charAt(i);
+			if (((c < 'a') || (c > 'z')) && ((c < '0') || (c > '9'))
+					&& (c != '_')) {
+				if (sb == null) {
+					sb = new StringBuffer();
+					if (i > 0)
+						sb.append(databasePrefix.substring(0, i));
+				}
+				sb.append('_');
+			} else if (sb != null) {
+				sb.append(c);
+			}
+		}
+		if (sb != null) {
+			return sb.append('_').toString();
+		} else {
+			return databasePrefix + '_';
+		}
+	}
+
+	private static Database createDatabase(ConfigManager config,
+			String configPrefix, String databaseName) {
+		String databaseDriver = config.getProperty(configPrefix
+				+ "database.driver", "se.sics.isl.db.file.FileDatabase");
+		Database database = null;
+		do {
+			try {
+				Database base = (Database) Class.forName(databaseDriver)
+						.newInstance();
+				base.init(databaseName, config, configPrefix + "database.");
+				database = base;
+			} catch (Exception e) {
+				log.log(Level.SEVERE,
+						"could not create database driver of type '"
+								+ databaseDriver + '\'', e);
+				log.severe("will retry database " + databaseName
+						+ " in 60 seconds...");
+				try {
+					Thread.sleep(60000);
+				} catch (InterruptedException e2) {
+				}
+			}
+		} while (database == null);
+		return database;
+	}
+
 } // DatabaseUtils

@@ -24,39 +24,35 @@ import java.awt.Color;
  * @version $Revision: 4074 $, $Date: 2008-02-24 12:03:02 -0500 (Sun, 24 Feb
  *          2008) $
  */
-public class HtmlUtils
-{
-  
-  private static final String loColor = "#40ff40"; // green
-  private static final String miColor = "yellow";
-  private static final String hiColor = "red";
-  
-  // Prevent instances of this class
-  private HtmlUtils()
-  {}
-  
-  public static void progress(HtmlWriter out, int width, int height, int lo,
-      int mi, int hi)
-  {
-    out.tag("table").attr("border=0 cellpadding=0 cellspacing=1 bgcolor=black")
-        .attr("width", width).attr("height", 8).text("<tr>");
-    if (lo > 0)
-    {
-      out.text("<td bgcolor='").text(loColor).text("' width='").text(lo).text(
-          "%'></td>").newLine();
-    }
-    if (mi > 0)
-    {
-      out.text("<td bgcolor='").text(miColor).text("' width='").text(mi).text(
-          "%'></td>").newLine();
-    }
-    if (hi > 0)
-    {
-      out.text("<td bgcolor='").text(hiColor).text("' width='").text(hi).text(
-          "%'></td>").newLine();
-    }
-    out.text("</tr>");
-    out.tagEnd("table");
-  }
-  
+public class HtmlUtils {
+
+	private static final String loColor = "#40ff40"; // green
+	private static final String miColor = "yellow";
+	private static final String hiColor = "red";
+
+	// Prevent instances of this class
+	private HtmlUtils() {
+	}
+
+	public static void progress(HtmlWriter out, int width, int height, int lo,
+			int mi, int hi) {
+		out.tag("table").attr(
+				"border=0 cellpadding=0 cellspacing=1 bgcolor=black").attr(
+				"width", width).attr("height", 8).text("<tr>");
+		if (lo > 0) {
+			out.text("<td bgcolor='").text(loColor).text("' width='").text(lo)
+					.text("%'></td>").newLine();
+		}
+		if (mi > 0) {
+			out.text("<td bgcolor='").text(miColor).text("' width='").text(mi)
+					.text("%'></td>").newLine();
+		}
+		if (hi > 0) {
+			out.text("<td bgcolor='").text(hiColor).text("' width='").text(hi)
+					.text("%'></td>").newLine();
+		}
+		out.text("</tr>");
+		out.tagEnd("table");
+	}
+
 } // HtmlUtils

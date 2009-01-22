@@ -28,12 +28,10 @@
  */
 package se.sics.tasim.sim;
 
-public class NoSuchManagerException extends Exception
-{
-  
-  public NoSuchManagerException(String simulationType)
-  {
-    super(simulationType);
-  }
-  
+public class NoSuchManagerException extends Exception {
+
+	public NoSuchManagerException(String simulationType) {
+		super(simulationType);
+	}
+
 } // NoSuchManagerException

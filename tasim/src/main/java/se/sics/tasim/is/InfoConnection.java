@@ -33,119 +33,110 @@ import se.sics.isl.util.IllegalConfigurationException;
 /**
  * The connection to the information system/server from the simulation server.
  */
-public abstract class InfoConnection extends EventWriter
-{
-  
-  public final static int STATUS = SimConnection.STATUS;
-  public final static int UNIQUE_SIM_ID = SimConnection.UNIQUE_SIM_ID;
-  public final static int SIM_ID = SimConnection.SIM_ID;
-  
-  public final static int STATUS_READY = SimConnection.STATUS_READY;
-  
-  /** Request types */
-  public static final int CREATE_SIMULATION = 1;
-  public static final int REMOVE_SIMULATION = 2;
-  public static final int JOIN_SIMULATION = 3;
-  public static final int RESERVE_TIME = 4;
-  public static final int SCHEDULE_COMPETITION = 10;
-  
-  /** Information */
-  private SimConnection sim;
-  private String serverName;
-  private String serverPassword;
-  private String serverVersion;
-  
-  /**
-   * This method sets the corresponding connection "listener" that handles
-   * messages to the simulation server.
-   * 
-   * @param sim
-   *          the <code>SimConnection</code> to use for communication to the
-   *          simulation server
-   */
-  public void setSimConnection(SimConnection sim)
-  {
-    if (this.sim != null)
-    {
-      throw new IllegalStateException("Connection already set");
-    }
-    this.sim = sim;
-  }
-  
-  public SimConnection getSimConnection()
-  {
-    return sim;
-  }
-  
-  public abstract void init(ConfigManager config)
-      throws IllegalConfigurationException, IOException;
-  
-  public abstract void close();
-  
-  // -------------------------------------------------------------------
-  // Information
-  // -------------------------------------------------------------------
-  
-  public String getServerName()
-  {
-    return serverName;
-  }
-  
-  public String getServerPassword()
-  {
-    return serverPassword;
-  }
-  
-  public String getServerVersion()
-  {
-    return serverVersion;
-  }
-  
-  public void auth(String serverName, String serverPassword,
-      String serverVersion)
-  {
-    if (serverName == null || serverVersion == null)
-    {
-      throw new NullPointerException();
-    }
-    if (serverName.length() < 1)
-    {
-      throw new IllegalArgumentException("too short server name");
-    }
-    this.serverName = serverName;
-    this.serverPassword = serverPassword;
-    this.serverVersion = serverVersion;
-  }
-  
-  public abstract void requestSuccessful(int operation, int id);
-  
-  public abstract void requestFailed(int operation, int id, String reason);
-  
-  public abstract void checkUser(String userName);
-  
-  // MLB 20080411 - Added to allow non-pre-registered agents to play,
-  //  for use in experimental work
-  public abstract int addUser(String name, String password, String email);
-  
-  public abstract void dataUpdated(int type, int value);
-  
-  public abstract void simulationCreated(SimulationInfo info);
-  
-  public abstract void simulationCreated(SimulationInfo info, int competitionID);
-  
-  public abstract void simulationRemoved(int simulationUniqID, String msg);
-  
-  public abstract void simulationJoined(int simulationUniqID, int agentID,
-      int role);
-  
-  public abstract void simulationLocked(int simulationUniqID, int simID);
-  
-  public abstract void simulationStarted(int simulationUniqID,
-      String timeUnitName, int timeUnitCount);
-  
-  public abstract void simulationStopped(int simulationUniqID,
-      int simulationID, boolean error);
-  
-  public abstract void sendChatMessage(long time, String message);
-  
+public abstract class InfoConnection extends EventWriter {
+
+	public final static int STATUS = SimConnection.STATUS;
+	public final static int UNIQUE_SIM_ID = SimConnection.UNIQUE_SIM_ID;
+	public final static int SIM_ID = SimConnection.SIM_ID;
+
+	public final static int STATUS_READY = SimConnection.STATUS_READY;
+
+	/** Request types */
+	public static final int CREATE_SIMULATION = 1;
+	public static final int REMOVE_SIMULATION = 2;
+	public static final int JOIN_SIMULATION = 3;
+	public static final int RESERVE_TIME = 4;
+	public static final int SCHEDULE_COMPETITION = 10;
+
+	/** Information */
+	private SimConnection sim;
+	private String serverName;
+	private String serverPassword;
+	private String serverVersion;
+
+	/**
+	 * This method sets the corresponding connection "listener" that handles
+	 * messages to the simulation server.
+	 * 
+	 * @param sim
+	 *            the <code>SimConnection</code> to use for communication to the
+	 *            simulation server
+	 */
+	public void setSimConnection(SimConnection sim) {
+		if (this.sim != null) {
+			throw new IllegalStateException("Connection already set");
+		}
+		this.sim = sim;
+	}
+
+	public SimConnection getSimConnection() {
+		return sim;
+	}
+
+	public abstract void init(ConfigManager config)
+			throws IllegalConfigurationException, IOException;
+
+	public abstract void close();
+
+	// -------------------------------------------------------------------
+	// Information
+	// -------------------------------------------------------------------
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public String getServerPassword() {
+		return serverPassword;
+	}
+
+	public String getServerVersion() {
+		return serverVersion;
+	}
+
+	public void auth(String serverName, String serverPassword,
+			String serverVersion) {
+		if (serverName == null || serverVersion == null) {
+			throw new NullPointerException();
+		}
+		if (serverName.length() < 1) {
+			throw new IllegalArgumentException("too short server name");
+		}
+		this.serverName = serverName;
+		this.serverPassword = serverPassword;
+		this.serverVersion = serverVersion;
+	}
+
+	public abstract void requestSuccessful(int operation, int id);
+
+	public abstract void requestFailed(int operation, int id, String reason);
+
+	public abstract void checkUser(String userName);
+
+	// MLB 20080411 - Added to allow non-pre-registered agents to play,
+	// for use in experimental work
+	public abstract int addUser(String name, String password, String email);
+
+	public abstract void dataUpdated(int type, int value);
+
+	public abstract void simulationCreated(SimulationInfo info);
+
+	public abstract void simulationCreated(SimulationInfo info,
+			int competitionID);
+
+	public abstract void simulationRemoved(int simulationUniqID, String msg);
+
+	public abstract void simulationJoined(int simulationUniqID, int agentID,
+			int role);
+
+	public abstract void simulationLocked(int simulationUniqID, int simID);
+
+	public abstract void simulationStarted(int simulationUniqID,
+			String timeUnitName, int timeUnitCount);
+
+	public abstract void simulationStopped(int simulationUniqID,
+			int simulationID, boolean error);
+
+	public abstract void sendChatMessage(long time, String message);
+
 } // InfoConnection

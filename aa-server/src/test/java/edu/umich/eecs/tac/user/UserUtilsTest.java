@@ -14,87 +14,110 @@ import java.lang.reflect.InvocationTargetException;
  * @author Patrick Jordan
  */
 public class UserUtilsTest {
-    private static Product product;
-    private static User user;
-    private static Query query;
-    private static AdvertiserInfo advertiserInfo;
-    private static AdLink genericAdLink;
-    private static AdLink focusedAdLink;
-    private static AdLink focusedWrongAdLink;
-    private static String advertiser;
-    private static String manufacturer;
-    private static String component;
-    private static UserClickModel userClickModel;
+	private static Product product;
+	private static User user;
+	private static Query query;
+	private static AdvertiserInfo advertiserInfo;
+	private static AdLink genericAdLink;
+	private static AdLink focusedAdLink;
+	private static AdLink focusedWrongAdLink;
+	private static String advertiser;
+	private static String manufacturer;
+	private static String component;
+	private static UserClickModel userClickModel;
 
-    @BeforeClass
-    public static void setup() {
-        manufacturer = "man";
-        component = "com";
-        product = new Product(manufacturer, component);
-        user = new User(QueryState.NON_SEARCHING, product);
-        query = new Query();
-        advertiserInfo = new AdvertiserInfo();
-        advertiserInfo.setDistributionCapacity(2);
-        advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO, 0.5);
-        advertiserInfo.setDecayRate(0.5);
-        advertiserInfo.setComponentBonus(2.0);
-        advertiserInfo.setComponentSpecialty(component);
-        advertiserInfo.setTargetEffect(0.5);
+	@BeforeClass
+	public static void setup() {
+		manufacturer = "man";
+		component = "com";
+		product = new Product(manufacturer, component);
+		user = new User(QueryState.NON_SEARCHING, product);
+		query = new Query();
+		advertiserInfo = new AdvertiserInfo();
+		advertiserInfo.setDistributionCapacity(2);
+		advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO, 0.5);
+		advertiserInfo.setDecayRate(0.5);
+		advertiserInfo.setComponentBonus(2.0);
+		advertiserInfo.setComponentSpecialty(component);
+		advertiserInfo.setTargetEffect(0.5);
 
-        advertiser = "alice";
-        genericAdLink = new AdLink((Product)null, advertiser);
-        focusedAdLink = new AdLink(product, advertiser);
-        focusedWrongAdLink = new AdLink(new Product(manufacturer, "not" + component), advertiser);
+		advertiser = "alice";
+		genericAdLink = new AdLink((Product) null, advertiser);
+		focusedAdLink = new AdLink(product, advertiser);
+		focusedWrongAdLink = new AdLink(new Product(manufacturer, "not"
+				+ component), advertiser);
 
-        userClickModel = new UserClickModel(new Query[]{query}, new String[]{advertiser});
-        userClickModel.setAdvertiserEffect(0, 0, 0.8);
+		userClickModel = new UserClickModel(new Query[] { query },
+				new String[] { advertiser });
+		userClickModel.setAdvertiserEffect(0, 0, 0.8);
 
-    }
+	}
 
-    @Test(expected=IllegalAccessException.class)
-    public void testConstructor() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        Constructor constructor = UserUtils.class.getDeclaredConstructor();
-        constructor.newInstance();
-    }
+	@Test(expected = IllegalAccessException.class)
+	public void testConstructor() throws NoSuchMethodException,
+			InstantiationException, IllegalAccessException,
+			InvocationTargetException {
+		Constructor constructor = UserUtils.class.getDeclaredConstructor();
+		constructor.newInstance();
+	}
 
-    @Test
-    public void testModifyOdds() {
-        assertEquals(modifyOdds(0.5, 2.0), 2.0 / 3.0, 0.000001);
-    }
+	@Test
+	public void testModifyOdds() {
+		assertEquals(modifyOdds(0.5, 2.0), 2.0 / 3.0, 0.000001);
+	}
 
-    @Test
-    public void testModifySalesProfitForManufacturerSpecialty() {
-        assertEquals(modifySalesProfitForManufacturerSpecialty(user, manufacturer, 0.5, 1.0), 1.5, 0.0000001);
-        assertEquals(modifySalesProfitForManufacturerSpecialty(user, "not" + manufacturer, 0.5, 1.0), 1.0, 0.0000001);
-    }
+	@Test
+	public void testModifySalesProfitForManufacturerSpecialty() {
+		assertEquals(modifySalesProfitForManufacturerSpecialty(user,
+				manufacturer, 0.5, 1.0), 1.5, 0.0000001);
+		assertEquals(modifySalesProfitForManufacturerSpecialty(user, "not"
+				+ manufacturer, 0.5, 1.0), 1.0, 0.0000001);
+	}
 
-    @Test
-    public void testModifyOddsForComponentSpecialty() {
-        assertEquals(modifyOddsForComponentSpecialty(user, component, 1.0, 0.5), 2.0 / 3.0, 0.0000001);
-        assertEquals(modifyOddsForComponentSpecialty(user, "not" + component, 1.0, 0.5), 0.5, 0.0000001);
-    }
+	@Test
+	public void testModifyOddsForComponentSpecialty() {
+		assertEquals(
+				modifyOddsForComponentSpecialty(user, component, 1.0, 0.5),
+				2.0 / 3.0, 0.0000001);
+		assertEquals(modifyOddsForComponentSpecialty(user, "not" + component,
+				1.0, 0.5), 0.5, 0.0000001);
+	}
 
-    @Test
-    public void testCalculateConversionProbability() {
-        assertEquals(calculateConversionProbability(user, query, advertiserInfo, 1.0), 0.75, 0.0000001);
-    }
+	@Test
+	public void testCalculateConversionProbability() {
+		assertEquals(calculateConversionProbability(user, query,
+				advertiserInfo, 1.0), 0.75, 0.0000001);
+	}
 
-    @Test
-    public void testCalculateClickProbability() {
-        assertEquals(calculateClickProbability(user, genericAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.8, 0.0000001);
-        assertEquals(calculateClickProbability(user, focusedAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.8571428571428572, 0.0000001);
-        assertEquals(calculateClickProbability(user, focusedWrongAdLink, advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.7272727272727273, 0.0000001);
+	@Test
+	public void testCalculateClickProbability() {
+		assertEquals(calculateClickProbability(user, genericAdLink,
+				advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.8, 0.0000001);
+		assertEquals(calculateClickProbability(user, focusedAdLink,
+				advertiserInfo.getTargetEffect(), 0.0, 0.8),
+				0.8571428571428572, 0.0000001);
+		assertEquals(calculateClickProbability(user, focusedWrongAdLink,
+				advertiserInfo.getTargetEffect(), 0.0, 0.8),
+				0.7272727272727273, 0.0000001);
 
-        assertEquals(calculateClickProbability(user, genericAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.8571428571428572, 0.0000001);
-        assertEquals(calculateClickProbability(user, focusedAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.9, 0.0000001);
-        assertEquals(calculateClickProbability(user, focusedWrongAdLink, advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.8, 0.0000001);
-    }
+		assertEquals(calculateClickProbability(user, genericAdLink,
+				advertiserInfo.getTargetEffect(), 0.5, 0.8),
+				0.8571428571428572, 0.0000001);
+		assertEquals(calculateClickProbability(user, focusedAdLink,
+				advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.9, 0.0000001);
+		assertEquals(calculateClickProbability(user, focusedWrongAdLink,
+				advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.8, 0.0000001);
+	}
 
-    @Test
-    public void testFindAdvertiserEffect() {
+	@Test
+	public void testFindAdvertiserEffect() {
 
-        assertEquals(findAdvertiserEffect(query, genericAdLink, userClickModel), 0.8, 0.0000001);
-        assertEquals(findAdvertiserEffect(query, new AdLink(product, "bob"), userClickModel), 0.0, 0.0000001);
-        assertEquals(findAdvertiserEffect(new Query("a", "b"), genericAdLink, userClickModel), 0.0, 0.0000001);
-    }
+		assertEquals(
+				findAdvertiserEffect(query, genericAdLink, userClickModel),
+				0.8, 0.0000001);
+		assertEquals(findAdvertiserEffect(query, new AdLink(product, "bob"),
+				userClickModel), 0.0, 0.0000001);
+		assertEquals(findAdvertiserEffect(new Query("a", "b"), genericAdLink,
+				userClickModel), 0.0, 0.0000001);
+	}
 }

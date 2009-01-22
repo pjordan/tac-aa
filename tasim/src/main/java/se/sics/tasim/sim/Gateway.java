@@ -31,63 +31,54 @@ import java.io.IOException;
 import se.sics.isl.util.ConfigManager;
 import se.sics.isl.util.IllegalConfigurationException;
 
-public abstract class Gateway
-{
-  
-  private Admin admin;
-  private String name;
-  
-  protected Gateway()
-  {}
-  
-  final void init(Admin admin, String name)
-      throws IllegalConfigurationException
-  {
-    if (admin == null)
-    {
-      throw new NullPointerException();
-    }
-    this.admin = admin;
-    this.name = name;
-    initGateway();
-  }
-  
-  public String getName()
-  {
-    return name;
-  }
-  
-  // The version handling should be handled better. FIX THIS!!! \TODO
-  public String getServerVersion()
-  {
-    return Admin.SERVER_VERSION;
-  }
-  
-  final void start() throws IOException
-  {
-    startGateway();
-  }
-  
-  final void stop()
-  {
-    stopGateway();
-  }
-  
-  protected abstract void initGateway() throws IllegalConfigurationException;
-  
-  protected abstract void startGateway() throws IOException;
-  
-  protected abstract void stopGateway();
-  
-  protected ConfigManager getConfig()
-  {
-    return admin.getConfig();
-  }
-  
-  protected void loginAgentChannel(AgentChannel channel, String name,
-      String password)
-  {
-    channel.init(admin, name, password);
-  }
-  
+public abstract class Gateway {
+
+	private Admin admin;
+	private String name;
+
+	protected Gateway() {
+	}
+
+	final void init(Admin admin, String name)
+			throws IllegalConfigurationException {
+		if (admin == null) {
+			throw new NullPointerException();
+		}
+		this.admin = admin;
+		this.name = name;
+		initGateway();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	// The version handling should be handled better. FIX THIS!!! \TODO
+	public String getServerVersion() {
+		return Admin.SERVER_VERSION;
+	}
+
+	final void start() throws IOException {
+		startGateway();
+	}
+
+	final void stop() {
+		stopGateway();
+	}
+
+	protected abstract void initGateway() throws IllegalConfigurationException;
+
+	protected abstract void startGateway() throws IOException;
+
+	protected abstract void stopGateway();
+
+	protected ConfigManager getConfig() {
+		return admin.getConfig();
+	}
+
+	protected void loginAgentChannel(AgentChannel channel, String name,
+			String password) {
+		channel.init(admin, name, password);
+	}
+
 } // Gateway

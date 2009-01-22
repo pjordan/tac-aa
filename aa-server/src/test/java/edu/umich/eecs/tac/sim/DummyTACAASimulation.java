@@ -22,9 +22,9 @@ public class DummyTACAASimulation implements BankStatusSender {
 	private RetailCatalog rc;
 	private SlotInfo ai;
 	private SalesAnalyst sa;
-    private Map<String, AdvertiserInfo> advertiserInfo = new HashMap<String, AdvertiserInfo>();
-    private SimulationAgent[] ps;
-    
+	private Map<String, AdvertiserInfo> advertiserInfo = new HashMap<String, AdvertiserInfo>();
+	private SimulationAgent[] ps;
+
 	public void sendBankStatus(String accountName, BankStatus status) {
 		return;
 	}
@@ -33,13 +33,13 @@ public class DummyTACAASimulation implements BankStatusSender {
 		rc = new RetailCatalog();
 		rc.addProduct(new Product("man", "com"));
 		ai = new SlotInfo();
-        SimpleAgentRepository repository = new SimpleAgentRepository();
-        SimpleSalesReportSender salesReportSender = new SimpleSalesReportSender();
+		SimpleAgentRepository repository = new SimpleAgentRepository();
+		SimpleSalesReportSender salesReportSender = new SimpleSalesReportSender();
 		sa = new DefaultSalesAnalyst(repository, salesReportSender, 1);
 		ps = new SimulationAgent[1];
 		ps[0] = new SimulationAgent(new DefaultPublisher(), "dp");
 	}
-	
+
 	public RetailCatalog getRetailCatalog() {
 		return rc;
 	}
@@ -74,47 +74,46 @@ public class DummyTACAASimulation implements BankStatusSender {
 		// TODO Auto-generated method stub
 		return null;
 	}
-    public class SimpleAgentRepository implements AgentRepository {
-        public RetailCatalog getRetailCatalog() {
-            return null;
-        }
 
-        public Map<String, AdvertiserInfo> getAdvertiserInfo() {
-            return advertiserInfo;
-        }
+	public class SimpleAgentRepository implements AgentRepository {
+		public RetailCatalog getRetailCatalog() {
+			return null;
+		}
 
-        public SimulationAgent[] getPublishers() {
-            return new SimulationAgent[0];
-        }
+		public Map<String, AdvertiserInfo> getAdvertiserInfo() {
+			return advertiserInfo;
+		}
 
-        public SimulationAgent[] getUsers() {
-            return new SimulationAgent[0];
-        }
+		public SimulationAgent[] getPublishers() {
+			return new SimulationAgent[0];
+		}
 
-        public SalesAnalyst getSalesAnalyst() {
-            return sa;
-        }
+		public SimulationAgent[] getUsers() {
+			return new SimulationAgent[0];
+		}
 
-        public SlotInfo getAuctionInfo() {
-            return ai;
-        }
+		public SalesAnalyst getSalesAnalyst() {
+			return sa;
+		}
 
+		public SlotInfo getAuctionInfo() {
+			return ai;
+		}
 
-        public int getNumberOfAdvertisers() {
-            return advertiserInfo.size();
-        }
+		public int getNumberOfAdvertisers() {
+			return advertiserInfo.size();
+		}
 
+		public String[] getAdvertiserAddresses() {
+			return advertiserInfo.keySet().toArray(new String[0]);
+		}
+	}
 
-        public String[] getAdvertiserAddresses() {
-            return advertiserInfo.keySet().toArray(new String[0]);
-        }
-    }
+	public class SimpleSalesReportSender implements SalesReportSender {
+		public void sendSalesReport(String advertiser, SalesReport report) {
+		}
 
-    public class SimpleSalesReportSender implements SalesReportSender {
-        public void sendSalesReport(String advertiser, SalesReport report) {
-        }
-
-       public void broadcastConversions(String advertiser, int conversions) {
-        }
-    }
+		public void broadcastConversions(String advertiser, int conversions) {
+		}
+	}
 }

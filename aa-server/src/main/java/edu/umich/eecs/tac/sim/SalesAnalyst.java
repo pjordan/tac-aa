@@ -5,8 +5,9 @@ import edu.umich.eecs.tac.user.UserEventListener;
 /**
  * @author Patrick Jordan
  */
-public interface SalesAnalyst extends UserEventListener, RecentConversionsTracker {
-    void addAccount(String name);
+public interface SalesAnalyst extends UserEventListener,
+		RecentConversionsTracker {
+	void addAccount(String name);
 
-    void sendSalesReportToAll();
+	void sendSalesReportToAll();
 }

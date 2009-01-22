@@ -38,55 +38,51 @@ import org.mortbay.util.ByteArrayISO8859Writer;
 
 /**
  */
-public class RegistrationNotificationPage extends HttpPage
-{
-  
-  private static final Logger log = Logger
-      .getLogger(RegistrationNotificationPage.class.getName());
-  
-  private final InfoServer infoServer;
-  
-  // -------------------------------------------------------------------
-  // User notification handling
-  // -------------------------------------------------------------------
-  
-  public RegistrationNotificationPage(InfoServer infoServer)
-  {
-    this.infoServer = infoServer;
-  }
-  
-  public void handle(String pathInContext, String pathParams,
-      HttpRequest request, HttpResponse response) throws HttpException,
-      IOException
-  {
-    String name = request.getParameter("id");
-    String message = null;
-    if (name != null)
-    {
-      try
-      {
-        int id = Integer.parseInt(name);
-        infoServer.updateUser(id);
-        log.info("updated user " + id + " using notification");
-        message = "<html><body>User " + id + " has been updated</body></html>";
-      }
-      catch (Exception e)
-      {
-        log.log(Level.WARNING, "illegal user update '" + name + '\'', e);
-      }
-    }
-    
-    if (message == null)
-    {
-      message = "<html><body>Failed to update user " + name + "</body></html>";
-    }
-    
-    ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer();
-    writer.write(message);
-    response.setContentType(HttpFields.__TextHtml);
-    response.setContentLength(writer.size());
-    writer.writeTo(response.getOutputStream());
-    response.commit();
-  }
-  
+public class RegistrationNotificationPage extends HttpPage {
+
+	private static final Logger log = Logger
+			.getLogger(RegistrationNotificationPage.class.getName());
+
+	private final InfoServer infoServer;
+
+	// -------------------------------------------------------------------
+	// User notification handling
+	// -------------------------------------------------------------------
+
+	public RegistrationNotificationPage(InfoServer infoServer) {
+		this.infoServer = infoServer;
+	}
+
+	public void handle(String pathInContext, String pathParams,
+			HttpRequest request, HttpResponse response) throws HttpException,
+			IOException {
+		String name = request.getParameter("id");
+		String message = null;
+		if (name != null) {
+			try {
+				int id = Integer.parseInt(name);
+				infoServer.updateUser(id);
+				log.info("updated user " + id + " using notification");
+				message = "<html><body>User " + id
+						+ " has been updated</body></html>";
+			} catch (Exception e) {
+				log
+						.log(Level.WARNING, "illegal user update '" + name
+								+ '\'', e);
+			}
+		}
+
+		if (message == null) {
+			message = "<html><body>Failed to update user " + name
+					+ "</body></html>";
+		}
+
+		ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer();
+		writer.write(message);
+		response.setContentType(HttpFields.__TextHtml);
+		response.setContentLength(writer.size());
+		writer.writeTo(response.getOutputStream());
+		response.commit();
+	}
+
 } // RegistrationNotificationPage

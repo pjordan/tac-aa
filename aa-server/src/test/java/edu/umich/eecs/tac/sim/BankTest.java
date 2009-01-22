@@ -16,11 +16,11 @@ public class BankTest {
 
 	private Bank bank;
 	private DummyTACAASimulation dummy;
-	
+
 	@Before
 	public void setUp() throws IllegalConfigurationException {
 		dummy = new DummyTACAASimulation();
-		bank = new Bank(dummy, null , 1);
+		bank = new Bank(dummy, null, 1);
 	}
 
 	@Test

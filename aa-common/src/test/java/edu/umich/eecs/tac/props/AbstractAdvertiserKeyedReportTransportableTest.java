@@ -8,19 +8,21 @@ import static org.junit.Assert.*;
  */
 public class AbstractAdvertiserKeyedReportTransportableTest {
 
-    @Test
-    public void testContains() {
-        assertFalse(new SimpleAbstractAdvertiserKeyedReportTransportable().containsAdvertiser("a"));
-    }
+	@Test
+	public void testContains() {
+		assertFalse(new SimpleAbstractAdvertiserKeyedReportTransportable()
+				.containsAdvertiser("a"));
+	}
 
-    private static class SimpleAbstractAdvertiserKeyedReportTransportable extends AbstractAdvertiserKeyedReportTransportable<AdvertiserEntry> {
+	private static class SimpleAbstractAdvertiserKeyedReportTransportable
+			extends AbstractAdvertiserKeyedReportTransportable<AdvertiserEntry> {
 
-        protected AdvertiserEntry createEntry(String key) {
-            return null;
-        }
+		protected AdvertiserEntry createEntry(String key) {
+			return null;
+		}
 
-        protected Class entryClass() {
-            return AdvertiserEntry.class;
-        }
-    }
+		protected Class entryClass() {
+			return AdvertiserEntry.class;
+		}
+	}
 }

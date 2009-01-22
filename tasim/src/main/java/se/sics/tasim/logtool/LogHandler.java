@@ -38,71 +38,63 @@ import se.sics.isl.util.IllegalConfigurationException;
  * implementations of log analyzers, viewers, etc, that uses the
  * <code>LogManager</code> for the log file processing.
  */
-public abstract class LogHandler
-{
-  
-  private LogManager logManager;
-  
-  protected LogHandler()
-  {}
-  
-  final void init(LogManager logManager)
-  {
-    if (this.logManager != null)
-    {
-      throw new IllegalStateException("already initialized");
-    }
-    if (logManager == null)
-    {
-      throw new NullPointerException();
-    }
-    this.logManager = logManager;
-    init();
-  }
-  
-  protected LogManager getLogManager()
-  {
-    return logManager;
-  }
-  
-  public ConfigManager getConfig()
-  {
-    return logManager.getConfig();
-  }
-  
-  public File getTempDirectory(String name) throws IOException
-  {
-    return logManager.getTempDirectory(name);
-  }
-  
-  public void warn(String warningMessage)
-  {
-    logManager.warn(warningMessage);
-  }
-  
-  // -------------------------------------------------------------------
-  // API to the log implementations
-  // -------------------------------------------------------------------
-  
-  /**
-   * Initializes the log handler.
-   */
-  protected void init()
-  {}
-  
-  protected void sessionStarted()
-  {}
-  
-  protected void sessionEnded()
-  {}
-  
-  /**
-   * Invoked when a new log file should be processed.
-   * 
-   * @param reader
-   *          the log reader for the log file.
-   */
-  protected abstract void start(LogReader reader)
-      throws IllegalConfigurationException, IOException, ParseException;
-  
+public abstract class LogHandler {
+
+	private LogManager logManager;
+
+	protected LogHandler() {
+	}
+
+	final void init(LogManager logManager) {
+		if (this.logManager != null) {
+			throw new IllegalStateException("already initialized");
+		}
+		if (logManager == null) {
+			throw new NullPointerException();
+		}
+		this.logManager = logManager;
+		init();
+	}
+
+	protected LogManager getLogManager() {
+		return logManager;
+	}
+
+	public ConfigManager getConfig() {
+		return logManager.getConfig();
+	}
+
+	public File getTempDirectory(String name) throws IOException {
+		return logManager.getTempDirectory(name);
+	}
+
+	public void warn(String warningMessage) {
+		logManager.warn(warningMessage);
+	}
+
+	// -------------------------------------------------------------------
+	// API to the log implementations
+	// -------------------------------------------------------------------
+
+	/**
+	 * Initializes the log handler.
+	 */
+	protected void init() {
+	}
+
+	protected void sessionStarted() {
+	}
+
+	protected void sessionEnded() {
+	}
+
+	/**
+	 * Invoked when a new log file should be processed.
+	 * 
+	 * @param reader
+	 *            the log reader for the log file.
+	 */
+	protected abstract void start(LogReader reader)
+			throws IllegalConfigurationException, IOException, ParseException;
+
 } // LogHandler

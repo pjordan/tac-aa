@@ -28,31 +28,28 @@
  */
 package se.sics.tasim.is.common;
 
-public abstract class InfoManager
-{
-  
-  private InfoServer infoServer;
-  private String name;
-  
-  protected InfoManager()
-  {}
-  
-  final void init(InfoServer infoServer, String name)
-  {
-    this.infoServer = infoServer;
-    this.name = name;
-    init();
-  }
-  
-  protected abstract void init();
-  
-  protected void registerType(String type)
-  {
-    infoServer.addInfoManager(type, this);
-  }
-  
-  public abstract ResultManager createResultManager(String simulationType);
-  
-  public abstract ViewerCache createViewerCache(String simulationType);
-  
+public abstract class InfoManager {
+
+	private InfoServer infoServer;
+	private String name;
+
+	protected InfoManager() {
+	}
+
+	final void init(InfoServer infoServer, String name) {
+		this.infoServer = infoServer;
+		this.name = name;
+		init();
+	}
+
+	protected abstract void init();
+
+	protected void registerType(String type) {
+		infoServer.addInfoManager(type, this);
+	}
+
+	public abstract ResultManager createResultManager(String simulationType);
+
+	public abstract ViewerCache createViewerCache(String simulationType);
+
 } // InfoManager

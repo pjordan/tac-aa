@@ -14,181 +14,186 @@ import se.sics.isl.transport.Transportable;
  * @author Patrick Jordan, Ben Cassell, Lee Callender
  */
 public class DefaultUserManager implements UserManager {
-    protected Logger log = Logger.getLogger(DefaultUserManager.class.getName());
+	protected Logger log = Logger.getLogger(DefaultUserManager.class.getName());
 
-    private final Object lock;
+	private final Object lock;
 
-    private List<User> users;
+	private List<User> users;
 
-    private Random random;
+	private Random random;
 
-    private UserQueryManager queryManager;
+	private UserQueryManager queryManager;
 
-    private UserTransitionManager transitionManager;
+	private UserTransitionManager transitionManager;
 
-    private UserViewManager viewManager;
+	private UserViewManager viewManager;
 
-    private UserClickModel userClickModel;
+	private UserClickModel userClickModel;
 
-    private UsersInitializer usersInitializer;
+	private UsersInitializer usersInitializer;
 
-    public DefaultUserManager(RetailCatalog retailCatalog, UserTransitionManager transitionManager, UserQueryManager queryManager, UserViewManager viewManager, int populationSize) {
-        this(retailCatalog, transitionManager, queryManager, viewManager, populationSize, new Random());
-    }
+	public DefaultUserManager(RetailCatalog retailCatalog,
+			UserTransitionManager transitionManager,
+			UserQueryManager queryManager, UserViewManager viewManager,
+			int populationSize) {
+		this(retailCatalog, transitionManager, queryManager, viewManager,
+				populationSize, new Random());
+	}
 
-    public DefaultUserManager(RetailCatalog retailCatalog, UserTransitionManager transitionManager, UserQueryManager queryManager, UserViewManager viewManager, int populationSize, Random random) {
-        lock = new Object();
+	public DefaultUserManager(RetailCatalog retailCatalog,
+			UserTransitionManager transitionManager,
+			UserQueryManager queryManager, UserViewManager viewManager,
+			int populationSize, Random random) {
+		lock = new Object();
 
-        if (retailCatalog == null) {
-            throw new NullPointerException("Retail catalog cannot be null");
-        }
+		if (retailCatalog == null) {
+			throw new NullPointerException("Retail catalog cannot be null");
+		}
 
-        if (transitionManager == null) {
-            throw new NullPointerException("User transition manager cannot be null");
-        }
+		if (transitionManager == null) {
+			throw new NullPointerException(
+					"User transition manager cannot be null");
+		}
 
-        if (queryManager == null) {
-            throw new NullPointerException("User query manager cannot be null");
-        }
+		if (queryManager == null) {
+			throw new NullPointerException("User query manager cannot be null");
+		}
 
-        if (viewManager == null) {
-            throw new NullPointerException("User view manager cannot be null");
-        }
+		if (viewManager == null) {
+			throw new NullPointerException("User view manager cannot be null");
+		}
 
-        if (populationSize < 0) {
-            throw new IllegalArgumentException("Population size cannot be negative");
-        }
+		if (populationSize < 0) {
+			throw new IllegalArgumentException(
+					"Population size cannot be negative");
+		}
 
-        if (random == null) {
-            throw new NullPointerException("Random number generator cannot be null");
-        }
+		if (random == null) {
+			throw new NullPointerException(
+					"Random number generator cannot be null");
+		}
 
-        this.random = random;
-        this.transitionManager = transitionManager;
-        this.queryManager = queryManager;
-        this.viewManager = viewManager;
-        this.usersInitializer = new DefaultUsersInitializer(transitionManager);
+		this.random = random;
+		this.transitionManager = transitionManager;
+		this.queryManager = queryManager;
+		this.viewManager = viewManager;
+		this.usersInitializer = new DefaultUsersInitializer(transitionManager);
 
-        users = buildUsers(retailCatalog, populationSize);
-    }
+		users = buildUsers(retailCatalog, populationSize);
+	}
 
-    private List<User> buildUsers(RetailCatalog catalog, int populationSize) {
-        List<User> users = new ArrayList<User>();
+	private List<User> buildUsers(RetailCatalog catalog, int populationSize) {
+		List<User> users = new ArrayList<User>();
 
-        for (Product product : catalog) {
-            for (int i = 0; i < populationSize; i++) {
-                users.add(new User(QueryState.NON_SEARCHING, product));
-            }
-        }
+		for (Product product : catalog) {
+			for (int i = 0; i < populationSize; i++) {
+				users.add(new User(QueryState.NON_SEARCHING, product));
+			}
+		}
 
-        return users;
-    }
+		return users;
+	}
 
+	public void initialize(int virtualDays) {
+		usersInitializer.initialize(users, virtualDays);
+	}
 
-    public void initialize(int virtualDays) {
-        usersInitializer.initialize(users, virtualDays);
-    }
+	public void triggerBehavior(Auctioneer auctioneer) {
 
-    public void triggerBehavior(Auctioneer auctioneer) {
+		synchronized (lock) {
+			log.finest("START OF USER TRIGGER");
 
-        synchronized (lock) {
-            log.finest("START OF USER TRIGGER");
+			Collections.shuffle(users, random);
 
-            Collections.shuffle(users, random);
+			for (User user : users) {
 
-            for (User user : users) {
+				boolean transacted = handleSearch(user, auctioneer);
 
-                boolean transacted = handleSearch(user, auctioneer);
+				handleTransition(user, transacted);
+			}
 
-                handleTransition(user, transacted);
-            }
+			log.finest("FINISH OF USER TRIGGER");
+		}
 
-            log.finest("FINISH OF USER TRIGGER");
-        }
+	}
 
+	private boolean handleSearch(User user, Auctioneer auctioneer) {
 
-    }
+		boolean transacted = false;
 
-    private boolean handleSearch(User user, Auctioneer auctioneer) {
+		Query query = generateQuery(user);
 
-        boolean transacted = false;
+		if (query != null) {
+			Auction auction = auctioneer.runAuction(query);
 
-        Query query = generateQuery(user);
+			transacted = handleImpression(query, auction, user);
+		}
 
-        if (query != null) {
-            Auction auction = auctioneer.runAuction(query);
+		return transacted;
+	}
 
-            transacted = handleImpression(query, auction, user);
-        }
+	private boolean handleImpression(Query query, Auction auction, User user) {
+		return viewManager.processImpression(user, query, auction);
+	}
 
-        return transacted;
-    }
+	private void handleTransition(User user, boolean transacted) {
+		user
+				.setState(transitionManager.transition(user.getState(),
+						transacted));
+	}
 
-    private boolean handleImpression(Query query, Auction auction, User user) {
-        return viewManager.processImpression(user, query, auction);
-    }
+	private Query generateQuery(User user) {
+		return queryManager.generateQuery(user);
+	}
 
+	public boolean addUserEventListener(UserEventListener listener) {
+		synchronized (lock) {
+			return viewManager.addUserEventListener(listener);
+		}
+	}
 
-    private void handleTransition(User user, boolean transacted) {
-        user.setState(transitionManager.transition(user.getState(), transacted));
-    }
+	public boolean containsUserEventListener(UserEventListener listener) {
+		synchronized (lock) {
+			return viewManager.containsUserEventListener(listener);
+		}
+	}
 
+	public boolean removeUserEventListener(UserEventListener listener) {
+		synchronized (lock) {
+			return viewManager.removeUserEventListener(listener);
+		}
+	}
 
-    private Query generateQuery(User user) {
-        return queryManager.generateQuery(user);
-    }
+	public void nextTimeUnit(int timeUnit) {
+		viewManager.nextTimeUnit(timeUnit);
+		queryManager.nextTimeUnit(timeUnit);
+		transitionManager.nextTimeUnit(timeUnit);
+	}
 
-    public boolean addUserEventListener(UserEventListener listener) {
-        synchronized (lock) {
-            return viewManager.addUserEventListener(listener);
-        }
-    }
+	public int[] getStateDistribution() {
+		int[] distribution = new int[QueryState.values().length];
 
-    public boolean containsUserEventListener(UserEventListener listener) {
-        synchronized (lock) {
-            return viewManager.containsUserEventListener(listener);
-        }
-    }
+		for (User user : users) {
+			distribution[user.getState().ordinal()]++;
+		}
 
-    public boolean removeUserEventListener(UserEventListener listener) {
-        synchronized (lock) {
-            return viewManager.removeUserEventListener(listener);
-        }
-    }
+		return distribution;
+	}
 
+	public UserClickModel getUserClickModel() {
+		return userClickModel;
+	}
 
-    public void nextTimeUnit(int timeUnit) {
-        viewManager.nextTimeUnit(timeUnit);
-        queryManager.nextTimeUnit(timeUnit);
-        transitionManager.nextTimeUnit(timeUnit);
-    }
+	public void setUserClickModel(UserClickModel userClickModel) {
+		this.userClickModel = userClickModel;
+		viewManager.setUserClickModel(userClickModel);
+	}
 
+	public void messageReceived(Message message) {
+		Transportable content = message.getContent();
 
-    public int[] getStateDistribution() {
-        int[] distribution = new int[QueryState.values().length];
-
-        for (User user : users) {
-            distribution[user.getState().ordinal()]++;
-        }
-
-        return distribution;
-    }
-
-
-    public UserClickModel getUserClickModel() {
-        return userClickModel;
-    }
-
-    public void setUserClickModel(UserClickModel userClickModel) {
-        this.userClickModel = userClickModel;
-        viewManager.setUserClickModel(userClickModel);
-    }
-
-    public void messageReceived(Message message) {
-        Transportable content = message.getContent();
-
-        if (content instanceof UserClickModel) {
-            setUserClickModel((UserClickModel) content);
-        }
-    }
+		if (content instanceof UserClickModel) {
+			setUserClickModel((UserClickModel) content);
+		}
+	}
 }

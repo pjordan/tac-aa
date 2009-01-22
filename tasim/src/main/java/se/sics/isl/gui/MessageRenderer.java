@@ -35,40 +35,35 @@ import javax.swing.JList;
 import javax.swing.border.Border;
 import javax.swing.Icon;
 
-public class MessageRenderer extends DefaultListCellRenderer
-{
-  
-  private MessageModel model;
-  
-  public MessageRenderer(MessageModel model)
-  {
-    this.model = model;
-    // No focus border
-    setBorder(null);
-  }
-  
-  public Component getListCellRendererComponent(JList list, Object value, int index,
-      boolean isSelected, boolean cellHasFocus)
-  {
-    int flag = model.getFlagAt(index);
-    setComponentOrientation(list.getComponentOrientation());
-    setBackground(list.getBackground());
-    setForeground(flag == MessageModel.WARNING ? Color.red : list.getForeground());
-    
-    if (value instanceof Icon)
-    {
-      setIcon((Icon) value);
-      setText("");
-    }
-    else
-    {
-      setIcon(null);
-      setText((value == null) ? "" : value.toString());
-    }
-    
-    setEnabled(list.isEnabled());
-    setFont(list.getFont());
-    return this;
-  }
-  
+public class MessageRenderer extends DefaultListCellRenderer {
+
+	private MessageModel model;
+
+	public MessageRenderer(MessageModel model) {
+		this.model = model;
+		// No focus border
+		setBorder(null);
+	}
+
+	public Component getListCellRendererComponent(JList list, Object value,
+			int index, boolean isSelected, boolean cellHasFocus) {
+		int flag = model.getFlagAt(index);
+		setComponentOrientation(list.getComponentOrientation());
+		setBackground(list.getBackground());
+		setForeground(flag == MessageModel.WARNING ? Color.red : list
+				.getForeground());
+
+		if (value instanceof Icon) {
+			setIcon((Icon) value);
+			setText("");
+		} else {
+			setIcon(null);
+			setText((value == null) ? "" : value.toString());
+		}
+
+		setEnabled(list.isEnabled());
+		setFont(list.getFont());
+		return this;
+	}
+
 } // MessageRenderer

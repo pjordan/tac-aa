@@ -35,98 +35,86 @@ import se.sics.isl.transport.TransportWriter;
  * <code>SimulationStatus</code> contains in game / simulation status.
  * 
  * <p>
- * <b>Warning:</b> serialized objects of this class might not be compatible
- * with future versions. Only use serialization of this class for temporary
- * storage or RMI using the same version of the class.
+ * <b>Warning:</b> serialized objects of this class might not be compatible with
+ * future versions. Only use serialization of this class for temporary storage
+ * or RMI using the same version of the class.
  */
-public class SimulationStatus extends SimpleContent
-{
-  
-  private static final long serialVersionUID = 7937789505047945874L;
-  
-  private int simDate;
-  private int consumedMillis;
-  private boolean isSimulationEnded;
-  
-  public SimulationStatus()
-  {}
-  
-  public SimulationStatus(int currentDate, int consumedMillis)
-  {
-    this(currentDate, consumedMillis, false);
-  }
-  
-  public SimulationStatus(int currentDate, int consumedMillis,
-      boolean isSimulationEnded)
-  {
-    this.simDate = currentDate;
-    this.consumedMillis = consumedMillis;
-    this.isSimulationEnded = isSimulationEnded;
-  }
-  
-  /**
-   * Returns <code>true</code> if the simulation has ended and
-   * <code>false</code> otherwise.
-   */
-  public boolean isSimulationEnded()
-  {
-    return isSimulationEnded;
-  }
-  
-  public int getCurrentDate()
-  {
-    return simDate;
-  }
-  
-  /**
-   * Returns the number of milliseconds passed since start of day when this
-   * message was sent.
-   */
-  public int getConsumedMillis()
-  {
-    return consumedMillis;
-  }
-  
-  public String toString()
-  {
-    StringBuffer buf = new StringBuffer().append(getTransportName())
-        .append('[').append(simDate).append(',').append(consumedMillis).append(
-            ',').append(isSimulationEnded).append(',');
-    return params(buf).append(']').toString();
-  }
-  
-  /*****************************************************************************
-   * Transportable (externalization support)
-   ****************************************************************************/
-  
-  /**
-   * Returns the transport name used for externalization.
-   */
-  public String getTransportName()
-  {
-    return "simulationStatus";
-  }
-  
-  public void read(TransportReader reader) throws ParseException
-  {
-    if (isLocked())
-    {
-      throw new IllegalStateException("locked");
-    }
-    simDate = reader.getAttributeAsInt("date");
-    consumedMillis = reader.getAttributeAsInt("consumedMillis");
-    isSimulationEnded = reader.getAttributeAsInt("isSimulationEnded", 0) > 0;
-    super.read(reader);
-  }
-  
-  public void write(TransportWriter writer)
-  {
-    writer.attr("date", simDate).attr("consumedMillis", consumedMillis);
-    if (isSimulationEnded)
-    {
-      writer.attr("isSimulationEnded", 1);
-    }
-    super.write(writer);
-  }
-  
+public class SimulationStatus extends SimpleContent {
+
+	private static final long serialVersionUID = 7937789505047945874L;
+
+	private int simDate;
+	private int consumedMillis;
+	private boolean isSimulationEnded;
+
+	public SimulationStatus() {
+	}
+
+	public SimulationStatus(int currentDate, int consumedMillis) {
+		this(currentDate, consumedMillis, false);
+	}
+
+	public SimulationStatus(int currentDate, int consumedMillis,
+			boolean isSimulationEnded) {
+		this.simDate = currentDate;
+		this.consumedMillis = consumedMillis;
+		this.isSimulationEnded = isSimulationEnded;
+	}
+
+	/**
+	 * Returns <code>true</code> if the simulation has ended and
+	 * <code>false</code> otherwise.
+	 */
+	public boolean isSimulationEnded() {
+		return isSimulationEnded;
+	}
+
+	public int getCurrentDate() {
+		return simDate;
+	}
+
+	/**
+	 * Returns the number of milliseconds passed since start of day when this
+	 * message was sent.
+	 */
+	public int getConsumedMillis() {
+		return consumedMillis;
+	}
+
+	public String toString() {
+		StringBuffer buf = new StringBuffer().append(getTransportName())
+				.append('[').append(simDate).append(',').append(consumedMillis)
+				.append(',').append(isSimulationEnded).append(',');
+		return params(buf).append(']').toString();
+	}
+
+	/*****************************************************************************
+	 * Transportable (externalization support)
+	 ****************************************************************************/
+
+	/**
+	 * Returns the transport name used for externalization.
+	 */
+	public String getTransportName() {
+		return "simulationStatus";
+	}
+
+	public void read(TransportReader reader) throws ParseException {
+		if (isLocked()) {
+			throw new IllegalStateException("locked");
+		}
+		simDate = reader.getAttributeAsInt("date");
+		consumedMillis = reader.getAttributeAsInt("consumedMillis");
+		isSimulationEnded = reader.getAttributeAsInt("isSimulationEnded", 0) > 0;
+		super.read(reader);
+	}
+
+	public void write(TransportWriter writer) {
+		writer.attr("date", simDate).attr("consumedMillis", consumedMillis);
+		if (isSimulationEnded) {
+			writer.attr("isSimulationEnded", 1);
+		}
+		super.write(writer);
+	}
+
 } // SimulationStatus

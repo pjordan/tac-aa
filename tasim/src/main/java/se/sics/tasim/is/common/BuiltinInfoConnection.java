@@ -35,46 +35,39 @@ import se.sics.tasim.is.SimConnection;
 /**
  * Setup the information system to be builtin in a simulation server
  */
-public class BuiltinInfoConnection extends InfoConnectionImpl
-{
-  
-  private InfoServer infoServer;
-  
-  public BuiltinInfoConnection()
-  {}
-  
-  public void init(ConfigManager config) throws IllegalConfigurationException,
-      IOException
-  {
-    super.init(config);
-    if (infoServer == null)
-    {
-      infoServer = new InfoServer(config);
-    }
-    
-    checkInitialized();
-  }
-  
-  public void setSimConnection(SimConnection connection)
-  {
-    super.setSimConnection(connection);
-    checkInitialized();
-  }
-  
-  public void auth(String serverName, String serverPassword,
-      String serverVersion)
-  {
-    super.auth(serverName, serverPassword, serverVersion);
-    checkInitialized();
-  }
-  
-  private void checkInitialized()
-  {
-    if (getServerName() != null && getSimConnection() != null
-        && infoServer != null)
-    {
-      infoServer.addInfoConnection(this);
-    }
-  }
-  
+public class BuiltinInfoConnection extends InfoConnectionImpl {
+
+	private InfoServer infoServer;
+
+	public BuiltinInfoConnection() {
+	}
+
+	public void init(ConfigManager config)
+			throws IllegalConfigurationException, IOException {
+		super.init(config);
+		if (infoServer == null) {
+			infoServer = new InfoServer(config);
+		}
+
+		checkInitialized();
+	}
+
+	public void setSimConnection(SimConnection connection) {
+		super.setSimConnection(connection);
+		checkInitialized();
+	}
+
+	public void auth(String serverName, String serverPassword,
+			String serverVersion) {
+		super.auth(serverName, serverPassword, serverVersion);
+		checkInitialized();
+	}
+
+	private void checkInitialized() {
+		if (getServerName() != null && getSimConnection() != null
+				&& infoServer != null) {
+			infoServer.addInfoConnection(this);
+		}
+	}
+
 } // BuiltinInfoConnection

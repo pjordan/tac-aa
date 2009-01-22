@@ -6,26 +6,23 @@ import java.util.Random;
  * @author Patrick Jordan
  */
 public enum QueryState {
-    NON_SEARCHING(false,false),
-    INFORMATIONAL_SEARCH(true,false),
-    FOCUS_LEVEL_ZERO(true,true),
-    FOCUS_LEVEL_ONE(true,true),
-    FOCUS_LEVEL_TWO(true,true), 
-    TRANSACTED(false,false);
+	NON_SEARCHING(false, false), INFORMATIONAL_SEARCH(true, false), FOCUS_LEVEL_ZERO(
+			true, true), FOCUS_LEVEL_ONE(true, true), FOCUS_LEVEL_TWO(true,
+			true), TRANSACTED(false, false);
 
-    private boolean searching;
-    private boolean transacting;
+	private boolean searching;
+	private boolean transacting;
 
-    QueryState(boolean searching, boolean transacting) {
-        this.searching = searching;
-        this.transacting = transacting;
-    }
+	QueryState(boolean searching, boolean transacting) {
+		this.searching = searching;
+		this.transacting = transacting;
+	}
 
-    public boolean isSearching() {
-        return searching;
-    }
+	public boolean isSearching() {
+		return searching;
+	}
 
-    public boolean isTransacting() {
-        return transacting;
-    }
+	public boolean isTransacting() {
+		return transacting;
+	}
 }

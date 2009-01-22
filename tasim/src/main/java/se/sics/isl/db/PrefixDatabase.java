@@ -29,56 +29,47 @@ package se.sics.isl.db;
 import se.sics.isl.util.ConfigManager;
 import se.sics.isl.util.IllegalConfigurationException;
 
-public class PrefixDatabase extends Database
-{
-  
-  private final String prefix;
-  private final Database database;
-  
-  public PrefixDatabase(String prefix, Database database, ConfigManager config, String configPrefix)
-  {
-    this.prefix = prefix;
-    this.database = database;
-    
-    try
-    {
-      init(database.getName(), config, configPrefix);
-    }
-    catch (IllegalConfigurationException e)
-    {}
-  }
-  
-  protected void init(ConfigManager config, String prefix)
-  {}
-  
-  public DBTable createTable(String name)
-  {
-    return database.createTable(prefix + name);
-  }
-  
-  public DBTable getTable(String name)
-  {
-    return database.getTable(prefix + name);
-  }
-  
-  public void flush()
-  {
-    database.flush();
-  }
-  
-  public void drop()
-  {
-  // \TODO To be implemented!!!
-  }
-  
-  public boolean isClosed()
-  {
-    return database.isClosed();
-  }
-  
-  public void close()
-  {
-  // \TODO To be implemented!!!
-  }
-  
+public class PrefixDatabase extends Database {
+
+	private final String prefix;
+	private final Database database;
+
+	public PrefixDatabase(String prefix, Database database,
+			ConfigManager config, String configPrefix) {
+		this.prefix = prefix;
+		this.database = database;
+
+		try {
+			init(database.getName(), config, configPrefix);
+		} catch (IllegalConfigurationException e) {
+		}
+	}
+
+	protected void init(ConfigManager config, String prefix) {
+	}
+
+	public DBTable createTable(String name) {
+		return database.createTable(prefix + name);
+	}
+
+	public DBTable getTable(String name) {
+		return database.getTable(prefix + name);
+	}
+
+	public void flush() {
+		database.flush();
+	}
+
+	public void drop() {
+		// \TODO To be implemented!!!
+	}
+
+	public boolean isClosed() {
+		return database.isClosed();
+	}
+
+	public void close() {
+		// \TODO To be implemented!!!
+	}
+
 } // PrefixDatabase

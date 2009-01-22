@@ -27,140 +27,151 @@ import se.sics.tasim.viewer.TickListener;
  * @author Patrick Jordan
  */
 public class AuctionPanel extends JComponent implements TACAAConstants {
-    private Query query;
+	private Query query;
 
-    private XYSeriesCollection seriescollection;
-    private int currentDay;
-    private PublisherTabPanel publisherPanel;
-    private Map<String, XYSeries> bidSeries;
+	private XYSeriesCollection seriescollection;
+	private int currentDay;
+	private PublisherTabPanel publisherPanel;
+	private Map<String, XYSeries> bidSeries;
 
-    public AuctionPanel(Query query, PublisherTabPanel publisherPanel) {
-        this.query = query;
-        this.publisherPanel = publisherPanel;
-        this.bidSeries = new HashMap<String, XYSeries>();
-        this.currentDay = 0;
-        initialize();
+	public AuctionPanel(Query query, PublisherTabPanel publisherPanel) {
+		this.query = query;
+		this.publisherPanel = publisherPanel;
+		this.bidSeries = new HashMap<String, XYSeries>();
+		this.currentDay = 0;
+		initialize();
 
-        publisherPanel.getSimulationPanel().addViewListener(new BidBundleListener());
-        publisherPanel.getSimulationPanel().addTickListener(new DayListener());
-    }
+		publisherPanel.getSimulationPanel().addViewListener(
+				new BidBundleListener());
+		publisherPanel.getSimulationPanel().addTickListener(new DayListener());
+	}
 
+	protected void initialize() {
+		setLayout(new GridLayout(1, 1));
 
-    protected void initialize() {
-        setLayout(new GridLayout(1, 1));
+		seriescollection = new XYSeriesCollection();
+		JFreeChart chart = createChart(seriescollection);
+		ChartPanel chartpanel = new ChartPanel(chart, false);
+		chartpanel.setMouseZoomable(true, false);
 
-        seriescollection = new XYSeriesCollection();
-        JFreeChart chart = createChart(seriescollection);
-        ChartPanel chartpanel = new ChartPanel(chart, false);
-        chartpanel.setMouseZoomable(true, false);
+		add(chartpanel);
 
-        add(chartpanel);
+		// Participants will be added to the publisher panel before getting
+		// here.
+		int count = publisherPanel.getAgentCount();
 
-        // Participants will be added to the publisher panel before getting here.
-        int count = publisherPanel.getAgentCount();
+		for (int index = 0; index < count; index++) {
+			if (publisherPanel.getRole(index) == TACAAConstants.ADVERTISER) {
+				XYSeries series = new XYSeries(publisherPanel
+						.getAgentName(index));
+				bidSeries.put(publisherPanel.getAgentName(index), series);
+				seriescollection.addSeries(series);
+			}
+		}
+	}
 
-        for (int index = 0; index < count; index++) {
-            if (publisherPanel.getRole(index) == TACAAConstants.ADVERTISER) {
-                XYSeries series = new XYSeries(publisherPanel.getAgentName(index));
-                bidSeries.put(publisherPanel.getAgentName(index), series);
-                seriescollection.addSeries(series);
-            }
-        }
-    }
+	private JFreeChart createChart(XYDataset xydataset) {
+		JFreeChart jfreechart = ChartFactory.createXYLineChart(String.format(
+				"Auction for (%s,%s)", getQuery().getManufacturer(), getQuery()
+						.getComponent()), "Day", "Bid [$]", xydataset,
+				PlotOrientation.VERTICAL, true, true, false);
+		jfreechart.setBackgroundPaint(Color.white);
+		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
+		xyplot.setBackgroundPaint(Color.lightGray);
+		xyplot.setDomainGridlinePaint(Color.white);
+		xyplot.setRangeGridlinePaint(Color.white);
+		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
+		xyplot.setDomainCrosshairVisible(true);
+		xyplot.setRangeCrosshairVisible(true);
 
+		org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot
+				.getRenderer();
+		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
+			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
+			xylineandshaperenderer.setBaseShapesVisible(false);
+		}
+		return jfreechart;
+	}
 
-    private JFreeChart createChart(XYDataset xydataset) {
-        JFreeChart jfreechart = ChartFactory.createXYLineChart(String.format("Auction for (%s,%s)", getQuery().getManufacturer(), getQuery().getComponent()), "Day", "Bid [$]", xydataset, PlotOrientation.VERTICAL, true, true, false);
-        jfreechart.setBackgroundPaint(Color.white);
-        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-        xyplot.setBackgroundPaint(Color.lightGray);
-        xyplot.setDomainGridlinePaint(Color.white);
-        xyplot.setRangeGridlinePaint(Color.white);
-        xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-        xyplot.setDomainCrosshairVisible(true);
-        xyplot.setRangeCrosshairVisible(true);
-        
-        org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot.getRenderer();
-        if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-            XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-            xylineandshaperenderer.setBaseShapesVisible(false);
-        }
-        return jfreechart;
-    }
+	public Query getQuery() {
+		return query;
+	}
 
-    public Query getQuery() {
-        return query;
-    }
+	private class BidBundleListener implements ViewListener {
 
+		public void dataUpdated(int agent, int type, int value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-    private class BidBundleListener implements ViewListener {
+		public void dataUpdated(int agent, int type, long value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int agent, int type, int value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, float value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int agent, int type, long value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, double value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int agent, int type, float value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, String value) {
+			// To change body of implemented methods use File | Settings | File
+			// Templates.
+		}
 
-        public void dataUpdated(int agent, int type, double value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+		public void dataUpdated(int agent, int type, Transportable value) {
+			if (type == TACAAConstants.DU_BIDS
+					&& value.getClass().equals(BidBundle.class)) {
+				int index = publisherPanel.indexOfAgent(agent);
+				String name = index < 0 ? null : publisherPanel
+						.getAgentName(index);
 
-        public void dataUpdated(int agent, int type, String value) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+				if (name != null) {
+					XYSeries timeSeries = bidSeries.get(name);
 
-        public void dataUpdated(int agent, int type, Transportable value) {
-            if (type == TACAAConstants.DU_BIDS && value.getClass().equals(BidBundle.class)) {
-                int index = publisherPanel.indexOfAgent(agent);
-                String name = index < 0 ? null : publisherPanel.getAgentName(index);
+					if (timeSeries != null) {
 
-                if (name != null) {
-                    XYSeries timeSeries = bidSeries.get(name);
+						BidBundle bundle = (BidBundle) value;
 
-                    if (timeSeries != null) {
+						double bid = bundle.getBid(query);
+						if (!Double.isNaN(bid)) {
+							timeSeries.addOrUpdate(currentDay, bid);
+						}
+					}
+				}
+			}
+		}
 
+		public void dataUpdated(int type, Transportable value) {
 
-                        BidBundle bundle = (BidBundle) value;
+		}
 
-                        double bid = bundle.getBid(query);
-                        if (!Double.isNaN(bid)) {
-                            timeSeries.addOrUpdate(currentDay, bid);
-                        }
-                    }
-                }
-            }
-        }
+		public void participant(int agent, int role, String name,
+				int participantID) {
 
-        public void dataUpdated(int type, Transportable value) {
+		}
+	}
 
-        }
+	protected class DayListener implements TickListener {
 
-        public void participant(int agent, int role, String name, int participantID) {
+		public void tick(long serverTime) {
+			AuctionPanel.this.tick(serverTime);
+		}
 
-        }
-    }
+		public void simulationTick(long serverTime, int simulationDate) {
+			AuctionPanel.this.simulationTick(serverTime, simulationDate);
+		}
+	}
 
-    protected class DayListener implements TickListener {
+	protected void tick(long serverTime) {
+	}
 
-        public void tick(long serverTime) {
-            AuctionPanel.this.tick(serverTime);
-        }
-
-        public void simulationTick(long serverTime, int simulationDate) {
-            AuctionPanel.this.simulationTick(serverTime, simulationDate);
-        }
-    }
-
-    protected void tick(long serverTime) {
-    }
-
-    protected void simulationTick(long serverTime, int simulationDate) {
-        currentDay = simulationDate;
-    }
+	protected void simulationTick(long serverTime, int simulationDate) {
+		currentDay = simulationDate;
+	}
 }

@@ -13,30 +13,30 @@ import static edu.umich.eecs.tac.props.TransportableTestUtils.readFromBytes;
  * @author Patrick Jordan
  */
 public class AbstractStringEntryTest {
-    @Test
-    public void testValidTransport() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
+	@Test
+	public void testValidTransport() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
 
+		Context context = new Context("testcontext");
+		context.addTransportable(new SimpleAbstractStringEntry());
 
-        Context context = new Context("testcontext");
-        context.addTransportable(new SimpleAbstractStringEntry());
+		reader.setContext(context);
 
-        reader.setContext(context);
+		SimpleAbstractStringEntry entry = new SimpleAbstractStringEntry();
 
-        SimpleAbstractStringEntry entry = new SimpleAbstractStringEntry();
+		byte[] buffer = getBytesForTransportable(writer, entry);
+		SimpleAbstractStringEntry received = readFromBytes(reader, buffer,
+				"SimpleAbstractStringEntry");
 
-        byte[] buffer = getBytesForTransportable(writer,entry);
-        SimpleAbstractStringEntry received = readFromBytes(reader,buffer,"SimpleAbstractStringEntry");
+		assertNotNull(received);
+	}
 
-        assertNotNull(received);        
-    }
+	public static class SimpleAbstractStringEntry extends AbstractStringEntry {
+		protected void readEntry(TransportReader reader) throws ParseException {
+		}
 
-    public static class SimpleAbstractStringEntry extends AbstractStringEntry {
-        protected void readEntry(TransportReader reader) throws ParseException {
-        }
-
-        protected void writeEntry(TransportWriter writer) {
-        }
-    }
+		protected void writeEntry(TransportWriter writer) {
+		}
+	}
 }

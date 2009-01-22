@@ -7,5 +7,5 @@ import se.sics.tasim.aw.TimeListener;
  * @author Patrick Jordan
  */
 public interface UserQueryManager extends TimeListener {
-    public Query generateQuery(User user);
+	public Query generateQuery(User user);
 }

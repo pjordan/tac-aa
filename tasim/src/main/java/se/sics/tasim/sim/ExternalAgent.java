@@ -30,28 +30,25 @@ import java.util.logging.Logger;
 import se.sics.tasim.aw.Agent;
 import se.sics.tasim.aw.Message;
 
-final class ExternalAgent extends Agent
-{
-  
-  private final static Logger log = Logger.getLogger(ExternalAgent.class
-      .getName());
-  
-  public ExternalAgent()
-  {}
-  
-  protected void simulationSetup()
-  {
-    log.fine(getName() + " setup with address " + getAddress());
-  }
-  
-  protected void simulationFinished()
-  {}
-  
-  protected void messageReceived(Message message)
-  {
-    // This should only happen if the agent has no agent channel
-    log.severe("no connection to agent " + getName() + ": ignoring message "
-        + message);
-  }
-  
+final class ExternalAgent extends Agent {
+
+	private final static Logger log = Logger.getLogger(ExternalAgent.class
+			.getName());
+
+	public ExternalAgent() {
+	}
+
+	protected void simulationSetup() {
+		log.fine(getName() + " setup with address " + getAddress());
+	}
+
+	protected void simulationFinished() {
+	}
+
+	protected void messageReceived(Message message) {
+		// This should only happen if the agent has no agent channel
+		log.severe("no connection to agent " + getName()
+				+ ": ignoring message " + message);
+	}
+
 } // ExternalAgent

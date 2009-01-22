@@ -28,61 +28,61 @@ package se.sics.tasim.is;
 
 import se.sics.isl.transport.Transportable;
 
-public abstract class EventWriter
-{
-  
-  protected EventWriter()
-  {}
-  
-  /**
-   * Specifies a participant in the current simulation. The agent field is a
-   * local id for this participant in the simulation.
-   * 
-   * The participantID field is the global user id for the participant. A
-   * negative participantID indicates that this participant is builtin (dummy).
-   * 
-   * @param agent
-   *          a simulation local id for this participant
-   * @param role
-   *          the role of the participant
-   * @param name
-   *          the name of the participant
-   * @param participantID
-   *          the global id of the participating agent or negative if this
-   *          participant is builtin (dummy)
-   */
-  public abstract void participant(int agent, int role, String name,
-      int participantID);
-  
-  /**
-   * Notifies about entering a new time unit for the running simulation. Time
-   * units can for example be simulated days, and similar. Only used in some
-   * simulations.
-   * 
-   * @param timeUnit
-   *          the current time unit
-   */
-  public abstract void nextTimeUnit(int timeUnit);
-  
-  public abstract void dataUpdated(int agent, int type, int value);
-  
-  public abstract void dataUpdated(int agent, int type, long value);
-  
-  public abstract void dataUpdated(int agent, int type, float value);
+public abstract class EventWriter {
 
-  public abstract void dataUpdated(int agent, int type, double value);
+	protected EventWriter() {
+	}
 
-  public abstract void dataUpdated(int agent, int type, String value);
-  
-  public abstract void dataUpdated(int agent, int type, Transportable content);
-  
-  public abstract void dataUpdated(int type, Transportable content);
-  
-  public abstract void interaction(int fromAgent, int toAgent, int type);
-  
-  public abstract void interactionWithRole(int fromAgent, int role, int type);
-  
-  // For viewers only...
-  public abstract void intCache(int agent, int type, int[] cache);
-  
+	/**
+	 * Specifies a participant in the current simulation. The agent field is a
+	 * local id for this participant in the simulation.
+	 * 
+	 * The participantID field is the global user id for the participant. A
+	 * negative participantID indicates that this participant is builtin
+	 * (dummy).
+	 * 
+	 * @param agent
+	 *            a simulation local id for this participant
+	 * @param role
+	 *            the role of the participant
+	 * @param name
+	 *            the name of the participant
+	 * @param participantID
+	 *            the global id of the participating agent or negative if this
+	 *            participant is builtin (dummy)
+	 */
+	public abstract void participant(int agent, int role, String name,
+			int participantID);
+
+	/**
+	 * Notifies about entering a new time unit for the running simulation. Time
+	 * units can for example be simulated days, and similar. Only used in some
+	 * simulations.
+	 * 
+	 * @param timeUnit
+	 *            the current time unit
+	 */
+	public abstract void nextTimeUnit(int timeUnit);
+
+	public abstract void dataUpdated(int agent, int type, int value);
+
+	public abstract void dataUpdated(int agent, int type, long value);
+
+	public abstract void dataUpdated(int agent, int type, float value);
+
+	public abstract void dataUpdated(int agent, int type, double value);
+
+	public abstract void dataUpdated(int agent, int type, String value);
+
+	public abstract void dataUpdated(int agent, int type, Transportable content);
+
+	public abstract void dataUpdated(int type, Transportable content);
+
+	public abstract void interaction(int fromAgent, int toAgent, int type);
+
+	public abstract void interactionWithRole(int fromAgent, int role, int type);
+
+	// For viewers only...
+	public abstract void intCache(int agent, int type, int[] cache);
+
 } // EventWriter

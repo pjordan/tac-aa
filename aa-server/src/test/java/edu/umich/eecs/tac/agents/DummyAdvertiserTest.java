@@ -21,7 +21,7 @@ public class DummyAdvertiserTest {
 	private DummySimulationAgent as;
 	private RetailCatalog rc;
 	private QueryReport qr;
-	
+
 	@Before
 	public void setUp() {
 		dummy = new DummyAdvertiser();
@@ -34,7 +34,7 @@ public class DummyAdvertiserTest {
 		dummy.messageReceived(message);
 		dummy.messageReceived(message);
 	}
-	
+
 	@Test
 	public void testMessageReceived() {
 		qr = new QueryReport();
@@ -64,7 +64,7 @@ public class DummyAdvertiserTest {
 		dummy.messageReceived(message);
 		dummy.simulationSetup();
 	}
-	
+
 	@Test
 	public void testSimulationFinished() {
 		dummy.simulationFinished();

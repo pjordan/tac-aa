@@ -28,30 +28,29 @@
  */
 package se.sics.isl.db;
 
-public abstract class DBResult
-{
-  
-  protected DBResult()
-  {}
-  
-  public abstract int getFieldCount();
-  
-  public abstract DBField getField(int index);
-  
-  public abstract int getInt(String name);
-  
-  public abstract long getLong(String name);
-  
-  public abstract double getDouble(String name);
-  
-  public abstract String getString(String name);
-  
-  public abstract Object getObject(String name);
-  
-  public abstract long getTimestamp(String name);
-  
-  public abstract boolean next();
-  
-  public abstract void close();
-  
+public abstract class DBResult {
+
+	protected DBResult() {
+	}
+
+	public abstract int getFieldCount();
+
+	public abstract DBField getField(int index);
+
+	public abstract int getInt(String name);
+
+	public abstract long getLong(String name);
+
+	public abstract double getDouble(String name);
+
+	public abstract String getString(String name);
+
+	public abstract Object getObject(String name);
+
+	public abstract long getTimestamp(String name);
+
+	public abstract boolean next();
+
+	public abstract void close();
+
 } // DBResult

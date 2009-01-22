@@ -27,36 +27,36 @@
  *
  */
 package se.sics.tasim.viewer;
+
 import se.sics.tasim.is.EventWriter;
 
 public abstract class ViewerConnection extends EventWriter {
 
-//   public void simulationStarted(int realSimID, String type,
-// 				long startTime, long endTime) {
-//     simulationStarted(realSimID, type, startTime, endTime,
-// 		      null, 0);
-//   }
+	// public void simulationStarted(int realSimID, String type,
+	// long startTime, long endTime) {
+	// simulationStarted(realSimID, type, startTime, endTime,
+	// null, 0);
+	// }
 
-  public abstract void setServerTime(long serverTime);
+	public abstract void setServerTime(long serverTime);
 
-  public abstract void simulationStarted(int realSimID, String type,
-					 long startTime, long endTime,
-					 String timeUnitName,
-					 int timeUnitCount);
+	public abstract void simulationStarted(int realSimID, String type,
+			long startTime, long endTime, String timeUnitName, int timeUnitCount);
 
-  public abstract void simulationStopped(int realSimID);
+	public abstract void simulationStopped(int realSimID);
 
-  /**
-   * Notifies about the next scheduled simulation if such exists.
-   *
-   * @param publicSimID the public simulation id or -1 if no such id
-   * has been assigned
-   * @param startTime the start time of the next simulation or 0 if no
-   * future simulation has been scheduled
-   */
-  public abstract void nextSimulation(int publicSimID, long startTime);
+	/**
+	 * Notifies about the next scheduled simulation if such exists.
+	 * 
+	 * @param publicSimID
+	 *            the public simulation id or -1 if no such id has been assigned
+	 * @param startTime
+	 *            the start time of the next simulation or 0 if no future
+	 *            simulation has been scheduled
+	 */
+	public abstract void nextSimulation(int publicSimID, long startTime);
 
-  // A cache with values for agent + type (bank account, etc)
-  public abstract void intCache(int agent, int type, int[] cache);
+	// A cache with values for agent + type (bank account, etc)
+	public abstract void intCache(int agent, int type, int[] cache);
 
 } // ViewerConnection

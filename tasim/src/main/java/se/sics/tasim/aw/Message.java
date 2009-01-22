@@ -38,113 +38,95 @@ import se.sics.isl.transport.TransportWriter;
  * sender, a receiver and a content. The content of the messages describe what
  * the purpose of the communication is.
  */
-public class Message implements Transportable
-{
-  
-  private String sender;
-  private String receiver;
-  private Transportable content;
-  
-  public Message(String receiver, Transportable content)
-  {
-    if (receiver == null)
-    {
-      throw new NullPointerException("receiver");
-    }
-    if (content == null)
-    {
-      throw new NullPointerException("content");
-    }
-    this.receiver = receiver;
-    this.content = content;
-  }
-  
-  public Message(String sender, String receiver, Transportable content)
-  {
-    this(receiver, content);
-    this.sender = sender;
-  }
-  
-  public Message()
-  {}
-  
-  public String getSender()
-  {
-    return sender;
-  }
-  
-  public synchronized void setSender(String sender)
-  {
-    if (this.sender != null)
-    {
-      throw new IllegalStateException("sender already set");
-    }
-    this.sender = sender;
-  }
-  
-  public String getReceiver()
-  {
-    return receiver;
-  }
-  
-  public Transportable getContent()
-  {
-    return content;
-  }
-  
-  public Message createReply(Transportable content)
-  {
-    return new Message(receiver, sender, content);
-  }
-  
-  public String toString()
-  {
-    return "Message[" + sender + ',' + receiver + ',' + content + ']';
-  }
-  
-  /*****************************************************************************
-   * Transportable API
-   ****************************************************************************/
-  
-  /**
-   * Returns the transport name used for externalization.
-   */
-  public String getTransportName()
-  {
-    return "message";
-  }
-  
-  public void read(TransportReader reader) throws ParseException
-  {
-    if (receiver != null)
-    {
-      throw new IllegalStateException("already initialized");
-    }
-    
-    // Already in this node when starting - attributes can be accessed
-    // before going to next node.
-    String receiver = reader.getAttribute("receiver");
-    String sender = reader.getAttribute("sender");
-    
-    reader.nextNode(true);
-    this.content = reader.readTransportable();
-    this.receiver = receiver;
-    this.sender = sender;
-  }
-  
-  public void write(TransportWriter writer)
-  {
-    if (receiver == null)
-    {
-      throw new IllegalStateException("not initalized");
-    }
-    if (sender == null)
-    {
-      throw new IllegalStateException("no sender");
-    }
-    writer.attr("sender", sender);
-    writer.attr("receiver", receiver);
-    writer.write(content);
-  }
-  
+public class Message implements Transportable {
+
+	private String sender;
+	private String receiver;
+	private Transportable content;
+
+	public Message(String receiver, Transportable content) {
+		if (receiver == null) {
+			throw new NullPointerException("receiver");
+		}
+		if (content == null) {
+			throw new NullPointerException("content");
+		}
+		this.receiver = receiver;
+		this.content = content;
+	}
+
+	public Message(String sender, String receiver, Transportable content) {
+		this(receiver, content);
+		this.sender = sender;
+	}
+
+	public Message() {
+	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public synchronized void setSender(String sender) {
+		if (this.sender != null) {
+			throw new IllegalStateException("sender already set");
+		}
+		this.sender = sender;
+	}
+
+	public String getReceiver() {
+		return receiver;
+	}
+
+	public Transportable getContent() {
+		return content;
+	}
+
+	public Message createReply(Transportable content) {
+		return new Message(receiver, sender, content);
+	}
+
+	public String toString() {
+		return "Message[" + sender + ',' + receiver + ',' + content + ']';
+	}
+
+	/*****************************************************************************
+	 * Transportable API
+	 ****************************************************************************/
+
+	/**
+	 * Returns the transport name used for externalization.
+	 */
+	public String getTransportName() {
+		return "message";
+	}
+
+	public void read(TransportReader reader) throws ParseException {
+		if (receiver != null) {
+			throw new IllegalStateException("already initialized");
+		}
+
+		// Already in this node when starting - attributes can be accessed
+		// before going to next node.
+		String receiver = reader.getAttribute("receiver");
+		String sender = reader.getAttribute("sender");
+
+		reader.nextNode(true);
+		this.content = reader.readTransportable();
+		this.receiver = receiver;
+		this.sender = sender;
+	}
+
+	public void write(TransportWriter writer) {
+		if (receiver == null) {
+			throw new IllegalStateException("not initalized");
+		}
+		if (sender == null) {
+			throw new IllegalStateException("no sender");
+		}
+		writer.attr("sender", sender);
+		writer.attr("receiver", receiver);
+		writer.write(content);
+	}
+
 } // Message

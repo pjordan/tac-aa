@@ -40,125 +40,102 @@ import se.sics.tasim.is.SimulationInfo;
  * Chain Simulator. It implements the "behaviour" for all methods that the
  * InfoSystem "calls"
  */
-public class SimConnectionImpl extends SimConnection
-{
-  
-  private static final Logger log = Logger.getLogger(SimConnectionImpl.class
-      .getName());
-  
-  private final Admin admin;
-  private final AgentLookup lookup;
-  private boolean isInitialized = false;
-  
-  public SimConnectionImpl(Admin admin, AgentLookup lookup)
-  {
-    this.admin = admin;
-    this.lookup = lookup;
-  }
-  
-  public void init(ConfigManager config)
-  {}
-  
-  public void close()
-  {
-    isInitialized = false;
-  }
-  
-  // -------------------------------------------------------------------
-  // Information
-  // -------------------------------------------------------------------
-  
-  public void dataUpdated(int type, int value)
-  {
-    admin.dataUpdated(type, value);
-  }
-  
-  public void setUser(String agentName, String password, int agentID)
-  {
-    lookup.setUser(agentName, password, agentID);
-  }
-  
-  public void setServerTime(long time)
-  {
-    admin.setServerTime(time);
-    
-    if (!isInitialized)
-    {
-      isInitialized = true;
-      admin.sendStateToInfoSystem();
-    }
-  }
-  
-  public void simulationInfo(SimulationInfo info)
-  {
-    admin.addSimulation(info);
-  }
-  
-  public void resultsGenerated(int simulationID)
-  {
-    admin.resultsGenerated(simulationID);
-  }
-  
-  // -------------------------------------------------------------------
-  // Requests
-  // -------------------------------------------------------------------
-  
-  public void addChatMessage(long time, String serverName, String userName,
-      String message)
-  {
-    admin.addChatMessage(time, serverName, userName, message);
-  }
-  
-  public void scheduleCompetition(CompetitionSchedule schedule)
-  {
-    admin.scheduleCompetition(schedule, true);
-  }
-  
-  public void lockNextSimulations(int simulationCount)
-  {
-    admin.lockNextSimulations(simulationCount);
-  }
-  
-  public void addTimeReservation(long startTime, int lengthInMillis)
-  {
-    admin.addTimeReservation(startTime, lengthInMillis, true);
-  }
-  
-  public void createSimulation(String type, String params)
-  {
-    admin.createSimulation(type, params, true);
-  }
-  
-  // Can only be done before the simulation is "locked"
-  public void removeSimulation(int simulationUniqID)
-  {
-    admin.removeSimulation(simulationUniqID);
-  }
-  
-  public void joinSimulation(int simulationUniqID, int agentID, String simRole)
-  {
-    try
-    {
-      admin.joinSimulation(simulationUniqID, agentID, simRole);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.SEVERE, "could not join agent " + agentID
-          + " to simulation with id " + simulationUniqID, e);
-    }
-  }
-  
-  public void joinSimulation(int simulationUniqID, int agentID, int simRole)
-  {
-    try
-    {
-      admin.joinSimulation(simulationUniqID, agentID, simRole);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.SEVERE, "could not join agent " + agentID
-          + " to simulation with id " + simulationUniqID, e);
-    }
-  }
-  
+public class SimConnectionImpl extends SimConnection {
+
+	private static final Logger log = Logger.getLogger(SimConnectionImpl.class
+			.getName());
+
+	private final Admin admin;
+	private final AgentLookup lookup;
+	private boolean isInitialized = false;
+
+	public SimConnectionImpl(Admin admin, AgentLookup lookup) {
+		this.admin = admin;
+		this.lookup = lookup;
+	}
+
+	public void init(ConfigManager config) {
+	}
+
+	public void close() {
+		isInitialized = false;
+	}
+
+	// -------------------------------------------------------------------
+	// Information
+	// -------------------------------------------------------------------
+
+	public void dataUpdated(int type, int value) {
+		admin.dataUpdated(type, value);
+	}
+
+	public void setUser(String agentName, String password, int agentID) {
+		lookup.setUser(agentName, password, agentID);
+	}
+
+	public void setServerTime(long time) {
+		admin.setServerTime(time);
+
+		if (!isInitialized) {
+			isInitialized = true;
+			admin.sendStateToInfoSystem();
+		}
+	}
+
+	public void simulationInfo(SimulationInfo info) {
+		admin.addSimulation(info);
+	}
+
+	public void resultsGenerated(int simulationID) {
+		admin.resultsGenerated(simulationID);
+	}
+
+	// -------------------------------------------------------------------
+	// Requests
+	// -------------------------------------------------------------------
+
+	public void addChatMessage(long time, String serverName, String userName,
+			String message) {
+		admin.addChatMessage(time, serverName, userName, message);
+	}
+
+	public void scheduleCompetition(CompetitionSchedule schedule) {
+		admin.scheduleCompetition(schedule, true);
+	}
+
+	public void lockNextSimulations(int simulationCount) {
+		admin.lockNextSimulations(simulationCount);
+	}
+
+	public void addTimeReservation(long startTime, int lengthInMillis) {
+		admin.addTimeReservation(startTime, lengthInMillis, true);
+	}
+
+	public void createSimulation(String type, String params) {
+		admin.createSimulation(type, params, true);
+	}
+
+	// Can only be done before the simulation is "locked"
+	public void removeSimulation(int simulationUniqID) {
+		admin.removeSimulation(simulationUniqID);
+	}
+
+	public void joinSimulation(int simulationUniqID, int agentID, String simRole) {
+		try {
+			admin.joinSimulation(simulationUniqID, agentID, simRole);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "could not join agent " + agentID
+					+ " to simulation with id " + simulationUniqID, e);
+		}
+	}
+
+	public void joinSimulation(int simulationUniqID, int agentID, int simRole) {
+		try {
+			admin.joinSimulation(simulationUniqID, agentID, simRole);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "could not join agent " + agentID
+					+ " to simulation with id " + simulationUniqID, e);
+		}
+	}
+
 } // SimConnectionImpl

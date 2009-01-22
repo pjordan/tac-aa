@@ -36,134 +36,100 @@ import java.util.logging.Logger;
 import se.sics.isl.db.DBField;
 import se.sics.isl.db.DBResult;
 
-public class SQLDBResult extends DBResult
-{
-  
-  private static final Logger log = Logger.getLogger(SQLDBResult.class.getName());
-  
-  private SQLDBTable table;
-  private Statement stm;
-  private ResultSet rs;
-  
-  public SQLDBResult(SQLDBTable table, Statement stm, ResultSet rs)
-  {
-    this.table = table;
-    this.stm = stm;
-    this.rs = rs;
-  }
-  
-  public int getFieldCount()
-  {
-    return table.getFieldCount();
-  }
-  
-  public DBField getField(int index)
-  {
-    return table.getField(index);
-  }
-  
-  public int getInt(String name)
-  {
-    try
-    {
-      return rs.getInt(name);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.WARNING, "could not getInt " + name, e);
-      return 0;
-    }
-  }
-  
-  public long getLong(String name)
-  {
-    try
-    {
-      return rs.getLong(name);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.WARNING, "could not getLong " + name, e);
-      return 0L;
-    }
-  }
-  
-  public double getDouble(String name)
-  {
-    try
-    {
-      return rs.getDouble(name);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.WARNING, "could not getDouble " + name, e);
-      return 0D;
-    }
-  }
-  
-  public String getString(String name)
-  {
-    try
-    {
-      return rs.getString(name);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.WARNING, "could not getString " + name, e);
-      return null;
-    }
-  }
-  
-  public Object getObject(String name)
-  {
-    try
-    {
-      return rs.getObject(name);
-    }
-    catch (Exception e)
-    {
-      log.log(Level.WARNING, "could not getObject " + name, e);
-      return null;
-    }
-  }
-  
-  public long getTimestamp(String name)
-  {
-    try
-    {
-      Timestamp ts = rs.getTimestamp(name);
-      return ts != null ? ts.getTime() : 0L;
-    }
-    catch (Exception e)
-    {
-      log.log(Level.WARNING, "could not getTimestamp " + name, e);
-      return 0L;
-    }
-  }
-  
-  public boolean next()
-  {
-    boolean hasNext = false;
-    try
-    {
-      hasNext = rs.next();
-    }
-    catch (Exception e)
-    {
-      log.log(Level.WARNING, "could not next", e);
-    }
-    return hasNext;
-  }
-  
-  public void close()
-  {
-    try
-    {
-      rs.close();
-      stm.close();
-    }
-    catch (Exception e)
-    {}
-  }
-  
+public class SQLDBResult extends DBResult {
+
+	private static final Logger log = Logger.getLogger(SQLDBResult.class
+			.getName());
+
+	private SQLDBTable table;
+	private Statement stm;
+	private ResultSet rs;
+
+	public SQLDBResult(SQLDBTable table, Statement stm, ResultSet rs) {
+		this.table = table;
+		this.stm = stm;
+		this.rs = rs;
+	}
+
+	public int getFieldCount() {
+		return table.getFieldCount();
+	}
+
+	public DBField getField(int index) {
+		return table.getField(index);
+	}
+
+	public int getInt(String name) {
+		try {
+			return rs.getInt(name);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "could not getInt " + name, e);
+			return 0;
+		}
+	}
+
+	public long getLong(String name) {
+		try {
+			return rs.getLong(name);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "could not getLong " + name, e);
+			return 0L;
+		}
+	}
+
+	public double getDouble(String name) {
+		try {
+			return rs.getDouble(name);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "could not getDouble " + name, e);
+			return 0D;
+		}
+	}
+
+	public String getString(String name) {
+		try {
+			return rs.getString(name);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "could not getString " + name, e);
+			return null;
+		}
+	}
+
+	public Object getObject(String name) {
+		try {
+			return rs.getObject(name);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "could not getObject " + name, e);
+			return null;
+		}
+	}
+
+	public long getTimestamp(String name) {
+		try {
+			Timestamp ts = rs.getTimestamp(name);
+			return ts != null ? ts.getTime() : 0L;
+		} catch (Exception e) {
+			log.log(Level.WARNING, "could not getTimestamp " + name, e);
+			return 0L;
+		}
+	}
+
+	public boolean next() {
+		boolean hasNext = false;
+		try {
+			hasNext = rs.next();
+		} catch (Exception e) {
+			log.log(Level.WARNING, "could not next", e);
+		}
+		return hasNext;
+	}
+
+	public void close() {
+		try {
+			rs.close();
+			stm.close();
+		} catch (Exception e) {
+		}
+	}
+
 } // SQLDBResult

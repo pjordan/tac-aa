@@ -8,9 +8,9 @@ public class DummySimulationAgent extends SimulationAgent {
 	public DummySimulationAgent(Agent agent, String name) {
 		super(agent, name);
 	}
-	
-	public void setup(){
+
+	public void setup() {
 		initializeAgent();
 	}
-	
+
 }

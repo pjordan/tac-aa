@@ -38,136 +38,120 @@ import se.sics.isl.util.AMonitor;
 import se.sics.isl.util.AdminMonitor;
 import se.sics.isl.util.ConfigManager;
 
-public class BlockingViewerServer extends InetServer implements AMonitor
-{
-  
-  private static final Logger log = Logger.getLogger(BlockingViewerServer.class
-      .getName());
-  
-  private static final String STATUS_NAME = "Viewer";
-  
-  private static final String CONF = "is.viewer.";
-  
-  private InfoServer infoServer;
-  private Context transportContext;
-  private BlockingViewerChannel[] viewerConnections;
-  
-  private ThreadPool viewerThreadPool;
-  
-  public BlockingViewerServer(InfoServer infoServer)
-  {
-    super("viewer", infoServer.getConfig().getProperty(CONF + "host",
-        infoServer.getConfig().getProperty("server.host")), infoServer
-        .getConfig().getPropertyAsInt(CONF + "port", 4042));
-    ConfigManager config = infoServer.getConfig();
-    this.infoServer = infoServer;
-    this.transportContext = new Context("viewer");
-    
-    int minThreads = config.getPropertyAsInt(CONF + "minThreads", 5);
-    int maxThreads = config.getPropertyAsInt(CONF + "maxThreads", 50);
-    int maxIdleThreads = config.getPropertyAsInt(CONF + "maxIdleThreads", 25);
-    this.viewerThreadPool = ThreadPool.getThreadPool("viewer");
-    this.viewerThreadPool.setMinThreads(minThreads);
-    this.viewerThreadPool.setMaxThreads(maxThreads);
-    this.viewerThreadPool.setMaxIdleThreads(maxIdleThreads);
-    this.viewerThreadPool.setInterruptThreadsAfter(120000);
-    
-    AdminMonitor adminMonitor = AdminMonitor.getDefault();
-    if (adminMonitor != null)
-    {
-      adminMonitor.addMonitor(STATUS_NAME, this);
-    }
-  }
-  
-  // -------------------------------------------------------------------
-  // Inet Server
-  // -------------------------------------------------------------------
-  
-  protected void serverStarted()
-  {
-    log.info("viewer server started at " + getBindAddress());
-  }
-  
-  protected void serverShutdown()
-  {
-    BlockingViewerChannel[] connections;
-    synchronized (this)
-    {
-      connections = this.viewerConnections;
-      this.viewerConnections = null;
-    }
-    
-    if (connections != null)
-    {
-      for (int i = 0, n = connections.length; i < n; i++)
-      {
-        connections[i].close();
-      }
-    }
-    log.severe("viewer server has closed");
-    infoServer.serverClosed(this);
-  }
-  
-  protected void newConnection(Socket socket) throws IOException
-  {
-    BlockingViewerChannel channel = new BlockingViewerChannel(this, socket,
-        transportContext);
-    channel.setThreadPool(viewerThreadPool);
-    channel.start();
-  }
-  
-  // -------------------------------------------------------------------
-  // API towards Viewer Channels
-  // -------------------------------------------------------------------
-  
-  SimServer getSimServer(BlockingViewerChannel connection, String serverName)
-  {
-    return infoServer.getSimServer(serverName);
-  }
-  
-  synchronized void addViewerConnection(BlockingViewerChannel connection)
-  {
-    viewerConnections = (BlockingViewerChannel[]) ArrayUtils.add(
-        BlockingViewerChannel.class, viewerConnections, connection);
-  }
-  
-  synchronized void removeViewerConnection(BlockingViewerChannel connection)
-  {
-    viewerConnections = (BlockingViewerChannel[]) ArrayUtils.remove(
-        viewerConnections, connection);
-  }
-  
-  // -------------------------------------------------------------------
-  // AMonitor API
-  // -------------------------------------------------------------------
-  
-  public String getStatus(String propertyName)
-  {
-    if (propertyName != STATUS_NAME)
-    {
-      return null;
-    }
-    
-    StringBuffer sb = new StringBuffer();
-    sb.append("--- Viewer Connections ---");
-    
-    BlockingViewerChannel[] connections = this.viewerConnections;
-    if (connections != null)
-    {
-      for (int i = 0, n = connections.length; i < n; i++)
-      {
-        BlockingViewerChannel channel = connections[i];
-        sb.append('\n').append(i + 1).append(": ").append(channel.getName())
-            .append(" (").append(channel.getRemoteHost()).append(':').append(
-                channel.getRemotePort()).append(')');
-      }
-    }
-    else
-    {
-      sb.append("\n<no connections>");
-    }
-    
-    return sb.toString();
-  }
-  
+public class BlockingViewerServer extends InetServer implements AMonitor {
+
+	private static final Logger log = Logger
+			.getLogger(BlockingViewerServer.class.getName());
+
+	private static final String STATUS_NAME = "Viewer";
+
+	private static final String CONF = "is.viewer.";
+
+	private InfoServer infoServer;
+	private Context transportContext;
+	private BlockingViewerChannel[] viewerConnections;
+
+	private ThreadPool viewerThreadPool;
+
+	public BlockingViewerServer(InfoServer infoServer) {
+		super("viewer", infoServer.getConfig().getProperty(CONF + "host",
+				infoServer.getConfig().getProperty("server.host")), infoServer
+				.getConfig().getPropertyAsInt(CONF + "port", 4042));
+		ConfigManager config = infoServer.getConfig();
+		this.infoServer = infoServer;
+		this.transportContext = new Context("viewer");
+
+		int minThreads = config.getPropertyAsInt(CONF + "minThreads", 5);
+		int maxThreads = config.getPropertyAsInt(CONF + "maxThreads", 50);
+		int maxIdleThreads = config.getPropertyAsInt(CONF + "maxIdleThreads",
+				25);
+		this.viewerThreadPool = ThreadPool.getThreadPool("viewer");
+		this.viewerThreadPool.setMinThreads(minThreads);
+		this.viewerThreadPool.setMaxThreads(maxThreads);
+		this.viewerThreadPool.setMaxIdleThreads(maxIdleThreads);
+		this.viewerThreadPool.setInterruptThreadsAfter(120000);
+
+		AdminMonitor adminMonitor = AdminMonitor.getDefault();
+		if (adminMonitor != null) {
+			adminMonitor.addMonitor(STATUS_NAME, this);
+		}
+	}
+
+	// -------------------------------------------------------------------
+	// Inet Server
+	// -------------------------------------------------------------------
+
+	protected void serverStarted() {
+		log.info("viewer server started at " + getBindAddress());
+	}
+
+	protected void serverShutdown() {
+		BlockingViewerChannel[] connections;
+		synchronized (this) {
+			connections = this.viewerConnections;
+			this.viewerConnections = null;
+		}
+
+		if (connections != null) {
+			for (int i = 0, n = connections.length; i < n; i++) {
+				connections[i].close();
+			}
+		}
+		log.severe("viewer server has closed");
+		infoServer.serverClosed(this);
+	}
+
+	protected void newConnection(Socket socket) throws IOException {
+		BlockingViewerChannel channel = new BlockingViewerChannel(this, socket,
+				transportContext);
+		channel.setThreadPool(viewerThreadPool);
+		channel.start();
+	}
+
+	// -------------------------------------------------------------------
+	// API towards Viewer Channels
+	// -------------------------------------------------------------------
+
+	SimServer getSimServer(BlockingViewerChannel connection, String serverName) {
+		return infoServer.getSimServer(serverName);
+	}
+
+	synchronized void addViewerConnection(BlockingViewerChannel connection) {
+		viewerConnections = (BlockingViewerChannel[]) ArrayUtils.add(
+				BlockingViewerChannel.class, viewerConnections, connection);
+	}
+
+	synchronized void removeViewerConnection(BlockingViewerChannel connection) {
+		viewerConnections = (BlockingViewerChannel[]) ArrayUtils.remove(
+				viewerConnections, connection);
+	}
+
+	// -------------------------------------------------------------------
+	// AMonitor API
+	// -------------------------------------------------------------------
+
+	public String getStatus(String propertyName) {
+		if (propertyName != STATUS_NAME) {
+			return null;
+		}
+
+		StringBuffer sb = new StringBuffer();
+		sb.append("--- Viewer Connections ---");
+
+		BlockingViewerChannel[] connections = this.viewerConnections;
+		if (connections != null) {
+			for (int i = 0, n = connections.length; i < n; i++) {
+				BlockingViewerChannel channel = connections[i];
+				sb.append('\n').append(i + 1).append(": ").append(
+						channel.getName()).append(" (").append(
+						channel.getRemoteHost()).append(':').append(
+						channel.getRemotePort()).append(')');
+			}
+		} else {
+			sb.append("\n<no connections>");
+		}
+
+		return sb.toString();
+	}
+
 } // BlockingViewerServer

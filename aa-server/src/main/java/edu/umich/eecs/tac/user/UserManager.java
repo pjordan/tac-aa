@@ -6,28 +6,28 @@ import se.sics.tasim.aw.TimeListener;
 import se.sics.tasim.aw.Message;
 
 /**
- * UserManager provides a public interface for triggering and managing agent behavior.  Listeners may be added and
- * removed through this object.
+ * UserManager provides a public interface for triggering and managing agent
+ * behavior. Listeners may be added and removed through this object.
  * 
  * @author Patrick Jordan
  */
 public interface UserManager extends TimeListener {
-    
-    public void initialize(int virtualDays);
 
-    public void triggerBehavior(Auctioneer auctioneer);
+	public void initialize(int virtualDays);
 
-    public boolean addUserEventListener(UserEventListener listener);
+	public void triggerBehavior(Auctioneer auctioneer);
 
-    public boolean containsUserEventListener(UserEventListener listener);
+	public boolean addUserEventListener(UserEventListener listener);
 
-    public boolean removeUserEventListener(UserEventListener listener);
+	public boolean containsUserEventListener(UserEventListener listener);
 
-    public int[] getStateDistribution();
+	public boolean removeUserEventListener(UserEventListener listener);
 
-    public UserClickModel getUserClickModel();
+	public int[] getStateDistribution();
 
-    public void setUserClickModel(UserClickModel userClickModel);
+	public UserClickModel getUserClickModel();
 
-    public void messageReceived(Message message);
+	public void setUserClickModel(UserClickModel userClickModel);
+
+	public void messageReceived(Message message);
 }

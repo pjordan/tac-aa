@@ -8,13 +8,13 @@ import javax.swing.*;
  * @author Patrick Jordan
  */
 public class SimulationTabPanel extends JComponent {
-    private TACAASimulationPanel simulationPanel;
+	private TACAASimulationPanel simulationPanel;
 
-    public SimulationTabPanel(TACAASimulationPanel simulationPanel) {
-        this.simulationPanel = simulationPanel;
-    }
+	public SimulationTabPanel(TACAASimulationPanel simulationPanel) {
+		this.simulationPanel = simulationPanel;
+	}
 
-    protected TACAASimulationPanel getSimulationPanel() {
-        return simulationPanel;
-    }
+	protected TACAASimulationPanel getSimulationPanel() {
+		return simulationPanel;
+	}
 }

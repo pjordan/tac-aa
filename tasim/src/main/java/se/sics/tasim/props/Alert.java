@@ -39,82 +39,71 @@ import se.sics.isl.transport.Transportable;
  * sent with information about the problem before the connection is terminated.
  * 
  * <p>
- * <b>Warning:</b> serialized objects of this class might not be compatible
- * with future versions. Only use serialization of this class for temporary
- * storage or RMI using the same version of the class.
+ * <b>Warning:</b> serialized objects of this class might not be compatible with
+ * future versions. Only use serialization of this class for temporary storage
+ * or RMI using the same version of the class.
  */
-public class Alert implements Transportable, java.io.Serializable
-{
-  
-  private static final long serialVersionUID = 5611022906104201693L;
-  
-  private int priority;
-  private String title;
-  private String message;
-  
-  public Alert()
-  {}
-  
-  public Alert(String title, String message)
-  {
-    this(0, title, message);
-  }
-  
-  public Alert(int priority, String title, String message)
-  {
-    this.priority = priority;
-    this.title = title;
-    this.message = message;
-  }
-  
-  public int getPriority()
-  {
-    return priority;
-  }
-  
-  public String getTitle()
-  {
-    return title;
-  }
-  
-  public String getMessage()
-  {
-    return message;
-  }
-  
-  public String toString()
-  {
-    return getTransportName() + '[' + priority + ',' + title + ',' + message
-        + ']';
-  }
-  
-  /*****************************************************************************
-   * Transportable (externalization support)
-   ****************************************************************************/
-  
-  /**
-   * Returns the transport name used for externalization.
-   */
-  public String getTransportName()
-  {
-    return "alert";
-  }
-  
-  public void read(TransportReader reader) throws ParseException
-  {
-    this.priority = reader.getAttributeAsInt("priority", 0);
-    this.title = reader.getAttribute("title");
-    this.message = reader.getAttribute("message");
-  }
-  
-  public void write(TransportWriter writer)
-  {
-    if (priority != 0)
-    {
-      writer.attr("priority", priority);
-    }
-    writer.attr("title", title);
-    writer.attr("message", message);
-  }
-  
+public class Alert implements Transportable, java.io.Serializable {
+
+	private static final long serialVersionUID = 5611022906104201693L;
+
+	private int priority;
+	private String title;
+	private String message;
+
+	public Alert() {
+	}
+
+	public Alert(String title, String message) {
+		this(0, title, message);
+	}
+
+	public Alert(int priority, String title, String message) {
+		this.priority = priority;
+		this.title = title;
+		this.message = message;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public String toString() {
+		return getTransportName() + '[' + priority + ',' + title + ','
+				+ message + ']';
+	}
+
+	/*****************************************************************************
+	 * Transportable (externalization support)
+	 ****************************************************************************/
+
+	/**
+	 * Returns the transport name used for externalization.
+	 */
+	public String getTransportName() {
+		return "alert";
+	}
+
+	public void read(TransportReader reader) throws ParseException {
+		this.priority = reader.getAttributeAsInt("priority", 0);
+		this.title = reader.getAttribute("title");
+		this.message = reader.getAttribute("message");
+	}
+
+	public void write(TransportWriter writer) {
+		if (priority != 0) {
+			writer.attr("priority", priority);
+		}
+		writer.attr("title", title);
+		writer.attr("message", message);
+	}
+
 } // Alert

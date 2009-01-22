@@ -33,119 +33,101 @@ import se.sics.isl.transport.Transportable;
  * used by {@link Agent} to communicate with the SCM servers (not used directly
  * by agent implementations).
  */
-public abstract class AgentService
-{
-  
-  private final Agent agent;
-  private String name;
-  private String address;
-  
-  protected AgentService(Agent agent, String name)
-  {
-    if (agent == null || name == null)
-    {
-      throw new NullPointerException();
-    }
-    this.agent = agent;
-    this.address = this.name = name;
-  }
-  
-  // Called after the agent service has been fully initialized
-  protected void initializeAgent()
-  {
-    agent.init(this);
-  }
-  
-  protected void simulationSetup(String address)
-  {
-    if (address != null)
-    {
-      this.address = address;
-    }
-    agent.simulationSetup();
-  }
-  
-  protected void simulationStopped()
-  {
-    agent.simulationStopped();
-  }
-  
-  protected void simulationFinished()
-  {
-    agent.simulationFinished();
-  }
-  
-  // -------------------------------------------------------------------
-  // Time support
-  // -------------------------------------------------------------------
-  
-  protected abstract void addTimeListener(TimeListener listener);
-  
-  protected abstract void removeTimeListener(TimeListener listener);
-  
-  // -------------------------------------------------------------------
-  // Information retrieval
-  // -------------------------------------------------------------------
-  
-  public String getName()
-  {
-    return name;
-  }
-  
-  public String getAddress()
-  {
-    return address;
-  }
-  
-  public Agent getAgent()
-  {
-    return agent;
-  }
-  
-  protected abstract long getServerTime();
-  
-  // -------------------------------------------------------------------
-  // Message handling
-  // -------------------------------------------------------------------
-  
-  // Should this be protected or package protected??? FIX THIS!!! TODO
-  protected void sendMessage(Message message)
-  {
-    if (address == null)
-    {
-      throw new IllegalStateException("not initialized");
-    }
-    
-    String sender = message.getSender();
-    if (sender == null)
-    {
-      message.setSender(address);
-    }
-    else if (!sender.equals(address))
-    {
-      throw new SecurityException("Can not send message from other than self: "
-          + "Self=" + address + ", Sender=" + sender);
-    }
-    deliverToServer(message);
-  }
-  
-  protected abstract void deliverToServer(Message message);
-  
-  protected void sendToRole(int role, Transportable content)
-  {
-    if (address == null)
-    {
-      throw new IllegalStateException("not initialized");
-    }
-    
-    deliverToServer(role, content);
-  }
-  
-  protected abstract void deliverToServer(int role, Transportable content);
-  
-  protected void deliverToAgent(Message message)
-  {
-    agent.messageReceived(message);
-  }
-  
+public abstract class AgentService {
+
+	private final Agent agent;
+	private String name;
+	private String address;
+
+	protected AgentService(Agent agent, String name) {
+		if (agent == null || name == null) {
+			throw new NullPointerException();
+		}
+		this.agent = agent;
+		this.address = this.name = name;
+	}
+
+	// Called after the agent service has been fully initialized
+	protected void initializeAgent() {
+		agent.init(this);
+	}
+
+	protected void simulationSetup(String address) {
+		if (address != null) {
+			this.address = address;
+		}
+		agent.simulationSetup();
+	}
+
+	protected void simulationStopped() {
+		agent.simulationStopped();
+	}
+
+	protected void simulationFinished() {
+		agent.simulationFinished();
+	}
+
+	// -------------------------------------------------------------------
+	// Time support
+	// -------------------------------------------------------------------
+
+	protected abstract void addTimeListener(TimeListener listener);
+
+	protected abstract void removeTimeListener(TimeListener listener);
+
+	// -------------------------------------------------------------------
+	// Information retrieval
+	// -------------------------------------------------------------------
+
+	public String getName() {
+		return name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public Agent getAgent() {
+		return agent;
+	}
+
+	protected abstract long getServerTime();
+
+	// -------------------------------------------------------------------
+	// Message handling
+	// -------------------------------------------------------------------
+
+	// Should this be protected or package protected??? FIX THIS!!! TODO
+	protected void sendMessage(Message message) {
+		if (address == null) {
+			throw new IllegalStateException("not initialized");
+		}
+
+		String sender = message.getSender();
+		if (sender == null) {
+			message.setSender(address);
+		} else if (!sender.equals(address)) {
+			throw new SecurityException(
+					"Can not send message from other than self: " + "Self="
+							+ address + ", Sender=" + sender);
+		}
+		deliverToServer(message);
+	}
+
+	protected abstract void deliverToServer(Message message);
+
+	protected void sendToRole(int role, Transportable content) {
+		if (address == null) {
+			throw new IllegalStateException("not initialized");
+		}
+
+		deliverToServer(role, content);
+	}
+
+	protected abstract void deliverToServer(int role, Transportable content);
+
+	protected void deliverToAgent(Message message) {
+		agent.messageReceived(message);
+	}
+
 } // AgentService

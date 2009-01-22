@@ -1,41 +1,41 @@
 package edu.umich.eecs.tac.util.sampling;
 
 /**
- * SynchronizedSampler provides synchronization support to a {@link MutableSampler}.
- *
+ * SynchronizedSampler provides synchronization support to a
+ * {@link MutableSampler}.
+ * 
  * @author Patrick Jordan
  */
 public class SynchronizedMutableSampler<T> implements MutableSampler<T> {
-    private MutableSampler<T> mutableSampler;
+	private MutableSampler<T> mutableSampler;
 
-    private final Object lock;
+	private final Object lock;
 
-    public SynchronizedMutableSampler(MutableSampler<T> mutableSampler) {
+	public SynchronizedMutableSampler(MutableSampler<T> mutableSampler) {
 
-        this.mutableSampler = mutableSampler;
+		this.mutableSampler = mutableSampler;
 
-        lock = new Object();
+		lock = new Object();
 
-    }
+	}
 
+	public void addState(double weight, T state) {
 
-    public void addState(double weight, T state) {
+		synchronized (lock) {
 
-        synchronized (lock) {
+			mutableSampler.addState(weight, state);
 
-            mutableSampler.addState(weight, state);
+		}
 
-        }
+	}
 
-    }
+	public T getSample() {
 
-    public T getSample() {
+		synchronized (lock) {
 
-        synchronized (lock) {
+			return mutableSampler.getSample();
 
-            return mutableSampler.getSample();
+		}
 
-        }
-
-    }
+	}
 }

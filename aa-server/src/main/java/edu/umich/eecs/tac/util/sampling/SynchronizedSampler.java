@@ -2,32 +2,31 @@ package edu.umich.eecs.tac.util.sampling;
 
 /**
  * SynchronizedSampler provides synchronization support to a {@link Sampler}.
- *
+ * 
  * @author Patrick Jordan
  */
-public class SynchronizedSampler<T> implements Sampler<T>{
-    /**
-     * The sampler used to delegate sampling
-     */
-    private Sampler<T> sampler;
+public class SynchronizedSampler<T> implements Sampler<T> {
+	/**
+	 * The sampler used to delegate sampling
+	 */
+	private Sampler<T> sampler;
 
-    private final Object lock;
+	private final Object lock;
 
-    public SynchronizedSampler(Sampler<T> sampler) {
+	public SynchronizedSampler(Sampler<T> sampler) {
 
-        this.sampler = sampler;
+		this.sampler = sampler;
 
-        lock = new Object();
-        
-    }
+		lock = new Object();
 
+	}
 
-    public T getSample() {
+	public T getSample() {
 
-        synchronized ( lock ) {
+		synchronized (lock) {
 
-            return sampler.getSample();
+			return sampler.getSample();
 
-        }
-    }
+		}
+	}
 }

@@ -33,42 +33,35 @@ import org.mortbay.http.UserRealm;
 
 /**
  */
-public class AgentRealm extends HashUserRealm
-{
-  
-  public static final String ADMIN_ROLE = "admin";
-  
-  private InfoServer infoServer;
-  
-  public AgentRealm(InfoServer infoServer, String realmName)
-  {
-    super(realmName);
-    this.infoServer = infoServer;
-  }
-  
-  void setAdminUser(String name, String password)
-  {
-    put(name, password);
-    addUserToRole(name, ADMIN_ROLE);
-  }
-  
-  public UserPrincipal authenticate(String username, Object credentials,
-      HttpRequest request)
-  {
-    if (get(username) == null)
-    {
-      updateUser(username);
-    }
-    return super.authenticate(username, credentials, request);
-  }
-  
-  public void updateUser(String name)
-  {
-    String password = infoServer.getUserPassword(name);
-    if (password != null)
-    {
-      put(name, password);
-    }
-  }
-  
+public class AgentRealm extends HashUserRealm {
+
+	public static final String ADMIN_ROLE = "admin";
+
+	private InfoServer infoServer;
+
+	public AgentRealm(InfoServer infoServer, String realmName) {
+		super(realmName);
+		this.infoServer = infoServer;
+	}
+
+	void setAdminUser(String name, String password) {
+		put(name, password);
+		addUserToRole(name, ADMIN_ROLE);
+	}
+
+	public UserPrincipal authenticate(String username, Object credentials,
+			HttpRequest request) {
+		if (get(username) == null) {
+			updateUser(username);
+		}
+		return super.authenticate(username, credentials, request);
+	}
+
+	public void updateUser(String name) {
+		String password = infoServer.getUserPassword(name);
+		if (password != null) {
+			put(name, password);
+		}
+	}
+
 } // AgentRealm

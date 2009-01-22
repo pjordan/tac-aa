@@ -28,9 +28,8 @@ package se.sics.isl.util;
 
 /**
  */
-public interface AMonitor
-{
-  
-  public String getStatus(String propertyName);
-  
+public interface AMonitor {
+
+	public String getStatus(String propertyName);
+
 } // AMonitor

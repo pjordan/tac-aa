@@ -9,202 +9,206 @@ import static edu.umich.eecs.tac.props.TransportableTestUtils.getBytesForTranspo
 import static edu.umich.eecs.tac.props.TransportableTestUtils.readFromBytes;
 
 /**
- *
+ * 
  * @author Kemal Eren
  */
 public class ManufacturerComponentComposableTest {
 
-    /**
-     * Test methods setManufacturer and getManufacturer
-     */
-    @Test
-    public void testManufacturer() {
-        ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
-        String expResult = null;
-        String result = instance.getManufacturer();
-        assertEquals(expResult, result);
-        
-        String manufacturer = "";
-        expResult = "";
-        instance.setManufacturer(manufacturer);
-        result = instance.getManufacturer();
-        assertEquals(expResult, result);
+	/**
+	 * Test methods setManufacturer and getManufacturer
+	 */
+	@Test
+	public void testManufacturer() {
+		ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
+		String expResult = null;
+		String result = instance.getManufacturer();
+		assertEquals(expResult, result);
 
-        manufacturer = "test_manufacturer";
-        expResult = manufacturer;
-        instance.setManufacturer(manufacturer);
-        result = instance.getManufacturer();
-        assertEquals(expResult, result);
-    }
+		String manufacturer = "";
+		expResult = "";
+		instance.setManufacturer(manufacturer);
+		result = instance.getManufacturer();
+		assertEquals(expResult, result);
 
-    /**
-     * Test methods getComonent and setComponent
-     */
-    @Test
-    public void testComponent() {
-        ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
-        String expResult = null;
-        String result = instance.getComponent();
-        assertEquals(expResult, result);
-        
-        String component = "";
-        instance.setComponent(component);
-        assertEquals(expResult, result);
+		manufacturer = "test_manufacturer";
+		expResult = manufacturer;
+		instance.setManufacturer(manufacturer);
+		result = instance.getManufacturer();
+		assertEquals(expResult, result);
+	}
 
-        component = "test_component";
-        instance.setComponent(component);
-        assertEquals(expResult, result);
-    }
+	/**
+	 * Test methods getComonent and setComponent
+	 */
+	@Test
+	public void testComponent() {
+		ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
+		String expResult = null;
+		String result = instance.getComponent();
+		assertEquals(expResult, result);
 
-    @Test
-    public void testEmptyTransport() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+		String component = "";
+		instance.setComponent(component);
+		assertEquals(expResult, result);
 
-        ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
+		component = "test_component";
+		instance.setComponent(component);
+		assertEquals(expResult, result);
+	}
 
-        byte[] buffer = getBytesForTransportable(writer, instance);
-        ManufacturerComponentComposable received = readFromBytes(reader, buffer, "ManufacturerComponentComposable");
+	@Test
+	public void testEmptyTransport() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertNull(instance.getComponent());
+		ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
 
-        instance.lock();
-        received = new ManufacturerComponentComposable();
+		byte[] buffer = getBytesForTransportable(writer, instance);
+		ManufacturerComponentComposable received = readFromBytes(reader,
+				buffer, "ManufacturerComponentComposable");
 
-        buffer = getBytesForTransportable(writer, instance);
-        received = readFromBytes(reader, buffer, "ManufacturerComponentComposable");
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertNull(instance.getComponent());
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertNull(instance.getComponent());
-    }
+		instance.lock();
+		received = new ManufacturerComponentComposable();
 
-        @Test
-    public void testValidTransport() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+		buffer = getBytesForTransportable(writer, instance);
+		received = readFromBytes(reader, buffer,
+				"ManufacturerComponentComposable");
 
-        ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
-        String advertisor = "advertisor_1";
-        String component = "componenent_1";
-        instance.setComponent(component);
-        instance.setComponent(component);
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertNull(instance.getComponent());
+	}
 
-        byte[] buffer = getBytesForTransportable(writer, instance);
-        ManufacturerComponentComposable received = readFromBytes(reader, buffer, "ManufacturerComponentComposable");
+	@Test
+	public void testValidTransport() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.getComponent(), received.getComponent());
-        assertEquals(instance.getManufacturer(), received.getManufacturer());
+		ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
+		String advertisor = "advertisor_1";
+		String component = "componenent_1";
+		instance.setComponent(component);
+		instance.setComponent(component);
 
-        instance.lock();
-        received = new ManufacturerComponentComposable();
+		byte[] buffer = getBytesForTransportable(writer, instance);
+		ManufacturerComponentComposable received = readFromBytes(reader,
+				buffer, "ManufacturerComponentComposable");
 
-        buffer = getBytesForTransportable(writer, instance);
-        received = readFromBytes(reader, buffer, "ManufacturerComponentComposable");
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.getComponent(), received.getComponent());
+		assertEquals(instance.getManufacturer(), received.getManufacturer());
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.getComponent(), received.getComponent());
-        assertEquals(instance.getManufacturer(), received.getManufacturer());
-    }
+		instance.lock();
+		received = new ManufacturerComponentComposable();
 
-    @Test
-    public void testHashCode() {
-        ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
-        int expResult = 0;
-        int result = instance.hashCode();
-        assertEquals(result, expResult);
+		buffer = getBytesForTransportable(writer, instance);
+		received = readFromBytes(reader, buffer,
+				"ManufacturerComponentComposable");
 
-        String component = "test_component";
-        String manufacturer = "test_manufacturer";
-        instance.setComponent(component);
-        instance.setManufacturer(manufacturer);
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.getComponent(), received.getComponent());
+		assertEquals(instance.getManufacturer(), received.getManufacturer());
+	}
 
-        expResult = manufacturer.hashCode()*31 + component.hashCode();
-        result = instance.hashCode();
-        assertEquals(result, expResult);
-    }
+	@Test
+	public void testHashCode() {
+		ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
+		int expResult = 0;
+		int result = instance.hashCode();
+		assertEquals(result, expResult);
 
-    @Test
-    public void testToString() {
-        ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
-        String expResult = "(ManufacturerComponentComposable (null,null))";
-        String result = instance.toString();
-        assertEquals(expResult, result);
+		String component = "test_component";
+		String manufacturer = "test_manufacturer";
+		instance.setComponent(component);
+		instance.setManufacturer(manufacturer);
 
-        String component = "test_component";
-        String manufacturer = "test_manufacturer";
-        instance.setComponent(component);
-        instance.setManufacturer(manufacturer);
-        expResult = "(ManufacturerComponentComposable (test_manufacturer,test_component))";
+		expResult = manufacturer.hashCode() * 31 + component.hashCode();
+		result = instance.hashCode();
+		assertEquals(result, expResult);
+	}
 
-        result = instance.toString();
-        assertEquals(expResult, result);
-    }
+	@Test
+	public void testToString() {
+		ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
+		String expResult = "(ManufacturerComponentComposable (null,null))";
+		String result = instance.toString();
+		assertEquals(expResult, result);
 
-    @Test
-    public void testComposableEquals() {
-        ManufacturerComponentComposable o = null;
-        ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
-        assertFalse(instance.composableEquals(o));
-        
-        assertTrue(instance.composableEquals(instance));
-        assertFalse(instance.composableEquals(null));
+		String component = "test_component";
+		String manufacturer = "test_manufacturer";
+		instance.setComponent(component);
+		instance.setManufacturer(manufacturer);
+		expResult = "(ManufacturerComponentComposable (test_manufacturer,test_component))";
 
-        o = new ManufacturerComponentComposable();
-        assertTrue(instance.composableEquals(o));
-        
-        o.lock();
-        assertFalse(instance.composableEquals(o));
-        assertFalse(o.composableEquals(instance));
-        
-        instance.lock();
-        assertTrue(instance.composableEquals(o));
+		result = instance.toString();
+		assertEquals(expResult, result);
+	}
 
-        instance = new ManufacturerComponentComposable();
-        o = new ManufacturerComponentComposable();
-        String manufacturer = "test_manufacturer";
-        String component = "test_component";
+	@Test
+	public void testComposableEquals() {
+		ManufacturerComponentComposable o = null;
+		ManufacturerComponentComposable instance = new ManufacturerComponentComposable();
+		assertFalse(instance.composableEquals(o));
 
-        instance.setManufacturer(manufacturer);
-        assertFalse(instance.composableEquals(o));
-        assertFalse(o.composableEquals(instance));
+		assertTrue(instance.composableEquals(instance));
+		assertFalse(instance.composableEquals(null));
 
-        o.setManufacturer("manufacturer_1");
-        assertFalse(instance.composableEquals(o));
-        assertFalse(o.composableEquals(instance));
+		o = new ManufacturerComponentComposable();
+		assertTrue(instance.composableEquals(o));
 
-        o.setManufacturer(manufacturer);
-        assertTrue(instance.composableEquals(o));
-        
-        manufacturer = "manufacturer_2";
-        instance.setManufacturer(manufacturer);
-        assertFalse(instance.composableEquals(o));
-        assertFalse(o.composableEquals(instance));
+		o.lock();
+		assertFalse(instance.composableEquals(o));
+		assertFalse(o.composableEquals(instance));
 
-        o.setManufacturer(manufacturer);
-        instance.setComponent(component);
-        assertFalse(instance.composableEquals(o));
-        assertFalse(o.composableEquals(instance));
+		instance.lock();
+		assertTrue(instance.composableEquals(o));
 
-        o.setComponent(component);
-        assertTrue(instance.composableEquals(o));
+		instance = new ManufacturerComponentComposable();
+		o = new ManufacturerComponentComposable();
+		String manufacturer = "test_manufacturer";
+		String component = "test_component";
 
-        component = "test_component_2";
-        o.setComponent(component);
-        assertFalse(instance.composableEquals(o));
-        assertFalse(o.composableEquals(instance));
+		instance.setManufacturer(manufacturer);
+		assertFalse(instance.composableEquals(o));
+		assertFalse(o.composableEquals(instance));
 
-        instance.setComponent(component);
-        o = new ManufacturerComponentComposable();
-        assertFalse(instance.equals(o));
-        assertFalse(o.equals(instance));
-    }
+		o.setManufacturer("manufacturer_1");
+		assertFalse(instance.composableEquals(o));
+		assertFalse(o.composableEquals(instance));
+
+		o.setManufacturer(manufacturer);
+		assertTrue(instance.composableEquals(o));
+
+		manufacturer = "manufacturer_2";
+		instance.setManufacturer(manufacturer);
+		assertFalse(instance.composableEquals(o));
+		assertFalse(o.composableEquals(instance));
+
+		o.setManufacturer(manufacturer);
+		instance.setComponent(component);
+		assertFalse(instance.composableEquals(o));
+		assertFalse(o.composableEquals(instance));
+
+		o.setComponent(component);
+		assertTrue(instance.composableEquals(o));
+
+		component = "test_component_2";
+		o.setComponent(component);
+		assertFalse(instance.composableEquals(o));
+		assertFalse(o.composableEquals(instance));
+
+		instance.setComponent(component);
+		o = new ManufacturerComponentComposable();
+		assertFalse(instance.equals(o));
+		assertFalse(o.equals(instance));
+	}
 
 }

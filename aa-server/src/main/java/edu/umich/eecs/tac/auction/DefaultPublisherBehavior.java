@@ -21,333 +21,340 @@ import se.sics.isl.transport.Transportable;
  * @author Patrick Jordan
  */
 public class DefaultPublisherBehavior implements PublisherBehavior {
-    private Logger log;
+	private Logger log;
 
-    private AuctionFactory auctionFactory;
+	private AuctionFactory auctionFactory;
 
-    private RetailCatalog retailCatalog;
+	private RetailCatalog retailCatalog;
 
-    private UserClickModel userClickModel;
+	private UserClickModel userClickModel;
 
-    private QueryReportManager queryReportManager;
+	private QueryReportManager queryReportManager;
 
-    /**
-     * Query space defines the set of allowable queries
-     */
-    private Set<Query> querySpace;
+	/**
+	 * Query space defines the set of allowable queries
+	 */
+	private Set<Query> querySpace;
 
-    /**
-     * The bid tracker tracks the current bids for each agent
-     */
-    private BidTracker bidTracker;
+	/**
+	 * The bid tracker tracks the current bids for each agent
+	 */
+	private BidTracker bidTracker;
 
-    /**
-     * The spend tracker tracks the current spend for each agent
-     */
-    private SpendTracker spendTracker;
+	/**
+	 * The spend tracker tracks the current spend for each agent
+	 */
+	private SpendTracker spendTracker;
 
-    /**
-     * The bid manager tracks the bid related information for the publisher
-     */
-    private BidManager bidManager;
+	/**
+	 * The bid manager tracks the bid related information for the publisher
+	 */
+	private BidManager bidManager;
 
-    /**
-     * Configuration proxy for this publisher
-     */
-    private ConfigProxy publisherConfigProxy;
+	/**
+	 * Configuration proxy for this publisher
+	 */
+	private ConfigProxy publisherConfigProxy;
 
-    /**
-     * The basic slot information
-     */
-    private SlotInfo slotInfo;
+	/**
+	 * The basic slot information
+	 */
+	private SlotInfo slotInfo;
 
-    /**
-     * The basic reserve information
-     */
-    private ReserveInfo reserveInfo;
+	/**
+	 * The basic reserve information
+	 */
+	private ReserveInfo reserveInfo;
 
-    /**
-     * The basic publisher info
-     */
-    private PublisherInfo publisherInfo;
+	/**
+	 * The basic publisher info
+	 */
+	private PublisherInfo publisherInfo;
 
-    private Random random;
+	private Random random;
 
+	private ConfigProxy config;
 
-    private ConfigProxy config;
+	private AgentRepository agentRepository;
 
-    private AgentRepository agentRepository;
+	private QueryReportSender queryReportSender;
 
-    private QueryReportSender queryReportSender;
+	private ClickCharger clickCharger;
 
-    private ClickCharger clickCharger;
+	private BidBundleWriter bidBundleWriter;
 
-    private BidBundleWriter bidBundleWriter;
+	public DefaultPublisherBehavior(ConfigProxy config,
+			AgentRepository agentRepository,
+			QueryReportSender queryReportSender, ClickCharger clickCharger,
+			BidBundleWriter bidBundleWriter) {
 
+		if (config == null) {
+			throw new NullPointerException("config cannot be null");
+		}
 
-    public DefaultPublisherBehavior(ConfigProxy config, AgentRepository agentRepository, QueryReportSender queryReportSender, ClickCharger clickCharger, BidBundleWriter bidBundleWriter) {
+		this.config = config;
 
-        if(config==null) {
-            throw new NullPointerException("config cannot be null");
-        }
+		if (agentRepository == null) {
+			throw new NullPointerException("agent repository cannot be null");
+		}
 
-        this.config = config;
+		this.agentRepository = agentRepository;
 
-        if(agentRepository==null) {
-            throw new NullPointerException("agent repository cannot be null");
-        }
+		if (queryReportSender == null) {
+			throw new NullPointerException("query report sender cannot be null");
+		}
 
-        this.agentRepository = agentRepository;
+		this.queryReportSender = queryReportSender;
 
-        if(queryReportSender==null) {
-            throw new NullPointerException("query report sender cannot be null");
-        }
+		if (clickCharger == null) {
+			throw new NullPointerException("click charger cannot be null");
+		}
 
-        this.queryReportSender = queryReportSender;
+		this.clickCharger = clickCharger;
 
-        if(clickCharger==null) {
-            throw new NullPointerException("click charger cannot be null");
-        }
+		if (bidBundleWriter == null) {
+			throw new NullPointerException("bid bundle writer cannot be null");
+		}
 
-        this.clickCharger = clickCharger;
+		this.bidBundleWriter = bidBundleWriter;
+	}
 
-        if(bidBundleWriter==null) {
-            throw new NullPointerException("bid bundle writer cannot be null");
-        }
-        
-        this.bidBundleWriter = bidBundleWriter;
-    }
+	public void nextTimeUnit(int date) {
+		spendTracker.reset();
 
-    public void nextTimeUnit(int date) {
-        spendTracker.reset();
+		// Auctions should be updated here.
+		if (bidManager != null) {
+			bidManager.nextTimeUnit(date);
+		}
+	}
 
-        //Auctions should be updated here.
-        if (bidManager != null) {
-            bidManager.nextTimeUnit(date);
-        }
-    }
+	public void setup() {
+		this.log = Logger.getLogger(DefaultPublisherBehavior.class.getName());
 
+		random = new Random();
 
-    public void setup() {
-        this.log = Logger.getLogger(DefaultPublisherBehavior.class.getName());
+		spendTracker = createSpendTracker();
 
-        random = new Random();
+		bidTracker = createBidTracker();
 
-        spendTracker = createSpendTracker();
+		setPublisherInfo(createPublisherInfo());
 
-        bidTracker = createBidTracker();
+		auctionFactory = createAuctionFactory();
+		auctionFactory.setPublisherInfo(getPublisherInfo());
 
-        setPublisherInfo(createPublisherInfo());
+		queryReportManager = createQueryReportManager();
 
-        auctionFactory = createAuctionFactory();
-        auctionFactory.setPublisherInfo(getPublisherInfo());
+		for (SimulationAgent agent : agentRepository.getUsers()) {
+			Users users = (Users) agent.getAgent();
+			users.addUserEventListener(new ClickMonitor());
+		}
+	}
 
+	private PublisherInfo createPublisherInfo() {
+		double squashingMin = config.getPropertyAsDouble("squashing.min", 0.0);
+		double squashingMax = config.getPropertyAsDouble("squashing.max", 1.0);
+		double squashing = squashingMin + random.nextDouble()
+				* (squashingMax - squashingMin);
 
-        queryReportManager = createQueryReportManager();
+		PublisherInfo publisherInfo = new PublisherInfo();
+		publisherInfo.setSquashingParameter(squashing);
+		publisherInfo.lock();
 
-        for (SimulationAgent agent : agentRepository.getUsers()) {
-            Users users = (Users) agent.getAgent();
-            users.addUserEventListener(new ClickMonitor());
-        }
-    }
+		return publisherInfo;
+	}
 
-    private PublisherInfo createPublisherInfo() {
-        double squashingMin = config.getPropertyAsDouble("squashing.min", 0.0);
-        double squashingMax = config.getPropertyAsDouble("squashing.max", 1.0);
-        double squashing = squashingMin + random.nextDouble() * (squashingMax - squashingMin);
+	private BidTracker createBidTracker() {
+		BidTracker bidTracker = new BidTrackerImpl(0);
 
-        PublisherInfo publisherInfo = new PublisherInfo();
-        publisherInfo.setSquashingParameter(squashing);
-        publisherInfo.lock();
+		return bidTracker;
+	}
 
-        return publisherInfo;
-    }
+	private SpendTracker createSpendTracker() {
+		SpendTracker spendTracker = new SpendTrackerImpl(0);
 
-    private BidTracker createBidTracker() {
-        BidTracker bidTracker = new BidTrackerImpl(0);
+		return spendTracker;
+	}
 
-        return bidTracker;
-    }
+	private QueryReportManager createQueryReportManager() {
+		QueryReportManager queryReportManager = new QueryReportManagerImpl(
+				queryReportSender, 0);
 
-    private SpendTracker createSpendTracker() {
-        SpendTracker spendTracker = new SpendTrackerImpl(0);
+		for (String advertiser : agentRepository.getAdvertiserAddresses()) {
+			queryReportManager.addAdvertiser(advertiser);
+		}
+
+		for (SimulationAgent agent : agentRepository.getUsers()) {
+			Users users = (Users) agent.getAgent();
+			users.addUserEventListener(queryReportManager);
+		}
 
+		return queryReportManager;
+	}
 
-        return spendTracker;
-    }
+	private BidManager createBidManager(BidTracker bidTracker,
+			SpendTracker spendTracker) {
 
-    private QueryReportManager createQueryReportManager() {
-        QueryReportManager queryReportManager = new QueryReportManagerImpl(queryReportSender, 0);
+		BidManager bidManager = new BidManagerImpl(userClickModel, bidTracker,
+				spendTracker);
 
-        for (String advertiser : agentRepository.getAdvertiserAddresses()) {
-            queryReportManager.addAdvertiser(advertiser);
-        }
+		// All advertisers should be known to the bidManager
+		String[] advertisers = agentRepository.getAdvertiserAddresses();
+		for (int i = 0, n = advertisers.length; i < n; i++) {
+			bidManager.addAdvertiser(advertisers[i]);
+		}
 
-        for (SimulationAgent agent : agentRepository.getUsers()) {
-            Users users = (Users) agent.getAgent();
-            users.addUserEventListener(queryReportManager);
-        }
+		return bidManager;
+	}
 
-        return queryReportManager;
-    }
+	private AuctionFactory createAuctionFactory() {
+		String auctionFactoryClass = config.getProperty("auctionfactory.class",
+				"edu.umich.eecs.tac.auction.LahaiePennockAuctionFactory");
 
-    private BidManager createBidManager(BidTracker bidTracker, SpendTracker spendTracker) {
+		AuctionFactory factory = null;
+
+		try {
+			factory = (AuctionFactory) Class.forName(auctionFactoryClass)
+					.newInstance();
+		} catch (InstantiationException e) {
+			log.log(Level.SEVERE, "error creating auction factory", e);
+		} catch (IllegalAccessException e) {
+			log.log(Level.SEVERE, "error creating auction factory", e);
+		} catch (ClassNotFoundException e) {
+			log.log(Level.SEVERE, "error creating auction factory", e);
+		}
+
+		return factory;
+	}
 
+	public void stopped() {
+	}
 
-        BidManager bidManager = new BidManagerImpl(userClickModel, bidTracker, spendTracker);
+	public void shutdown() {
+	}
 
-        //All advertisers should be known to the bidManager
-        String[] advertisers = agentRepository.getAdvertiserAddresses();
-        for (int i = 0, n = advertisers.length; i < n; i++) {
-            bidManager.addAdvertiser(advertisers[i]);
-        }
+	public void messageReceived(Message message) {
+		String sender = message.getSender();
+		Transportable content = message.getContent();
 
-        return bidManager;
-    }
+		if (content instanceof BidBundle) {
+			handleBidBundle(sender, (BidBundle) content);
+		} else if (content instanceof UserClickModel) {
+			handleUserClickModel((UserClickModel) content);
+		} else if (content instanceof RetailCatalog) {
+			handleRetailCatalog((RetailCatalog) content);
+		} else if (content instanceof SlotInfo) {
+			handleSlotInfo((SlotInfo) content);
+		} else if (content instanceof ReserveInfo) {
+			handleReserveInfo((ReserveInfo) content);
+		}
+	}
 
-    private AuctionFactory createAuctionFactory() {
-        String auctionFactoryClass = config.getProperty("auctionfactory.class", "edu.umich.eecs.tac.auction.LahaiePennockAuctionFactory");
+	private void handleSlotInfo(SlotInfo slotInfo) {
+		this.slotInfo = slotInfo;
 
-        AuctionFactory factory = null;
+		if (auctionFactory != null) {
+			auctionFactory.setSlotInfo(slotInfo);
+		}
+	}
 
-        try {
-            factory = (AuctionFactory) Class.forName(auctionFactoryClass).newInstance();
-        } catch (InstantiationException e) {
-            log.log(Level.SEVERE,"error creating auction factory",e);
-        } catch (IllegalAccessException e) {
-            log.log(Level.SEVERE,"error creating auction factory",e);
-        } catch (ClassNotFoundException e) {
-            log.log(Level.SEVERE,"error creating auction factory",e);
-        }
+	private void handleReserveInfo(ReserveInfo reserveInfo) {
+		this.reserveInfo = reserveInfo;
 
-        return factory;
-    }
+		if (auctionFactory != null) {
+			auctionFactory.setReserveInfo(reserveInfo);
+		}
+	}
 
-    public void stopped() {
-    }
+	private void handleUserClickModel(UserClickModel userClickModel) {
+		this.userClickModel = userClickModel;
 
+		bidManager = createBidManager(bidTracker, spendTracker);
 
-    public void shutdown() {
-    }
+		if (auctionFactory != null) {
+			auctionFactory.setBidManager(bidManager);
+		}
+	}
 
-    public void messageReceived(Message message) {
-        String sender = message.getSender();
-        Transportable content = message.getContent();
+	private void handleBidBundle(String advertiser, BidBundle bidBundle) {
+		if (bidManager == null) {
+			// Not yet initialized => ignore the RFQ
+			log.warning("Received BidBundle from " + advertiser
+					+ " before initialization");
+		} else {
+			bidManager.updateBids(advertiser, bidBundle);
 
-        if (content instanceof BidBundle) {
-            handleBidBundle(sender, (BidBundle) content);
-        } else if (content instanceof UserClickModel) {
-            handleUserClickModel((UserClickModel) content);
-        } else if (content instanceof RetailCatalog) {
-            handleRetailCatalog((RetailCatalog) content);
-        } else if (content instanceof SlotInfo) {
-            handleSlotInfo((SlotInfo) content);
-        } else if (content instanceof ReserveInfo) {
-            handleReserveInfo((ReserveInfo) content);
-        }
-    }
+			bidBundleWriter.writeBundle(advertiser, bidBundle);
+		}
+	}
 
-    private void handleSlotInfo(SlotInfo slotInfo) {
-        this.slotInfo = slotInfo;
+	private void handleRetailCatalog(RetailCatalog retailCatalog) {
+		this.retailCatalog = retailCatalog;
 
-        if (auctionFactory != null) {
-            auctionFactory.setSlotInfo(slotInfo);
-        }
-    }
+		generatePossibleQueries();
 
-    private void handleReserveInfo(ReserveInfo reserveInfo) {
-        this.reserveInfo = reserveInfo;
+		bidTracker.initializeQuerySpace(querySpace);
+	}
 
-        if (auctionFactory != null) {
-            auctionFactory.setReserveInfo(reserveInfo);
-        }
-    }
+	private void generatePossibleQueries() {
+		if (retailCatalog != null && querySpace == null) {
+			querySpace = new HashSet<Query>();
 
-    private void handleUserClickModel(UserClickModel userClickModel) {
-        this.userClickModel = userClickModel;
+			for (Product product : retailCatalog) {
+				Query f0 = new Query();
+				Query f1_manufacturer = new Query(product.getManufacturer(),
+						null);
+				Query f1_component = new Query(null, product.getComponent());
+				Query f2 = new Query(product.getManufacturer(), product
+						.getComponent());
 
-        bidManager = createBidManager(bidTracker, spendTracker);
+				querySpace.add(f0);
+				querySpace.add(f1_manufacturer);
+				querySpace.add(f1_component);
+				querySpace.add(f2);
+			}
 
-        if (auctionFactory != null) {
-            auctionFactory.setBidManager(bidManager);
-        }
-    }
+		}
+	}
 
-    private void handleBidBundle(String advertiser, BidBundle bidBundle) {
-        if (bidManager == null) {
-            // Not yet initialized => ignore the RFQ
-            log.warning("Received BidBundle from " + advertiser + " before initialization");
-        } else {
-            bidManager.updateBids(advertiser, bidBundle);
+	public void sendQueryReportsToAll() {
+		if (queryReportManager != null)
+			queryReportManager.sendQueryReportToAll();
+	}
 
-            bidBundleWriter.writeBundle(advertiser, bidBundle);
-        }
-    }
+	public Auction runAuction(Query query) {
 
-    private void handleRetailCatalog(RetailCatalog retailCatalog) {
-        this.retailCatalog = retailCatalog;
+		if (auctionFactory != null) {
+			return auctionFactory.runAuction(query);
+		}
 
-        generatePossibleQueries();
+		return null;
+	}
 
+	public PublisherInfo getPublisherInfo() {
+		return publisherInfo;
+	}
 
-        bidTracker.initializeQuerySpace(querySpace);
-    }
+	public void setPublisherInfo(PublisherInfo publisherInfo) {
+		this.publisherInfo = publisherInfo;
+	}
 
-    private void generatePossibleQueries() {
-        if (retailCatalog != null && querySpace == null) {
-            querySpace = new HashSet<Query>();
+	protected class ClickMonitor implements UserEventListener {
 
-            for (Product product : retailCatalog) {
-                Query f0 = new Query();
-                Query f1_manufacturer = new Query(product.getManufacturer(), null);
-                Query f1_component = new Query(null, product.getComponent());
-                Query f2 = new Query(product.getManufacturer(), product.getComponent());
+		public void queryIssued(Query query) {
+		}
 
-                querySpace.add(f0);
-                querySpace.add(f1_manufacturer);
-                querySpace.add(f1_component);
-                querySpace.add(f2);
-            }
+		public void viewed(Query query, Ad ad, int slot, String advertiser,
+				boolean isPromoted) {
+		}
 
-        }
-    }
+		public void clicked(Query query, Ad ad, int slot, double cpc,
+				String advertiser) {
+			clickCharger.charge(advertiser, cpc);
+			spendTracker.addCost(advertiser, query, cpc);
+		}
 
-    public void sendQueryReportsToAll() {
-        if (queryReportManager != null)
-            queryReportManager.sendQueryReportToAll();
-    }
-
-    public Auction runAuction(Query query) {
-
-        if (auctionFactory != null) {
-            return auctionFactory.runAuction(query);
-        }
-
-        return null;
-    }
-
-    public PublisherInfo getPublisherInfo() {
-        return publisherInfo;
-    }
-
-    public void setPublisherInfo(PublisherInfo publisherInfo) {
-        this.publisherInfo = publisherInfo;
-    }
-
-    protected class ClickMonitor implements UserEventListener {
-
-        public void queryIssued(Query query) {
-        }
-
-        public void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted) {
-        }
-
-        public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
-            clickCharger.charge(advertiser, cpc);
-            spendTracker.addCost(advertiser,query,cpc);
-        }
-
-        public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {
-        }
-    }
+		public void converted(Query query, Ad ad, int slot, double salesProfit,
+				String advertiser) {
+		}
+	}
 }

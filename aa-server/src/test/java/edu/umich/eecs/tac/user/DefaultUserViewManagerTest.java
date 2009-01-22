@@ -21,179 +21,187 @@ import edu.umich.eecs.tac.sim.RecentConversionsTracker;
  */
 @RunWith(JMock.class)
 public class DefaultUserViewManagerTest {
-    private Mockery context;
-    
-    private Random random;
+	private Mockery context;
 
-    private RetailCatalog retailCatalog;
+	private Random random;
 
-    private UserClickModel userClickModel;
+	private RetailCatalog retailCatalog;
 
-    private RecentConversionsTracker recentConversionsTracker;
+	private UserClickModel userClickModel;
 
-    private DefaultUserViewManager userViewManager;
+	private RecentConversionsTracker recentConversionsTracker;
 
-    private Map<String, AdvertiserInfo> advertiserInfo;
+	private DefaultUserViewManager userViewManager;
 
-    private SlotInfo slotInfo;
+	private Map<String, AdvertiserInfo> advertiserInfo;
 
-    private Query query;
+	private SlotInfo slotInfo;
 
-    private String alice;
+	private Query query;
 
-    private String bob;
+	private String alice;
 
-    private String eve;
+	private String bob;
 
-    private Product product;
+	private String eve;
 
-    private String manufacturer;
+	private Product product;
 
-    private String component;
+	private String manufacturer;
 
-    @Before
-    public void setup() {
-        context = new JUnit4Mockery();
-        
-        random = new Random(103);
+	private String component;
 
-        alice = "alice";
-        bob = "bob";
-        eve = "eve";
+	@Before
+	public void setup() {
+		context = new JUnit4Mockery();
 
-        manufacturer = "man";
+		random = new Random(103);
 
-        component = "com";
+		alice = "alice";
+		bob = "bob";
+		eve = "eve";
 
-        product = new Product(manufacturer,component);
+		manufacturer = "man";
 
-        query = new Query(manufacturer,component);
-        
-        retailCatalog = new RetailCatalog();
+		component = "com";
 
-        retailCatalog.addProduct(product);
+		product = new Product(manufacturer, component);
 
-        retailCatalog.setSalesProfit(product,1.0);
+		query = new Query(manufacturer, component);
 
+		retailCatalog = new RetailCatalog();
 
-        slotInfo = new SlotInfo();
+		retailCatalog.addProduct(product);
 
-        recentConversionsTracker = context.mock(RecentConversionsTracker.class);
+		retailCatalog.setSalesProfit(product, 1.0);
 
-        AdvertiserInfo aliceInfo = new AdvertiserInfo();
+		slotInfo = new SlotInfo();
 
-        aliceInfo.setDecayRate(0.0);
+		recentConversionsTracker = context.mock(RecentConversionsTracker.class);
 
-        AdvertiserInfo bobInfo = new AdvertiserInfo();
+		AdvertiserInfo aliceInfo = new AdvertiserInfo();
 
-        bobInfo.setDecayRate(0.0);
+		aliceInfo.setDecayRate(0.0);
 
-        AdvertiserInfo eveInfo = new AdvertiserInfo();
+		AdvertiserInfo bobInfo = new AdvertiserInfo();
 
-        eveInfo.setDecayRate(1.0);
-        eveInfo.setFocusEffects(query.getType(),1.0);
-        eveInfo.setManufacturerSpecialty(manufacturer);
-        
-        advertiserInfo = new HashMap<String,AdvertiserInfo>();
-        advertiserInfo.put(alice,aliceInfo);
-        advertiserInfo.put(bob,bobInfo);
-        advertiserInfo.put(eve,eveInfo);
+		bobInfo.setDecayRate(0.0);
 
+		AdvertiserInfo eveInfo = new AdvertiserInfo();
 
+		eveInfo.setDecayRate(1.0);
+		eveInfo.setFocusEffects(query.getType(), 1.0);
+		eveInfo.setManufacturerSpecialty(manufacturer);
 
+		advertiserInfo = new HashMap<String, AdvertiserInfo>();
+		advertiserInfo.put(alice, aliceInfo);
+		advertiserInfo.put(bob, bobInfo);
+		advertiserInfo.put(eve, eveInfo);
 
-        userClickModel = new UserClickModel(new Query[] {query}, new String[] {alice, bob, eve});
-        userClickModel.setContinuationProbability(0,0.75);
-        userClickModel.setAdvertiserEffect(0,0,0.0);
-        userClickModel.setAdvertiserEffect(0,1,1.0);
-        userClickModel.setAdvertiserEffect(0,2,1.0);
+		userClickModel = new UserClickModel(new Query[] { query },
+				new String[] { alice, bob, eve });
+		userClickModel.setContinuationProbability(0, 0.75);
+		userClickModel.setAdvertiserEffect(0, 0, 0.0);
+		userClickModel.setAdvertiserEffect(0, 1, 1.0);
+		userClickModel.setAdvertiserEffect(0, 2, 1.0);
 
-        userViewManager = new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, slotInfo, random);
-        userViewManager.setUserClickModel(userClickModel);        
-    }
+		userViewManager = new DefaultUserViewManager(retailCatalog,
+				recentConversionsTracker, advertiserInfo, slotInfo, random);
+		userViewManager.setUserClickModel(userClickModel);
+	}
 
-    @Test
-    public void testConstructors() {
-        assertNotNull(userViewManager);
-        assertNotNull(new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, slotInfo));
-    }
+	@Test
+	public void testConstructors() {
+		assertNotNull(userViewManager);
+		assertNotNull(new DefaultUserViewManager(retailCatalog,
+				recentConversionsTracker, advertiserInfo, slotInfo));
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testConstructorRetailCatalogNull() {
-        new DefaultUserViewManager(null, recentConversionsTracker, advertiserInfo, slotInfo);
-    }
+	@Test(expected = NullPointerException.class)
+	public void testConstructorRetailCatalogNull() {
+		new DefaultUserViewManager(null, recentConversionsTracker,
+				advertiserInfo, slotInfo);
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testConstructorTrackerNull() {
-        new DefaultUserViewManager(retailCatalog, null, advertiserInfo, slotInfo);
-    }
+	@Test(expected = NullPointerException.class)
+	public void testConstructorTrackerNull() {
+		new DefaultUserViewManager(retailCatalog, null, advertiserInfo,
+				slotInfo);
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testConstructorInfoNull() {
-        new DefaultUserViewManager(retailCatalog, recentConversionsTracker, null, slotInfo);
-    }
+	@Test(expected = NullPointerException.class)
+	public void testConstructorInfoNull() {
+		new DefaultUserViewManager(retailCatalog, recentConversionsTracker,
+				null, slotInfo);
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testConstructorRandomNull() {
-        new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, slotInfo, null);
-    }
+	@Test(expected = NullPointerException.class)
+	public void testConstructorRandomNull() {
+		new DefaultUserViewManager(retailCatalog, recentConversionsTracker,
+				advertiserInfo, slotInfo, null);
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testConstructorAuctionInfoNull() {
-        new DefaultUserViewManager(retailCatalog, recentConversionsTracker, advertiserInfo, null);
-    }
+	@Test(expected = NullPointerException.class)
+	public void testConstructorAuctionInfoNull() {
+		new DefaultUserViewManager(retailCatalog, recentConversionsTracker,
+				advertiserInfo, null);
+	}
 
-    @Test
-    public void testUserClickModel() {
-        assertSame(userViewManager.getUserClickModel(), userClickModel);
-    }
+	@Test
+	public void testUserClickModel() {
+		assertSame(userViewManager.getUserClickModel(), userClickModel);
+	}
 
-    @Test
-    public void testUserEventSupport() {
-        UserEventListener listener = context.mock(UserEventListener.class);
+	@Test
+	public void testUserEventSupport() {
+		UserEventListener listener = context.mock(UserEventListener.class);
 
-        assertTrue(userViewManager.addUserEventListener(listener));
-        assertTrue(userViewManager.containsUserEventListener(listener));
-        assertTrue(userViewManager.removeUserEventListener(listener));
-        assertFalse(userViewManager.containsUserEventListener(listener));
-    }
+		assertTrue(userViewManager.addUserEventListener(listener));
+		assertTrue(userViewManager.containsUserEventListener(listener));
+		assertTrue(userViewManager.removeUserEventListener(listener));
+		assertFalse(userViewManager.containsUserEventListener(listener));
+	}
 
-    @Test
-    public void testProcessImpression() {
-        User user = new User(QueryState.FOCUS_LEVEL_TWO, product);
+	@Test
+	public void testProcessImpression() {
+		User user = new User(QueryState.FOCUS_LEVEL_TWO, product);
 
-        AdLink aliceAd = new AdLink(product, alice);
-        AdLink bobAd = new AdLink(product, bob);
-        AdLink eveAd = new AdLink(product, eve);
+		AdLink aliceAd = new AdLink(product, alice);
+		AdLink bobAd = new AdLink(product, bob);
+		AdLink eveAd = new AdLink(product, eve);
 
-        Pricing pricing = new Pricing();
-        pricing.setPrice(aliceAd, 1.0);
-        pricing.setPrice(bobAd, 0.5);
-        pricing.setPrice(eveAd, 0.25);
+		Pricing pricing = new Pricing();
+		pricing.setPrice(aliceAd, 1.0);
+		pricing.setPrice(bobAd, 0.5);
+		pricing.setPrice(eveAd, 0.25);
 
-        Ranking ranking = new Ranking();
-        ranking.add(aliceAd);
-        ranking.add(bobAd);
-        ranking.add(eveAd);
+		Ranking ranking = new Ranking();
+		ranking.add(aliceAd);
+		ranking.add(bobAd);
+		ranking.add(eveAd);
 
-        Auction auction = new Auction();
-        auction.setQuery(query);
-        auction.setPricing(pricing);
-        auction.setRanking(ranking);
+		Auction auction = new Auction();
+		auction.setQuery(query);
+		auction.setPricing(pricing);
+		auction.setRanking(ranking);
 
-        userViewManager.nextTimeUnit(0);
+		userViewManager.nextTimeUnit(0);
 
-        context.checking(new Expectations() {{
-            atLeast(1).of(recentConversionsTracker).getRecentConversions(bob); will(returnValue(0.0));
-            atLeast(1).of(recentConversionsTracker).getRecentConversions(eve); will(returnValue(0.0));
-        }});
+		context.checking(new Expectations() {
+			{
+				atLeast(1).of(recentConversionsTracker).getRecentConversions(
+						bob);
+				will(returnValue(0.0));
+				atLeast(1).of(recentConversionsTracker).getRecentConversions(
+						eve);
+				will(returnValue(0.0));
+			}
+		});
 
-        assertTrue(userViewManager.processImpression(user, query, auction));
+		assertTrue(userViewManager.processImpression(user, query, auction));
 
-        assertFalse(userViewManager.processImpression(user, new Query(), auction));
-    }
-    
-
-
+		assertFalse(userViewManager.processImpression(user, new Query(),
+				auction));
+	}
 
 }

@@ -4,49 +4,61 @@ package edu.umich.eecs.tac.user;
  * @author Ben Cassell
  */
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import se.sics.isl.transport.Transportable;
+import se.sics.tasim.aw.Message;
+import se.sics.tasim.is.EventWriter;
 import se.sics.tasim.sim.SimulationAgent;
-
 import edu.umich.eecs.tac.props.AdvertiserInfo;
-import edu.umich.eecs.tac.props.SlotInfo;
+import edu.umich.eecs.tac.props.Auction;
+import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.RetailCatalog;
+import edu.umich.eecs.tac.props.SlotInfo;
 import edu.umich.eecs.tac.sim.AgentRepository;
+import edu.umich.eecs.tac.sim.Auctioneer;
 import edu.umich.eecs.tac.sim.DummyTACAASimulation;
 import edu.umich.eecs.tac.sim.SalesAnalyst;
 import edu.umich.eecs.tac.util.config.ConfigProxy;
 
 public class DefaultUsersBehaviorTest {
-	
+
 	protected DummyTACAASimulation dts;
 	private DefaultUsersBehavior dub;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		dts = new DummyTACAASimulation();
 		dts.setup();
-		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(), new AgentRepositoryProxy(), new UsersTransactorProxy());
+		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(),
+				new AgentRepositoryProxy(), new UsersTransactorProxy());
 		dub.setup();
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testDefaultUsersBehaviorNPEA() {
-		dub = new DefaultUsersBehavior(null, new AgentRepositoryProxy(), new UsersTransactorProxy());
+		dub = new DefaultUsersBehavior(null, new AgentRepositoryProxy(),
+				new UsersTransactorProxy());
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testDefaultUsersBehaviorNPEB() {
-		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(), null, new UsersTransactorProxy());
+		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(), null,
+				new UsersTransactorProxy());
 	}
-	
+
 	@Test(expected = NullPointerException.class)
 	public void testDefaultUsersBehaviorNPEC() {
-		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(), new AgentRepositoryProxy(), null);
-	}	
-	
+		dub = new DefaultUsersBehavior(new DummyUsersConfigProxy(),
+				new AgentRepositoryProxy(), null);
+	}
+
 	@Test
 	public void testNextTimeUnit() {
 		dub.nextTimeUnit(0);
@@ -55,146 +67,229 @@ public class DefaultUsersBehaviorTest {
 
 	@Test
 	public void testSetup() {
-
-	}
-
-	@Test
-	public void testCreateBuilder() {
-
+		//TODO
 	}
 
 	@Test
 	public void testStopped() {
-
+		dub.stopped();
 	}
 
 	@Test
 	public void testShutdown() {
-
+		dub.shutdown();
 	}
 
 	@Test
 	public void testGetRanking() {
-
+		DummyPublisher dumPub = new DummyPublisher();
+		dub.getRanking(new Query("man", "com"), dumPub);
 	}
 
 	@Test
 	public void testMessageReceived() {
-
+		Query q = new Query("man", "com");
+		Message m = new Message("dummy", q);
+		dub.messageReceived(m);
 	}
 
 	@Test
 	public void testAddUserEventListener() {
-
+		dub.addUserEventListener(dts.getSalesAnalyst());
 	}
 
 	@Test
 	public void testContainsUserEventListener() {
-
+		assertFalse(dub.containsUserEventListener(dts.getSalesAnalyst()));
+		dub.addUserEventListener(dts.getSalesAnalyst());
+		assertTrue(dub.containsUserEventListener(dts.getSalesAnalyst()));
+		assertFalse(dub.containsUserEventListener(null));
+		dub.removeUserEventListener(dts.getSalesAnalyst());
+		assertFalse(dub.containsUserEventListener(dts.getSalesAnalyst()));
 	}
-
-	@Test
-	public void testRemoveUserEventListener() {
-
-	}
-
+	
 	@Test
 	public void testBroadcastUserDistribution() {
-
+		dub.broadcastUserDistribution(0, new DummyEventWriter());
+		dub.broadcastUserDistribution(0, new DummyEventWriter());
 	}
 
-    protected class DummyUsersConfigProxy implements ConfigProxy {
-        public String getProperty(String name) {
-            return name;
-        }
+	protected class DummyPublisher implements Auctioneer {
 
-        public String getProperty(String name, String defaultValue) {
-            return defaultValue;
-        }
+		public Auction runAuction(Query query) {
+			return new Auction();
+		}
+		
+	}
+	
+	protected class DummyEventWriter extends EventWriter {
 
-        public String[] getPropertyAsArray(String name) {
-            return this.getPropertyAsArray(name, "name");
-        }
+		@Override
+		public void dataUpdated(int agent, int type, int value) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public String[] getPropertyAsArray(String name, String defaultValue) {
-            char [] k = defaultValue.toCharArray();
-            String [] i = new String [k.length];
-            int j;
-            for(j = 0; j < k.length; j++) {
-            	i[j] = String.valueOf(k[j]);
-            }
-            return i;  
-        }
+		@Override
+		public void dataUpdated(int agent, int type, long value) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public int getPropertyAsInt(String name, int defaultValue) {
-            return 0;
-        }
+		@Override
+		public void dataUpdated(int agent, int type, float value) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public int[] getPropertyAsIntArray(String name) {
-            return this.getPropertyAsIntArray(name, "name");
-        }
+		@Override
+		public void dataUpdated(int agent, int type, double value) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public int[] getPropertyAsIntArray(String name, String defaultValue) {
-            char [] k = defaultValue.toCharArray();
-            int [] i = new int [k.length];
-            int j;
-            for(j = 0; j < k.length; j++) {
-            	i[j] = (int)k[j];
-            }
-            return i;  
-        }
+		@Override
+		public void dataUpdated(int agent, int type, String value) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public long getPropertyAsLong(String name, long defaultValue) {
-            return defaultValue;
-        }
+		@Override
+		public void dataUpdated(int agent, int type, Transportable content) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public float getPropertyAsFloat(String name, float defaultValue) {
-            return defaultValue;
-        }
+		@Override
+		public void dataUpdated(int type, Transportable content) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public double getPropertyAsDouble(String name, double defaultValue) {
-            return defaultValue;
-        }
-    }
+		@Override
+		public void intCache(int agent, int type, int[] cache) {
+			// TODO Auto-generated method stub
+			
+		}
 
-    protected class UsersTransactorProxy implements UsersTransactor {
-        public void transact(String address, double amount) {
-            this.transact(address, amount);
-        }
-    }
+		@Override
+		public void interaction(int fromAgent, int toAgent, int type) {
+			// TODO Auto-generated method stub
+			
+		}
 
-    protected class AgentRepositoryProxy implements AgentRepository {
-        public RetailCatalog getRetailCatalog() {
-            return dts.getRetailCatalog();
-        }
+		@Override
+		public void interactionWithRole(int fromAgent, int role, int type) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public SlotInfo getAuctionInfo() {
-            return dts.getAuctionInfo();
-        }
+		@Override
+		public void nextTimeUnit(int timeUnit) {
+			// TODO Auto-generated method stub
+			
+		}
 
-        public Map<String, AdvertiserInfo> getAdvertiserInfo() {
-            return dts.getAdvertiserInfo();
-        }
+		@Override
+		public void participant(int agent, int role, String name,
+				int participantID) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	protected class DummyUsersConfigProxy implements ConfigProxy {
+		public String getProperty(String name) {
+			return name;
+		}
 
-        public SimulationAgent[] getPublishers() {
-            return dts.getPublishers();
-        }
+		public String getProperty(String name, String defaultValue) {
+			return defaultValue;
+		}
 
-        public SimulationAgent[] getUsers() {
-            return dts.getUsers();
-        }
+		public String[] getPropertyAsArray(String name) {
+			return this.getPropertyAsArray(name, "name");
+		}
 
-        public SalesAnalyst getSalesAnalyst() {
-            return dts.getSalesAnalyst();
-        }
+		public String[] getPropertyAsArray(String name, String defaultValue) {
+			char[] k = defaultValue.toCharArray();
+			String[] i = new String[k.length];
+			int j;
+			for (j = 0; j < k.length; j++) {
+				i[j] = String.valueOf(k[j]);
+			}
+			return i;
+		}
 
-        public int getNumberOfAdvertisers() {
-            return dts.getNumberOfAdvertisers();
-        }
+		public int getPropertyAsInt(String name, int defaultValue) {
+			return 0;
+		}
 
+		public int[] getPropertyAsIntArray(String name) {
+			return this.getPropertyAsIntArray(name, "name");
+		}
 
-        public String[] getAdvertiserAddresses() {
-            return dts.getAdvertiserAddresses();
-        }
-    }
+		public int[] getPropertyAsIntArray(String name, String defaultValue) {
+			char[] k = defaultValue.toCharArray();
+			int[] i = new int[k.length];
+			int j;
+			for (j = 0; j < k.length; j++) {
+				i[j] = k[j];
+			}
+			return i;
+		}
+
+		public long getPropertyAsLong(String name, long defaultValue) {
+			return defaultValue;
+		}
+
+		public float getPropertyAsFloat(String name, float defaultValue) {
+			return defaultValue;
+		}
+
+		public double getPropertyAsDouble(String name, double defaultValue) {
+			return defaultValue;
+		}
+	}
+
+	protected class UsersTransactorProxy implements UsersTransactor {
+		public void transact(String address, double amount) {
+			this.transact(address, amount);
+		}
+	}
+
+	protected class AgentRepositoryProxy implements AgentRepository {
+		public RetailCatalog getRetailCatalog() {
+			return dts.getRetailCatalog();
+		}
+
+		public SlotInfo getAuctionInfo() {
+			return dts.getAuctionInfo();
+		}
+
+		public Map<String, AdvertiserInfo> getAdvertiserInfo() {
+			return dts.getAdvertiserInfo();
+		}
+
+		public SimulationAgent[] getPublishers() {
+			return dts.getPublishers();
+		}
+
+		public SimulationAgent[] getUsers() {
+			return dts.getUsers();
+		}
+
+		public SalesAnalyst getSalesAnalyst() {
+			return dts.getSalesAnalyst();
+		}
+
+		public int getNumberOfAdvertisers() {
+			return dts.getNumberOfAdvertisers();
+		}
+
+		public String[] getAdvertiserAddresses() {
+			return dts.getAdvertiserAddresses();
+		}
+	}
 }

@@ -16,84 +16,82 @@ import se.sics.tasim.is.SimulationInfo;
 
 public class Bank {
 
-    private BankStatusSender bankStatusSender;
-    private String[] accountNames;
-    private double[] accountAmounts;
-//    private BankStatus[] bankStatus;
-    private int accountNumber;  //number of accounts
-    private SimulationInfo simulationInfo;
+	private BankStatusSender bankStatusSender;
+	private String[] accountNames;
+	private double[] accountAmounts;
+	// private BankStatus[] bankStatus;
+	private int accountNumber; // number of accounts
+	private SimulationInfo simulationInfo;
 
-    public Bank(BankStatusSender bankStatusSender, SimulationInfo simulationInfo, int accountNumber) {
-        this.bankStatusSender = bankStatusSender;
-        accountNames = new String[accountNumber];
-        accountAmounts = new double[accountNumber];
-        this.simulationInfo = simulationInfo;
-    }
+	public Bank(BankStatusSender bankStatusSender,
+			SimulationInfo simulationInfo, int accountNumber) {
+		this.bankStatusSender = bankStatusSender;
+		accountNames = new String[accountNumber];
+		accountAmounts = new double[accountNumber];
+		this.simulationInfo = simulationInfo;
+	}
 
-    public void addAccount(String name) {
-        int index = ArrayUtils.indexOf(accountNames, 0, accountNumber, name);
-        if (index < 0) {
-            doAddAccount(name);
-        }
-    }
+	public void addAccount(String name) {
+		int index = ArrayUtils.indexOf(accountNames, 0, accountNumber, name);
+		if (index < 0) {
+			doAddAccount(name);
+		}
+	}
 
-    private synchronized int doAddAccount(String name) {
-        if (accountNumber == accountNames.length) {
-            int newSize = accountNumber + 8;
-            accountNames = (String[])
-                    ArrayUtils.setSize(accountNames, newSize);
-            accountAmounts = ArrayUtils.setSize(accountAmounts, newSize);
-//            bankStatus = (BankStatus[]) ArrayUtils.setSize(bankStatus, newSize);
-        }
-        accountNames[accountNumber] = name;
-        accountAmounts[accountNumber] = 0.0d;
-        return accountNumber++;
-    }
+	private synchronized int doAddAccount(String name) {
+		if (accountNumber == accountNames.length) {
+			int newSize = accountNumber + 8;
+			accountNames = (String[]) ArrayUtils.setSize(accountNames, newSize);
+			accountAmounts = ArrayUtils.setSize(accountAmounts, newSize);
+			// bankStatus = (BankStatus[]) ArrayUtils.setSize(bankStatus,
+			// newSize);
+		}
+		accountNames[accountNumber] = name;
+		accountAmounts[accountNumber] = 0.0d;
+		return accountNumber++;
+	}
 
-    public double getAccountStatus(String name) {
-        int index = ArrayUtils.indexOf(accountNames, 0, accountNumber, name);
-        return index >= 0
-                ? accountAmounts[index]
-                : 0.0d;
-    }
+	public double getAccountStatus(String name) {
+		int index = ArrayUtils.indexOf(accountNames, 0, accountNumber, name);
+		return index >= 0 ? accountAmounts[index] : 0.0d;
+	}
 
-    public double deposit(String name, double amount) {
-        int index = ArrayUtils.indexOf(accountNames, 0, accountNumber, name);
-        if (index < 0) {
-            index = doAddAccount(name);
-        }
-        accountAmounts[index] += amount;
-        return accountAmounts[index];
-    }
+	public double deposit(String name, double amount) {
+		int index = ArrayUtils.indexOf(accountNames, 0, accountNumber, name);
+		if (index < 0) {
+			index = doAddAccount(name);
+		}
+		accountAmounts[index] += amount;
+		return accountAmounts[index];
+	}
 
-    public double withdraw(String name, double amount) {
-        return deposit(name, -amount);
-    }
+	public double withdraw(String name, double amount) {
+		return deposit(name, -amount);
+	}
 
-    public void sendBankStatusToAll() {
-        for (int i = 0; i < accountNumber; i++) {
-        	  BankStatus status = new BankStatus();
-  //          BankStatus status = bankStatus[i];
-  //          if (status == null) {
-  //              status = new BankStatus();
-  //          } else {
- //               // Can not simply reset the bank status after sending it
- //               // because the message might be in a send queue or used in an
- //              // internal agent.  Only option is to simply forget about it
- //               // and create a new bank status for the agent the next day.
- //               bankStatus[i] = null;
- //           }
-            status.setAccountBalance(accountAmounts[i]);
-            bankStatusSender.sendBankStatus(accountNames[i], status);
-        }
-    }
+	public void sendBankStatusToAll() {
+		for (int i = 0; i < accountNumber; i++) {
+			BankStatus status = new BankStatus();
+			// BankStatus status = bankStatus[i];
+			// if (status == null) {
+			// status = new BankStatus();
+			// } else {
+			// // Can not simply reset the bank status after sending it
+			// // because the message might be in a send queue or used in an
+			// // internal agent. Only option is to simply forget about it
+			// // and create a new bank status for the agent the next day.
+			// bankStatus[i] = null;
+			// }
+			status.setAccountBalance(accountAmounts[i]);
+			bankStatusSender.sendBankStatus(accountNames[i], status);
+		}
+	}
 
-    // DEBUG FINALIZE REMOVE THIS!!!
-    protected void finalize() throws Throwable {
-        Logger.global.info("BANK FOR SIMULATION "
-                + simulationInfo.getSimulationID()
-                + " IS BEING GARBAGED");
-        super.finalize();
-    }
+	// DEBUG FINALIZE REMOVE THIS!!!
+	protected void finalize() throws Throwable {
+		Logger.global.info("BANK FOR SIMULATION "
+				+ simulationInfo.getSimulationID() + " IS BEING GARBAGED");
+		super.finalize();
+	}
 
 } // Bank

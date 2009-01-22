@@ -34,37 +34,36 @@ import java.io.ObjectOutputStream;
 
 import se.sics.isl.db.DBField;
 
-public abstract class FileDBField extends DBField
-{
-  
-  protected final FileDBTable table;
-  
-  protected FileDBField(FileDBTable table, String name, int type, int size, int flags,
-      Object defaultValue)
-  {
-    super(name, type, size, flags, defaultValue);
-    this.table = table;
-  }
-  
-  protected abstract String getString(int index);
-  
-  protected abstract Object getObject(int index);
-  
-  protected abstract int indexOf(Object value, int start, int end);
-  
-  protected abstract boolean match(int index, Object value);
-  
-  protected abstract void remove(int index);
-  
-  protected abstract void prepareSet(int index, Object value);
-  
-  protected abstract void set();
-  
-  protected abstract void ensureCapacity(int index);
-  
-  protected abstract void loadState(ObjectInputStream oin, int len) throws IOException,
-      ClassNotFoundException;
-  
-  protected abstract void saveState(ObjectOutputStream oout) throws IOException;
-  
+public abstract class FileDBField extends DBField {
+
+	protected final FileDBTable table;
+
+	protected FileDBField(FileDBTable table, String name, int type, int size,
+			int flags, Object defaultValue) {
+		super(name, type, size, flags, defaultValue);
+		this.table = table;
+	}
+
+	protected abstract String getString(int index);
+
+	protected abstract Object getObject(int index);
+
+	protected abstract int indexOf(Object value, int start, int end);
+
+	protected abstract boolean match(int index, Object value);
+
+	protected abstract void remove(int index);
+
+	protected abstract void prepareSet(int index, Object value);
+
+	protected abstract void set();
+
+	protected abstract void ensureCapacity(int index);
+
+	protected abstract void loadState(ObjectInputStream oin, int len)
+			throws IOException, ClassNotFoundException;
+
+	protected abstract void saveState(ObjectOutputStream oout)
+			throws IOException;
+
 } // FileDBField

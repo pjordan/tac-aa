@@ -30,53 +30,45 @@ package se.sics.tasim.is.common;
 
 import se.sics.isl.transport.TransportWriter;
 
-public class ChatMessage
-{
-  
-  private long time;
-  private String serverName;
-  private String userName;
-  private String message;
-  
-  public ChatMessage(long time, String serverName, String userName,
-      String message)
-  {
-    setMessage(time, serverName, userName, message);
-  }
-  
-  public long getTime()
-  {
-    return time;
-  }
-  
-  public String getServerName()
-  {
-    return serverName;
-  }
-  
-  public String getUserName()
-  {
-    return userName;
-  }
-  
-  public String getMessage()
-  {
-    return message;
-  }
-  
-  public void setMessage(long time, String serverName, String userName,
-      String message)
-  {
-    this.time = time;
-    this.serverName = serverName;
-    this.userName = userName;
-    this.message = message;
-  }
-  
-  public void writeMessage(TransportWriter writer)
-  {
-    writer.node("chat").attr("time", time).attr("server", serverName).attr(
-        "user", userName).attr("message", message).endNode("chat");
-  }
-  
+public class ChatMessage {
+
+	private long time;
+	private String serverName;
+	private String userName;
+	private String message;
+
+	public ChatMessage(long time, String serverName, String userName,
+			String message) {
+		setMessage(time, serverName, userName, message);
+	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(long time, String serverName, String userName,
+			String message) {
+		this.time = time;
+		this.serverName = serverName;
+		this.userName = userName;
+		this.message = message;
+	}
+
+	public void writeMessage(TransportWriter writer) {
+		writer.node("chat").attr("time", time).attr("server", serverName).attr(
+				"user", userName).attr("message", message).endNode("chat");
+	}
+
 } // ChatMessage

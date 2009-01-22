@@ -39,83 +39,67 @@ import org.mortbay.util.ByteArrayISO8859Writer;
 
 /**
  */
-public class StaticPage extends HttpPage
-{
-  
-  private static final Logger log = Logger
-      .getLogger(StaticPage.class.getName());
-  
-  private String path;
-  private byte[] pageData;
-  private String contentType = HttpFields.__TextHtml;
-  
-  private StaticPage(String path)
-  {
-    if (path == null)
-    {
-      throw new NullPointerException();
-    }
-    this.path = path;
-  }
-  
-  public StaticPage(String path, String page)
-  {
-    this(path);
-    setPage(page);
-  }
-  
-  public StaticPage(String path, HtmlWriter writer)
-  {
-    this(path);
-    setPage(writer);
-  }
-  
-  public void setPage(String page)
-  {
-    try
-    {
-      ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer();
-      writer.write(page);
-      this.pageData = writer.getByteArray();
-    }
-    catch (Exception e)
-    {
-      log.log(Level.SEVERE, "could not set page data for " + path, e);
-    }
-  }
-  
-  public void setPage(HtmlWriter page)
-  {
-    try
-    {
-      ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer();
-      page.close();
-      page.write(writer);
-      this.pageData = writer.getByteArray();
-    }
-    catch (Exception e)
-    {
-      log.log(Level.SEVERE, "could not set page data for " + path, e);
-    }
-  }
-  
-  public void handle(String pathInContext, String pathParams,
-      HttpRequest request, HttpResponse response) throws HttpException,
-      IOException
-  {
-    if (path.equals(pathInContext) && pageData != null)
-    {
-      response.setContentType(contentType);
-      response.setContentLength(pageData.length);
-      response.getOutputStream().write(pageData);
-      response.commit();
-    }
-  }
-  
-  public String toString()
-  {
-    return "StaticPage[" + path + ','
-        + (pageData == null ? 0 : pageData.length) + ']';
-  }
-  
+public class StaticPage extends HttpPage {
+
+	private static final Logger log = Logger.getLogger(StaticPage.class
+			.getName());
+
+	private String path;
+	private byte[] pageData;
+	private String contentType = HttpFields.__TextHtml;
+
+	private StaticPage(String path) {
+		if (path == null) {
+			throw new NullPointerException();
+		}
+		this.path = path;
+	}
+
+	public StaticPage(String path, String page) {
+		this(path);
+		setPage(page);
+	}
+
+	public StaticPage(String path, HtmlWriter writer) {
+		this(path);
+		setPage(writer);
+	}
+
+	public void setPage(String page) {
+		try {
+			ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer();
+			writer.write(page);
+			this.pageData = writer.getByteArray();
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "could not set page data for " + path, e);
+		}
+	}
+
+	public void setPage(HtmlWriter page) {
+		try {
+			ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer();
+			page.close();
+			page.write(writer);
+			this.pageData = writer.getByteArray();
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "could not set page data for " + path, e);
+		}
+	}
+
+	public void handle(String pathInContext, String pathParams,
+			HttpRequest request, HttpResponse response) throws HttpException,
+			IOException {
+		if (path.equals(pathInContext) && pageData != null) {
+			response.setContentType(contentType);
+			response.setContentLength(pageData.length);
+			response.getOutputStream().write(pageData);
+			response.commit();
+		}
+	}
+
+	public String toString() {
+		return "StaticPage[" + path + ','
+				+ (pageData == null ? 0 : pageData.length) + ']';
+	}
+
 } // StaticPage

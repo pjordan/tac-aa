@@ -9,121 +9,120 @@ import static edu.umich.eecs.tac.props.TransportableTestUtils.getBytesForTranspo
 import static edu.umich.eecs.tac.props.TransportableTestUtils.readFromBytes;
 
 /**
- *
+ * 
  * @author Kemal Eren
  */
 public class BankStatusTest {
 
-    @Test
-    public void testIsLocked() {
-        BankStatus instance = new BankStatus();
-        boolean expResult = false;
-        boolean result = instance.isLocked();
-        assertEquals(expResult, result);
-    }
+	@Test
+	public void testIsLocked() {
+		BankStatus instance = new BankStatus();
+		boolean expResult = false;
+		boolean result = instance.isLocked();
+		assertEquals(expResult, result);
+	}
 
-    @Test
-    public void testLock() {
-        BankStatus instance = new BankStatus();
-        instance.lock();
-        boolean expResult = true;
-        boolean result = instance.isLocked();
-        assertEquals(expResult, result);
-    }
+	@Test
+	public void testLock() {
+		BankStatus instance = new BankStatus();
+		instance.lock();
+		boolean expResult = true;
+		boolean result = instance.isLocked();
+		assertEquals(expResult, result);
+	}
 
-    @Test
-    public void testAccountBalance() {
-        BankStatus instance = new BankStatus();
-        double expResult = 0.0;
-        double result = instance.getAccountBalance();
-        assertEquals(expResult, result);
-    
-        double b = 0.0;
-        instance.setAccountBalance(b);
-        result = instance.getAccountBalance();
-        assertEquals(b, result);
+	@Test
+	public void testAccountBalance() {
+		BankStatus instance = new BankStatus();
+		double expResult = 0.0;
+		double result = instance.getAccountBalance();
+		assertEquals(expResult, result);
 
-        b = 100.5;
-        instance.setAccountBalance(b);
-        result = instance.getAccountBalance();
-        assertEquals(b, result);
+		double b = 0.0;
+		instance.setAccountBalance(b);
+		result = instance.getAccountBalance();
+		assertEquals(b, result);
 
-        instance = new BankStatus(100.0);
-        assertEquals(instance.getAccountBalance(), 100.0);
-    }
+		b = 100.5;
+		instance.setAccountBalance(b);
+		result = instance.getAccountBalance();
+		assertEquals(b, result);
 
-    @Test
-    public void testToString() {
-        BankStatus instance = new BankStatus();
-        String expResult = "BankStatus[0.000000]";
-        String result = instance.toString();
-        assertEquals(expResult, result);
+		instance = new BankStatus(100.0);
+		assertEquals(instance.getAccountBalance(), 100.0);
+	}
 
-        double b = 10.5;
-        instance.setAccountBalance(b);
-        expResult = "BankStatus[10.500000]";
-        result = instance.toString();
-        assertEquals(expResult, result);
-    }
+	@Test
+	public void testToString() {
+		BankStatus instance = new BankStatus();
+		String expResult = "BankStatus[0.000000]";
+		String result = instance.toString();
+		assertEquals(expResult, result);
 
-    @Test
-    public void testValidTransport() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+		double b = 10.5;
+		instance.setAccountBalance(b);
+		expResult = "BankStatus[10.500000]";
+		result = instance.toString();
+		assertEquals(expResult, result);
+	}
 
-        BankStatus instance = new BankStatus();
-        instance.setAccountBalance(100.5);
+	@Test
+	public void testValidTransport() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-        byte[] buffer = getBytesForTransportable(writer, instance);
-        BankStatus received = readFromBytes(reader, buffer, "BankStatus");
+		BankStatus instance = new BankStatus();
+		instance.setAccountBalance(100.5);
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.getAccountBalance(), received.getAccountBalance());
+		byte[] buffer = getBytesForTransportable(writer, instance);
+		BankStatus received = readFromBytes(reader, buffer, "BankStatus");
 
-        instance.lock();
-        received = new BankStatus();
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.getAccountBalance(), received.getAccountBalance());
 
-        buffer = getBytesForTransportable(writer, instance);
-        received = readFromBytes(reader, buffer, "BankStatus");
+		instance.lock();
+		received = new BankStatus();
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.getAccountBalance(), received.getAccountBalance());
-    }
+		buffer = getBytesForTransportable(writer, instance);
+		received = readFromBytes(reader, buffer, "BankStatus");
 
-    @Test
-    public void testEmptyTransport() throws ParseException {
-        BinaryTransportWriter writer = new BinaryTransportWriter();
-        BinaryTransportReader reader = new BinaryTransportReader();
-        reader.setContext(new AAInfo().createContext());
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.getAccountBalance(), received.getAccountBalance());
+	}
 
-        BankStatus instance = new BankStatus();
+	@Test
+	public void testEmptyTransport() throws ParseException {
+		BinaryTransportWriter writer = new BinaryTransportWriter();
+		BinaryTransportReader reader = new BinaryTransportReader();
+		reader.setContext(new AAInfo().createContext());
 
-        byte[] buffer = getBytesForTransportable(writer, instance);
-        BankStatus received = readFromBytes(reader, buffer, "BankStatus");
+		BankStatus instance = new BankStatus();
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.getAccountBalance(), received.getAccountBalance());
+		byte[] buffer = getBytesForTransportable(writer, instance);
+		BankStatus received = readFromBytes(reader, buffer, "BankStatus");
 
-        instance.lock();
-        received = new BankStatus();
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.getAccountBalance(), received.getAccountBalance());
 
-        buffer = getBytesForTransportable(writer, instance);
-        received = readFromBytes(reader, buffer, "BankStatus");
+		instance.lock();
+		received = new BankStatus();
 
-        assertNotNull(instance);
-        assertNotNull(received);
-        assertEquals(instance.getAccountBalance(), received.getAccountBalance());
-    }
+		buffer = getBytesForTransportable(writer, instance);
+		received = readFromBytes(reader, buffer, "BankStatus");
 
+		assertNotNull(instance);
+		assertNotNull(received);
+		assertEquals(instance.getAccountBalance(), received.getAccountBalance());
+	}
 
-    @Test(expected = IllegalStateException.class)
-    public void testWriteToLocked() {
-        BankStatus instance = new BankStatus();
-        instance.lock();
-        instance.setAccountBalance(100.0);
-    }
+	@Test(expected = IllegalStateException.class)
+	public void testWriteToLocked() {
+		BankStatus instance = new BankStatus();
+		instance.lock();
+		instance.setAccountBalance(100.0);
+	}
 }
