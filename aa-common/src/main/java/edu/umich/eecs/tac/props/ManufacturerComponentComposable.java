@@ -7,7 +7,7 @@ import java.text.ParseException;
 
 /**
  * The manufacturer component composable holds a manufacturer and component.  This is the superclass of the
- * {@link Query} and {@Product} classes.
+ * {@link Query} and {@link Product} classes.
  * @author Patrick Jordan
  */
 public class ManufacturerComponentComposable extends AbstractTransportable {

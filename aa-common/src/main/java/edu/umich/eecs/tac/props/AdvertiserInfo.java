@@ -41,7 +41,7 @@ public class AdvertiserInfo extends AbstractTransportable {
     /**
      * The decay rate (see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>).
      */
-    private double decayRate;
+    private double distributionCapacityDiscounter;
     /**
      * The address id of the publisher agent.
      */
@@ -267,18 +267,18 @@ public class AdvertiserInfo extends AbstractTransportable {
      * @return the decay rate.
      * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
      */
-    public final double getDecayRate() {
-        return decayRate;
+    public final double getDistributionCapacityDiscounter() {
+        return distributionCapacityDiscounter;
     }
 
     /**
      * Sets the decay rate.
-     * @param decayRate the decay rate.
+     * @param distributionCapacityDiscounter the decay rate.
      * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
      */
-    public final void setDecayRate(final double decayRate) {
+    public final void setDistributionCapacityDiscounter(final double distributionCapacityDiscounter) {
         lockCheck();
-        this.decayRate = decayRate;
+        this.distributionCapacityDiscounter = distributionCapacityDiscounter;
     }
 
     /**
@@ -292,7 +292,7 @@ public class AdvertiserInfo extends AbstractTransportable {
         manufacturerBonus = reader.getAttributeAsDouble("manufacturerBonus", 0.0);
         componentSpecialty = reader.getAttribute("componentSpecialty", null);
         componentBonus = reader.getAttributeAsDouble("componentBonus", 0.0);
-        decayRate = reader.getAttributeAsDouble("decayRate", 1.0);
+        distributionCapacityDiscounter = reader.getAttributeAsDouble("distributionCapacityDiscounter", 1.0);
         publisherId = reader.getAttribute("publisherId", null);
         distributionCapacity = reader.getAttributeAsInt("distributionCapacity");
         advertiserId = reader.getAttribute("advertiserId", null);
@@ -322,7 +322,7 @@ public class AdvertiserInfo extends AbstractTransportable {
         }
 
         writer.attr("componentBonus", componentBonus);
-        writer.attr("decayRate", decayRate);
+        writer.attr("distributionCapacityDiscounter", distributionCapacityDiscounter);
 
         if (publisherId != null) {
             writer.attr("publisherId", publisherId);
@@ -366,7 +366,7 @@ public class AdvertiserInfo extends AbstractTransportable {
             return false;
         }
 
-        if (Double.compare(that.decayRate, decayRate) != 0) {
+        if (Double.compare(that.distributionCapacityDiscounter, distributionCapacityDiscounter) != 0) {
             return false;
         }
 
@@ -425,7 +425,7 @@ public class AdvertiserInfo extends AbstractTransportable {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = componentBonus != +0.0d ? Double.doubleToLongBits(componentBonus) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = decayRate != +0.0d ? Double.doubleToLongBits(decayRate) : 0L;
+        temp = distributionCapacityDiscounter != +0.0d ? Double.doubleToLongBits(distributionCapacityDiscounter) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (publisherId != null ? publisherId.hashCode() : 0);
         result = 31 * result + distributionCapacity;
