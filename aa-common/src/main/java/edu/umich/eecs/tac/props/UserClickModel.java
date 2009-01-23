@@ -8,24 +8,54 @@ import java.util.List;
 import java.util.LinkedList;
 
 /**
+ * UserClickModel the parameters that generate user viewing behavior.
+ * These parameters include (for each query class):
+ * <ul>
+ *  <li> Advertiser effects</li>
+ *  <li> Continuation probabilities</li>
+ * </ul>
+ * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
+ *
  * @author Patrick Jordan
  */
 public class UserClickModel extends AbstractTransportable {
-    protected double[][] advertiserEffects;
-    protected double[] continuationProbabilities;
+    /**
+     * The advertiser effects (see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>).
+     */
+    private double[][] advertiserEffects;
+    /**
+     * The continuation probabilities (see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>).
+     */
+    private double[] continuationProbabilities;
+    /**
+     * The query classes.
+     */
+    private Query[] queries;
+    /**
+     * The advertiser addresses.
+     */
+    private String[] advertisers;
 
-    protected Query[] queries;
-    protected String[] advertisers;
-
+    /**
+     * Creates an empty user click model with no query classes nor advertisers.
+     */
     public UserClickModel() {
         this(new Query[0], new String[0]);
     }
 
-    public UserClickModel(Query[] queries, String[] advertisers) {
-        if (queries == null)
+    /**
+     * Creates a user click model initialized with the {@link Query queries} and advertisers.
+     * @param queries the initial queries
+     * @param advertisers the initial advertisers.
+     */
+    public UserClickModel(final Query[] queries, final String[] advertisers) {
+        if (queries == null) {
             throw new NullPointerException("queries cannot be null");
-        if (advertisers == null)
+        }
+
+        if (advertisers == null) {
             throw new NullPointerException("advertisers cannot be null");
+        }
 
         this.queries = queries;
         this.advertisers = advertisers;
@@ -33,60 +63,121 @@ public class UserClickModel extends AbstractTransportable {
         continuationProbabilities = new double[queries.length];
     }
 
-    public int advertiserCount() {
+    /**
+     * Returns the advertiser count.
+     * @return the advertiser count.
+     */
+    public final int advertiserCount() {
         return advertisers.length;
     }
 
-    public String advertiser(int index) {
+    /**
+     * Returns the advertiser at the index.
+     * @param index the index into the advertiser set.
+     * @return the advertiser at the index.
+     */
+    public final String advertiser(final int index) {
         return advertisers[index];
     }
 
-    public int advertiserIndex(String advertiser) {
+    /**
+     * Returns the index for an advertiser and <code>-1</code> if the advertiser is not in the model.
+     * @param advertiser the advertiser.
+     * @return the index for an advertiser and <code>-1</code> if the advertiser is not in the model.
+     */
+    public final int advertiserIndex(final String advertiser) {
         for (int index = 0; index < advertisers.length; index++) {
-            if (advertisers[index].equals(advertiser))
+            if (advertisers[index].equals(advertiser)) {
                 return index;
+            }
         }
 
         return -1;
     }
 
-    public int queryCount() {
+    /**
+     * Returns the query count.
+     * @return the query count.
+     */
+    public final int queryCount() {
         return queries.length;
     }
 
-    public Query query(int index) {
+    /**
+     * Returns the query at the index.
+     * @param index the index into the query set.
+     * @return the query at the index.
+     */
+    public final Query query(final int index) {
         return queries[index];
     }
 
-    public int queryIndex(Query query) {
+    /**
+     * Returns the index for a query and <code>-1</code> if the query is not in the model.
+     * @param query the query.
+     * @return the index for a query and <code>-1</code> if the query is not in the model.
+     */
+    public final int queryIndex(final Query query) {
         for (int index = 0; index < queries.length; index++) {
-            if (queries[index].equals(query))
+            if (queries[index].equals(query)) {
                 return index;
+            }
         }
 
         return -1;
     }
 
-    public double getContinuationProbability(int queryIndex) {
+    /**
+     * Returns the continuation probability for the query at the index.
+     * @param queryIndex the query index.
+     * @return the continuation probability for the query at the index.
+     * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
+     */
+    public final double getContinuationProbability(final int queryIndex) {
         return continuationProbabilities[queryIndex];
     }
 
-    public void setContinuationProbability(int queryIndex, double probability) {
+    /**
+     * Sets the continuation probability for the query at the index.
+     * @param queryIndex the query index.
+     * @param probability the continuation probability.
+     * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
+     */
+    public final void setContinuationProbability(final int queryIndex, final double probability) {
         lockCheck();
         continuationProbabilities[queryIndex] = probability;
     }
 
-    public double getAdvertiserEffect(int queryIndex, int advertiserIndex) {
+    /**
+     * Returns the advertiser effect for the query and advertiser at the indices.
+     * @param queryIndex the query index.
+     * @param advertiserIndex the advertiser index.
+     * @return the advertiser effect for the query and advertiser at the indices.
+     * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
+     */
+    public final double getAdvertiserEffect(final int queryIndex, final int advertiserIndex) {
         return advertiserEffects[queryIndex][advertiserIndex];
     }
 
-    public void setAdvertiserEffect(int queryIndex, int advertiserIndex,
-                                    double effect) {
+    /**
+     * Sets the advertiser effect for the query and advertiser at the indices.
+     * @param queryIndex the query index.
+     * @param advertiserIndex the advertiser index.
+     * @param effect the advertiser effect.
+     * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
+     */
+    public final void setAdvertiserEffect(final int queryIndex, final int advertiserIndex, final double effect) {
         lockCheck();
         advertiserEffects[queryIndex][advertiserIndex] = effect;
     }
 
-    protected void readWithLock(TransportReader reader) throws ParseException {
+    /**
+     * Reads the queries, advertisers, advertiser effects, and continuation probabilities from the reader.
+     * @param reader the reader to read data from.
+     * @throws ParseException if an exception occurs reading the parameters.
+     */
+    @Override
+    protected final void readWithLock(final TransportReader reader) throws ParseException {
         List<Query> queryList = new LinkedList<Query>();
 
         String queryName = Query.class.getSimpleName();
@@ -122,28 +213,30 @@ public class UserClickModel extends AbstractTransportable {
         }
     }
 
-    protected void writeWithLock(TransportWriter writer) {
-        for (Query query : queries)
+    /**
+     * Writes the queries, advertisers, advertiser effects, and continuation probabilities to the writer.
+     * @param writer the writer to write data to.
+     */
+    @Override
+    protected final void writeWithLock(final TransportWriter writer) {
+        for (Query query : queries) {
             writer.write(query);
+        }
 
         for (String advertiser : advertisers) {
-            writer.node("advertiser").attr("name", advertiser).endNode(
-                    "advertiser");
+            writer.node("advertiser").attr("name", advertiser).endNode("advertiser");
         }
 
         for (int queryIndex = 0; queryIndex < queries.length; queryIndex++) {
             writer.node("continuationProbability").attr("index", queryIndex)
-                    .attr("probability", continuationProbabilities[queryIndex])
-                    .endNode("continuationProbability");
+                    .attr("probability", continuationProbabilities[queryIndex]).endNode("continuationProbability");
         }
 
         for (int queryIndex = 0; queryIndex < queries.length; queryIndex++) {
             for (int advertiserIndex = 0; advertiserIndex < advertisers.length; advertiserIndex++) {
                 writer.node("advertiserEffect").attr("queryIndex", queryIndex)
-                        .attr("advertiserIndex", advertiserIndex).attr(
-                        "effect",
-                        advertiserEffects[queryIndex][advertiserIndex])
-                        .endNode("advertiserEffect");
+                        .attr("advertiserIndex", advertiserIndex)
+                        .attr("effect", advertiserEffects[queryIndex][advertiserIndex]).endNode("advertiserEffect");
             }
         }
     }

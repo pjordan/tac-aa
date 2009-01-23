@@ -22,18 +22,20 @@ public class UserEventSupportTest {
 	private UserEventListener listener;
 	private Query query;
 	private String advertiser;
-	private AdLink ad;
+	private AdLink adLink;
+    private Ad ad;
 	private double cpc;
 	private int slot;
 	private double salesProfit;
 
-	@Before
+    @Before
 	public void setup() {
 		context = new JUnit4Mockery();
 		listener = context.mock(UserEventListener.class);
 		query = new Query();
 		advertiser = "alice";
-		ad = new AdLink(new Ad(), advertiser);
+        ad = new Ad();
+		adLink = new AdLink(ad, advertiser);
 		cpc = 1.0;
 		slot = 2;
 		salesProfit = 3.0;
@@ -94,7 +96,7 @@ public class UserEventSupportTest {
 			}
 		});
 
-		support.fireAdViewed(query, ad, slot, false);
+		support.fireAdViewed(query, adLink, slot, false);
 	}
 
 	@Test
@@ -110,7 +112,7 @@ public class UserEventSupportTest {
 			}
 		});
 
-		support.fireAdClicked(query, ad, slot, cpc);
+		support.fireAdClicked(query, adLink, slot, cpc);
 	}
 
 	@Test
@@ -121,11 +123,10 @@ public class UserEventSupportTest {
 
 		context.checking(new Expectations() {
 			{
-				oneOf(listener).converted(query, ad, slot, salesProfit,
-						advertiser);
+				oneOf(listener).converted(query, ad, slot, salesProfit, advertiser);
 			}
 		});
 
-		support.fireAdConverted(query, ad, slot, salesProfit);
+		support.fireAdConverted(query, adLink, slot, salesProfit);
 	}
 }

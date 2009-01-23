@@ -91,21 +91,21 @@ public class UserUtilsTest {
 
 	@Test
 	public void testCalculateClickProbability() {
-		assertEquals(calculateClickProbability(user, genericAdLink,
+		assertEquals(calculateClickProbability(user, genericAdLink.getAd(),
 				advertiserInfo.getTargetEffect(), 0.0, 0.8), 0.8, 0.0000001);
-		assertEquals(calculateClickProbability(user, focusedAdLink,
+		assertEquals(calculateClickProbability(user, focusedAdLink.getAd(),
 				advertiserInfo.getTargetEffect(), 0.0, 0.8),
 				0.8571428571428572, 0.0000001);
-		assertEquals(calculateClickProbability(user, focusedWrongAdLink,
+		assertEquals(calculateClickProbability(user, focusedWrongAdLink.getAd(),
 				advertiserInfo.getTargetEffect(), 0.0, 0.8),
 				0.7272727272727273, 0.0000001);
 
-		assertEquals(calculateClickProbability(user, genericAdLink,
+		assertEquals(calculateClickProbability(user, genericAdLink.getAd(),
 				advertiserInfo.getTargetEffect(), 0.5, 0.8),
 				0.8571428571428572, 0.0000001);
-		assertEquals(calculateClickProbability(user, focusedAdLink,
+		assertEquals(calculateClickProbability(user, focusedAdLink.getAd(),
 				advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.9, 0.0000001);
-		assertEquals(calculateClickProbability(user, focusedWrongAdLink,
+		assertEquals(calculateClickProbability(user, focusedWrongAdLink.getAd(),
 				advertiserInfo.getTargetEffect(), 0.5, 0.8), 0.8, 0.0000001);
 	}
 

@@ -59,24 +59,18 @@ public class BidTrackerImplTest {
 		String advertiser = "alice";
 		Query query = new Query();
 
-		assertEquals(bidTracker.getDailySpendLimit(advertiser),
-				Double.POSITIVE_INFINITY, 0.0);
-		assertEquals(bidTracker.getDailySpendLimit(advertiser, query),
-				Double.POSITIVE_INFINITY, 0.0);
+		assertEquals(bidTracker.getDailySpendLimit(advertiser), Double.POSITIVE_INFINITY, 0.0);
+		assertEquals(bidTracker.getDailySpendLimit(advertiser, query), Double.POSITIVE_INFINITY, 0.0);
 
 		bidTracker.addAdvertiser(advertiser);
 
-		assertEquals(bidTracker.getDailySpendLimit(advertiser),
-				Double.POSITIVE_INFINITY, 0.0);
-		assertEquals(bidTracker.getDailySpendLimit(advertiser),
-				Double.POSITIVE_INFINITY, 0.0);
+		assertEquals(bidTracker.getDailySpendLimit(advertiser), Double.POSITIVE_INFINITY, 0.0);
+		assertEquals(bidTracker.getDailySpendLimit(advertiser), Double.POSITIVE_INFINITY, 0.0);
 
 		advertiser = "bob";
 		bidTracker.addAdvertiser(advertiser);
-		assertEquals(bidTracker.getDailySpendLimit(advertiser, query),
-				Double.POSITIVE_INFINITY, 0.0);
-		assertEquals(bidTracker.getDailySpendLimit(advertiser, query),
-				Double.POSITIVE_INFINITY, 0.0);
+		assertEquals(bidTracker.getDailySpendLimit(advertiser, query), Double.POSITIVE_INFINITY, 0.0);
+		assertEquals(bidTracker.getDailySpendLimit(advertiser, query), Double.POSITIVE_INFINITY, 0.0);
 	}
 
 	@Test
@@ -101,7 +95,7 @@ public class BidTrackerImplTest {
 		String advertiser = "alice";
 		Query query = new Query();
 
-		AdLink adLink = new AdLink((Ad) null, advertiser);
+		AdLink adLink = new AdLink(new Ad(), advertiser);
 
 		assertEquals(bidTracker.getAdLink(advertiser, query), adLink);
 
@@ -146,17 +140,13 @@ public class BidTrackerImplTest {
 		bidTracker.updateBids(advertiser2, bundle2);
 
 		assertEquals(bidTracker.getBid(advertiser2, query1), 1.0, 0.0);
-		assertEquals(bidTracker.getAdLink(advertiser2, query2), new AdLink(
-				(Ad) null, advertiser2));
-		assertEquals(bidTracker.getDailySpendLimit(advertiser2, query3), 1.0,
-				0.0);
+		assertEquals(bidTracker.getAdLink(advertiser2, query2), new AdLink(new Ad(), advertiser2));
+		assertEquals(bidTracker.getDailySpendLimit(advertiser2, query3), 1.0,0.0);
 
 		bidTracker.updateBids(advertiser2, bundle2);
 		assertEquals(bidTracker.getBid(advertiser2, query1), 1.0, 0.0);
-		assertEquals(bidTracker.getAdLink(advertiser2, query2), new AdLink(
-				(Ad) null, advertiser2));
-		assertEquals(bidTracker.getDailySpendLimit(advertiser2, query3), 1.0,
-				0.0);
+		assertEquals(bidTracker.getAdLink(advertiser2, query2), new AdLink(new Ad(), advertiser2));
+		assertEquals(bidTracker.getDailySpendLimit(advertiser2, query3), 1.0, 0.0);
 	}
 
 }

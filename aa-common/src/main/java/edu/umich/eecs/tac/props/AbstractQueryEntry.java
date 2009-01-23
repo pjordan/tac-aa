@@ -14,7 +14,7 @@ public abstract class AbstractQueryEntry extends
      *
      * @return the query key.
      */
-    public Query getQuery() {
+    public final Query getQuery() {
         return getKey();
     }
 
@@ -23,7 +23,7 @@ public abstract class AbstractQueryEntry extends
      *
      * @param query the query key.
      */
-    protected void setQuery(Query query) {
+    public final void setQuery(final Query query) {
         setKey(query);
     }
 
@@ -33,8 +33,7 @@ public abstract class AbstractQueryEntry extends
      * @return the {@link Class#getSimpleName() simple name} of the
      *         {@link Query} class.
      */
-    protected String keyNodeName() {
+    protected final String keyNodeName() {
         return Query.class.getSimpleName();
-	}
-
+    }
 }

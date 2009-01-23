@@ -8,54 +8,115 @@ import java.util.ArrayList;
 import java.text.ParseException;
 
 /**
+ * Ranking represents the slots allocated to the advertisers' {@link AdLink ad links} in an auction.
  * @author Patrick Jordan
+ * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
  */
 public class Ranking extends AbstractTransportable {
+    /**
+     * The slots indexed by position.
+     */
     private List<Slot> slots;
 
+    /**
+     * Create an empty ranking.
+     */
     public Ranking() {
         slots = new ArrayList<Slot>();
     }
 
-    public void add(AdLink ad, boolean promoted) {
-        add(new Slot(ad, promoted));
+    /**
+     * Adds the {@link AdLink ad link} to the alots and set its promoted status.
+     * @param adLink the ad link
+     * @param promoted <code>true</code> if the ad link is promoted.
+     * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
+     * @throws IllegalStateException if the ranking is locked.
+     */
+    public final void add(final AdLink adLink, final boolean promoted) throws IllegalStateException {
+        add(new Slot(adLink, promoted));
     }
 
-    public void add(AdLink ad) {
-        add(ad, false);
+    /**
+     * Adds the {@link AdLink ad link} to the alots and set its promoted status to <code>false</code>.
+     * @param adLink the ad link.
+     * @throws IllegalStateException if the ranking is locked.
+     */
+    public final void add(final AdLink adLink) throws IllegalStateException {
+        add(adLink, false);
     }
 
-    protected void add(Slot slot) {
+    /**
+     * Adds the slot to the slot list.
+     * @param slot the slot to add.
+     * @throws IllegalStateException if the ranking is locked.
+     */
+    protected final void add(final Slot slot) throws IllegalStateException {
         lockCheck();
         slots.add(slot);
     }
 
-    public void set(int position, AdLink ad, boolean promoted) {
+    /**
+     * Set the {@link AdLink ad link} and promoted status for the slot.
+     * @param position the slot position.
+     * @param adLink the ad link.
+     * @param promoted the promoted status.
+     * @throws IllegalStateException if the ranking is locked.
+     */
+    public final void set(final int position, final AdLink adLink, final boolean promoted)
+            throws IllegalStateException {
         lockCheck();
-        slots.set(position, new Slot(ad, promoted));
+        slots.set(position, new Slot(adLink, promoted));
     }
 
-    public AdLink get(int position) {
+    /**
+     * Returns the {@link AdLink ad link} at the slot position.
+     * @param position the slot position.
+     * @return the {@link AdLink ad link} at the slot position.
+     */
+    public final AdLink get(final int position) {
         return slots.get(position).getAdLink();
     }
 
-    public boolean isPromoted(int position) {
+    /**
+     * Returns the promoted status of the {@link AdLink ad link} at the slot position.
+     * @param position the slot position.
+     * @return the promoted status of the {@link AdLink ad link} at the slot position.
+     */
+    public final boolean isPromoted(final int position) {
         return slots.get(position).isPromoted();
     }
 
-    public int positionForAd(AdLink ad) {
+    /**
+     * Returns the slot position for the {@link AdLink ad link} in question and <code>-1</code> if the
+     * {@link AdLink ad link} is not in the ranking.
+     * @param adLink the ad link.
+     * @return the slot position for the {@link AdLink ad link} in question and <code>-1</code> if the
+     *         {@link AdLink ad link} is not in the ranking.
+     */
+    public final int positionForAd(final AdLink adLink) {
         for (int i = 0; i < size(); i++) {
-            if (get(i).equals(ad))
+            if (get(i).equals(adLink))  {
                 return i;
+            }
         }
+
         return -1;
     }
 
-    public int size() {
+    /**
+     * Returns the number of slots in the ranking.
+     * @return the number of slots in the ranking.
+     */
+    public final int size() {
         return slots.size();
     }
 
-    public String toString() {
+    /**
+     * Returns a string representation of the ranking.
+     * @return a string representation of the ranking.
+     */
+    @Override
+    public final String toString() {
         StringBuffer sb = new StringBuffer().append('[');
         for (int i = 0, n = size(); i < n; i++) {
             sb.append('[').append(i).append(": ").append(get(i)).append(']');
@@ -65,50 +126,102 @@ public class Ranking extends AbstractTransportable {
         return sb.toString();
     }
 
-    protected void readWithLock(TransportReader reader) throws ParseException {
+    /**
+     * Reads the slots from the reader.
+     * @param reader the reader to read data from.
+     * @throws ParseException if an exception occurs while reading the slots.
+     */
+    @Override
+    protected final void readWithLock(final TransportReader reader) throws ParseException {
         while (reader.nextNode(Slot.class.getSimpleName(), false)) {
             add((Slot) reader.readTransportable());
         }
     }
 
-    protected void writeWithLock(TransportWriter writer) {
+    /**
+     * Writes the slots to the writer.
+     * @param writer the writer to write data to.
+     */
+    @Override
+    protected final void writeWithLock(final TransportWriter writer) {
         for (Slot slot : slots) {
             writer.write(slot);
         }
     }
 
+    /**
+     * The slot for the ranking.  The slot contains the {@link AdLink ad link} and the promoted status.
+     * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
+     */
     public static class Slot extends AbstractTransportable {
-
+        /**
+         * The serial version id.
+         */
         private static final long serialVersionUID = -2489798409612047493L;
+        /**
+         * The ad link.
+         */
         private AdLink adLink;
+        /**
+         * The promoted status.
+         */
         private boolean promoted;
 
+        /**
+         * Creates an empty slot.
+         */
         public Slot() {
         }
 
-        public Slot(AdLink adLink, boolean promoted) {
+        /**
+         * Creates a slot with an {@link AdLink ad link} and promoted status.
+         * @param adLink the ad link.
+         * @param promoted the promoted status.
+         */
+        public Slot(final AdLink adLink, final boolean promoted) {
             this.adLink = adLink;
             this.promoted = promoted;
         }
 
-        public AdLink getAdLink() {
+        /**
+         * Returns the {@link AdLink ad link}.
+         * @return the {@link AdLink ad link}.
+         */
+        public final AdLink getAdLink() {
             return adLink;
         }
 
-        public void setAdLink(AdLink adLink) {
+        /**
+         * Sets the {@link AdLink ad link}.
+         * @param adLink the ad link.
+         */
+        public final void setAdLink(final AdLink adLink) {
             this.adLink = adLink;
         }
 
-        public boolean isPromoted() {
+        /**
+         * Returns the promoted status.
+         * @return the promoted status.
+         */
+        public final boolean isPromoted() {
             return promoted;
         }
 
-        public void setPromoted(boolean promoted) {
+        /**
+         * Sets the promoted status.
+         * @param promoted the promoted status.
+         */
+        public final void setPromoted(final boolean promoted) {
             this.promoted = promoted;
         }
 
-        protected void readWithLock(TransportReader reader)
-                throws ParseException {
+        /**
+         * Read the {@link AdLink ad link} and the promoted status from the reader.
+         * @param reader the reader to read data from.
+         * @throws ParseException if an exception occurs while reading the promoted status and ad link.
+         */
+        @Override
+        protected final void readWithLock(final TransportReader reader) throws ParseException {
             promoted = reader.getAttributeAsInt("promoted", 0) > 0;
 
             if (reader.nextNode(AdLink.class.getSimpleName(), false)) {
@@ -116,7 +229,12 @@ public class Ranking extends AbstractTransportable {
             }
         }
 
-        protected void writeWithLock(TransportWriter writer) {
+        /**
+         * Write the {@link AdLink ad link} and the promoted status to the writer.
+         * @param writer the writer to write data to.
+         */
+        @Override
+        protected final void writeWithLock(final TransportWriter writer) {
             if (promoted) {
                 writer.attr("promoted", 1);
             }

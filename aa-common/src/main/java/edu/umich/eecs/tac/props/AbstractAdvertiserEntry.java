@@ -15,7 +15,7 @@ public abstract class AbstractAdvertiserEntry extends AbstractStringEntry
      *
      * @return the advertiser for the entry.
      */
-    public String getAdvertiser() {
+    public final String getAdvertiser() {
         return getKey();
     }
 
@@ -25,8 +25,7 @@ public abstract class AbstractAdvertiserEntry extends AbstractStringEntry
      *
      * @param advertiser the advertiser for the entry.
      */
-    protected void setAdvertiser(String advertiser) {
-		setKey(advertiser);
-	}
-
+    public final void setAdvertiser(final String advertiser) {
+        setKey(advertiser);
+    }
 }

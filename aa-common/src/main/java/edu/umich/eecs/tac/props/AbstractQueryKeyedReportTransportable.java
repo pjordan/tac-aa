@@ -1,11 +1,10 @@
 package edu.umich.eecs.tac.props;
 
-import java.util.ArrayList;
-
 /**
- * This class provides a skeletal implementation of the
- * {@link AbstractKeyedEntryList} abstract class, where the key is a
- * {@link Query} object.
+ * This class provides a skeletal implementation of the {@link AbstractKeyedEntryList} abstract class, where the key is
+ * a {@link Query} object.
+ *
+ * @param <T> the query entry class
  *
  * @author Patrick Jordan
  */
@@ -17,7 +16,6 @@ public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry
      * implicit.)
      */
     public AbstractQueryKeyedReportTransportable() {
-        this.entries = new ArrayList<T>();
     }
 
     /**
@@ -26,7 +24,7 @@ public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry
      * @param query the query key to be added.
      * @return the index of the key
      */
-    public int addQuery(Query query) {
+    public final int addQuery(final Query query) {
         return addKey(query);
     }
 
@@ -37,7 +35,7 @@ public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry
      * @return <code>true</code> if the query key exists in the key set and
      *         <code>false</code> otherwise.
      */
-    public boolean containsQuery(Query query) {
+    public final boolean containsQuery(final Query query) {
         return containsKey(query);
     }
 
@@ -47,7 +45,7 @@ public abstract class AbstractQueryKeyedReportTransportable<T extends QueryEntry
      * @param index the key index.
      * @return the query key at the specified index.
      */
-    public Query getQuery(int index) {
-		return getKey(index);
-	}
+    public final Query getQuery(final int index) {
+        return getKey(index);
+    }
 }

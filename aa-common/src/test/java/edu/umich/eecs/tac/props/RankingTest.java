@@ -220,7 +220,7 @@ public class RankingTest {
 			instance.add(ad);
 		}
 
-		expResult = "[[0: (AdLink advertiser:advertiser_0 generic:false product:(Product (manufacturer_0,component_0)))][1: (AdLink advertiser:advertiser_1 generic:false product:(Product (manufacturer_1,component_1)))][2: (AdLink advertiser:advertiser_2 generic:false product:(Product (manufacturer_2,component_2)))]]";
+		expResult = "[[0: (AdLink advertiser:advertiser_0 ad:(Ad generic:false product:(Product (manufacturer_0,component_0))))][1: (AdLink advertiser:advertiser_1 ad:(Ad generic:false product:(Product (manufacturer_1,component_1))))][2: (AdLink advertiser:advertiser_2 ad:(Ad generic:false product:(Product (manufacturer_2,component_2))))]]";
 		result = instance.toString();
 		assertEquals(expResult, result);
 	}

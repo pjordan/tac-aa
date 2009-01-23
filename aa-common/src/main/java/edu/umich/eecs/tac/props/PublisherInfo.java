@@ -6,29 +6,51 @@ import se.sics.isl.transport.TransportWriter;
 import java.text.ParseException;
 
 /**
- * This class contains the publisher information released to the advertisers at
- * the begining of the game.
+ * This class contains the publisher information released to the advertisers at the begining of the game.
  *
  * @author Patrick Jordan
  */
 public class PublisherInfo extends AbstractTransportable {
+    /**
+     * The squashing parameter used in the auctions.
+     */
     private double squashingParameter;
 
-    public double getSquashingParameter() {
+    /**
+     * Returns the squashing parameter value used in the simulation.
+     * @return the squashing parameter value used in the simulation.
+     */
+    public final double getSquashingParameter() {
         return squashingParameter;
     }
 
-    public void setSquashingParameter(double squashingParameter) {
+    /**
+     * Sets the squashing parameter value used in the simulation.
+     *
+     * @param squashingParameter the squashing parameter value used in the simulation.
+     */
+    public final void setSquashingParameter(final double squashingParameter) {
         lockCheck();
         this.squashingParameter = squashingParameter;
     }
 
-    protected void readWithLock(TransportReader reader) throws ParseException {
-        squashingParameter = reader.getAttributeAsDouble("squashingParameter",
-                0.0);
+    /**
+     * Reads the squashing parameter value from the reader.
+     * @param reader the reader to read data from.
+     *
+     * @throws ParseException if an exception is thrown when reading the attribute
+     */
+    @Override
+    protected final void readWithLock(final TransportReader reader) throws ParseException {
+        squashingParameter = reader.getAttributeAsDouble("squashingParameter", 0.0);
     }
 
-    protected void writeWithLock(TransportWriter writer) {
+    /**
+     * Writes the squashing parameter value to the writer.
+     * @param writer the writer to write data to.
+     */
+    @Override
+    protected final void writeWithLock(final TransportWriter writer) {
         writer.attr("squashingParameter", squashingParameter);
     }
 }

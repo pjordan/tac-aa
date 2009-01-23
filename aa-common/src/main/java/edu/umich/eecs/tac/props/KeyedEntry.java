@@ -7,6 +7,8 @@ import java.io.Serializable;
 /**
  * This interface designates a list entry with a key.
  *
+ * @param <T> key class
+ *
  * @author Patrick Jordan
  */
 public interface KeyedEntry<T> extends Serializable, Transportable {
@@ -16,5 +18,5 @@ public interface KeyedEntry<T> extends Serializable, Transportable {
      *
      * @return the key for the entry.
      */
-    public T getKey();
+    T getKey();
 }

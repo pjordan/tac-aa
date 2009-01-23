@@ -12,12 +12,21 @@ import java.util.*;
  * each product.
  *
  * @author Patrick Jordan
+ * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
  */
-public class RetailCatalog extends
-        AbstractKeyedEntryList<Product, RetailCatalog.RetailCatalogEntry> {
+public class RetailCatalog extends AbstractKeyedEntryList<Product, RetailCatalog.RetailCatalogEntry> {
+    /**
+     * The supported manufacturers.
+     */
     private Set<String> manufacturers;
+    /**
+     * The supported components.
+     */
     private Set<String> components;
 
+    /**
+     * Creates a empty retail catalog.
+     */
     public RetailCatalog() {
         manufacturers = new TreeSet<String>();
         components = new TreeSet<String>();
@@ -28,7 +37,7 @@ public class RetailCatalog extends
      *
      * @return the set of manufacturers for the products.
      */
-    public Set<String> getManufacturers() {
+    public final Set<String> getManufacturers() {
         return manufacturers;
     }
 
@@ -37,18 +46,18 @@ public class RetailCatalog extends
      *
      * @return the set of components for the products.
      */
-    public Set<String> getComponents() {
+    public final Set<String> getComponents() {
         return components;
     }
 
     /**
-     * Returns the advertiser sales profit for the product. The sales profit is
-     * zero if the product is not in the retail catalog.
+     * Returns the advertiser sales profit for the product. The sales profit is zero if the product is not in the retail
+     * catalog.
      *
      * @param product the product
      * @return the advertiser sales profit for the product.
      */
-    public double getSalesProfit(Product product) {
+    public final double getSalesProfit(final Product product) {
         int index = indexForEntry(product);
 
         return index < 0 ? 0.0 : getSalesProfit(index);
@@ -60,18 +69,18 @@ public class RetailCatalog extends
      * @param index the index for the product
      * @return the advertiser sales profit for the product.
      */
-    public double getSalesProfit(int index) {
+    public final double getSalesProfit(final int index) {
         return getEntry(index).getSalesProfit();
     }
 
     /**
      * Sets the sales profit for the product.
      *
-     * @param product     the product whose sales profit is being set.
+     * @param product the product whose sales profit is being set.
      * @param salesProfit the sales profit for the product.
      * @throws IllegalStateException if the retail catalog is locked.
      */
-    public void setSalesProfit(Product product, double salesProfit) {
+    public final void setSalesProfit(final Product product, final double salesProfit) throws IllegalStateException {
         lockCheck();
 
         int index = indexForEntry(product);
@@ -90,86 +99,149 @@ public class RetailCatalog extends
      * @param salesProfit the sales profit for the product.
      * @throws IllegalStateException if the retail catalog is locked.
      */
-    public void setSalesProfit(int index, double salesProfit) {
+    public final void setSalesProfit(final int index, final double salesProfit) throws IllegalStateException {
         lockCheck();
         getEntry(index).setSalesProfit(salesProfit);
     }
 
     /**
-     * Adds the product to the retail catalog. This method delegates to
-     * {@link #addKey(Object)} .
+     * Adds the product to the retail catalog. This method delegates to {@link #addKey(Object)} .
      *
      * @param product the product to add.
      * @return the index of the newly added product.
+     * @throws IllegalStateException if the retail catalog is locked.
      */
-    public int addProduct(Product product) {
+    public final int addProduct(final Product product) throws IllegalStateException {
         return addKey(product);
     }
 
-    protected int addEntry(RetailCatalogEntry entry) {
-        int index = super.addEntry(entry);
-
+    /**
+     * Adds the the manufacturer and component of the supporting entry.
+     * @param entry the entry to be added.
+     *
+     * @throws IllegalStateException if the retail catalog is locked.
+     */
+    @Override
+    protected final void afterAddEntry(final RetailCatalogEntry entry) throws IllegalStateException {
         manufacturers.add(entry.getProduct().getManufacturer());
         components.add(entry.getProduct().getComponent());
-
-        return index;
     }
 
+    /**
+     * Creates a retail catalog entry for a product.
+     * @param key the key for the created entry.
+     * @return a retail catalog entry for a product.
+     */
     @Override
-    protected RetailCatalogEntry createEntry(Product key) {
+    protected final RetailCatalogEntry createEntry(final Product key) {
         return new RetailCatalogEntry(key);
     }
 
+    /**
+     * Throws an {@link UnsupportedOperationException}.
+     * @param index the index to remove.
+     * @throws UnsupportedOperationException throws exception.
+     */
     @Override
-    protected void removeEntry(int index) {
+    protected final void beforeRemoveEntry(final int index) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Cannot remove retail catalog entry");
     }
 
-    protected Class entryClass() {
+    /**
+     * Returns the {@link RetailCatalogEntry} class.
+     * @return the {@link RetailCatalogEntry} class.
+     */
+    @Override
+    protected final Class entryClass() {
         return RetailCatalogEntry.class;
     }
 
-    public static class RetailCatalogEntry extends
-            AbstractTransportableEntry<Product> {
+    /**
+     * The retail catalog entry holds the sales profit for a {@link Product}.
+     */
+    public static class RetailCatalogEntry extends AbstractTransportableEntry<Product> {
+        /**
+         * The serial version ID.
+         */
         private static final long serialVersionUID = -1140097762238141476L;
-
+        /**
+         * The sales profit.
+         */
         private double salesProfit;
 
+        /**
+         * Creates a retail catalog entry.
+         */
         public RetailCatalogEntry() {
-            super();
         }
 
-        public RetailCatalogEntry(Product product) {
+        /**
+         * Creates a retail catalog entry for a product.
+         * @param product the product.
+         */
+        public RetailCatalogEntry(final Product product) {
             setProduct(product);
         }
 
-        public Product getProduct() {
+        /**
+         * Returns the product.
+         * @return the product.
+         */
+        public final Product getProduct() {
             return getKey();
         }
 
-        protected void setProduct(Product product) {
+        /**
+         * Sets the product.
+         * @param product the product.
+         */
+        protected final void setProduct(final Product product) {
             setKey(product);
         }
 
-        public double getSalesProfit() {
+        /**
+         * Returns the sales profit.
+         * @return the sales profit.
+         */
+        public final double getSalesProfit() {
             return salesProfit;
         }
 
-        protected void setSalesProfit(double salesProfit) {
+        /**
+         * Sets the sales profit.
+         * @param salesProfit the sales profit.
+         */
+        protected final void setSalesProfit(final double salesProfit) {
             this.salesProfit = salesProfit;
         }
 
-        protected void readEntry(TransportReader reader) throws ParseException {
+        /**
+         * Reads the sales profit from the reader.
+         * @param reader the reader to read the state in from.
+         * @throws ParseException if an exception occurs reading the sales profit.
+         */
+        @Override
+        protected final void readEntry(final TransportReader reader) throws ParseException {
             salesProfit = reader.getAttributeAsDouble("salesProfit", 0.0);
         }
 
-        protected void writeEntry(TransportWriter writer) {
+        /**
+         * Writes the sales profit to the writer.
+         * @param writer the writer to write the entry state to
+         */
+        @Override
+        protected final void writeEntry(final TransportWriter writer) {
             writer.attr("salesProfit", salesProfit);
-		}
+        }
 
-		protected String keyNodeName() {
-			return Product.class.getSimpleName();
-		}
-	}
+        /**
+         * Returns the {@link Product} class.
+         * @return the {@link Product} class.
+         */
+        @Override
+        protected final String keyNodeName() {
+            return Product.class.getSimpleName();
+        }
+    }
 }

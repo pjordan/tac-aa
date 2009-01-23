@@ -9,9 +9,14 @@ import java.text.ParseException;
  * This class provides a skeletal implementation of the {@link KeyedEntry}
  * interface.
  *
+ * @param <T> key type
+ *
  * @author Patrick Jordan
  */
 public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
+    /**
+     * The key for the entry.
+     */
     private T key;
 
     /**
@@ -19,7 +24,7 @@ public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
      *
      * @return the key for the entry.
      */
-    public T getKey() {
+    public final T getKey() {
         return key;
     }
 
@@ -28,7 +33,7 @@ public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
      *
      * @param key the key for the entry.
      */
-    public void setKey(T key) {
+    public final void setKey(final T key) {
         this.key = key;
     }
 
@@ -39,7 +44,7 @@ public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
      * @return the {@link Class#getSimpleName() simple name} of the implementing
      *         class.
      */
-    public String getTransportName() {
+    public final String getTransportName() {
         return this.getClass().getSimpleName();
     }
 
@@ -50,7 +55,7 @@ public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
      * @param reader the reader to read the state in from.
      * @throws ParseException if a parse exception occurs
      */
-    public void read(TransportReader reader) throws ParseException {
+    public final void read(final TransportReader reader) throws ParseException {
         readEntry(reader);
 
         readKey(reader);
@@ -62,7 +67,7 @@ public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
      *
      * @param writer the writer to write the state to
      */
-    public void write(TransportWriter writer) {
+    public final void write(final TransportWriter writer) {
         writeEntry(writer);
 
         writeKey(writer);
@@ -102,6 +107,5 @@ public abstract class AbstractKeyedEntry<T> implements KeyedEntry<T> {
      *
      * @param writer the writer to write the key to
      */
-	protected abstract void writeKey(TransportWriter writer);
-
+    protected abstract void writeKey(TransportWriter writer);
 }

@@ -112,7 +112,7 @@ public class BidTrackerImpl implements BidTracker {
 				advertiser);
 
 		if (index < 0) {
-			return new AdLink(DEFAULT_AD.getProduct(), advertiser);
+			return new AdLink(DEFAULT_AD, advertiser);
 		}
 
 		if (queryBid[index] == null) {
@@ -192,7 +192,7 @@ public class BidTrackerImpl implements BidTracker {
 				for (int i = queryCount; i < newSize; i++) {
 					bids[i] = DEFAULT_BID;
 					spendLimits[i] = DEFAULT_SPEND_LIMIT;
-					adLinks[i] = new AdLink(DEFAULT_AD.getProduct(), advertiser);
+					adLinks[i] = new AdLink(DEFAULT_AD, advertiser);
 				}
 			}
 			queries[queryCount] = query;
@@ -247,14 +247,14 @@ public class BidTrackerImpl implements BidTracker {
 				index = doAddQuery(query);
 			}
 
-			this.adLinks[index] = new AdLink(ad.getProduct(), advertiser);
+			this.adLinks[index] = new AdLink(ad, advertiser);
 		}
 
 		protected AdLink getAdLink(Query query) {
 			int index = ArrayUtils.indexOf(queries, 0, queryCount, query);
 
 			if (index < 0) {
-				return new AdLink(DEFAULT_AD.getProduct(), advertiser);
+				return new AdLink(DEFAULT_AD, advertiser);
 			}
 
 			return this.adLinks[index];

@@ -6,97 +6,152 @@ import se.sics.isl.transport.TransportWriter;
 import java.text.ParseException;
 
 /**
- * This class represents an ad link. It contains the {@link Product} of the
- * {@link Ad} as well as a string for the advertiser's address. Note that
- * AdLinks are created by the publisher from ads specified in an advertiser's
- * bid bundle and thus are not directly used by the advertiser.
+ * This class represents an ad link. It contains an {@link Ad} as well as a string for the advertiser's address.
+ * Note that ad links are created by the publisher from ads specified in an advertisers bid bundle and thus are not
+ * directly used by the advertiser.
  *
- *  
- *
- * @author Lee Callender
+ * @author Lee Callender, Patrick Jordan
  */
 
-public class AdLink extends Ad {
-    protected String advertiser;
+public class AdLink extends AbstractTransportable {
+    /**
+     * The advertiser address.
+     */
+    private String advertiser;
+    /**
+     * The ad to be shown with the link.
+     */
+    private Ad ad;
 
     /**
-     * Creates a generic ad link. Advertiser's address is initialized
-     * to <code> null </code>.
+     * Creates a generic ad link. Advertiser's address is initialized to <code> null </code> and a <code>null</code>
+     * ad.
      */
     public AdLink() {
     }
 
-    public AdLink(Product product, String advertiser) {
-        this.product = product;
+    /**
+     * Creates an ad link with the supplied {@link Product} and advertiser.  An {@link Ad} with the given product is
+     * created.
+     *
+     * @param product the product.
+     * @param advertiser the advertiser address.
+     */
+    public AdLink(final Product product, final String advertiser) {
+        this(new Ad(product), advertiser);
+    }
+
+    /**
+     * Creates an ad link from a given {@link Ad ad} and advertiser.
+     * @param ad the ad.
+     * @param advertiser the advertiser.
+     */
+    public AdLink(final Ad ad, final String advertiser) {
+        this.ad = ad;
         this.advertiser = advertiser;
     }
 
     /**
-     * Creates an ad link from a given ad. 
+     * Returns the advertiser's address.
+     * @return the advertiser's address.
      */
-    public AdLink(Ad ad, String advertiser) {
-        this(ad == null ? null : ad.getProduct(), advertiser);
-    }
-
-    public String getAdvertiser() {
+    public final String getAdvertiser() {
         return advertiser;
     }
 
     /**
-   * Specify and advertiser's address for this ad link.
-   *
-   * @param advertiser
-   *  the advertiser's address contained in the ad link.
-   *
-   * @throws IllegalStateException if the ad link is locked.
-   */
-    public void setAdvertiser(String advertiser) {
+     * Returns the {@link Ad ad} backing the ad link.
+     * @return the ad.
+     */
+    public final Ad getAd() {
+        return ad;
+    }
+
+    /**
+     * Sets the {@link Ad ad} backing the ad link.
+     * @param ad the ad.
+     */
+    public final void setAd(final Ad ad) {
+        this.ad = ad;
+    }
+
+    /**
+     * Specify and advertiser's address for this ad link.
+     *
+     * @param advertiser the advertiser's address contained in the ad link.
+     * @throws IllegalStateException if the ad link is locked.
+     */
+    public final void setAdvertiser(final String advertiser) throws IllegalStateException {
         lockCheck();
         this.advertiser = advertiser;
     }
 
-    protected void readWithLock(TransportReader reader) throws ParseException {
+    /**
+     * Reads the advertiser's address and {@link Ad ad} from the reader.
+     * @param reader the reader to read data from.
+     * @throws ParseException if an exception occured reading the advertiser and {@link Ad ad}.
+     */
+    @Override
+    protected final void readWithLock(final TransportReader reader) throws ParseException {
         advertiser = reader.getAttribute("advertiser", null);
 
-        if (reader.nextNode(Product.class.getSimpleName(), false)) {
-            this.product = (Product) reader.readTransportable();
+        if (reader.nextNode(Ad.class.getSimpleName(), false)) {
+            this.ad = (Ad) reader.readTransportable();
         }
     }
 
-    protected void writeWithLock(TransportWriter writer) {
-        if (advertiser != null)
+    /**
+     * Writes the advertiser's address and {@link Ad ad} to the writer.
+     * @param writer the writer to write data to.
+     */
+    @Override
+    protected final void writeWithLock(final TransportWriter writer) {
+        if (advertiser != null) {
             writer.attr("advertiser", advertiser);
+        }
 
-        if (product != null)
-            writer.write(product);
+        if (ad != null) {
+            writer.write(ad);
+        }
     }
 
-    public boolean equals(Object o) {
-        if (this == o)
+    /**
+     * Returns <code>true</code> if the object is an {@link AdLink} and has the same {@link Ad ad} and advertiser.
+     * @param o the object to compare.
+     * @return <code>true</code> if the object is an {@link AdLink} and has the same {@link Ad ad} and advertiser.
+     */
+    @Override
+    public final boolean equals(final Object o) {
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        }
 
-        AdLink ad = (AdLink) o;
-
-        if (advertiser != null ? !advertiser.equals(ad.advertiser)
-                : ad.advertiser != null)
+        if (o == null || getClass() != o.getClass()) {
             return false;
-        if (product != null ? !product.equals(ad.product) : ad.product != null)
-            return false;
+        }
 
-        return true;
+        AdLink adLink = (AdLink) o;
+
+        return !(ad != null ? !ad.equals(adLink.ad) : adLink.ad != null) &&
+               !(advertiser != null ? !advertiser.equals(adLink.advertiser) : adLink.advertiser != null);
     }
 
-    public int hashCode() {
-        int result;
-        result = (product != null ? product.hashCode() : 0);
-        result = 31 * result + (advertiser != null ? advertiser.hashCode() : 0);
+    /**
+     * Returns a hash code based on the contained {@link Ad ad} and advertiser.
+     * @return a hash code based on the contained {@link Ad ad} and advertiser.
+     */
+    @Override
+    public final int hashCode() {
+        int result = advertiser != null ? advertiser.hashCode() : 0;
+        result = 31 * result + (ad != null ? ad.hashCode() : 0);
         return result;
     }
 
-    public String toString() {
-        return String.format("(AdLink advertiser:%s generic:%s product:%s)",
-                getAdvertiser(), isGeneric(), getProduct());
+    /**
+     * Returns a string representation of the ad link.
+     * @return a string representation of the ad link.
+     */
+    public final String toString() {
+        return String.format("(AdLink advertiser:%s ad:%s)", getAdvertiser(), getAd());
     }
 }

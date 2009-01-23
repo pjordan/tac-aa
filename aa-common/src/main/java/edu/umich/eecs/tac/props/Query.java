@@ -15,9 +15,9 @@ public class Query extends ManufacturerComponentComposable {
      * @param manufacturer the manufacturer in the query
      * @param component    the component in the query
      */
-    public Query(String manufacturer, String component) {
-        this.manufacturer = manufacturer;
-        this.component = component;
+    public Query(final String manufacturer, final String component) {
+        setManufacturer(manufacturer);
+        setComponent(component);
         calculateHashCode();
     }
 
@@ -34,7 +34,7 @@ public class Query extends ManufacturerComponentComposable {
      *
      * @return the query type of the query.
      */
-    public QueryType getType() {
+    public final QueryType getType() {
         return QueryType.value(this);
-	}
+    }
 }

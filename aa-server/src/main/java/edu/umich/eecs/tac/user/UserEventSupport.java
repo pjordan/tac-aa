@@ -35,16 +35,15 @@ public class UserEventSupport {
 		}
 	}
 
-	public void fireAdViewed(Query query, AdLink ad, int slot,
-			boolean isPromoted) {
+	public void fireAdViewed(Query query, AdLink ad, int slot, boolean isPromoted) {
 		for (UserEventListener listener : listeners) {
-			listener.viewed(query, ad, slot, ad.getAdvertiser(), isPromoted);
+			listener.viewed(query, ad.getAd(), slot, ad.getAdvertiser(), isPromoted);
 		}
 	}
 
 	public void fireAdClicked(Query query, AdLink ad, int slot, double cpc) {
 		for (UserEventListener listener : listeners) {
-			listener.clicked(query, ad, slot, cpc, ad.getAdvertiser());
+			listener.clicked(query, ad.getAd(), slot, cpc, ad.getAdvertiser());
 		}
 	}
 
@@ -52,7 +51,7 @@ public class UserEventSupport {
 			double salesProfit) {
 		for (UserEventListener listener : listeners) {
 			listener
-					.converted(query, ad, slot, salesProfit, ad.getAdvertiser());
+					.converted(query, ad.getAd(), slot, salesProfit, ad.getAdvertiser());
 		}
 	}
 

@@ -7,6 +7,8 @@ import java.util.*;
  * {@link edu.umich.eecs.tac.props.KeyedEntry keyed entries} with supporting
  * methods for interacting entries specified by a given key.
  *
+ * @param <T> key class
+ * @param <S> entry class
  * @author Patrick Jordan
  */
 public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>>
@@ -16,10 +18,9 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>>
      * Returns the index for the entry specified by the key.
      *
      * @param key the key for the entry to be found.
-     * @return the index for the entry specified by the key. <code>-1</code> if
-     *         the <code>key</code> is not in the list.
+     * @return the index for the entry specified by the key. <code>-1</code> if the <code>key</code> is not in the list.
      */
-    public final int indexForEntry(T key) {
+    public final int indexForEntry(final T key) {
 
         for (int i = 0; i < size(); i++) {
 
@@ -39,8 +40,8 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>>
      *
      * @return an iterator over the keys in the list.
      */
-    public Iterator<T> iterator() {
-        return new KeyIterator<T>(entries.iterator());
+    public final Iterator<T> iterator() {
+        return new KeyIterator<T>(getEntries().iterator());
     }
 
     /**
@@ -48,10 +49,9 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>>
      * <code>false</code> otherwise.
      *
      * @param key the key to check for containment.
-     * @return <code>true</code> if the key is in the list and
-     *         <code>false</code> otherwise.
+     * @return <code>true</code> if the key is in the list and <code>false</code> otherwise.
      */
-    public final boolean containsKey(T key) {
+    public final boolean containsKey(final T key) {
         return indexForEntry(key) > -1;
     }
 
@@ -63,7 +63,7 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>>
      * @return the index of the newly generated entry.
      * @throws NullPointerException if the <code>key</code> is <code>null</code>.
      */
-    protected final int addKey(T key) {
+    protected final int addKey(final T key) throws NullPointerException {
 
         if (key == null) {
             throw new NullPointerException("Key cannot be null");
@@ -81,12 +81,11 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>>
     protected abstract S createEntry(T key);
 
     /**
-     * Returns the set of keys for the entries. A new set is created each time
-     * the method is called.
+     * Returns the set of keys for the entries. A new set is created each time the method is called.
      *
      * @return the set of keys for the entries.
      */
-    public Set<T> keys() {
+    public final Set<T> keys() {
         Set<T> keys = new HashSet<T>();
 
         for (int i = 0; i < size(); i++) {
@@ -103,7 +102,7 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>>
      * @return the key for the entry at the <code>index</code>.
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size()).
      */
-    protected T getKey(int index) {
+    protected final T getKey(final int index) throws IndexOutOfBoundsException {
         return getEntry(index).getKey();
     }
 
@@ -111,16 +110,15 @@ public abstract class AbstractKeyedEntryList<T, S extends KeyedEntry<T>>
      * Returns the entry with the specified key.
      *
      * @param key the key used to identify the entry.
-     * @return the entry with the specified key or <code>null</code> if the key
-     *         is not found.
+     * @return the entry with the specified key or <code>null</code> if the key is not found.
      */
-    protected S getEntry(T key) {
-		int index = indexForEntry(key);
+    protected final S getEntry(final T key) {
+        int index = indexForEntry(key);
 
-		if (index < 0) {
-			return null;
-		} else {
-			return getEntry(index);
-		}
-	}
+        if (index < 0) {
+            return null;
+        } else {
+            return getEntry(index);
+        }
+    }
 }

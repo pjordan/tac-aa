@@ -20,8 +20,8 @@ public class Product extends ManufacturerComponentComposable {
      * @param manufacturer the manufacturer
      * @param component    the component
      */
-    public Product(String manufacturer, String component) {
+    public Product(final String manufacturer, final String component) {
         setManufacturer(manufacturer);
         setComponent(component);
-	}
+    }
 }

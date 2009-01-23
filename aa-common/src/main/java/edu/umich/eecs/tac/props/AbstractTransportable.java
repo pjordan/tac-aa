@@ -28,12 +28,12 @@ public abstract class AbstractTransportable implements Transportable,
     /**
      * Make the transportable immutable.
      */
-    public void lock() {
+    public final void lock() {
         locked = true;
     }
 
     /**
-     * Returns whether the transportable is immutable
+     * Returns whether the transportable is immutable.
      *
      * @return <code>true</code> if the transportable is locked,
      *         <code>false</code> otherwise.
@@ -63,7 +63,7 @@ public abstract class AbstractTransportable implements Transportable,
      * @param reader the reader to read data from
      * @throws ParseException if a parse error occurs
      */
-    public final void read(TransportReader reader) throws ParseException {
+    public final void read(final TransportReader reader) throws ParseException {
         lockCheck();
 
         boolean lock = reader.getAttributeAsInt("lock", 0) > 0;
@@ -80,7 +80,7 @@ public abstract class AbstractTransportable implements Transportable,
      *
      * @param writer the writer to write data to
      */
-    public final void write(TransportWriter writer) {
+    public final void write(final TransportWriter writer) {
 
         if (isLocked()) {
 
@@ -107,7 +107,7 @@ public abstract class AbstractTransportable implements Transportable,
      * classes should read in attributes first and then any sub-nodes.
      *
      * @param reader the reader to read data from.
-     * @throws ParseException
+     * @throws ParseException if a parse error occurs
      */
     protected abstract void readWithLock(TransportReader reader)
             throws ParseException;
@@ -118,5 +118,5 @@ public abstract class AbstractTransportable implements Transportable,
      *
      * @param writer the writer to write data to.
      */
-	protected abstract void writeWithLock(TransportWriter writer);
+    protected abstract void writeWithLock(TransportWriter writer);
 }

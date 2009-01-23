@@ -13,7 +13,14 @@ import java.text.ParseException;
  * @author Patrick Jordan
  */
 public abstract class AbstractStringEntry extends AbstractKeyedEntry<String> {
+    /**
+     * The key node name used for reading and writing as a transport.
+     */
     private static final String KEY_NODE = "AbstractStringEntryKeyNode";
+
+    /**
+     * The key attribue used for reading and writing the key as an attribute.
+     */
     private static final String KEY_ATTRIBUTE = "AbstractStringEntryKey";
 
     /**
@@ -21,9 +28,9 @@ public abstract class AbstractStringEntry extends AbstractKeyedEntry<String> {
      * attribute.
      *
      * @param reader the reader to read data from.
-     * @throws ParseException
+     * @throws ParseException if exeption occurs reading the key node and attribute.
      */
-    protected void readKey(TransportReader reader) throws ParseException {
+    protected final void readKey(final TransportReader reader) throws ParseException {
 
         // Read in the key node. The node must exist.
         reader.nextNode(KEY_NODE, true);
@@ -38,7 +45,7 @@ public abstract class AbstractStringEntry extends AbstractKeyedEntry<String> {
      *
      * @param writer the writer to write data to.
      */
-    protected void writeKey(TransportWriter writer) {
+    protected final void writeKey(final TransportWriter writer) {
 
         // Create a "key" node.
         writer.node(KEY_NODE);
@@ -53,5 +60,5 @@ public abstract class AbstractStringEntry extends AbstractKeyedEntry<String> {
 
         // Close the key node.
         writer.endNode(KEY_NODE);
-	}
+    }
 }

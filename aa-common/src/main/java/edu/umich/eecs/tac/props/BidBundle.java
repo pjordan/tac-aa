@@ -149,34 +149,20 @@ public class BidBundle extends
         this.campaignDailySpendLimit = campaignDailySpendLimit;
     }
 
-    protected void readWithLock(TransportReader reader) throws ParseException {
-        // Read the campaign daily spend limit
-        this.campaignDailySpendLimit = reader.getAttributeAsDouble(
-                "campaignDailySpendLimit", DEFAULT_SPEND_LIMIT);
 
-        // Read the entries
-        super.readWithLock(reader);
+    protected void readBeforeEntries(TransportReader reader) throws ParseException {
+        this.campaignDailySpendLimit = reader.getAttributeAsDouble("campaignDailySpendLimit", DEFAULT_SPEND_LIMIT);
     }
 
-    protected void writeWithLock(TransportWriter writer) {
-        // Write the campaign daily spend limit
+
+    protected void writeBeforeEntries(TransportWriter writer) {
         writer.attr("campaignDailySpendLimit", campaignDailySpendLimit);
-
-        // Write the entries
-        super.writeWithLock(writer);
     }
 
-    public String toString() {
-        StringBuilder builder = new StringBuilder("(");
-        builder.append(this.getClass().getSimpleName());
+
+    protected void toStringBeforeEntries(StringBuilder builder) {
         builder.append(" limit: ").append(campaignDailySpendLimit);
-        for (Object reportEntry : entries) {
-            builder.append(' ').append(reportEntry);
-        }
-        builder.append(')');
-
-        return builder.toString();
-    }
+    }    
 
     public static class BidEntry extends AbstractQueryEntry {
         private Ad ad;

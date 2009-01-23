@@ -10,7 +10,7 @@ import java.text.ParseException;
  * This class provides a skeletal implementation of the
  * {@link AbstractKeyedEntry} abstract class, where the key is a
  * {@link Transportable} object.
- *
+ * @param <T> key type.
  * @author Patrick Jordan
  */
 public abstract class AbstractTransportableEntry<T extends Transportable>
@@ -22,18 +22,18 @@ public abstract class AbstractTransportableEntry<T extends Transportable>
      * @param reader the reader to read the data in.
      * @throws ParseException if a parse exception occurs when reading in the key.
      */
-    protected void readKey(TransportReader reader) throws ParseException {
+    protected final void readKey(final TransportReader reader) throws ParseException {
         if (reader.nextNode(keyNodeName(), false)) {
             setKey((T) reader.readTransportable());
         }
     }
 
     /**
-     * Writes the key out to the {@link TransportWriter writer},
+     * Writes the key out to the {@link TransportWriter writer}.
      *
      * @param writer the writer to write the data out to.
      */
-    protected void writeKey(TransportWriter writer) {
+    protected final void writeKey(final TransportWriter writer) {
         if (getKey() != null) {
             writer.write(getKey());
         }

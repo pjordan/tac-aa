@@ -32,9 +32,9 @@ public class AdLinkTest {
 		assertEquals(first, second);
 
 		first = new AdLink();
-		first.setProduct(new Product());
+		first.setAd(new Ad());
 
-		second = new AdLink(new Ad(new Product()), null);
+		second = new AdLink(new Ad(), null);
 
 		assertEquals(first, second);
 	}
@@ -105,13 +105,13 @@ public class AdLinkTest {
 		assertTrue(instance.equals(instance_2));
 
 		instance_2.setAdvertiser("abc");
-		instance_2.setProduct(new Product("123", "xyz"));
+		instance_2.setAd(new Ad(new Product("123", "xyz")));
 		assertFalse(instance.equals(instance_2));
 
 		instance.setAdvertiser("abc");
 		assertFalse(instance.equals(instance_2));
 
-		instance.setProduct(new Product("123", "xyz"));
+		instance.setAd(new Ad(new Product("123", "xyz")));
 		assertTrue(instance.equals(instance_2));
 
 		instance.setAdvertiser("abcd");
@@ -121,31 +121,21 @@ public class AdLinkTest {
 	@Test
 	public void testHashCode() {
 		AdLink instance = new AdLink();
-		int expResult = 0;
-		int result = instance.hashCode();
-		assertEquals(expResult, result);
-
-		String advertiser = "abc";
-		instance.setAdvertiser(advertiser);
-		Product product = new Product("123", "xyz");
-		instance.setProduct(product);
-		expResult = 31 * product.hashCode() + advertiser.hashCode();
-		result = instance.hashCode();
-		assertEquals(expResult, result);
+		assertEquals(instance.hashCode(), new AdLink().hashCode());
 	}
 
 	@Test
 	public void testToString() {
 		AdLink instance = new AdLink();
-		String expResult = "(AdLink advertiser:null generic:true product:null)";
+		String expResult = "(AdLink advertiser:null ad:null)";
 		String result = instance.toString();
 		assertEquals(expResult, result);
 
 		String advertiser = "abc";
 		instance.setAdvertiser(advertiser);
 		Product product = new Product("123", "xyz");
-		instance.setProduct(product);
-		expResult = "(AdLink advertiser:abc generic:false product:(Product (123,xyz)))";
+		instance.setAd(new Ad(product));
+		expResult = "(AdLink advertiser:abc ad:(Ad generic:false product:(Product (123,xyz))))";
 		result = instance.toString();
 		assertEquals(expResult, result);
 	}

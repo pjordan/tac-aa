@@ -137,7 +137,7 @@ under the License.
             <!-- Default tokens and additional GENERIC_START and GENERIC_END -->
             <property name="tokens" value="SEMI, POST_DEC, POST_INC, GENERIC_START, GENERIC_END"/>
         </module>
-        <module name="OperatorWrap"/>
+        <!--<module name="OperatorWrap"/>-->
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
         <module name="TabCharacter"/>
@@ -167,16 +167,16 @@ under the License.
 
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
-        <module name="AvoidInlineConditionals"/>
+        <!--<module name="AvoidInlineConditionals"/>-->
         <module name="DoubleCheckedLocking"/>    <!-- MY FAVOURITE -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
+        <!--<module name="HiddenField"/>-->
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <!--<module name="MagicNumber"/>-->
         <module name="MissingSwitchDefault"/>
-        <module name="RedundantThrows"/>
+        <!--<module name="RedundantThrows"/>-->
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
 

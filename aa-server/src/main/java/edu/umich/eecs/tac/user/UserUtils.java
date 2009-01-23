@@ -1,9 +1,6 @@
 package edu.umich.eecs.tac.user;
 
-import edu.umich.eecs.tac.props.AdLink;
-import edu.umich.eecs.tac.props.AdvertiserInfo;
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.UserClickModel;
+import edu.umich.eecs.tac.props.*;
 
 /**
  * @author Patrick Jordan
@@ -49,7 +46,7 @@ public class UserUtils {
 		return probability;
 	}
 
-	public static double calculateClickProbability(User user, AdLink ad,
+	public static double calculateClickProbability(User user, Ad ad,
 			double targetEffect, double promotionEffect, double advertiserEffect) {
 
 		double probability = advertiserEffect;

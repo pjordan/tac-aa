@@ -13,5 +13,5 @@ public interface QueryEntry extends KeyedEntry<Query> {
      *
      * @return the query for the entry.
      */
-    public Query getQuery();
+    Query getQuery();
 }
