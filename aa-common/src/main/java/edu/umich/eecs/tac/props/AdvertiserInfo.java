@@ -39,7 +39,7 @@ public class AdvertiserInfo extends AbstractTransportable {
      */
     private double componentBonus;
     /**
-     * The decay rate (see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>).
+     * The distribution capacity discounter (see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>).
      */
     private double distributionCapacityDiscounter;
     /**
