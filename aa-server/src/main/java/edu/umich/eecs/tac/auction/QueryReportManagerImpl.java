@@ -3,9 +3,7 @@ package edu.umich.eecs.tac.auction;
 import edu.umich.eecs.tac.props.QueryReport;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.Ad;
-import edu.umich.eecs.tac.sim.Publisher;
 import edu.umich.eecs.tac.sim.QueryReportSender;
-import edu.umich.eecs.tac.user.UserEventListener;
 import com.botbox.util.ArrayUtils;
 
 /**
@@ -87,10 +85,10 @@ public class QueryReportManagerImpl implements QueryReportManager {
 		queryReports[index].addClicks(query, clicks, cost);
 	}
 
-	protected void addImpressions(String name, Query query, int nonPromoted,
-			int promoted, Ad ad, double positionSum) {
+	protected void addImpressions(String name, Query query, int regular, int promoted, Ad ad, double positionSum) {
 		int index = ArrayUtils.indexOf(advertisers, 0, advertisersCount, name);
-		if (index < 0) {
+
+        if (index < 0) {
 			index = doAddAccount(name);
 		}
 
@@ -98,8 +96,7 @@ public class QueryReportManagerImpl implements QueryReportManager {
 			queryReports[index] = new QueryReport();
 		}
 
-		queryReports[index].addImpressions(query, nonPromoted, promoted, ad,
-				positionSum);
+		queryReports[index].addImpressions(query, regular, promoted, ad, positionSum);
 	}
 
 	/**
@@ -114,7 +111,7 @@ public class QueryReportManagerImpl implements QueryReportManager {
 		}
 
 		// For each advertiser, tell the other advertisers about their positions
-		// and ads
+		// and adLinks
 		for (int advertiserIndex = 0; advertiserIndex < advertisersCount; advertiserIndex++) {
 
 			QueryReport baseReport = queryReports[advertiserIndex];
@@ -152,8 +149,7 @@ public class QueryReportManagerImpl implements QueryReportManager {
 	public void queryIssued(Query query) {
 	}
 
-	public void viewed(Query query, Ad ad, int slot, String advertiser,
-			boolean isPromoted) {
+	public void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted) {
 		if (isPromoted) {
 			addImpressions(advertiser, query, 0, 1, ad, slot);
 		} else {
@@ -161,12 +157,10 @@ public class QueryReportManagerImpl implements QueryReportManager {
 		}
 	}
 
-	public void clicked(Query query, Ad ad, int slot, double cpc,
-			String advertiser) {
+	public void clicked(Query query, Ad ad, int slot, double cpc, String advertiser) {
 		addClicks(advertiser, query, 1, cpc);
 	}
 
-	public void converted(Query query, Ad ad, int slot, double salesProfit,
-			String advertiser) {
+	public void converted(Query query, Ad ad, int slot, double salesProfit, String advertiser) {
 	}
 }

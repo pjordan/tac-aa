@@ -227,6 +227,7 @@ public class SalesReport extends AbstractQueryKeyedReportTransportable<SalesRepo
 
     /**
      * Sales report entry holds the conversions and revenue for a query class.
+     * @author Patrick Jordan
      */
     public static class SalesReportEntry extends AbstractQueryEntry {
         /**

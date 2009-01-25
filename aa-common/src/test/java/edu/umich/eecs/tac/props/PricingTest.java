@@ -39,14 +39,14 @@ public class PricingTest {
 		String advertisor = "advertisor_1";
 		ad = new AdLink(product, advertisor);
 		instance.setPrice(ad, price);
-		assertTrue(instance.ads().size() == 1);
-		assertTrue(instance.ads().contains(ad));
+		assertTrue(instance.adLinks().size() == 1);
+		assertTrue(instance.adLinks().contains(ad));
 		assertTrue(instance.getPrice(ad) == 0.00);
 
 		price = 100.00;
 		instance.setPrice(ad, price);
-		assertTrue(instance.ads().size() == 1);
-		assertTrue(instance.ads().contains(ad));
+		assertTrue(instance.adLinks().size() == 1);
+		assertTrue(instance.adLinks().contains(ad));
 		assertTrue(instance.getPrice(ad) == 100.00);
 
 		product = new Product("manufacturer_2", "component_2");
@@ -54,9 +54,9 @@ public class PricingTest {
 		price = 200;
 		AdLink ad2 = new AdLink(product, advertisor);
 		instance.setPrice(ad2, price);
-		assertTrue(instance.ads().size() == 2);
-		assertTrue(instance.ads().contains(ad));
-		assertTrue(instance.ads().contains(ad2));
+		assertTrue(instance.adLinks().size() == 2);
+		assertTrue(instance.adLinks().contains(ad));
+		assertTrue(instance.adLinks().contains(ad2));
 		assertTrue(instance.getPrice(ad) == 100.00);
 		assertTrue(instance.getPrice(ad2) == 200.00);
 	}
@@ -91,7 +91,7 @@ public class PricingTest {
 	public void testAds() {
 		Pricing instance = new Pricing();
 		Set<AdLink> expResult = new HashSet<AdLink>();
-		assertEquals(expResult, instance.ads());
+		assertEquals(expResult, instance.adLinks());
 
 		Product product = new Product("manufacturer_1", "component_1");
 		String advertisor = "advertisor_1";
@@ -100,9 +100,9 @@ public class PricingTest {
 		expResult = new HashSet<AdLink>();
 		expResult.add(ad);
 		instance.setPrice(ad, price);
-		assertEquals(expResult, instance.ads());
+		assertEquals(expResult, instance.adLinks());
 		assertTrue(expResult.contains(ad));
-		Iterator it = instance.ads().iterator();
+		Iterator it = instance.adLinks().iterator();
 		ad = (AdLink) it.next();
 		assertTrue(instance.getPrice(ad) == 1.00);
 
@@ -115,18 +115,18 @@ public class PricingTest {
 			price++;
 			instance.setPrice(ad, price);
 		}
-		assertEquals(instance.ads().size(), total_ads);
-		assertTrue(instance.ads().contains(ad));
+		assertEquals(instance.adLinks().size(), total_ads);
+		assertTrue(instance.adLinks().contains(ad));
 
 		product = new Product("manufacturer_51", "component_51");
 		advertisor = "advertisor_51";
 		ad = new AdLink(product, advertisor);
-		assertTrue(instance.ads().contains(ad));
+		assertTrue(instance.adLinks().contains(ad));
 
 		product = new Product("manufacturer_0", "component_0");
 		advertisor = "advertisor_0";
 		ad = new AdLink(product, advertisor);
-		assertFalse(instance.ads().contains(ad));
+		assertFalse(instance.adLinks().contains(ad));
 	}
 
 	@Test
@@ -147,7 +147,7 @@ public class PricingTest {
 
 		assertNotNull(instance);
 		assertNotNull(received);
-		assertEquals(instance.ads().size(), received.ads().size());
+		assertEquals(instance.adLinks().size(), received.adLinks().size());
 		assertEquals(instance.getPrice(ad), received.getPrice(ad));
 
 		instance.lock();
@@ -158,7 +158,7 @@ public class PricingTest {
 
 		assertNotNull(instance);
 		assertNotNull(received);
-		assertEquals(instance.ads().size(), received.ads().size());
+		assertEquals(instance.adLinks().size(), received.adLinks().size());
 		assertEquals(instance.getPrice(ad), received.getPrice(ad));
 	}
 
@@ -175,7 +175,7 @@ public class PricingTest {
 
 		assertNotNull(instance);
 		assertNotNull(received);
-		assertEquals(instance.ads().size(), received.ads().size());
+		assertEquals(instance.adLinks().size(), received.adLinks().size());
 
 		instance.lock();
 		received = new Pricing();
@@ -185,7 +185,7 @@ public class PricingTest {
 
 		assertNotNull(instance);
 		assertNotNull(received);
-		assertEquals(instance.ads().size(), received.ads().size());
+		assertEquals(instance.adLinks().size(), received.adLinks().size());
 	}
 
 	@Test(expected = IllegalStateException.class)

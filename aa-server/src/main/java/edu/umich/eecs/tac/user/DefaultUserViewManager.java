@@ -97,7 +97,7 @@ public class DefaultUserViewManager implements UserViewManager {
         Ranking ranking = auction.getRanking();
         Pricing pricing = auction.getPricing();
 
-        // Users will view all ads, but may only click on some.
+        // Users will view all adLinks, but may only click on some.
         for (int i = 0; i < ranking.size(); i++) {
 
             AdLink ad = ranking.get(i);
