@@ -139,6 +139,17 @@ public class QueryReportManagerImpl implements QueryReportManager {
 			queryReports[i] = null;
 
 			queryReportSender.sendQueryReport(advertisers[i], report);
+
+            int impressions = 0;
+            int clicks = 0;
+
+            for(int index = 0; index < report.size(); index++) {
+                impressions += report.getImpressions(index);
+                clicks += report.getClicks(index);
+            }
+
+            queryReportSender.broadcastImpressions(advertisers[i], impressions);
+            queryReportSender.broadcastClicks(advertisers[i], clicks);
 		}
 	}
 

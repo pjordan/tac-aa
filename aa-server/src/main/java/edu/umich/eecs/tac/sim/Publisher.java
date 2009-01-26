@@ -52,4 +52,12 @@ public abstract class Publisher extends Builtin implements QueryReportSender,
 			sendPublisherInfo(advertiser);
 		}
 	}
+
+    public void broadcastImpressions(String advertiser, int impressions) {
+        getSimulation().broadcastImpressions(advertiser, impressions);
+    }
+
+    public void broadcastClicks(String advertiser, int clicks) {
+        getSimulation().broadcastClicks(advertiser, clicks);
+    }
 }

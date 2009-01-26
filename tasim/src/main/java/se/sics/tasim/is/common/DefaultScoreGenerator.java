@@ -169,7 +169,7 @@ public class DefaultScoreGenerator extends ScoreGenerator {
 			boolean isShowingZeroGameAgents = this.isShowingAllAgents
 					|| this.isShowingZeroGameAgents;
 			StringBuffer page = new StringBuffer();
-			page.append("<html><head><title>TAC AA - Score Page for ").append(
+            page.append("<html><head><title>TAC SIM - Score Page for ").append(
 					competition.getName()).append(
 					"</title></head>\r\n<body>\r\n");
 

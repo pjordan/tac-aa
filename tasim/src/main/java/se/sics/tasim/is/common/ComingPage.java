@@ -453,7 +453,7 @@ public class ComingPage extends HttpPage {
 		}
 		page.text("<p><hr noshade color='#202080'>\r\n"
 				+ "<center><font face='Arial,Helvetica,sans-serif' size='-2'>"
-				+ "TAC AA Server " + InfoServer.FULL_VERSION
+				+ infoServer.getServerType() + " " + infoServer.getVersion()
 				+ "</font></center>\r\n");
 
 		page.close();

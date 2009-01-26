@@ -262,8 +262,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 				"advertiser.specialization.manufacturerBonus", 0.0);
 		double componentBonus = config.getPropertyAsDouble(
 				"advertiser.specialization.componentBonus", 0.0);
-		double decayRate = config.getPropertyAsDouble(
-				"advertiser.capacity.decay_rate", 1.0);
+		double decayRate = config.getPropertyAsDouble("advertiser.capacity.distribution_capacity_discounter", 1.0);
 		double targetEffect = config.getPropertyAsDouble(
 				"advertiser.targeteffect", 0.5);
 		int window = config.getPropertyAsInt("advertiser.capacity.window", 7);
@@ -964,8 +963,15 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 	}
 
 	public void broadcastConversions(String advertiser, int conversions) {
-		getEventWriter().dataUpdated(agentIndex(advertiser),
-				TACAAConstants.DU_CONVERSIONS, conversions);
+		getEventWriter().dataUpdated(agentIndex(advertiser), TACAAConstants.DU_CONVERSIONS, conversions);
+	}
+
+    public void broadcastImpressions(String advertiser, int impressions) {
+		getEventWriter().dataUpdated(agentIndex(advertiser), TACAAConstants.DU_IMPRESSIONS, impressions);
+	}
+
+    public void broadcastClicks(String advertiser, int clicks) {
+		getEventWriter().dataUpdated(agentIndex(advertiser), TACAAConstants.DU_CLICKS, clicks);
 	}
 
 	public SlotInfo getAuctionInfo() {

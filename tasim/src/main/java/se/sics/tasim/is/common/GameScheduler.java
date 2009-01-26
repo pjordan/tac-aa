@@ -788,7 +788,7 @@ public class GameScheduler extends HttpPage {
 
 	private StringBuffer pageStart(String title) {
 		StringBuffer page = new StringBuffer();
-		page.append("<html><head><title>TAC AA - ").append(title).append('@')
+		page.append("<html><head><title>").append(infoServer.getServerType()).append(" - ").append(title).append('@')
 				.append(serverName)
 				.append("</title></head>\r\n" + "<body>\r\n").append(header)
 				.append("<font face='arial' size='+2'>").append(title).append(

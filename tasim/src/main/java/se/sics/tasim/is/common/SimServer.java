@@ -331,13 +331,14 @@ public class SimServer {
 
 		/** Set up web handling */
 		PageHandler pageHandler = infoServer.getPageHandler();
-		SecurityConstraint security = new SecurityConstraint("TAC AA", "*");
+
+		SecurityConstraint security = new SecurityConstraint(infoServer.getServerType(), "*");
 		infoServer.getHttpContext().addSecurityConstraint(
 				"/" + serverName + "/games/*", security);
 		infoServer.getHttpContext().addSecurityConstraint(
 				"/" + serverName + "/viewer/*", security);
 
-		security = new SecurityConstraint("TAC AA", AgentRealm.ADMIN_ROLE);
+		security = new SecurityConstraint(infoServer.getServerType(), AgentRealm.ADMIN_ROLE);
 		infoServer.getHttpContext().addSecurityConstraint(
 				"/" + serverName + "/admin/*", security);
 		infoServer.getHttpContext().addSecurityConstraint(

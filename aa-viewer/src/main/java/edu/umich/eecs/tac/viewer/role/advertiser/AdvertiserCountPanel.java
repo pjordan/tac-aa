@@ -73,7 +73,7 @@ public class AdvertiserCountPanel extends JPanel {
 
 	private JFreeChart createChart(String s, XYDataset xydataset) {
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", "",
-				xydataset, PlotOrientation.VERTICAL, false, true, false);
+                                               xydataset, PlotOrientation.VERTICAL, false, true, false);
 		jfreechart.setBackgroundPaint(Color.white);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
 		xyplot.setBackgroundPaint(Color.lightGray);

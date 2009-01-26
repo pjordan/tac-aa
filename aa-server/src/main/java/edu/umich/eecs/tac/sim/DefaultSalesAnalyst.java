@@ -124,8 +124,7 @@ public class DefaultSalesAnalyst implements SalesAnalyst {
 
 			salesReportSender.sendSalesReport(accountNames[i], report);
 
-			salesReportSender.broadcastConversions(accountNames[i],
-					accountConversions[i][0]);
+			salesReportSender.broadcastConversions(accountNames[i], accountConversions[i][0]);
 		}
 
 		updateConversionQueue();

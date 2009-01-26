@@ -72,5 +72,11 @@ public class QueryReportManagerImplTest {
 	private static class QueryReportSenderImpl implements QueryReportSender {
 		public void sendQueryReport(String advertiser, QueryReport report) {
 		}
-	}
+
+        public void broadcastImpressions(String advertiser, int impressions) {
+        }
+
+        public void broadcastClicks(String advertiser, int clicks) {
+        }
+    }
 }

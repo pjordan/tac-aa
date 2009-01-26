@@ -72,12 +72,7 @@ public class InfoServer {
 
 	public final static boolean ALLOW_SIM_TYPE = false;
 
-	/** Version information */
-	public final static String VERSION = "0.0.1";
-	public final static String FULL_VERSION = VERSION;
-
-	private static final Logger log = Logger.getLogger(InfoServer.class
-			.getName());
+	private static final Logger log = Logger.getLogger(InfoServer.class.getName());
 
 	private final ConfigManager config;
 	private final String defaultSimulationType;
@@ -94,6 +89,8 @@ public class InfoServer {
 
 	/** Server information */
 	private String infoServerName;
+    private String version;
+    private String serverType;
 
 	/** The HTTP handling */
 	private HttpServer httpServer;
@@ -132,17 +129,18 @@ public class InfoServer {
 	// User notification handling
 	private String registrationURL = null;
 
-	public InfoServer(ConfigManager config)
-			throws IllegalConfigurationException, IOException {
+	public InfoServer(ConfigManager config) throws IllegalConfigurationException, IOException {
 		this.config = config;
 
-		this.infoServerName = config.getProperty(CONF + "server.name", config
-				.getProperty("server.name"));
+		this.infoServerName = config.getProperty(CONF + "server.name", config.getProperty("server.name"));
 		if (this.infoServerName == null) {
 			this.infoServerName = generateServerName();
 		}
-		this.defaultSimulationType = config.getProperty(CONF
-				+ "simulation.defaultType", config.getProperty(
+
+        this.serverType = config.getProperty(CONF + "server.type", config.getProperty("server.type", "TAC SIM Server"));
+        this.version = config.getProperty(CONF + "server.version", config.getProperty("server.version", "0.0.1"));
+
+		this.defaultSimulationType = config.getProperty(CONF + "simulation.defaultType", config.getProperty(
 				"simulation.defaultType", "tac09aa"));
 
 		setTimeZone(config.getPropertyAsInt("timeZone", 0));
@@ -277,7 +275,7 @@ public class InfoServer {
 
 		String adminName = agentLookup.getAgentName(ADMIN_USER_ID);
 		String adminPassword = agentLookup.getAgentPassword(ADMIN_USER_ID);
-		agentRealm = new AgentRealm(this, "TAC AA");
+		agentRealm = new AgentRealm(this, serverType);
 		if (adminName != null && adminPassword != null) {
 			agentRealm.setAdminUser(adminName, adminPassword);
 		}
@@ -292,7 +290,7 @@ public class InfoServer {
 		// context.add(new SecurityHandler());
 
 		// Index page
-		String page = "<html><head><title>TAC AA Server " + infoServerName
+		String page = "<html><head><title>"+serverType + " " + infoServerName
 				+ "</title></head>\r\n"
 				+ "<FRAMESET BORDER=0 ROWS='105,*'>\r\n"
 				+ "<FRAME SRC='/top/'>"
@@ -309,7 +307,7 @@ public class InfoServer {
 				+ "</td><td valign=top align=right><font face=arial>"
 				+ "<b>Trading Agent Competition</b></font>" + "<br>"
 				+ "<font face=arial size='-1' color='#900000'>"
-				+ "TAC AA Server " + FULL_VERSION
+				+ serverType + " " + version
 				+ "</font></td></tr></table><hr>" + "</body></html>\r\n";
 		pageHandler.addPage("/top/", new StaticPage("/top/", page));
 
@@ -829,4 +827,20 @@ public class InfoServer {
 				"font").tagEnd('a');
 	}
 
+
+    public String getVersion() {
+        return version;
+    }
+
+    void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getServerType() {
+        return serverType;
+    }
+
+    void setServerType(String serverType) {
+        this.serverType = serverType;
+    }
 } // InfoServer

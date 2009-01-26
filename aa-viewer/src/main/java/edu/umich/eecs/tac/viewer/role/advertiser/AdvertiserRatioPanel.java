@@ -163,8 +163,7 @@ public class AdvertiserRatioPanel extends JPanel {
 		public void dataUpdated(int type, Transportable value) {
 		}
 
-		public void participant(int agent, int role, String name,
-				int participantID) {
+		public void participant(int agent, int role, String name, int participantID) {
 		}
 	}
 }
