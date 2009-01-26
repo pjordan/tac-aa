@@ -6,7 +6,9 @@ import se.sics.isl.transport.TransportWriter;
 import java.text.ParseException;
 
 /**
- * @author Patrick Jordan
+ * Auction contains a {@link Ranking} and a {@link Pricing} for a {@link Query}.
+ * Auctions are instantied by the Publisher. 
+ * @author Patrick Jordan, Lee Callender
  */
 public class Auction extends AbstractTransportable {
     private Ranking ranking;
