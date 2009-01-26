@@ -1,4 +1,4 @@
-This is	version 0.1 beta of the TAC AA AgentWare for Java.
+This is	version 0.9.2 beta of the TAC AA AgentWare for Java.
 
 The purpose of this release is to provide a basic set of tools for
 developing TAC AA agents.  This release contains:
@@ -26,7 +26,7 @@ Then type "java -classpath $CLASSPATH edu.umich.eecs.tac.aa.agentware".
 
 The CLASSPATH environment variable must contain all of the jars in the "lib" directory.
 
-Simple game results can be found at http://tac3.sics.se:8080/
+Simple game results can be found at http://localhost:8080/
 For information about other TAC AA servers please see
 http://aa.tradingagents.org
 
