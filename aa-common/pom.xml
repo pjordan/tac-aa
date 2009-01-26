@@ -4,13 +4,13 @@
     <parent>
         <groupId>edu.umich.eecs.tac</groupId>
         <artifactId>tac-aa</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.umich.eecs.tac</groupId>
     <artifactId>aa-common</artifactId>
     <packaging>jar</packaging>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
     <name>Trading Agent Ad Auctions common</name>
     <dependencies>
         <dependency>
