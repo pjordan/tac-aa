@@ -17,7 +17,17 @@ import java.util.Arrays;
  *  <li> Component Specialist Bonus - The bonus given for a product containing the advertiser's
  * component specialty</li>
  *  <li> Distribution Capacity - The advertiser's daily distribution capacity threshold.</li>
+ *  <li> Distribution Capacity Discounter - The discount given to the advertiser after exceeding
+ *  the distribution capacity threshold.</li>
+ *  <li> Publisher Id - The address id of the publisher agent. </li>
+ *  <li> Advertiser Id - The address id for the given advertiser. </li>
+ *  <li> Distribution Window - The Distribution Window is used in calculating whether a given advertiser
+ * has exceeded their Distribution Capacity Threshold over the window of days.</li>
+ *  <li> Target Effect - The targeting effect of a correctly targeted ad. </li>
+ *  <li> Focus Effects - The focus effects for the 3 different user states f0, f1, and f2. </li> 
  * </ul>
+ *
+ * AdvertiserInfo is typically sent at the beginning of every game.
  * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
  * @author Patrick Jordan, Lee Callender
  */
