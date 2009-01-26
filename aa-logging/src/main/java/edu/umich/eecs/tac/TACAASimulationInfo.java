@@ -14,6 +14,7 @@ import java.text.ParseException;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.SlotInfo;
 import com.botbox.util.ArrayUtils;
+import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
  * @author Patrick Jordan

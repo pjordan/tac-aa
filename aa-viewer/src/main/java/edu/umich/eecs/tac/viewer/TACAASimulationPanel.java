@@ -20,8 +20,7 @@ import edu.umich.eecs.tac.viewer.role.UserTabPanel;
 /**
  * @author Patrick Jordan
  */
-public class TACAASimulationPanel extends JPanel implements TickListener,
-		TACAAConstants, ViewListener {
+public class TACAASimulationPanel extends JPanel implements TickListener, ViewListener {
 	private Object lock;
 
 	private Icon[] backgroundIcons;

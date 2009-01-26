@@ -116,6 +116,10 @@ public class AdLinkTest {
 
 		instance.setAdvertiser("abcd");
 		assertFalse(instance.equals(instance_2));
+
+        instance = new AdLink(new Ad(), null);
+
+        assertFalse(instance.equals(new AdLink(new Ad(), "bob")));
 	}
 
 	@Test

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * @author Lee Callender, Patrick Jordan
  */
-public class DefaultUsers extends Users implements TACAAConstants {
+public class DefaultUsers extends Users {
 	private UsersBehavior usersBehavior;
 
 	public DefaultUsers() {

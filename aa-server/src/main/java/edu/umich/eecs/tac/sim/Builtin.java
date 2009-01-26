@@ -33,6 +33,7 @@ import se.sics.isl.transport.Transportable;
 import se.sics.tasim.aw.Agent;
 import se.sics.tasim.aw.TimeListener;
 import se.sics.tasim.is.EventWriter;
+import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
  * @author Lee Callender, Patrick Jordan
@@ -209,12 +210,12 @@ public abstract class Builtin extends Agent implements TimeListener {
 
 	protected void sendEvent(String message) {
 		simulation.getEventWriter().dataUpdated(index,
-				TACAASimulation.TYPE_MESSAGE, message);
+				TYPE_MESSAGE, message);
 	}
 
 	protected void sendWarningEvent(String message) {
 		simulation.getEventWriter().dataUpdated(index,
-				TACAASimulation.TYPE_WARNING, message);
+				TYPE_WARNING, message);
 	}
 
 	protected String[] getAdvertiserAddresses() {

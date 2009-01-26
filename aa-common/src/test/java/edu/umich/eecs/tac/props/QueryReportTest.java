@@ -52,7 +52,8 @@ public class QueryReportTest {
 		assertEquals(entry.getRegularImpressions(), 0);
 		assertEquals(entry.getPromotedImpressions(), 1);
         assertEquals(entry.getImpressions(), 1);
-		entry.setImpressions(1, 1);
+		entry.setRegularImpressions(1);
+        entry.setPromotedImpressions(1);
 		assertEquals(entry.getRegularImpressions(), 1);
 		assertEquals(entry.getPromotedImpressions(), 1);
         assertEquals(entry.getImpressions(), 2);
@@ -440,6 +441,7 @@ public class QueryReportTest {
 		int clicks = 3;
 		int conversions = 1;
 
+        assertEquals(report.getImpressions(query), 0);
 		report.setImpressions(query, impressions, promotedImpressions, ad, position * (impressions + promotedImpressions));
 
 		assertEquals(report.getAd(query), ad);

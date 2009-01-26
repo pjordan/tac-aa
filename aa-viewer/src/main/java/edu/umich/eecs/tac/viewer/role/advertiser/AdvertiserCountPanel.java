@@ -25,7 +25,7 @@ import se.sics.tasim.viewer.TickListener;
 /**
  * @author Patrick Jordan
  */
-public class AdvertiserCountPanel extends JPanel implements TACAAConstants {
+public class AdvertiserCountPanel extends JPanel {
 	private int agent;
 	private String advertiser;
 

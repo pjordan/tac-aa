@@ -8,11 +8,12 @@ import edu.umich.eecs.tac.props.RetailCatalog;
 
 import javax.swing.*;
 import java.util.logging.Logger;
+import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
  * @author Patrick Jordan
  */
-public class TACAAViewer extends SimulationViewer implements TACAAConstants {
+public class TACAAViewer extends SimulationViewer {
 
 	private static final Logger log = Logger.getLogger(TACAAViewer.class
 			.getName());

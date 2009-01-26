@@ -16,15 +16,14 @@ import se.sics.tasim.sim.LogWriter;
 import se.sics.tasim.sim.Simulation;
 import se.sics.tasim.sim.SimulationAgent;
 import se.sics.tasim.aw.Message;
-
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.*;
+import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
  * @author Lee Callender, Patrick Jordan
  */
-public class TACAASimulation extends Simulation implements TACAAConstants,
-		AgentRepository, SalesReportSender, BankStatusSender {
+public class TACAASimulation extends Simulation implements AgentRepository, SalesReportSender, BankStatusSender {
 	private Bank bank;
 	private SalesAnalyst salesAnalyst;
 

@@ -132,8 +132,15 @@ public class AdLink extends AbstractTransportable {
 
         AdLink adLink = (AdLink) o;
 
-        return !(ad != null ? !ad.equals(adLink.ad) : adLink.ad != null) &&
-               !(advertiser != null ? !advertiser.equals(adLink.advertiser) : adLink.advertiser != null);
+        if (ad != null ? !ad.equals(adLink.ad) : adLink.ad != null) {
+            return false;
+        }
+
+        if (advertiser != null ? !advertiser.equals(adLink.advertiser) : adLink.advertiser != null) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

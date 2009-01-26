@@ -26,7 +26,7 @@ import se.sics.tasim.viewer.TickListener;
 /**
  * @author Patrick Jordan
  */
-public class AuctionPanel extends JComponent implements TACAAConstants {
+public class AuctionPanel extends JComponent {
 	private Query query;
 
 	private XYSeriesCollection seriescollection;

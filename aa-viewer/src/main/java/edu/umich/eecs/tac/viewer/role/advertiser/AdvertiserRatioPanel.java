@@ -20,7 +20,7 @@ import se.sics.isl.transport.Transportable;
 /**
  * @author Patrick Jordan
  */
-public class AdvertiserRatioPanel extends JPanel implements TACAAConstants {
+public class AdvertiserRatioPanel extends JPanel {
 	private int agent;
 	private String advertiser;
 

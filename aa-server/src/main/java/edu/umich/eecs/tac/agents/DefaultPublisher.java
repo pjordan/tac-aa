@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * @author Lee Callender, Patrick Jordan
  */
-public class DefaultPublisher extends Publisher implements TACAAConstants {
+public class DefaultPublisher extends Publisher {
 
 	/**
 	 * The publisher behavior

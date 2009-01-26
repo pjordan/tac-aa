@@ -19,11 +19,12 @@ import java.awt.*;
 
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
+import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
  * @author Patrick Jordan
  */
-public class UserTabPanel extends SimulationTabPanel implements TACAAConstants {
+public class UserTabPanel extends SimulationTabPanel {
 	private XYSeries nsTimeSeries;
 	private XYSeries isTimeSeries;
 	private XYSeries f0TimeSeries;

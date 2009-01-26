@@ -11,6 +11,7 @@ import edu.umich.eecs.tac.props.PublisherInfo;
 import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
+import static edu.umich.eecs.tac.TACAAConstants.*;
 
 public abstract class Publisher extends Builtin implements QueryReportSender,
 		Auctioneer, PublisherInfoSender {
@@ -23,7 +24,7 @@ public abstract class Publisher extends Builtin implements QueryReportSender,
 	}
 
 	protected void sendToAdvertisers(Transportable content) {
-		sendToRole(TACAASimulation.ADVERTISER, content);
+		sendToRole(ADVERTISER, content);
 	}
 
 	public abstract void sendQueryReportsToAll();

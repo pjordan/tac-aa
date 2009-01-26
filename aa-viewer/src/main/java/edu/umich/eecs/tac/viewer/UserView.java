@@ -17,11 +17,12 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.ui.RectangleInsets;
 import edu.umich.eecs.tac.TACAAConstants;
+import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
  * @author Patrick Jordan
  */
-public class UserView extends TACAAAgentView implements TACAAConstants {
+public class UserView extends TACAAAgentView {
 	private TimeSeries nsTimeSeries;
 	private TimeSeries isTimeSeries;
 	private TimeSeries f0TimeSeries;

@@ -11,6 +11,7 @@ import se.sics.tasim.logtool.LogReader;
 import se.sics.tasim.logtool.ParticipantInfo;
 import edu.umich.eecs.tac.props.AAInfo;
 import se.sics.tasim.props.ServerConfig;
+import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
  * The abstract class <code>Parser</code> is a base class that helps with the
@@ -29,7 +30,7 @@ import se.sics.tasim.props.ServerConfig;
  * 
  * @author Patrick Jordan, Lee Callender
  */
-public abstract class Parser implements TACAAConstants {
+public abstract class Parser {
 
 	private static final Logger log = Logger.getLogger(Parser.class.getName());
 
