@@ -38,7 +38,7 @@ public class BidBundleTest {
 		ad2.setProduct(product2);
 
 		double bid2 = 50.5;
-		bundle.addQuery(query2, bid2, ad2);
+		bundle.addQuery(query2, bid2, ad2, BidBundle.PERSISTENT_SPEND_LIMIT);
 
 		assertEquals(bundle.size(), 2);
 

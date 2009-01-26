@@ -24,7 +24,7 @@ import java.util.Arrays;
  *  <li> Distribution Window - The Distribution Window is used in calculating whether a given advertiser
  * has exceeded their Distribution Capacity Threshold over the window of days.</li>
  *  <li> Target Effect - The targeting effect of a correctly targeted ad. </li>
- *  <li> Focus Effects - The focus effects for the 3 different user states f0, f1, and f2. </li> 
+ *  <li> Focus Effects - The focus effects for the 3 different user states f0, f1, and f2. </li>
  * </ul>
  *
  * AdvertiserInfo is typically sent at the beginning of every game.
