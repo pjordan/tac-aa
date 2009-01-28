@@ -72,20 +72,13 @@
       <id>web-eecs-umich-edu</id>
       <url>scp://web.eecs.umich.edu/u/p/prjordan/public_html/tac-aa</url>
     </site>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>web-eecs-umich-edu</id>
+      <name>TAC/AA Releases</name>
+      <url>scp://web.eecs.umich.edu/u/p/prjordan/public_html/tac-aa/repository</url>
+      <layout>default</layout>
+    </repository>
+    <downloadUrl>http://www.eecs.umich.edu/~prjordan/tac-aa/repository</downloadUrl>
   </distributionManagement>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>javadoc</report>              
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>

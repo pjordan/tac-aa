@@ -165,9 +165,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 				SimulationAgent publisher = publishers[i];
 				Publisher publisherAgent = (Publisher) publisher.getAgent();
 				publisherAgent.simulationSetup(this, publishers[i].getIndex());
-				addTimeListener(publisherAgent);
-
-				publisherAgent.sendPublisherInfoToAll();
+				addTimeListener(publisherAgent);				
 			}
 		}
 
@@ -388,6 +386,12 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 		sendToRole(USERS, this.userClickModel);
 		sendToRole(PUBLISHER, this.reserveInfo);
 		sendToRole(USERS, this.reserveInfo);
+
+        for (SimulationAgent publisher : getPublishers()) {
+            Publisher publisherAgent = (Publisher) publisher.getAgent();
+            publisherAgent.sendPublisherInfoToAll();
+        }
+
 
 		for (Map.Entry<String, AdvertiserInfo> entry : advertiserInfoMap
 				.entrySet()) {
