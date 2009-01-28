@@ -165,9 +165,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
                 SimulationAgent publisher = publishers[i];
                 Publisher publisherAgent = (Publisher) publisher.getAgent();
                 publisherAgent.simulationSetup(this, publishers[i].getIndex());
-                addTimeListener(publisherAgent);
-
-                publisherAgent.sendPublisherInfoToAll();
+                addTimeListener(publisherAgent);                
             }
         }
 
