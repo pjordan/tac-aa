@@ -169,8 +169,9 @@ public class LogManager {
 			return handler;
 		}
 
-		String handlerName = config.getProperty("handler." + type, config
-				.getProperty("handler", "se.sics.tasim.visualizer."
+    //TODO-This probably shouldn't be hardcoded...
+    String handlerName = config.getProperty("handler." + type, config
+				.getProperty("handler", "edu.umich.eecs.tac.logviewer."
 						+ "Visualizer"));
 		handler = setupLogHandler(handlerName);
 		handlerTable.put(type, handler);

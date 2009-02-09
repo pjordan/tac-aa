@@ -6,7 +6,7 @@ import se.sics.isl.transport.TransportWriter;
 import java.text.ParseException;
 
 /**
- * This class contains the publisher information released to the advertisers at the begining of the game.
+ * This class contains the publisher information released to the advertisers at the beginning of the game.
  *
  * @author Patrick Jordan
  */

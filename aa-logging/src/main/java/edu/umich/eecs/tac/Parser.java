@@ -151,7 +151,8 @@ public abstract class Parser {
 					dataUpdated(type, content);
 				}
 
-			} else if (reader.isNode("transaction")) {
+      //Transaction exists here because it is not contained within a Message
+      } else if (reader.isNode("transaction")) {
 				int source = reader.getAttributeAsInt("source");
 				int recipient = reader.getAttributeAsInt("recipient");
 				double amount = reader.getAttributeAsDouble("amount");

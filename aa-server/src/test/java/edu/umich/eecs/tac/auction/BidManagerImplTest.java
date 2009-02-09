@@ -188,8 +188,9 @@ public class BidManagerImplTest {
 		});
 
 		bidManager.updateBids(alice, bidBundle);
-		bidManager.nextTimeUnit(0);
-	}
+		//bidManager.nextTimeUnit(0);
+	  bidManager.applyBidUpdates();
+  }
 
 	@Test
 	public void testAddAdvertisers() {

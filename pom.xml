@@ -65,6 +65,7 @@
 	<module>aa-server</module>
 	<module>aa-agent</module>
     <module>aa-viewer</module>
+    <module>aa-logviewer</module>
     <module>aa-logging</module>
   </modules>
   <distributionManagement>

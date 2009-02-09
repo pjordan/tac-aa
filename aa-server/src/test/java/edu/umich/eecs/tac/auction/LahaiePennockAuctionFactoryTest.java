@@ -160,7 +160,10 @@ public class LahaiePennockAuctionFactoryTest {
 
 		public void nextTimeUnit(int i) {
 		}
-	}
+
+    public void applyBidUpdates(){}
+
+  }
 
 	private class SimpleConfigProxy implements ConfigProxy {
 		public String getProperty(String name) {
