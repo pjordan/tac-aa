@@ -338,7 +338,11 @@ public class DefaultPublisherBehavior implements PublisherBehavior {
 		this.publisherInfo = publisherInfo;
 	}
 
-	protected class ClickMonitor implements UserEventListener {
+    public void applyBidUpdates() {
+        bidManager.applyBidUpdates();
+    }
+
+    protected class ClickMonitor implements UserEventListener {
 
 		public void queryIssued(Query query) {
 		}

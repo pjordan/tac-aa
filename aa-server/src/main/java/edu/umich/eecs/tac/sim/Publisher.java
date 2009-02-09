@@ -60,4 +60,6 @@ public abstract class Publisher extends Builtin implements QueryReportSender,
     public void broadcastClicks(String advertiser, int clicks) {
         getSimulation().broadcastClicks(advertiser, clicks);
     }
+
+    public abstract void applyBidUpdates();
 }

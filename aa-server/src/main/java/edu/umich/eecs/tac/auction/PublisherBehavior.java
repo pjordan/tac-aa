@@ -24,6 +24,8 @@ public interface PublisherBehavior {
 
 	public Auction runAuction(Query query);
 
+    void applyBidUpdates();
+
 	PublisherInfo getPublisherInfo();
 
 	void setPublisherInfo(PublisherInfo publisherInfo);

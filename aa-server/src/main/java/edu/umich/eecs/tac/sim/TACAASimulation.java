@@ -462,9 +462,10 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 			salesAnalyst.sendSalesReportToAll();
 
 			for (SimulationAgent agent : getAgents(PUBLISHER)) {
-				if (agent.getAgent() instanceof PublisherInfoSender) {
+				if (agent.getAgent() instanceof Publisher) {
 					Publisher publisher = (Publisher) agent.getAgent();
 					publisher.sendQueryReportsToAll();
+                    publisher.applyBidUpdates();
 				}
 			}
 

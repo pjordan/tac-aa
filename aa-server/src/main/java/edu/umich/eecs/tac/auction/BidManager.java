@@ -28,5 +28,7 @@ public interface BidManager extends TimeListener {
 
 	void updateBids(String advertiser, BidBundle bundle);
 
+    void applyBidUpdates();
+
 	Set<String> advertisers();
 }

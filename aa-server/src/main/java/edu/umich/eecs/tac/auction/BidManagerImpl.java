@@ -93,9 +93,11 @@ public class BidManagerImpl implements BidManager {
 		return advertisersView;
 	}
 
-	public void nextTimeUnit(int timeUnit) {
+    public void nextTimeUnit(int timeUnit) {        
+    }
 
-		for (Message m : bidBundleList) {
+    public void applyBidUpdates() {
+        for (Message m : bidBundleList) {
 			bidTracker.updateBids(m.getSender(), (BidBundle) m.getContent());
 		}
 

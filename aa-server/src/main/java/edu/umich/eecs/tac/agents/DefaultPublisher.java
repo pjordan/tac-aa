@@ -71,7 +71,11 @@ public class DefaultPublisher extends Publisher {
 		return publisherBehavior.runAuction(query);
 	}
 
-	protected class PublisherConfigProxy implements ConfigProxy {
+    public void applyBidUpdates() {
+        publisherBehavior.applyBidUpdates();
+    }
+
+    protected class PublisherConfigProxy implements ConfigProxy {
 
 		public String getProperty(String name) {
 			return DefaultPublisher.this.getProperty(name);
