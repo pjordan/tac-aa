@@ -6,17 +6,27 @@ import org.junit.Before;
 
 import java.util.Random;
 
+import edu.umich.eecs.tac.props.RetailCatalog;
+import edu.umich.eecs.tac.props.Product;
+
 /**
  * @author Patrick Jordan
  */
 public class DefaultUserTransitionManagerTest {
 	private DefaultUserTransitionManager userTransitionManager;
 	private Random random;
+    private RetailCatalog retailCatalog;
+    private User user;
+    private Product product;
 
 	@Before
 	public void setup() {
+        product = new Product("man","com");
+        retailCatalog = new RetailCatalog();
+        retailCatalog.addProduct(product);
+        user = new User(QueryState.NON_SEARCHING, product);
 		random = new Random(100);
-		userTransitionManager = new DefaultUserTransitionManager(random);
+		userTransitionManager = new DefaultUserTransitionManager(retailCatalog, random);
 
 		userTransitionManager.setBurstProbability(0.3);
 
@@ -32,7 +42,7 @@ public class DefaultUserTransitionManagerTest {
 
 	@Test
 	public void testConstructors() {
-		assertNotNull(new DefaultUserTransitionManager());
+		assertNotNull(new DefaultUserTransitionManager(retailCatalog));
 		assertNotNull(userTransitionManager);
 	}
 
@@ -41,38 +51,19 @@ public class DefaultUserTransitionManagerTest {
 		new DefaultUserTransitionManager(null);
 	}
 
-	@Test
-	public void testBurst() {
-		assertFalse(userTransitionManager.isBurst());
 
-		int bursts = 0;
-		int regulars = 0;
-		for (int i = 0; i < 1000; i++) {
-			userTransitionManager.nextTimeUnit(0);
-
-			if (userTransitionManager.isBurst()) {
-				bursts++;
-			} else {
-				regulars++;
-			}
-		}
-
-		assertEquals(bursts, 295, 0);
-		assertEquals(regulars, 705, 0);
-	}
 
 	@Test
 	public void testTransitions() {
 		assertEquals(userTransitionManager.getBurstProbability(), 0.3, 0.00001);
 
-		boolean burst = userTransitionManager.isBurst();
+		boolean burst = userTransitionManager.isBurst(user.getProduct());
 
 		int nsCount = 0;
 		int isCount = 0;
 
 		for (int i = 0; i < 1000; i++) {
-			QueryState state = userTransitionManager.transition(
-					QueryState.NON_SEARCHING, false);
+			QueryState state = userTransitionManager.transition(user, false);
 
 			switch (state) {
 			case NON_SEARCHING:
@@ -92,7 +83,7 @@ public class DefaultUserTransitionManagerTest {
 			assertEquals(isCount, 191, 0);
 		}
 
-		while (userTransitionManager.isBurst() == burst) {
+		while (userTransitionManager.isBurst(product) == burst) {
 			userTransitionManager.nextTimeUnit(0);
 		}
 
@@ -100,8 +91,7 @@ public class DefaultUserTransitionManagerTest {
 		isCount = 0;
 
 		for (int i = 0; i < 1000; i++) {
-			QueryState state = userTransitionManager.transition(
-					QueryState.NON_SEARCHING, false);
+			QueryState state = userTransitionManager.transition(user, false);
 
 			switch (state) {
 			case NON_SEARCHING:
@@ -121,7 +111,6 @@ public class DefaultUserTransitionManagerTest {
 			assertEquals(isCount, 200, 0);
 		}
 
-		assertEquals(userTransitionManager.transition(QueryState.NON_SEARCHING,
-				true), QueryState.TRANSACTED);
+		assertEquals(userTransitionManager.transition(user,true), QueryState.TRANSACTED);
 	}
 }

@@ -53,8 +53,9 @@ public class DefaultUsersInitializerTest {
 		context.checking(new Expectations() {
 			{
 				atLeast(1).of(userTransitionManager).nextTimeUnit(-1);
-				atLeast(1).of(userTransitionManager).transition(
-						QueryState.NON_SEARCHING, false);
+				atLeast(1).of(userTransitionManager).transition(users.get(0), false);
+				will(returnValue(QueryState.INFORMATIONAL_SEARCH));
+                atLeast(1).of(userTransitionManager).transition(users.get(1), false);
 				will(returnValue(QueryState.INFORMATIONAL_SEARCH));
 			}
 		});

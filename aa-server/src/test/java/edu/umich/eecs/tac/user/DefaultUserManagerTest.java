@@ -126,7 +126,7 @@ public class DefaultUserManagerTest {
 
 	public class SimpleUserTransitionManager implements UserTransitionManager {
 
-		public QueryState transition(QueryState queryState, boolean transacted) {
+		public QueryState transition(User user, boolean transacted) {
 			return QueryState.NON_SEARCHING;
 		}
 

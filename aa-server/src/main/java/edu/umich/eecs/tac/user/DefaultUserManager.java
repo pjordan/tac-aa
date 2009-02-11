@@ -137,9 +137,7 @@ public class DefaultUserManager implements UserManager {
 	}
 
 	private void handleTransition(User user, boolean transacted) {
-		user
-				.setState(transitionManager.transition(user.getState(),
-						transacted));
+		user.setState(transitionManager.transition(user,transacted));
 	}
 
 	private Query generateQuery(User user) {

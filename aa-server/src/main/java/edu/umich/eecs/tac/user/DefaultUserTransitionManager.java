@@ -2,6 +2,8 @@ package edu.umich.eecs.tac.user;
 
 import edu.umich.eecs.tac.util.sampling.MutableSampler;
 import edu.umich.eecs.tac.util.sampling.WheelSampler;
+import edu.umich.eecs.tac.props.RetailCatalog;
+import edu.umich.eecs.tac.props.Product;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -13,25 +15,30 @@ import java.util.Random;
 public class DefaultUserTransitionManager implements UserTransitionManager {
 	private Map<QueryState, MutableSampler<QueryState>> standardSamplers;
 	private Map<QueryState, MutableSampler<QueryState>> burstSamplers;
-	private boolean burst;
-	private double burstProbability;
-	private Random random;
 
-	public DefaultUserTransitionManager() {
-		this(new Random());
+    private double burstProbability;
+    private boolean[] bursts;
+	private Random random;
+    private RetailCatalog retailCatalog;
+
+	public DefaultUserTransitionManager(RetailCatalog retailCatalog) {
+		this(retailCatalog, new Random());
 	}
 
-	public DefaultUserTransitionManager(Random random) {
+	public DefaultUserTransitionManager(RetailCatalog retailCatalog, Random random) {
 		if (random == null) {
-			throw new NullPointerException(
-					"Random number generator cannot be null");
+			throw new NullPointerException("Random number generator cannot be null");
 		}
 
-		standardSamplers = new HashMap<QueryState, MutableSampler<QueryState>>(
-				QueryState.values().length);
-		burstSamplers = new HashMap<QueryState, MutableSampler<QueryState>>(
-				QueryState.values().length);
+        if(retailCatalog==null) {
+            throw new NullPointerException("retail catalog cannot be null");
+        }
+		standardSamplers = new HashMap<QueryState, MutableSampler<QueryState>>(QueryState.values().length);
+		burstSamplers = new HashMap<QueryState, MutableSampler<QueryState>>(QueryState.values().length);
 		this.random = random;
+
+        this.retailCatalog = retailCatalog;
+        bursts = new boolean[retailCatalog.size()];
 
 		updateBurst();
 	}
@@ -40,8 +47,7 @@ public class DefaultUserTransitionManager implements UserTransitionManager {
 		updateBurst();
 	}
 
-	public void addStandardTransitionProbability(QueryState from,
-			QueryState to, double probability) {
+	public void addStandardTransitionProbability(QueryState from, QueryState to, double probability) {
 		MutableSampler<QueryState> sampler = standardSamplers.get(from);
 		if (sampler == null) {
 			sampler = new WheelSampler<QueryState>(random);
@@ -51,8 +57,7 @@ public class DefaultUserTransitionManager implements UserTransitionManager {
 		sampler.addState(probability, to);
 	}
 
-	public void addBurstTransitionProbability(QueryState from, QueryState to,
-			double probability) {
+	public void addBurstTransitionProbability(QueryState from, QueryState to, double probability) {
 		MutableSampler<QueryState> sampler = burstSamplers.get(from);
 		if (sampler == null) {
 			sampler = new WheelSampler<QueryState>(random);
@@ -70,20 +75,22 @@ public class DefaultUserTransitionManager implements UserTransitionManager {
 		this.burstProbability = burstProbability;
 	}
 
-	public QueryState transition(QueryState queryState, boolean transacted) {
+	public QueryState transition(User user, boolean transacted) {
 		if (transacted)
 			return QueryState.TRANSACTED;
-		else if (burst)
-			return burstSamplers.get(queryState).getSample();
+		else if (bursts[retailCatalog.indexForEntry(user.getProduct())])
+			return burstSamplers.get(user.getState()).getSample();
 		else
-			return standardSamplers.get(queryState).getSample();
+			return standardSamplers.get(user.getState()).getSample();
 	}
 
 	private void updateBurst() {
-		burst = random.nextDouble() < burstProbability;
+        for(int i = 0 ; i < bursts.length; i++) {
+            bursts[i] = random.nextDouble() < burstProbability;
+        }
 	}
 
-	public boolean isBurst() {
-		return burst;
-	}
+	public boolean isBurst(Product product) {
+        return bursts[retailCatalog.indexForEntry(product)];
+    }
 }

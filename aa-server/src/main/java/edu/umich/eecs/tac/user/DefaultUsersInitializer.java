@@ -33,8 +33,7 @@ public class DefaultUsersInitializer implements UsersInitializer {
 			userTransitionManager.nextTimeUnit(-d);
 
 			for (User user : users) {
-				user.setState(userTransitionManager.transition(user.getState(),
-						false));
+				user.setState(userTransitionManager.transition(user, false));
 			}
 
 		}
