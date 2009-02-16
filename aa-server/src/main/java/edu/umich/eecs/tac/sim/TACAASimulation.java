@@ -926,12 +926,12 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 		int receipientIndex = receipientAgent != null ? receipientAgent
 				.getIndex() : COORDINATOR_INDEX;
 
-		LogWriter writer = getLogWriter();
+		/*LogWriter writer = getLogWriter();
 		synchronized (writer) {
 			writer.node("transaction").attr("source", sourceIndex).attr(
 					"recipient", receipientIndex).attr("amount", amount)
 					.endNode("transaction");
-		}
+		}*/
 	}
 
 	// Publishers send query reports
