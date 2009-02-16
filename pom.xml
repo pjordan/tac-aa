@@ -71,7 +71,7 @@
   <distributionManagement>
     <site>
       <id>web-eecs-umich-edu</id>
-      <url>scp://web.eecs.umich.edu/u/p/prjordan/public_html/tac-aa</url>
+      <url>scp://web.eecs.umich.edu/u/p/prjordan/public_html/tac-aa/0.9.3</url>
     </site>
     <repository>
       <uniqueVersion>false</uniqueVersion>
