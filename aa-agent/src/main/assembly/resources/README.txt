@@ -1,4 +1,4 @@
-This is	version 0.9-SNAPSHOT beta of the TAC AA AgentWare for Java.
+This is	version 0.9.3 beta of the TAC AA AgentWare for Java.
 
 The purpose of this release is to provide a basic set of tools for
 developing TAC AA agents.  This release contains:
