@@ -2,6 +2,8 @@ package edu.umich.eecs.tac.user;
 
 import edu.umich.eecs.tac.sim.Auctioneer;
 import edu.umich.eecs.tac.props.UserClickModel;
+import edu.umich.eecs.tac.props.Product;
+import edu.umich.eecs.tac.props.RetailCatalog;
 import se.sics.tasim.aw.TimeListener;
 import se.sics.tasim.aw.Message;
 
@@ -23,9 +25,22 @@ public interface UserManager extends TimeListener {
 
 	public boolean removeUserEventListener(UserEventListener listener);
 
-	public int[] getStateDistribution();
+  /**
+   * Gathers the state distribution over all product populations
+   * @return
+   */
+  public int[] getStateDistribution();
+  
+  /**
+   * Gathers the state distribution over the given product population
+   * @param product
+   * @return
+   */
+  public int[] getStateDistribution(Product product);
 
-	public UserClickModel getUserClickModel();
+  public RetailCatalog getRetailCatalog();
+
+  public UserClickModel getUserClickModel();
 
 	public void setUserClickModel(UserClickModel userClickModel);
 

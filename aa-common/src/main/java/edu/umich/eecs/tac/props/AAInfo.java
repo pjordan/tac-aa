@@ -81,6 +81,8 @@ public class AAInfo implements ContextFactory {
         context.addTransportable(new Auction());
         context.addTransportable(new AdvertiserInfo());
         context.addTransportable(new ManufacturerComponentComposable());
+        context.addTransportable(new UserPopulationState());
+        context.addTransportable(new UserPopulationState.UserPopulationEntry());
 
         // Cache the last context
         lastContext = context;

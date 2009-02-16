@@ -22,7 +22,9 @@ public class DefaultUserManager implements UserManager {
 
 	private Random random;
 
-	private UserQueryManager queryManager;
+  private RetailCatalog retailCatalog;
+
+  private UserQueryManager queryManager;
 
 	private UserTransitionManager transitionManager;
 
@@ -73,7 +75,8 @@ public class DefaultUserManager implements UserManager {
 					"Random number generator cannot be null");
 		}
 
-		this.random = random;
+		this.retailCatalog = retailCatalog;
+    this.random = random;
 		this.transitionManager = transitionManager;
 		this.queryManager = queryManager;
 		this.viewManager = viewManager;
@@ -178,7 +181,23 @@ public class DefaultUserManager implements UserManager {
 		return distribution;
 	}
 
-	public UserClickModel getUserClickModel() {
+  public int[] getStateDistribution(Product product){
+    int[] distribution = new int[QueryState.values().length];
+
+		for (User user : users) {
+      if(user.getProduct() == product){
+        distribution[user.getState().ordinal()]++;
+      }
+    }
+
+		return distribution;
+  }
+
+  public RetailCatalog getRetailCatalog(){
+    return this.retailCatalog;
+  }
+
+  public UserClickModel getUserClickModel() {
 		return userClickModel;
 	}
 

@@ -11,10 +11,13 @@ import java.util.*;
  * over. In addition, the advertiser sales profit per conversion is given for
  * each product.
  *
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  * @see <a href="http://aa.tradingagents.org/documentation">TAC Documentation</a>
  */
 public class RetailCatalog extends AbstractKeyedEntryList<Product, RetailCatalog.RetailCatalogEntry> {
+
+    private static final long serialVersionUID = 6299454928374287377L;
+
     /**
      * The supported manufacturers.
      */

@@ -65,7 +65,7 @@ public class DefaultUsers extends Users {
 	protected class UsersConfigProxy implements ConfigProxy {
 		public String getProperty(String name) {
 			return DefaultUsers.this.getProperty(name);
-		}
+	}
 
 		public String getProperty(String name, String defaultValue) {
 			return DefaultUsers.this.getProperty(name, defaultValue);

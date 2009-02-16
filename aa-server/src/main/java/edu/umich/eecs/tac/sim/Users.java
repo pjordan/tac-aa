@@ -29,7 +29,7 @@ public abstract class Users extends Builtin {
 
 	public abstract void broadcastUserDistribution();
 
-	// DEBUG FINALIZE REMOVE THIS!!! REMOVE THIS!!!
+  // DEBUG FINALIZE REMOVE THIS!!! REMOVE THIS!!!
 	protected void finalize() throws Throwable {
 		Logger.global.info("USER " + getName() + " IS BEING GARBAGED");
 		super.finalize();

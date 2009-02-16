@@ -2,9 +2,11 @@ package edu.umich.eecs.tac.user;
 
 import se.sics.tasim.is.EventWriter;
 import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.UserPopulationState;
+import edu.umich.eecs.tac.props.Product;
 
 /**
- * @author Patrick Jordan
+ * @author Patrick Jordan, Lee Callender
  */
 public class DefaultDistributionBroadcaster implements DistributionBroadcaster {
 	private UserManager userManager;
@@ -18,11 +20,17 @@ public class DefaultDistributionBroadcaster implements DistributionBroadcaster {
 		this.userManager = userManager;
 	}
 
-	public void broadcastUserDistribution(int usersIndex,
+  /**
+   * For the time being, this broadcasts both the total user distribution plus
+   * the distribution over all product populations
+   * @param usersIndex
+   * @param eventWriter
+   */
+  public void broadcastUserDistribution(int usersIndex,
 			EventWriter eventWriter) {
 		int[] distribution = userManager.getStateDistribution();
 
-		QueryState[] states = QueryState.values();
+    QueryState[] states = QueryState.values();
 
 		for (int i = 0; i < distribution.length; i++) {
 			switch (states[i]) {
@@ -56,5 +64,15 @@ public class DefaultDistributionBroadcaster implements DistributionBroadcaster {
 				break;
 			}
 		}
-	}
+
+    //This is inefficient implementation, but works for now
+    //We can change if we have time/it's an issue
+    UserPopulationState ups = new UserPopulationState();
+    for(Product product: userManager.getRetailCatalog()){
+        ups.setDistribution(product, userManager.getStateDistribution(product));
+    }
+    ups.lock();
+
+    eventWriter.dataUpdated(usersIndex, TACAAConstants.TYPE_NONE, ups);
+  }
 }
