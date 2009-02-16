@@ -199,10 +199,11 @@ public abstract class Parser {
 
 	/**
 	 * Invoked when a message to all participants with a specific role is
-	 * encountered in the log file. Example of this is the RFQs sent by the
-	 * customers to all manufacturers each day. The default implementation will
+	 * encountered in the log file. Example of this are the BidBundles sent by the
+	 * advertisers to the publisher each day. The default implementation will
 	 * invoke the <code>message</code> method for all agents with the specific
-	 * role.
+	 * role. Roles include PUBLISHER, ADVERTISER, and USER from
+   * <code>TACAAConstants</code>.
 	 * 
 	 * @param sender
 	 *            the sender of the message
@@ -326,8 +327,8 @@ public abstract class Parser {
 
 	/**
 	 * Invoked when a data update is encountered in the log file. Examples of
-	 * this is the BOMBundle and ComponentCatalog in the beginning of a
-	 * simulation.
+	 * this is the <code>StartInfo</code> and <code>RetailCatalog</code> in the
+   * beginning of a simulation.
 	 * 
 	 * @param type
 	 *            the type of the data
