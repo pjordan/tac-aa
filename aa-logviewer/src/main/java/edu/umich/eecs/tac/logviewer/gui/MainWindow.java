@@ -20,7 +20,8 @@ public class MainWindow extends JFrame {
     DayChanger dayChanger;
     AdvertiserDisplay advertiserDisplay;
     PopulationPanel populationPanel;
-  
+    AuctionResultsDisplay auctionResultsDisplay;
+
   public MainWindow(final GameInfo gameInfo,
                     final PositiveBoundedRangeModel dayModel,
                     final ParserMonitor[] monitors) {
@@ -46,6 +47,7 @@ public class MainWindow extends JFrame {
     paramsPane = new ParamsPanel(gameInfo);
     advertiserDisplay = new AdvertiserDisplay(gameInfo, dayModel, monitors);
     populationPanel = new PopulationPanel(gameInfo);
+    auctionResultsDisplay = new AuctionResultsDisplay(gameInfo, dayModel);
     /*
     //paramsPane = new ParamsPanel(simInfo);
     //dayChanger = new DayChanger(dayModel);
@@ -79,6 +81,10 @@ public class MainWindow extends JFrame {
     gbl.setConstraints(dayChanger.getMainPane(), gblConstraints);
     pane.add(dayChanger.getMainPane());
 
+    gblConstraints.gridx = 0;
+    gblConstraints.gridy = 3;
+    gbl.setConstraints(populationPanel.getMainPane(), gblConstraints);
+    pane.add(populationPanel.getMainPane());
     /*
 
 //     gblConstraints.gridx = 0;
@@ -105,9 +111,11 @@ public class MainWindow extends JFrame {
     gblConstraints.gridy = 0;
     gblConstraints.weightx = 1.0;
     gblConstraints.weighty = 1.0;
-    gbl.setConstraints(populationPanel.getMainPane(), gblConstraints);
-    pane.add(populationPanel.getMainPane());
-    
+    //gbl.setConstraints(populationPanel.getMainPane(), gblConstraints);
+    //pane.add(populationPanel.getMainPane());
+    gbl.setConstraints(auctionResultsDisplay.getMainPane(), gblConstraints);
+    pane.add(auctionResultsDisplay.getMainPane());
+
     pack();
     setLocationRelativeTo(null);
   }

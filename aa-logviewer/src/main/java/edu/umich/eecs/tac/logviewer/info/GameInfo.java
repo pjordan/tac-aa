@@ -4,6 +4,7 @@ import edu.umich.eecs.tac.logviewer.util.SimulationParser;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.UserPopulationState;
+import edu.umich.eecs.tac.props.SlotInfo;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -35,6 +36,7 @@ public class GameInfo {
   private Advertiser[] advertisers;
   private Set<Query> querySpace;
   private RetailCatalog catalog;
+  private SlotInfo slotInfo;
   /*private PCType[] bom;
   private Component[] componentCatalog;
 
@@ -60,6 +62,7 @@ public class GameInfo {
     advertisers = sp.getAdvertisers();
     querySpace = sp.getQuerySpace();
     catalog = sp.getRetailCatalog();
+    slotInfo = sp.getSlotInfo();
     ups = sp.getUserPopulationState();
     //factories = sp.getFactories();
     //suppliers = sp.getSuppliers();
@@ -107,6 +110,14 @@ public class GameInfo {
 
   public RetailCatalog getRetailCatalog() {
     return catalog;
+  }
+
+  public SlotInfo getSlotInfo() {
+    return slotInfo;
+  }
+
+  public Advertiser[] getAdvertisers(){
+    return advertisers;
   }
 
   public Advertiser getAdvertiser(int index) {

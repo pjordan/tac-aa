@@ -144,8 +144,11 @@ public class AdvertiserWindow extends JFrame{
   }
 
   protected JPanel createSalesPane(){
-    JPanel pane = new JPanel();
+	  JPanel pane = new JPanel();
+
+
     return pane;
+
   }
 
   private PositiveRangeDiagram createDiagram(Dimension preferredSize,

@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.logviewer.gui;
 import edu.umich.eecs.tac.logviewer.info.GameInfo;
 
 import javax.swing.*;
+import java.text.DecimalFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,7 +37,8 @@ public class ParamsPanel {
 	    server = new JLabel("Server: " + gameInfo.getServer());
 	    secondsPerDay = new JLabel("Seconds per day: " + gameInfo.getSecondsPerDay());
       numberOfDays = new JLabel("Number of days: " + gameInfo.getNumberOfDays());
-      squash = new JLabel("Squashing Parameter: " + gameInfo.getSquashingParameter());
+      DecimalFormat squashFormat = new DecimalFormat("#.###");
+      squash = new JLabel("Squashing Parameter: " + squashFormat.format(gameInfo.getSquashingParameter()));
 
 
       mainPane.add(server);

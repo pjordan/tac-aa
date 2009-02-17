@@ -82,6 +82,7 @@ public class SimulationParser extends Parser{
   private ComponentCatalog componentCatalog;*/
   private RetailCatalog retailCatalog;
   private ServerConfig serverConfig;
+  private SlotInfo slotInfo; 
   private UserPopulationState[] ups;
 
   private boolean[] gotLastDayAccount;
@@ -148,6 +149,8 @@ public class SimulationParser extends Parser{
       handleMessage(sender, receiver, (QueryReport) content);
     else if(content instanceof SalesReport)
       handleMessage(sender, receiver, (SalesReport) content);
+    else if(content instanceof SlotInfo)
+      handleMessage(sender, receiver, (SlotInfo) content);
 
     if(monitors != null)
 	    for (int i = 0, n = monitors.length; i < n; i++)
@@ -223,6 +226,11 @@ public class SimulationParser extends Parser{
       int index = newParticipantIndex[receiver];
       advertisers[index].setSalesReport(content, currentDay);
     }
+  }
+
+  private void handleMessage(int sender, int receiver, SlotInfo content){
+    if(this.slotInfo == null)
+      this.slotInfo = content;
   }
 
   private void handleData(RetailCatalog content){
@@ -425,13 +433,13 @@ public class SimulationParser extends Parser{
     return retailCatalog;
   }
 
+  public SlotInfo getSlotInfo() {
+    return slotInfo;
+  }
+
   public UserPopulationState[] getUserPopulationState(){
     return ups;
   }
-  /*public BOMBundle getBOMBundle() {
-    return bomBundle;
-  }*/
-
 
   public Set<Query> getQuerySpace() {
     return querySpace;
@@ -501,7 +509,7 @@ public class SimulationParser extends Parser{
    **********************************************************************/
 
   private void initActors() {
-    Color[] c_array = {Color.BLUE, Color.CYAN,  Color.GREEN,  Color.GRAY,
+    Color[] c_array = {Color.BLUE, Color.CYAN,  Color.GREEN,  new Color(75, 0, 130),
                        Color.RED, Color.MAGENTA, Color.ORANGE, Color.PINK};
 
     
