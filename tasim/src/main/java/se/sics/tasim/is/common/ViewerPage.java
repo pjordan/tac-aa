@@ -61,6 +61,8 @@ public class ViewerPage extends HttpPage {
 		contextFactory = infoServer.getConfig().getProperty(
 				"is.viewer.contextFactory", contextFactory);
 
+        infoPort = infoServer.getConfig().getPropertyAsInt("is.viewer.port", 4042);
+
 		// Generate the page
 		topPage = "<html>\r\n<head>\r\n<title>Simulation viewer for "
 				+ serverName
