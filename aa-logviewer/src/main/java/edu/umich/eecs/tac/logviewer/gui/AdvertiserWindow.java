@@ -16,11 +16,13 @@ import edu.umich.eecs.tac.props.Query;
  * To change this template use File | Settings | File Templates.
  */
 public class AdvertiserWindow extends JFrame{
+  private static final int ROOT_NUM_QUERIES = 4;
   GameInfo gameInfo;
   DayChanger dayChanger;
   Advertiser advertiser;
   int advertiserIndex;
   PositiveBoundedRangeModel dayModel;
+  Query[] querySpace;
 
   public AdvertiserWindow(GameInfo gameInfo, Advertiser advertiser,
 		                      PositiveBoundedRangeModel dayModel, ParserMonitor[] monitors) {
@@ -30,14 +32,18 @@ public class AdvertiserWindow extends JFrame{
       this.gameInfo = gameInfo;
       this.advertiser = advertiser;
       advertiserIndex = gameInfo.getAdvertiserIndex(advertiser);
-
+      this.querySpace = gameInfo.getQuerySpace().toArray(new Query[0]);
       this.dayModel = dayModel;
       dayChanger = new DayChanger(dayModel);
 
       JTabbedPane tabPane = new JTabbedPane();
-      tabPane.addTab("Bank", null, createBankPane(), "Financial information");
-      tabPane.addTab("Bidding", null, createBiddingPane(), "Information about bidding");
-      tabPane.addTab("Sales", null, createSalesPane(), "Information about sales");
+      //
+    // tabPane.addTab("Bank", null, createBankPane(), "Advertiser financial information");
+      tabPane.addTab("Overview", null, createOverviewPane(), "Advertiser overview information");
+      tabPane.addTab("Bidding Metrics", null, createBiddingPane(), "Information about bidding");
+      //tabPane.addTab("Ratio Metrics", null, createRatioPane(), "Information about clicks and conversions");
+      tabPane.addTab("User Metrics", null, createUserInteractionPane(), "Information about user interactions");
+      tabPane.addTab("Transactions", null, createSalesPane(), "Information about sales");
       //tabPane.addTab("B2C", null, createCustomerPane(), "Customer communication");
       //tabPane.addTab("PC Order Details", null, createPCCommPane(), "Detailed information about customer communication");
       //tabPane.addTab("B2B", null, createSupplierPane(), "Supplier communication");
@@ -113,8 +119,64 @@ public class AdvertiserWindow extends JFrame{
       return pane;
     }
 
+  protected JPanel createOverviewPane(){
+    PositiveRangeDiagram accountDiagram;
+    OverviewTransactionPanel otp;
+    OverviewBidPanel obp;
+    OverviewUserMetricPanel oump;
+
+    GridBagLayout gbl = new GridBagLayout();
+	  GridBagConstraints gblConstraints = new GridBagConstraints();
+	  gblConstraints.fill = GridBagConstraints.BOTH;
+
+	  JPanel pane = new JPanel();
+	  pane.setLayout(gbl);
+
+    accountDiagram = new PositiveRangeDiagram(1, dayModel);
+    accountDiagram.setPreferredSize(new Dimension(200,150));
+    accountDiagram.setData(0, advertiser.getAccountBalance(), 1);
+    accountDiagram.addConstant(Color.black, 0);
+    accountDiagram.setBorder(BorderFactory.createTitledBorder(""));
+    accountDiagram.setTitle(0, "Account Balance: $", "");
+    gblConstraints.weightx = 1;
+    gblConstraints.weighty = 1;
+    gblConstraints.gridwidth = 3;
+    gblConstraints.gridx = 0;
+    gblConstraints.gridy = 0;
+    gbl.setConstraints(accountDiagram, gblConstraints);
+    pane.add(accountDiagram);
+
+    obp = new OverviewBidPanel(advertiser, dayModel, gameInfo, gameInfo.getNumberOfDays());
+    gblConstraints.weightx = 1;
+    gblConstraints.weighty = 1;
+    gblConstraints.gridwidth = 1;
+    gblConstraints.gridx = 1;
+    gblConstraints.gridy = 1;
+    gbl.setConstraints(obp.getMainPane(), gblConstraints);
+    pane.add(obp.getMainPane());
+
+    oump = new OverviewUserMetricPanel(advertiser, dayModel, gameInfo);
+    gblConstraints.weightx = 1;
+    gblConstraints.weighty = 1;
+    gblConstraints.gridwidth = 1;
+    gblConstraints.gridx = 2;
+    gblConstraints.gridy = 1;
+    gbl.setConstraints(oump.getMainPane(), gblConstraints);
+    pane.add(oump.getMainPane());
+
+    otp = new OverviewTransactionPanel(advertiser, dayModel, gameInfo);
+    gblConstraints.weightx = 1;
+    gblConstraints.weighty = 1;
+    gblConstraints.gridwidth = 1;
+    gblConstraints.gridx = 0;
+    gblConstraints.gridy = 1;
+    gbl.setConstraints(otp.getMainPane(), gblConstraints);
+    pane.add(otp.getMainPane());
+
+    return pane;
+  }
+
   protected JPanel createBiddingPane() {
-    Query[] querySpace = gameInfo.getQuerySpace().toArray(new Query[0]);
 
     GridBagLayout gbl = new GridBagLayout();
 	  GridBagConstraints gblConstraints = new GridBagConstraints();
@@ -144,11 +206,86 @@ public class AdvertiserWindow extends JFrame{
   }
 
   protected JPanel createSalesPane(){
-	  JPanel pane = new JPanel();
+	  GridBagLayout gbl = new GridBagLayout();
+	  GridBagConstraints gblConstraints = new GridBagConstraints();
+	  gblConstraints.fill = GridBagConstraints.BOTH;
 
+	  JPanel pane = new JPanel();
+    pane.setLayout(gbl);
+
+    //Add query panels
+    QuerySalesPanel current;
+    gblConstraints.weightx = 1;
+    gblConstraints.weighty = 1;
+    gblConstraints.gridwidth = 1;
+    //TODO-Number of queries should not be hardcoded
+    for(int i = 0; i < ROOT_NUM_QUERIES; i++){
+      for(int j = 0; j < ROOT_NUM_QUERIES; j++){
+        gblConstraints.gridx = i;
+        gblConstraints.gridy = j;
+        current = new QuerySalesPanel(querySpace[ROOT_NUM_QUERIES*i + j], advertiser, this.dayModel);
+        //Add queryPanel information
+        gbl.setConstraints(current.getMainPane(), gblConstraints);
+        pane.add(current.getMainPane());
+      }
+    }
 
     return pane;
+  }
 
+  protected JPanel createRatioPane(){
+
+    GridBagLayout gbl = new GridBagLayout();
+	  GridBagConstraints gblConstraints = new GridBagConstraints();
+	  gblConstraints.fill = GridBagConstraints.BOTH;
+
+	  JPanel pane = new JPanel();
+    pane.setLayout(gbl);
+
+    //Add query panels
+    QueryRatioPanel current;
+    gblConstraints.weightx = 1;
+    gblConstraints.weighty = 1;
+    gblConstraints.gridwidth = 1;
+    //TODO-Number of queries should not be hardcoded
+    for(int i = 0; i < ROOT_NUM_QUERIES; i++){
+      for(int j = 0; j < ROOT_NUM_QUERIES; j++){
+        gblConstraints.gridx = i;
+        gblConstraints.gridy = j;
+        current = new QueryRatioPanel(querySpace[ROOT_NUM_QUERIES*i + j], advertiser, this.dayModel);
+        //Add queryPanel information
+        gbl.setConstraints(current.getMainPane(), gblConstraints);
+        pane.add(current.getMainPane());
+      }
+    }
+
+    return pane;
+  }
+
+  protected JPanel createUserInteractionPane(){
+    GridBagLayout gbl = new GridBagLayout();
+	  GridBagConstraints gblConstraints = new GridBagConstraints();
+	  gblConstraints.fill = GridBagConstraints.BOTH;
+    JPanel pane = new JPanel();
+    pane.setLayout(gbl);
+
+    QueryUserInteractionPanel current;
+    gblConstraints.weightx = 1;
+    gblConstraints.weighty = 1;
+    gblConstraints.gridwidth = 1;
+    //TODO-Number of queries should not be hardcoded
+    for(int i = 0; i < ROOT_NUM_QUERIES; i++){
+      for(int j = 0; j < ROOT_NUM_QUERIES; j++){
+        gblConstraints.gridx = i;
+        gblConstraints.gridy = j;
+        current = new QueryUserInteractionPanel(querySpace[ROOT_NUM_QUERIES*i + j], advertiser, this.dayModel);
+        //Add queryPanel information
+        gbl.setConstraints(current.getMainPane(), gblConstraints);
+        pane.add(current.getMainPane());
+      }
+    }
+
+    return pane;
   }
 
   private PositiveRangeDiagram createDiagram(Dimension preferredSize,

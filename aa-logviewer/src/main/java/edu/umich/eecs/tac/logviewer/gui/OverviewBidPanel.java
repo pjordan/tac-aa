@@ -2,156 +2,135 @@ package edu.umich.eecs.tac.logviewer.gui;
 
 import edu.umich.eecs.tac.logviewer.info.GameInfo;
 import edu.umich.eecs.tac.logviewer.info.Advertiser;
+import static edu.umich.eecs.tac.logviewer.util.VisualizerUtils.formatToString;
 import edu.umich.eecs.tac.props.*;
-import static edu.umich.eecs.tac.logviewer.util.VisualizerUtils.*;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.border.BevelBorder;
-import java.awt.*;
 import java.text.DecimalFormat;
 
 /**
  * Created by IntelliJ IDEA.
  * User: leecallender
- * Date: Feb 5, 2009
- * Time: 4:37:48 PM
+ * Date: Mar 2, 2009
+ * Time: 2:37:55 PM
  * To change this template use File | Settings | File Templates.
  */
-public class QueryBidPanel {
-  JPanel mainPane;
+public class OverviewBidPanel extends UpdatablePanel {
   JLabel bidLabel, reserveLabel, adLabel, cpcLabel, vpcLabel, posLabel;
-  public static final String BID_STRING = "Bid: ";
-  public static final String RESERVE_STRING = "Spend Limit: ";
-  public static final String AD_STRING = "Ad: ";
-  public static final String CPC_STRING = "Avg. CPC: ";
-  public static final String VPC_STRING = "Avg. VPC: ";
-  public static final String POS_STRING = "Avg. Position: ";
+  public static final String RESERVE_STRING = "Global Spend Limit: ";
+  public static final String CPC_STRING = "Total Avg. CPC: ";
+  public static final String VPC_STRING = "Total Avg. VPC: ";
+  public static final String POS_STRING = "Avg. Placed Position: ";
   public static final String AD_NULL = "NULL";
   public static final DecimalFormat dFormat = new DecimalFormat("$#0.000");
   public static final DecimalFormat pFormat = new DecimalFormat("#0.###");
+  Query[] querySpace;
+  Advertiser advertiser;
 
-  double[] bid;
   double[] reserve;
-  Ad[]     ad;
   double[] cpc;
   double[] vpc;
-  double[]    pos;
+  double[] pos;
 
-  //GameInfo gameInfo;
-  Query query;
-  Advertiser advertiser;
-  PositiveBoundedRangeModel dayModel;
 
-  public QueryBidPanel(Query query, Advertiser advertiser, PositiveBoundedRangeModel dm, int numDays){
-    this.query = query;
+  public OverviewBidPanel(Advertiser advertiser, PositiveBoundedRangeModel dm, GameInfo gameInfo, int numDays) {
+    super(dm);
     this.advertiser = advertiser;
-    this.dayModel = dm;
-    this.bid = new double[numDays];
+    this.querySpace = gameInfo.getQuerySpace().toArray(new Query[0]);
     this.reserve = new double[numDays];
-    this.ad = new Ad[numDays];
     this.cpc = new double[numDays];
     this.vpc = new double[numDays];
     this.pos = new double[numDays];
 
-    if(dayModel != null) {
-	    dayModel.addChangeListener(new ChangeListener() {
-		    public void stateChanged(ChangeEvent ce) {
-			    updateMePlz();
-		    }
-		  });
-    }
 
-    applyData();
-
-    mainPane = new JPanel();
     mainPane.setLayout(new BoxLayout(mainPane, BoxLayout.Y_AXIS));
     mainPane.setBorder(BorderFactory.createTitledBorder
-			   (BorderFactory.createEtchedBorder(),query.toString()));
+			   (BorderFactory.createEtchedBorder(),"Bid Metrics"));
 
-    bidLabel = new JLabel();
+
     reserveLabel = new JLabel();
-    adLabel = new JLabel();
     cpcLabel = new JLabel();
     vpcLabel = new JLabel();
     posLabel = new JLabel();
 
-    mainPane.add(bidLabel);
     mainPane.add(reserveLabel);
-    mainPane.add(adLabel);
     mainPane.add(cpcLabel);
     mainPane.add(vpcLabel);
     mainPane.add(posLabel);
 
+    applyData();
     updateMePlz();
   }
 
   private void applyData(){
-    bid[0] = Double.NaN;
     reserve[0] = Double.NaN;
-    ad[0] = null;
     cpc[0] = Double.NaN;
     vpc[0] = Double.NaN;
     pos[0] = Double.NaN;
 
-    for(int i = 0; i < bid.length - 1; i++){
+    for(int i = 0; i < reserve.length - 1; i++){
       BidBundle current = advertiser.getBidBundle(i);
       QueryReport report = advertiser.getQueryReport(i+2);
       SalesReport s_report = advertiser.getSalesReport(i+2);
       //TODO-FIX!
       //What if advertiser doesn't send BidBundle today?
       if(current != null){
-        bid[i+1] = current.getBid(query);
-        reserve[i+1] = current.getDailyLimit(query);
-        ad[i+1] = current.getAd(query);
+        reserve[i+1] = current.getCampaignDailySpendLimit();
       }else{
-        bid[i+1] = current.PERSISTENT_BID;
         reserve[i+1] = current.PERSISTENT_BID;
-        ad[i+1] = current.PERSISTENT_AD;
       }
-
       if(report != null){
-        cpc[i+1] = report.getCPC(query);
-        pos[i+1] = report.getPosition(query);
+        double cost = 0.0D;
+        int clicks = 0;
+        int count = 0;
+        double position = 0.0D;
+        double curPosition;
+        for(int j = 0; j < querySpace.length; j++){
+          cost += report.getCost(querySpace[j]);
+          clicks += report.getClicks(querySpace[j]);
+
+          curPosition = report.getPosition(querySpace[j]);
+          if(!Double.isNaN(curPosition)){
+            position += curPosition;
+            count++;
+          }
+        }
+        cpc[i+1] = cost/clicks;
+        pos[i+1] = position/count; 
       }else{
         cpc[i+1] = Double.NaN;
         pos[i+1] = Double.NaN;
       }
 
       if(s_report != null && report != null){
-        vpc[i+1] = (s_report.getRevenue(query) - report.getCost(query))/report.getClicks(query);
+        double revenue = 0.0D;
+        double cost = 0.0D;
+        int clicks = 0; 
+        for(int j = 0; j < querySpace.length; j++){
+          revenue += s_report.getRevenue(querySpace[j]);
+          cost    += report.getCost(querySpace[j]);
+          clicks  += report.getClicks(querySpace[j]);
+        }
+        vpc[i+1] = (revenue - cost)/clicks;
       }else{
         vpc[i+1] = Double.NaN;
       }
 
       if(i != 0){//Does this still apply?
-        if(bid[i+1] == current.PERSISTENT_BID)
-          bid[i+1] = bid[i];
         if(reserve[i+1] == current.PERSISTENT_SPEND_LIMIT)
           reserve[i+1] = reserve[i];
-        if(ad[i+1] == current.PERSISTENT_AD)
-          ad[i+1] = ad[i];
       }
     }
   }
 
-  private void updateMePlz(){
+  protected void updateMePlz(){
     //System.out.println("updating!");
     String s = (""+dayModel.getCurrent());
     int day = dayModel.getCurrent();
-    if(Double.isNaN(bid[day]))
-      bidLabel.setText(BID_STRING+bid[day]);
-    else
-      bidLabel.setText(BID_STRING+dFormat.format(bid[day]));
     if(Double.isNaN(reserve[day]))
       reserveLabel.setText(RESERVE_STRING+reserve[day]);
     else
       reserveLabel.setText(RESERVE_STRING+dFormat.format(reserve[day]));
-    if(ad[day] != null)
-      adLabel.setText(AD_STRING+formatToString(ad[day]));
-    else
-      adLabel.setText(AD_STRING+AD_NULL);
     if(Double.isNaN(cpc[day]))
       cpcLabel.setText(CPC_STRING+cpc[day]);
     else
@@ -164,10 +143,6 @@ public class QueryBidPanel {
       posLabel.setText(POS_STRING+pos[day]);
     else
       posLabel.setText(POS_STRING+pFormat.format(pos[day]));
-
   }
 
-  public Component getMainPane() {
-    return mainPane;
-  }
 }

@@ -41,6 +41,9 @@ public class Advertiser extends Actor {
   }
 
   public void setAccountBalance(int day, double accountBalance) {
+    if(day < 0)
+      return;
+    
     balance[day < balance.length ? day : (balance.length - 1)] = (int) accountBalance;
   }
 

@@ -190,7 +190,7 @@ public class SimulationParser extends Parser{
   private void handleMessage(int sender, int receiver, BankStatus content){
     if(participants[receiver].getRole() == TACAAConstants.ADVERTISER){
       int index = newParticipantIndex[receiver];
-      advertisers[index].setAccountBalance(currentDay, content.getAccountBalance());
+      advertisers[index].setAccountBalance(currentDay - 1, content.getAccountBalance());
     }
   }
 
