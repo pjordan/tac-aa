@@ -61,9 +61,9 @@ public class AuctionResultsPanel {
     positionLabels = new JLabel[advertisers.length];
     for(int i = 0; i < indexes.length; i++){
       indexes[i] = i;
-      positionLabels[i] = new JLabel(NA);
-      positionLabels[i].setForeground(advertisers[i].getColor());
-      mainPane.add(positionLabels[i]);
+      positionLabels[indexes.length-i-1] = new JLabel(NA);
+      positionLabels[indexes.length-i-1].setForeground(advertisers[i].getColor());
+      mainPane.add(positionLabels[indexes.length-i-1]);
     }
     
     updateMePlz();
@@ -78,6 +78,7 @@ public class AuctionResultsPanel {
     }else{
       for(int i = 0; i < indexes.length; i++){
         averagePosition[indexes[i]] = report.getPosition(query, advertisers[indexes[i]].getName());
+        System.out.println(averagePosition[indexes[i]]+","+advertisers[indexes[i]].getName());
       }
       hardSort(averagePosition, indexes);
 
