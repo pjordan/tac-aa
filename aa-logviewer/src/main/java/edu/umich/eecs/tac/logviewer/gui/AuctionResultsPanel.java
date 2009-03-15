@@ -78,7 +78,7 @@ public class AuctionResultsPanel {
     }else{
       for(int i = 0; i < indexes.length; i++){
         averagePosition[indexes[i]] = report.getPosition(query, advertisers[indexes[i]].getName());
-        System.out.println(averagePosition[indexes[i]]+","+advertisers[indexes[i]].getName());
+        //System.out.println(averagePosition[indexes[i]]+","+advertisers[indexes[i]].getName());
       }
       hardSort(averagePosition, indexes);
 
