@@ -77,13 +77,13 @@ public class AuctionResultsPanel {
       noQueryReportDay();
     }else{
       for(int i = 0; i < indexes.length; i++){
-        averagePosition[indexes[i]] = report.getPosition(query, advertisers[indexes[i]].getName());
+        averagePosition[indexes[i]] = report.getPosition(query, advertisers[indexes[i]].getAddress());
         //System.out.println(averagePosition[indexes[i]]+","+advertisers[indexes[i]].getName());
       }
       hardSort(averagePosition, indexes);
 
       for(int i = 0; i < indexes.length; i++){
-        Ad ad = report.getAd(query, advertisers[indexes[i]].getName());
+        Ad ad = report.getAd(query, advertisers[indexes[i]].getAddress());
         String adString;
         if(ad == null)
           adString = NA;
