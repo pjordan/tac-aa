@@ -5,7 +5,7 @@
   <groupId>edu.umich.eecs.tac</groupId>
   <artifactId>tac-aa</artifactId>
   <packaging>pom</packaging>
-  <version>0.9-SNAPSHOT</version>
+  <version>0.9.4</version>
   <name>TAC Ad Auctions</name>
   <url>http://www.eecs.umich.edu/~prjordan/tac-aa</url>
   <description>Ad Auctions game for the Trading Agent Competition</description>
