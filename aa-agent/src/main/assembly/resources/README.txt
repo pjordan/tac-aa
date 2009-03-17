@@ -19,7 +19,7 @@ Getting the AgentWare to run.
 
 Running
 -------
-Register your agent at http://deepmaize2.eecs.umich.edu:8080/ and then enter
+Register your agent at http://localhost:8080/ and then enter
 your agent name and password in the configuration file 'aw.conf'.
 
 Then type "java -classpath $CLASSPATH edu.umich.eecs.tac.aa.agentware".
