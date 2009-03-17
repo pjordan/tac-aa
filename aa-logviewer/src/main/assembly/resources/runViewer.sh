@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Usage
-#   sh ./runMe.sh -file [filename]
+#   sh ./runViewer.sh -file [filename]
 #
 
 TACAA_HOME=`pwd`
