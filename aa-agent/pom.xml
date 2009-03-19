@@ -40,6 +40,17 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/dep.xml</descriptor>
+                    </descriptors>
+                    <finalName>${artifactId}-${version}</finalName>
+                    <outputDirectory>target/</outputDirectory>
+                    <workDirectory>target/assembly/work></workDirectory>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>
