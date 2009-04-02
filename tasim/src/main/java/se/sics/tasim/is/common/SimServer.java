@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +48,8 @@ import java.util.zip.GZIPOutputStream;
 
 import com.botbox.util.ArrayQueue;
 import com.botbox.util.ArrayUtils;
+
+
 import org.mortbay.http.SecurityConstraint;
 import se.sics.isl.db.DBField;
 import se.sics.isl.db.DBMatcher;
@@ -86,14 +89,14 @@ public class SimServer {
 
 	/** Web page handling */
 	private final ComingPage comingPage;
-	private final HistoryPage historyPage;
-	private final ScorePage scorePage;
-	private final ViewerPage viewerPage;
+	private final HttpPage historyPage;
+	private final HttpPage scorePage;
+	private final HttpPage viewerPage;
 
 	// This pages are null if administration pages are disabled in the
 	// server configuration
 	private final AdminPage adminPage;
-	private final GameScheduler schedulePage;
+	private HttpPage schedulePage;
 
 	private final InfoServer infoServer;
 	private final String serverName;
@@ -383,7 +386,15 @@ public class SimServer {
 
 			adminPage = new AdminPage(infoServer, this, path, adminHeader);
 			pageHandler.addPage("/" + serverName + "/admin/*", adminPage);
-			schedulePage = new GameScheduler(infoServer, this, adminHeader);
+			String className = infoServer.getConfig().getProperty("pages.gamescheduler.class", null);
+            try {
+				Class sp = Class.forName(className);
+				Constructor spc = sp.getDeclaredConstructor(InfoServer.class, SimServer.class, String.class);
+				schedulePage = (HttpPage)spc.newInstance(infoServer, this, adminHeader);
+			} catch (Exception e) {
+				e.printStackTrace();
+				schedulePage = new GameScheduler(infoServer, this, adminHeader);
+			}
 			pageHandler.addPage("/" + serverName + "/schedule/", schedulePage);
 		} else {
 			adminPage = null;

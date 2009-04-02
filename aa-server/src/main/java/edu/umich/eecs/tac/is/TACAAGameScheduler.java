@@ -507,8 +507,11 @@ public class TACAAGameScheduler extends HttpPage {
 				schedule.setSimulationsClosed(true);
 
 				for (int i = 0, n = scheduledGames.length; i < n; i++) {
-					for(int j = 0; j < 4; j++){
-						schedule.addSimulation(scheduledGames[i]);
+					int [] roles = new int [scheduledGames[i].length];
+					for(int j = 0; j < scheduledGames[i].length; j++)
+						roles[j] = 1;
+					for(int k = 0; k < 4; k++){
+						schedule.addSimulation(scheduledGames[i], roles);
 					}
 				}
 				schedule.setSimulationParams("12345678,78123456,56781234,34567812");
@@ -730,9 +733,8 @@ public class TACAAGameScheduler extends HttpPage {
 				games[0][i] = i + 1;
 			}
 		} else {
-			int perAgent = agentsPerGame
-					/ findLargestDivisor(noAgents, agentsPerGame);
-			int totalGames = (perAgent * noAgents) / agentsPerGame;
+			int perAgent = agentsPerGame/(findLargestDivisor(noAgents, agentsPerGame));
+			int totalGames = (perAgent * noAgents)/agentsPerGame;
 			games = new int[totalGames][agentsPerGame];
 			int agent = 0;
 			for (int game = 0; game < totalGames; game++) {
