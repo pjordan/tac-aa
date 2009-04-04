@@ -55,9 +55,10 @@ public class GameScheduler extends HttpPage {
 	private final String header;
 
 	private static SimpleDateFormat dateFormat = null;
-	private int agentsPerGame = 6;
+	//private int agentsPerGame = 6;
+  private int agentsPerGame = 8;
 
-	// private int delayBetweenGames = 60 * 1000;
+  // private int delayBetweenGames = 60 * 1000;
 	// private int minGameLength = 5;
 	// private int maxGameLength = 60;
 	// private int defaultGameLength = 55;

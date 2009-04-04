@@ -278,10 +278,15 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
 		if (advertisers != null) {
 
-			// Create capacities and randomize
+			// Create capacities and either assign or randomize
 			int[] capacities = new int[advertisers.length];
 
-			for (int i = 0; i < highCount && i < capacities.length; i++) {
+      //check simulationInfo
+      //decrypt
+      //gather permutation
+      //assign
+
+      for (int i = 0; i < highCount && i < capacities.length; i++) {
 				capacities[i] = highValue;
 			}
 
@@ -294,7 +299,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 				capacities[i] = medValue;
 			}
 
-			for (int i = 0; i < capacities.length; i++) {
+      for (int i = 0; i < capacities.length; i++) {
 				int rindex = i + r.nextInt(capacities.length - i);
 
 				int sw = capacities[i];
@@ -926,12 +931,12 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 		int receipientIndex = receipientAgent != null ? receipientAgent
 				.getIndex() : COORDINATOR_INDEX;
 
-		/*LogWriter writer = getLogWriter();
-		synchronized (writer) {
+		LogWriter writer = getLogWriter();
+		  synchronized (writer) {
 			writer.node("transaction").attr("source", sourceIndex).attr(
 					"recipient", receipientIndex).attr("amount", amount)
 					.endNode("transaction");
-		}*/
+		}
 	}
 
 	// Publishers send query reports

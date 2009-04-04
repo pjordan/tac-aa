@@ -204,6 +204,7 @@ public class SimulationParser extends Parser{
       advertisers[index].setManufacturerSpecialty(content.getManufacturerSpecialty());
       advertisers[index].setComponentSpecialty(content.getComponentSpecialty());
       advertisers[index].setDistributionCapacity(content.getDistributionCapacity());
+      advertisers[index].setDistributionWindow(content.getDistributionWindow());
     }
   }
 

@@ -17,22 +17,26 @@ import java.text.DecimalFormat;
  * To change this template use File | Settings | File Templates.
  */
 public class OverviewUserMetricPanel extends UpdatablePanel {
-  JLabel impLabel, clicksLabel, convLabel, ctrLabel, convRateLabel;
+  JLabel impLabel, clicksLabel, convLabel, ctrLabel, convRateLabel, capAvLabel;
   public static final String IMPRESSIONS_STRING = "Total Impressions: ";
   public static final String CLICKS_STRING = "Total Clicks: ";
   public static final String CONVERSIONS_STRING = "Total Conversions: ";
+  public static final String CAPACITY_AVAIL_STRING = "Capacity Available:";
+  //public static final String 
   public static final String CTR_STRING = "CTR: ";
   public static final String CONV_RATE_STRING = "Conv. Rate: ";
-  public static final DecimalFormat dFormat = new DecimalFormat("##.##%");
+  public static final DecimalFormat dFormat = new DecimalFormat("###.##%");
   Query[] querySpace;
 
 
   Advertiser advertiser;
+  int window;
 
   public OverviewUserMetricPanel(Advertiser advertiser, PositiveBoundedRangeModel dm, GameInfo gameInfo) {
     super(dm);
     this.advertiser = advertiser;
     this.querySpace = gameInfo.getQuerySpace().toArray(new Query[0]);
+    this.window = advertiser.getDistributionWindow();
 
     mainPane.setLayout(new BoxLayout(mainPane, BoxLayout.Y_AXIS));
     mainPane.setBorder(BorderFactory.createTitledBorder
@@ -43,19 +47,21 @@ public class OverviewUserMetricPanel extends UpdatablePanel {
     convLabel = new JLabel();
     ctrLabel = new JLabel();
     convRateLabel = new JLabel();
+    capAvLabel = new JLabel();
 
     mainPane.add(impLabel);
     mainPane.add(clicksLabel);
     mainPane.add(convLabel);
     mainPane.add(ctrLabel);
     mainPane.add(convRateLabel);
+    //mainPane.add(capAvLabel);
 
     updateMePlz();
 
   }
 
   protected void updateMePlz(){
-      int current = dayModel.getCurrent();
+    int current = dayModel.getCurrent();
     QueryReport q_report = advertiser.getQueryReport(current+1);
     SalesReport s_report = advertiser.getSalesReport(current+1);
     if(q_report == null || s_report == null){//TODO-Don't assume both will be null or both will exist.
@@ -74,6 +80,23 @@ public class OverviewUserMetricPanel extends UpdatablePanel {
       convLabel.setText(CONVERSIONS_STRING+conversions);
       ctrLabel.setText(CTR_STRING+dFormat.format(calcCTR(impressions, clicks)));
       convRateLabel.setText(CONV_RATE_STRING+dFormat.format(calcConvRate(conversions, clicks)));
+
+
+      int c = 0;
+      for(int i = 0; i < window; i++){
+        if(current+1-i < 1)
+          continue;
+
+        s_report = advertiser.getSalesReport(current+1-i);
+        for(int j=0; j < querySpace.length; j++){
+          c = s_report.getConversions(querySpace[j]);
+        }
+      }
+
+      capAvLabel.setText(CAPACITY_AVAIL_STRING+
+            dFormat.format(calcCapacityAvail(c, advertiser.getDistributionCapacity())));
+
+
     }
 
 
@@ -87,6 +110,7 @@ public class OverviewUserMetricPanel extends UpdatablePanel {
     convLabel.setText(CONVERSIONS_STRING+0);
     ctrLabel.setText(CTR_STRING+0.0+"%");
     convRateLabel.setText(CONV_RATE_STRING+0.0+"%");
+    capAvLabel.setText(CAPACITY_AVAIL_STRING+100.0+"%");
   }
 
   protected double calcCTR(int impressions, int clicks) {
@@ -106,5 +130,9 @@ public class OverviewUserMetricPanel extends UpdatablePanel {
 			return 0.0D;
 		}
 	}
+
+  protected double calcCapacityAvail(int conversions, int capacity){
+			return (((double) capacity - (double) conversions) / ((double) capacity));
+  }
   
 }

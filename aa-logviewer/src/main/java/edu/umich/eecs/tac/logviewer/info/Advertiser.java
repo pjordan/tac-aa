@@ -19,7 +19,8 @@ public class Advertiser extends Actor {
   private String manufacturerSpecialty;
   private String componentSpecialty;
   private int distributionCapacity;
-  private BidBundle[] bidBundle; 
+  private int distributionWindow;
+  private BidBundle[] bidBundle;
   private QueryReport[] queryReport;
   private SalesReport[] salesReport;
 
@@ -113,5 +114,14 @@ public class Advertiser extends Actor {
 
   public void setColor(Color color){
     this.color = color;
+  }
+
+
+  public int getDistributionWindow() {
+    return distributionWindow;
+  }
+
+  public void setDistributionWindow(int distributionWindow) {
+    this.distributionWindow = distributionWindow;
   }
 }

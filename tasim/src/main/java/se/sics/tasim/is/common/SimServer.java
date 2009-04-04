@@ -1969,7 +1969,7 @@ public class SimServer {
 	}
 
 	// Called by the admin page
-	public void scheduleCompetition(CompetitionSchedule schedule) {
+  public void scheduleCompetition(CompetitionSchedule schedule) {
 		SimConnection connection = this.simConnection;
 		if (connection == null) {
 			throw new IllegalStateException("no connection with aa server");
