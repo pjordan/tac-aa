@@ -26,6 +26,10 @@ import se.sics.tasim.is.common.InfoServer;
 import se.sics.tasim.is.common.ScoreGenerator;
 import se.sics.tasim.is.common.SimServer;
 
+/**
+ * @author Ben Cassell, based on GameScheduler by SICS
+ */
+
 public class TACAAGameScheduler extends HttpPage {
 	
 	private static final Logger log = Logger.getLogger(GameScheduler.class
@@ -514,7 +518,7 @@ public class TACAAGameScheduler extends HttpPage {
 						schedule.addSimulation(scheduledGames[i], roles);
 					}
 				}
-				schedule.setSimulationParams("12345678,78123456,56781234,34567812");
+				schedule.setSimulationParams("perm1=12345678,perm2=78123456,perm3=56781234,perm4=34567812");
 				simServer.scheduleCompetition(schedule);
 				page.append("Requested ").append(scheduledGames.length).append(
 						" scheduled games in competition ").append(name)

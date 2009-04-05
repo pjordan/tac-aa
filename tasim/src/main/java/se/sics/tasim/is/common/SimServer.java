@@ -24,6 +24,8 @@
  * Updated : $Date: 2008-04-11 20:26:24 -0500 (Fri, 11 Apr 2008) $
  *           $Revision: 4090 $
  */
+
+//Modified by BC, UMich.  DBFields for score have been changed to double
 package se.sics.tasim.is.common;
 
 import java.io.BufferedReader;
@@ -325,7 +327,8 @@ public class SimServer {
 						.createField("participantid", DBField.INTEGER, 32, 0);
 				resultTable.createField("participantrole", DBField.INTEGER, 32,
 						0);
-				resultTable.createField("score", DBField.LONG, 64, 0);
+				//Modded by BC, UMich
+				resultTable.createField("score", DBField.DOUBLE, 64, 0);
 				resultTable.flush();
 			}
 		}
@@ -1512,7 +1515,7 @@ public class SimServer {
 					DBField.INTEGER, 32, 0);
 			competitionParticipantTable.createField("flags", DBField.INTEGER,
 					32, 0);
-			competitionParticipantTable.createField("score", DBField.LONG, 64,
+			competitionParticipantTable.createField("score", DBField.DOUBLE, 64,
 					0);
 			competitionParticipantTable.createField("wscore", DBField.DOUBLE,
 					64, 0);
@@ -1577,7 +1580,7 @@ public class SimServer {
 			competitionResultTable.createField("participantrole",
 					DBField.INTEGER, 32, 0);
 			competitionResultTable.createField("flags", DBField.INTEGER, 32, 0);
-			competitionResultTable.createField("score", DBField.LONG, 64, 0);
+			competitionResultTable.createField("score", DBField.DOUBLE, 64, 0);
 			competitionResultTable.createField("weight", DBField.DOUBLE, 64, 0);
 			competitionResultTable.flush();
 		}
@@ -1969,7 +1972,7 @@ public class SimServer {
 	}
 
 	// Called by the admin page
-  public void scheduleCompetition(CompetitionSchedule schedule) {
+	public void scheduleCompetition(CompetitionSchedule schedule) {
 		SimConnection connection = this.simConnection;
 		if (connection == null) {
 			throw new IllegalStateException("no connection with aa server");

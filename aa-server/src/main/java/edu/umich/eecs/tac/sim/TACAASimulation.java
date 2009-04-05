@@ -1,5 +1,6 @@
 package edu.umich.eecs.tac.sim;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.*;
 
@@ -21,7 +22,7 @@ import edu.umich.eecs.tac.props.*;
 import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
- * @author Lee Callender, Patrick Jordan
+ * @author Lee Callender, Patrick Jordan, Ben Cassell
  */
 public class TACAASimulation extends Simulation implements AgentRepository, SalesReportSender, BankStatusSender {
 	private Bank bank;
@@ -236,7 +237,6 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
 	private void initializeAdvertisers() {
 		ConfigManager config = getConfig();
-
 		Random r = new Random();
 
 		SimulationAgent[] publishers = getAgents(PUBLISHER);
@@ -280,34 +280,49 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
 			// Create capacities and either assign or randomize
 			int[] capacities = new int[advertisers.length];
+			
+			//check simulationInfo
+			SimulationInfo info = getSimulationInfo();
+			String key = "perm"+Integer.toString((info.getSimulationID()%4)+1);
+			String perm = info.getParams();
+			int start = perm.indexOf(key);
+			if(start == -1){
+			
+				log.log(Level.INFO, "Using random capacity assigments");
+				for (int i = 0; i < highCount && i < capacities.length; i++) {
+					capacities[i] = highValue;
+				}
 
-      //check simulationInfo
-      //decrypt
-      //gather permutation
-      //assign
+				for (int i = highCount; i < highCount + lowCount && i < capacities.length; i++) {
+					capacities[i] = lowValue;
+				}
 
-      for (int i = 0; i < highCount && i < capacities.length; i++) {
-				capacities[i] = highValue;
+				for (int i = highCount + lowCount; i < capacities.length; i++) {
+					capacities[i] = medValue;
+				}
+
+				for (int i = 0; i < capacities.length; i++) {
+					int rindex = i + r.nextInt(capacities.length - i);
+
+					int sw = capacities[i];
+					capacities[i] = capacities[rindex];
+					capacities[rindex] = sw;
+					
+				}
+			
 			}
-
-			for (int i = highCount; i < highCount + lowCount
-					&& i < capacities.length; i++) {
-				capacities[i] = lowValue;
+			else{
+				log.log(Level.INFO, "Using permuted capacity assigments");
+				for(int i = 0; i < highCount && i < capacities.length; i++){
+					capacities[Integer.parseInt(perm.substring(i+start+6, i+start+7))-1] = highValue;
+				}
+				for(int i = highCount; i < highCount+lowCount && i < capacities.length; i++){
+					capacities[Integer.parseInt(perm.substring(i+start+6, i+start+7))-1] = lowValue;
+				}
+				for(int i = highCount + lowCount; i < capacities.length; i++){
+					capacities[Integer.parseInt(perm.substring(i+start+6, i+start+7))-1] = medValue;
+				}
 			}
-
-			for (int i = highCount + lowCount; i < capacities.length; i++) {
-				capacities[i] = medValue;
-			}
-
-      for (int i = 0; i < capacities.length; i++) {
-				int rindex = i + r.nextInt(capacities.length - i);
-
-				int sw = capacities[i];
-				capacities[i] = capacities[rindex];
-				capacities[rindex] = sw;
-
-			}
-
 			for (int i = 0, n = advertisers.length; i < n; i++) {
 				SimulationAgent agent = advertisers[i];
 

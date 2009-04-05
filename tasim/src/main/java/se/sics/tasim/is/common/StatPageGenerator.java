@@ -27,6 +27,8 @@
  *	     $Revision: 3981 $
  */
 
+//Modded by BC, UMich to turn longs into doubles (pertaining to score)
+
 package se.sics.tasim.is.common;
 
 import java.awt.Color;
@@ -62,11 +64,11 @@ public class StatPageGenerator {
 	private static boolean hasGUI = true;
 	private static int averageCount = 15;
 
-	public static boolean createImage(String file, long[] results) {
+	public static boolean createImage(String file, double[] results) {
 		return createImage(file, results, 0, results.length);
 	}
 
-	public static boolean createImage(String file, long[] results, int start,
+	public static boolean createImage(String file, double[] scores, int start,
 			int end) {
 		if (!hasGUI || end <= start) {
 			return false;
@@ -75,11 +77,11 @@ public class StatPageGenerator {
 		float avgPos = averageCount / 2f;
 		int noLines = 10;
 
-		long max = Long.MIN_VALUE;
-		long min = Long.MAX_VALUE;
+		double max = Double.MIN_VALUE;
+		double min = Double.MAX_VALUE;
 		int len = end - start;
 		for (int i = start; i < end; i++) {
-			long score = results[i];
+			double score = scores[i];
 			if (max < score)
 				max = score;
 			if (min > score)
@@ -92,7 +94,7 @@ public class StatPageGenerator {
 			min = 0;
 
 		long tagSpacing = 2000;
-		long interval = max - min;
+		double interval = max - min;
 		int zeroLine = min < 0 ? (int) (20 + ((HEIGHT - 40) * max) / interval)
 				: HEIGHT - 20;
 		// log.finest("Max: " + max + " Min: " + min + " Interval: " + interval
@@ -169,19 +171,19 @@ public class StatPageGenerator {
 		g2d.drawLine(WIDTH - MX, zeroLine, WIDTH - MX - 6, zeroLine - 4);
 
 		// This should probably generate maximum 100 games (100 latest???)
-		float sc;
+		double sc;
 		float med = 0;
 		float oldMed = 0;
 		int medP = -1;
 		int oldMedP = -1;
 		for (int i = 0, n = len; i < n; i++) {
 			int xp = (int) (TXT + MX + i * xResolution);
-			sc = results[start + i];
+			sc = scores[start + i];
 			med += sc;
 
 			if (i >= averageCount) {
 				oldMed = med;
-				med -= results[start + i - averageCount];
+				med -= scores[start + i - averageCount];
 				oldMedP = medP;
 				medP = zeroLine - (int) ((resolution * med) / averageCount);
 				if (oldMedP == -1)
@@ -251,7 +253,7 @@ public class StatPageGenerator {
 			int numGames = competition.getSimulationCount();
 			int lastNumberOfGames = 0;
 			int[] gameIDs = new int[numGames];
-			long[] scores = new long[numGames];
+			double[] scores = new double[numGames];
 			int[] gameFlags = new int[numGames];
 			int[] scratchedGames = null;
 			int scratchedCount = 0;
@@ -283,14 +285,14 @@ public class StatPageGenerator {
 				while (res.next()) {
 					int gameID = res.getInt("simid");
 					int flags = res.getInt("flags");
-					long agentScore = res.getLong("score");
+					double agentScore = res.getDouble("score");
 					if ((flags & SimServer.SIMULATION_SCRATCHED) == 0) {
 						gameIDs[lastNumberOfGames] = gameID;
 						gameFlags[lastNumberOfGames] = flags;
 						scores[lastNumberOfGames] = agentScore;
 						lastNumberOfGames++;
 
-						if ((agentScore == 0L)
+						if ((agentScore == 0)
 								|| (flags & SimServer.ZERO_GAME) != 0) {
 							zeroScore += agentScore;
 							zeroScoreCount++;
@@ -412,10 +414,10 @@ public class StatPageGenerator {
 							&& scores[i] < 0L) {
 						// Zero game but lowest score is used instead of zero
 						out.text("0 (");
-						formatLong(out, scores[i]);
+						formatDouble(out, scores[i]);
 						out.text(')');
 					} else {
-						formatLong(out, scores[i]);
+						formatDouble(out, scores[i]);
 					}
 				}
 				out.tableEnd();
@@ -454,12 +456,12 @@ public class StatPageGenerator {
 		}
 	}
 
-	private static HtmlWriter formatLong(HtmlWriter out, long score) {
+	private static HtmlWriter formatDouble(HtmlWriter out, double score) {
 		if (score < 0) {
 			out.text("<font color=red>").text(
-					FormatUtils.formatLong(score, "&nbsp;")).text("</font>");
+					FormatUtils.formatDouble(score, "&nbsp;")).text("</font>");
 		} else {
-			out.text(FormatUtils.formatLong(score, "&nbsp;"));
+			out.text(FormatUtils.formatDouble(score, "&nbsp;"));
 		}
 		return out;
 	}
