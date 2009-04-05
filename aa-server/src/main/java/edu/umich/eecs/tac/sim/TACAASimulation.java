@@ -285,7 +285,11 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 			SimulationInfo info = getSimulationInfo();
 			String key = "perm"+Integer.toString((info.getSimulationID()%4)+1);
 			String perm = info.getParams();
-			int start = perm.indexOf(key);
+			int start;
+			if(perm == null)
+				start = -1;
+			else
+				start = perm.indexOf(key);
 			if(start == -1){
 			
 				log.log(Level.INFO, "Using random capacity assigments");
