@@ -80,8 +80,8 @@ public class DefaultUserQueryManager implements UserQueryManager {
 
 			MutableSampler<Query> isSampler = new WheelSampler<Query>(random);
 			isSampler.addState(1.0, f0);
-			isSampler.addState(1.0, f1_component);
-			isSampler.addState(1.0, f1_manufacturer);
+			isSampler.addState(0.5, f1_component);
+			isSampler.addState(0.5, f1_manufacturer);
 			isSampler.addState(1.0, f2);
 
 			MutableSampler<Query> f0Sampler = new WheelSampler<Query>(random);
