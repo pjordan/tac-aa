@@ -25,6 +25,7 @@ import edu.umich.eecs.tac.sim.AgentRepository;
 import edu.umich.eecs.tac.sim.Auctioneer;
 import edu.umich.eecs.tac.sim.DummyTACAASimulation;
 import edu.umich.eecs.tac.sim.SalesAnalyst;
+import edu.umich.eecs.tac.user.DefaultUsersBehavior.ConversionMonitor;
 import edu.umich.eecs.tac.util.config.ConfigProxy;
 
 public class DefaultUsersBehaviorTest {
@@ -103,7 +104,8 @@ public class DefaultUsersBehaviorTest {
 		assertFalse(dub.containsUserEventListener(dts.getSalesAnalyst()));
 		dub.addUserEventListener(dts.getSalesAnalyst());
 		assertTrue(dub.containsUserEventListener(dts.getSalesAnalyst()));
-		assertFalse(dub.containsUserEventListener(null));
+		ConversionMonitor cm = dub.new ConversionMonitor();
+		assertFalse(dub.containsUserEventListener(cm));
 		dub.removeUserEventListener(dts.getSalesAnalyst());
 		assertFalse(dub.containsUserEventListener(dts.getSalesAnalyst()));
 	}

@@ -269,8 +269,10 @@ public class TACAAGameScheduler extends HttpPage {
 					.append(
 							"</td></tr\r\n>"
 									+ "<tr><td>Number of games scheduled:</td><td>")
-					.append(rounds * minGames)
-					.append(
+					.append(rounds * minGames);
+					if(rounds == 0)
+						page.append("</td><td> WARNING: If number of players is > 8 and not divisible by 2, request at least 8 games per player");
+					page.append(
 							"</td></tr\r\n>"
 									+ "<tr><td>Number of games per round:</td><td>")
 					.append(minGames)
@@ -336,13 +338,13 @@ public class TACAAGameScheduler extends HttpPage {
 									+ "<font face='arial' size='+1'>Example round</font><p>\r\n"
 									+ "<table border=1><tr><th>Game</th><th>Agents</th></tr>");
 			for (int i = 0; i < minGames; i++) {
+				for(int b = 0; b < 4; b++){
 				page.append("<tr><td>").append(i + 1).append("</td><td>");
 				for (int a = 0; a < agentsPerGame; a++) {
-					for(int b = 0; b < 4; b++){
-						page.append(agentNames[games[i][a]]).append(' ');
-					}
+					page.append(agentNames[games[i][a]]).append(' ');
 				}
 				page.append("</td></tr>");
+				}
 			}
 			page.append(
 					"</table>\r\n<p>\r\n" + "<form method=post>"
