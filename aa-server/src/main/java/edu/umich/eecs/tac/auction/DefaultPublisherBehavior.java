@@ -153,8 +153,9 @@ public class DefaultPublisherBehavior implements PublisherBehavior {
 	private PublisherInfo createPublisherInfo() {
 		double squashingMin = config.getPropertyAsDouble("squashing.min", 0.0);
 		double squashingMax = config.getPropertyAsDouble("squashing.max", 1.0);
-		double squashing = squashingMin + random.nextDouble()
-				* (squashingMax - squashingMin);
+        double squashingPower = config.getPropertyAsDouble("squashing.max", 1.0);
+		double squashing = Math.pow(squashingMin + random.nextDouble()* (squashingMax - squashingMin),
+                                    1.0/squashingPower);
 
 		PublisherInfo publisherInfo = new PublisherInfo();
 		publisherInfo.setSquashingParameter(squashing);
