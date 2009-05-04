@@ -72,8 +72,8 @@ public class OverviewUserMetricPanel extends UpdatablePanel {
       int conversions = 0;
       for(int i=0; i < querySpace.length; i++){
         impressions += q_report.getImpressions(querySpace[i]);
-        clicks = q_report.getClicks(querySpace[i]);
-        conversions = s_report.getConversions(querySpace[i]);
+        clicks += q_report.getClicks(querySpace[i]);
+        conversions += s_report.getConversions(querySpace[i]);
       }
       impLabel.setText(IMPRESSIONS_STRING+impressions);
       clicksLabel.setText(CLICKS_STRING+clicks);

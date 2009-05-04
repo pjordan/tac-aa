@@ -13,6 +13,7 @@ import java.text.ParseException;
  * To change this template use File | Settings | File Templates.
  *
  * @author Lee Callender
+ * TODO-Add comentary for which indexes relate to which state.
  */
 
 
