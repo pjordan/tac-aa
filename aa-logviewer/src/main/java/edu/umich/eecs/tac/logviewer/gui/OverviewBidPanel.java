@@ -77,7 +77,7 @@ public class OverviewBidPanel extends UpdatablePanel {
       if(current != null){
         reserve[i+1] = current.getCampaignDailySpendLimit();
       }else{
-        reserve[i+1] = current.PERSISTENT_BID;
+        reserve[i+1] = BidBundle.PERSISTENT_SPEND_LIMIT;
       }
       if(report != null){
         double cost = 0.0D;
@@ -117,7 +117,8 @@ public class OverviewBidPanel extends UpdatablePanel {
       }
 
       if(i != 0){//Does this still apply?
-        if(reserve[i+1] == current.PERSISTENT_SPEND_LIMIT)
+        if((Double.isNaN(reserve[i+1]) && Double.isNaN(BidBundle.PERSISTENT_SPEND_LIMIT)) ||
+            reserve[i+1] == BidBundle.PERSISTENT_SPEND_LIMIT)
           reserve[i+1] = reserve[i];
       }
     }

@@ -106,9 +106,9 @@ public class QueryBidPanel {
         reserve[i+1] = current.getDailyLimit(query);
         ad[i+1] = current.getAd(query);
       }else{
-        bid[i+1] = current.PERSISTENT_BID;
-        reserve[i+1] = current.PERSISTENT_BID;
-        ad[i+1] = current.PERSISTENT_AD;
+        bid[i+1] = BidBundle.PERSISTENT_BID;
+        reserve[i+1] = BidBundle.PERSISTENT_BID;
+        ad[i+1] = BidBundle.PERSISTENT_AD;
       }
 
       if(report != null){
@@ -126,11 +126,18 @@ public class QueryBidPanel {
       }
 
       if(i != 0){//Does this still apply?
-        if(bid[i+1] == current.PERSISTENT_BID)
+        if((Double.isNaN(bid[i+1]) && Double.isNaN(BidBundle.PERSISTENT_BID)) ||
+            bid[i+1] == BidBundle.PERSISTENT_BID ||
+            bid[i+1] < 0)
+
           bid[i+1] = bid[i];
-        if(reserve[i+1] == current.PERSISTENT_SPEND_LIMIT)
+
+        if((Double.isNaN(reserve[i+1]) && Double.isNaN(BidBundle.PERSISTENT_SPEND_LIMIT)) ||
+            reserve[i+1] == BidBundle.PERSISTENT_SPEND_LIMIT)
+
           reserve[i+1] = reserve[i];
-        if(ad[i+1] == current.PERSISTENT_AD)
+
+        if(ad[i+1] == BidBundle.PERSISTENT_AD)
           ad[i+1] = ad[i];
       }
     }
