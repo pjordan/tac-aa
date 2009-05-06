@@ -853,7 +853,7 @@ public class TACAAGameScheduler extends HttpPage {
 				System.out.println();
 			}
 		}
-		for (int i = 0; i < gameNr + 1; i++) {
+		for (int i = 1; i < gameNr + 1; i++) {
 			System.out.println("Agent " + i + " played " + agentGames[i]);
 		}
 	}
