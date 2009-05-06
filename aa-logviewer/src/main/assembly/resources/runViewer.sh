@@ -4,7 +4,7 @@
 #   sh ./runMe.sh -file [filename]
 #
 
-TACAA_HOME=`pwd`
+TACAA_HOME=`dirname $0`
 LIB=${TACAA_HOME}/lib
 CLASSPATH=.
 for i in $( ls ${LIB}/*.jar ); do

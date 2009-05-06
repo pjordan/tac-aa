@@ -3,13 +3,13 @@
 	<parent>
 		<groupId>edu.umich.eecs.tac</groupId>
 		<artifactId>tac-aa</artifactId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9.5</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.umich.eecs.tac</groupId>
 	<artifactId>aa-agent</artifactId>
 	<packaging>jar</packaging>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9.5</version>
 	<name>Trading Agent Ad Auctions agent</name>
 	<dependencies>
 		<dependency>
@@ -21,12 +21,12 @@
         <dependency>
 			<groupId>se.sics</groupId>
 			<artifactId>tasim</artifactId>
-			<version>0.8.0-SNAPSHOT</version>
+			<version>0.8.0.3</version>
 		</dependency>
         <dependency>
             <groupId>edu.umich.eecs.tac</groupId>
             <artifactId>aa-common</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9.5</version>
         </dependency>
     </dependencies>
 	<build>
@@ -40,6 +40,17 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/dep.xml</descriptor>
+                    </descriptors>
+                    <finalName>${artifactId}-${version}</finalName>
+                    <outputDirectory>target/</outputDirectory>
+                    <workDirectory>target/assembly/work></workDirectory>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>
