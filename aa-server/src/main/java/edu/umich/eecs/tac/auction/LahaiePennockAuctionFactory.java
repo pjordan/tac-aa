@@ -37,11 +37,9 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
 
 		for (int i = 0; i < advertisers.length; i++) {
 			bids[i] = bidManager.getBid(advertisers[i], query);
-			qualityScores[i] = bidManager
-					.getQualityScore(advertisers[i], query);
+			qualityScores[i] = bidManager.getQualityScore(advertisers[i], query);
 			ads[i] = bidManager.getAdLink(advertisers[i], query);
-			weight[i] = Math.pow(qualityScores[i], publisherInfo
-					.getSquashingParameter());
+			weight[i] = Math.pow(qualityScores[i], publisherInfo.getSquashingParameter());
 			scores[i] = weight[i] * bids[i];
 			indices[i] = i;
 			// log.finest("Advertiser: "+advertisers[i]+"\tScore: "+scores[i]);

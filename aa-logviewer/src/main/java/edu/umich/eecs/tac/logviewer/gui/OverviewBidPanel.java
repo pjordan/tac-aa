@@ -96,7 +96,7 @@ public class OverviewBidPanel extends UpdatablePanel {
           }
         }
         cpc[i+1] = cost/clicks;
-        pos[i+1] = position/count; 
+        pos[i+1] = position/count;
       }else{
         cpc[i+1] = Double.NaN;
         pos[i+1] = Double.NaN;
