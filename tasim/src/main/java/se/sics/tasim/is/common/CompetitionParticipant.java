@@ -270,7 +270,7 @@ public class CompetitionParticipant {
 		}
 	}
 
-	public void removeScore(int simulationID, long score, double weight,
+	public void removeScore(int simulationID, double score, double weight,
 			boolean isZeroGame) {
 		totalScore -= score;
 		wTotalScore -= score * weight;
@@ -282,7 +282,7 @@ public class CompetitionParticipant {
 		}
 	}
 
-	void setScores(long totalScore, double wTotalScore, int gamesPlayed,
+	void setScores(double totalScore, double wTotalScore, int gamesPlayed,
 			int zGamesPlayed, double wGamesPlayed, double zwGamesPlayed) {
 		this.totalScore = totalScore;
 		this.wTotalScore = wTotalScore;

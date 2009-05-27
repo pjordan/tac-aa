@@ -1640,7 +1640,7 @@ public class SimServer {
 				CompetitionParticipant cp = new CompetitionParticipant(pid,
 						uname == null ? "unknown" : uname);
 				cp.setFlags(res2.getInt("flags"));
-				cp.setScores(res2.getLong("score"), res2.getDouble("wscore"),
+				cp.setScores(res2.getDouble("score"), res2.getDouble("wscore"),
 						res2.getInt("gamesplayed"),
 						res2.getInt("zgamesplayed"), res2
 								.getDouble("wgamesplayed"), res2
@@ -2100,7 +2100,7 @@ public class SimServer {
 		// Find any competition results
 		int[] crParticipantIDs = new int[10];
 		int[] crFlags = new int[10];
-		long[] crScore = new long[10];
+		double[] crScore = new double[10];
 		double[] crWeight = new double[10];
 		int competitionID = -1;
 		int count = 0;
@@ -2122,7 +2122,7 @@ public class SimServer {
 			}
 			crParticipantIDs[count] = res.getInt("participantid");
 			crFlags[count] = res.getInt("flags");
-			crScore[count] = res.getLong("score");
+			crScore[count] = res.getDouble("score");
 			crWeight[count] = res.getDouble("weight");
 			count++;
 		}
@@ -2200,7 +2200,7 @@ public class SimServer {
 				res = competitionParticipantTable.select(dbm);
 				if (res.next()) {
 					object.clear();
-					object.setLong("score", res.getLong("score") - crScore[i]);
+					object.setDouble("score", res.getDouble("score") - crScore[i]);
 					object.setDouble("wscore", res.getDouble("wscore")
 							- crScore[i] * crWeight[i]);
 					object.setInt("gamesplayed", res.getInt("gamesplayed") - 1);
@@ -2749,7 +2749,7 @@ public class SimServer {
 					if (!info.isBuiltinAgent()) {
 						object.setInt("participantid", info.getUserID());
 						object.setInt("participantrole", info.getRole());
-						object.setLong("score", scores[i]);
+						object.setDouble("score", scores[i]);
 						resultTable.insert(object);
 					}
 				}
@@ -2832,7 +2832,7 @@ public class SimServer {
 						object.setInt("participantid", info.getUserID());
 						object.setInt("participantrole", info.getRole());
 						object
-								.setLong(
+								.setDouble(
 										"score",
 										(lowestScoreForZero && isZeroGame) ? lowestScore
 												: scores[i]);
@@ -2906,7 +2906,7 @@ public class SimServer {
 						if (!info.isBuiltinAgent()
 								&& ((cp = competition.getParticipantByID(info
 										.getUserID())) != null)) {
-							boolean isZeroGame = scores[i] == 0L;
+							boolean isZeroGame = scores[i] == 0.0;
 							dbm.setInt("participantid", info.getUserID());
 							cp
 									.addScore(
