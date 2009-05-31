@@ -80,7 +80,15 @@ public final class TACAAConstants {
      * The conversions an advertiser receives.
      */
     public static final int DU_CONVERSIONS = 303;
-  
+    /**
+     * The query report for an advertiser.
+     */
+    public static final int DU_QUERY_REPORT = 304;
+    /**
+     * The query report for an advertiser.
+     */
+    public static final int DU_SALES_REPORT = 305;
+
     /**
      * The TAC AA Publisher role.
      */
