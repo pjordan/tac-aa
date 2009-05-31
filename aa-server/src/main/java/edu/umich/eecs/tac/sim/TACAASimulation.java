@@ -985,6 +985,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
 	public final void sendSalesReport(String agentName, SalesReport report) {
 		sendMessage(agentName, report);
+        getEventWriter().dataUpdated(agentIndex(agentName), TACAAConstants.DU_SALES_REPORT, report);
 	}
 
 	final void sendQueryReport(String agentName, QueryReport report) {

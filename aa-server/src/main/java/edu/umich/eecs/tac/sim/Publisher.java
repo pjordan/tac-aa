@@ -12,6 +12,7 @@ import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
 import static edu.umich.eecs.tac.TACAAConstants.*;
+import edu.umich.eecs.tac.TACAAConstants;
 
 public abstract class Publisher extends Builtin implements QueryReportSender,
 		Auctioneer, PublisherInfoSender {
@@ -41,6 +42,10 @@ public abstract class Publisher extends Builtin implements QueryReportSender,
 
 	public void sendQueryReport(String advertiser, QueryReport report) {
 		sendMessage(advertiser, report);
+
+        int agentIndex = getSimulation().agentIndex(advertiser);
+
+        getEventWriter().dataUpdated(agentIndex, TACAAConstants.DU_QUERY_REPORT, report);
 	}
 
 	public void sendPublisherInfo(String advertiser) {
