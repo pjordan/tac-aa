@@ -85,9 +85,17 @@ public final class TACAAConstants {
      */
     public static final int DU_QUERY_REPORT = 304;
     /**
-     * The query report for an advertiser.
+     * The sales report for an advertiser.
      */
     public static final int DU_SALES_REPORT = 305;
+    /**
+     * The publisher information for an advertiser.
+     */
+    public static final int DU_PUBLISHER_INFO = 306;
+    /**
+     * The slot information for an advertiser.
+     */
+    public static final int DU_ADVERTISER_INFO = 307;
 
     /**
      * The TAC AA Publisher role.
