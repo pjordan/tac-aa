@@ -56,6 +56,8 @@ public abstract class Publisher extends Builtin implements QueryReportSender,
 		for (String advertiser : getAdvertiserAddresses()) {
 			sendPublisherInfo(advertiser);
 		}
+
+        getEventWriter().dataUpdated(getSimulation().agentIndex(this.getAddress()), TACAAConstants.DU_PUBLISHER_INFO, getPublisherInfo());
 	}
 
     public void broadcastImpressions(String advertiser, int impressions) {

@@ -381,7 +381,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
 		// Log the retailCatalog
 		logWriter.dataUpdated(TYPE_NONE, this.retailCatalog);
-		// logWriter.dataUpdated(TYPE_NONE, this.componentCatalog);
+        logWriter.dataUpdated(TYPE_NONE, this.slotInfo);		
 
 		SimulationInfo simInfo = getSimulationInfo();
 		StartInfo startInfo = createStartInfo(simInfo);
@@ -659,7 +659,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 			for (int advertiserIndex = 0; advertiserIndex < clickModel
 					.advertiserCount(); advertiserIndex++) {
 				double effect = Math.max(Math.min(1.0, random.nextDouble()
-						* (effectHigh - effectLow) + effectHigh), 0.0);
+						* (effectHigh - effectLow) + effectLow), 0.0);
 				clickModel.setAdvertiserEffect(queryIndex, advertiserIndex,
 						effect);
 			}
@@ -747,15 +747,19 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
 			sendMessage(new Message(agentAddress, this.retailCatalog));
 
-			sendMessage(new Message(agentAddress, advertiserInfoMap
-					.get(agentAddress)));
+            sendAdvertiserInfo(agentAddress, advertiserInfoMap.get(agentAddress));
 
-			for (SimulationAgent publisher : getPublishers()) {
+            for (SimulationAgent publisher : getPublishers()) {
 				Publisher publisherAgent = (Publisher) publisher.getAgent();
 				publisherAgent.sendPublisherInfo(agentAddress);
 			}
 		}
 	}
+
+    private void sendAdvertiserInfo(String agentAddress, AdvertiserInfo advertiserInfo) {
+        sendMessage(new Message(agentAddress, advertiserInfo));
+        getEventWriter().dataUpdated(agentIndex(agentAddress), TACAAConstants.DU_ADVERTISER_INFO, advertiserInfo);
+    }
 
 	/**
 	 * Delivers a message to the coordinator (the simulation). The coordinator
