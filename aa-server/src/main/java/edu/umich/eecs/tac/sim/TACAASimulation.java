@@ -420,6 +420,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 		for (Map.Entry<String, AdvertiserInfo> entry : advertiserInfoMap
 				.entrySet()) {
 			sendMessage(entry.getKey(), entry.getValue());
+            getEventWriter().dataUpdated(agentIndex(entry.getKey()), TACAAConstants.DU_ADVERTISER_INFO, entry.getValue());
 		}
 
 		startTickTimer(simInfo.getStartTime(), secondsPerDay * 1000);
@@ -747,7 +748,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
 			sendMessage(new Message(agentAddress, this.retailCatalog));
 
-            sendAdvertiserInfo(agentAddress, advertiserInfoMap.get(agentAddress));
+            sendMessage(new Message(agentAddress, advertiserInfoMap.get(agentAddress)));
 
             for (SimulationAgent publisher : getPublishers()) {
 				Publisher publisherAgent = (Publisher) publisher.getAgent();
@@ -755,12 +756,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 			}
 		}
 	}
-
-    private void sendAdvertiserInfo(String agentAddress, AdvertiserInfo advertiserInfo) {
-        sendMessage(new Message(agentAddress, advertiserInfo));
-        getEventWriter().dataUpdated(agentIndex(agentAddress), TACAAConstants.DU_ADVERTISER_INFO, advertiserInfo);
-    }
-
+    
 	/**
 	 * Delivers a message to the coordinator (the simulation). The coordinator
 	 * must self validate the message.
