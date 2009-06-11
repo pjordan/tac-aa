@@ -2,7 +2,7 @@ package edu.umich.eecs.tac.viewer.role;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
@@ -10,7 +10,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.block.BlockBorder;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.ui.RectangleInsets;
@@ -39,6 +40,7 @@ public class UserPanel extends SimulationTabPanel {
 
 	public UserPanel(TACAASimulationPanel simulationPanel) {
 		super(simulationPanel);
+        setBorder(BorderFactory.createTitledBorder("User State Distribution"));
 
 		currentDay = 0;
 
@@ -114,34 +116,35 @@ public class UserPanel extends SimulationTabPanel {
 
 	private JFreeChart createChart(XYDataset xydataset) {
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
-				"User state distribution", "Day", "Users per state", xydataset,
+				null, "Day", "Users per state", xydataset,
 				PlotOrientation.VERTICAL, true, true, false);
-		jfreechart.setBackgroundPaint(Color.white);
+		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
 
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
 
-		xyplot.setBackgroundPaint(Color.lightGray);
+		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
 
-		xyplot.setDomainGridlinePaint(Color.white);
-
-		xyplot.setRangeGridlinePaint(Color.white);
+		xyplot.setDomainGridlinePaint(Color.GRAY);
+        
+		xyplot.setRangeGridlinePaint(Color.GRAY);
 
 		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
 
-		xyplot.setDomainCrosshairVisible(true);
+		//xyplot.setDomainCrosshairVisible(true);
 
-		xyplot.setRangeCrosshairVisible(true);
+		//xyplot.setRangeCrosshairVisible(true);
 
+        LegendTitle legendTitle = jfreechart.getLegend();
+        legendTitle.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+        legendTitle.setFrame(BlockBorder.NONE);
+
+        xyplot.setOutlineVisible(false);
+        
 		org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot
 				.getRenderer();
 
 		xyitemrenderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_BEVEL));
-
-		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-			//xylineandshaperenderer.setBaseShapesVisible(false);
-		}
 
 		return jfreechart;
 	}

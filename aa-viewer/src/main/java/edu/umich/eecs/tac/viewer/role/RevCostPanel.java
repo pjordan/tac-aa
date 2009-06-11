@@ -53,9 +53,9 @@ public class RevCostPanel extends SimulationTabPanel {
 
     private void initialize() {
         setLayout(new GridLayout(2, 4));
-        Font font = new Font("font", Font.BOLD, 18);
-        setBorder(BorderFactory.createTitledBorder( BorderFactory.createEmptyBorder(),
-                "Daily Revenue and Cost", TitledBorder.CENTER, TitledBorder.ABOVE_TOP, font));
+        //Font font = new Font("font", Font.BOLD, 18);
+        setBorder(BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(),
+                "Daily Revenue and Cost", TitledBorder.CENTER, TitledBorder.DEFAULT_JUSTIFICATION));        
     }
 
     private class ParticipantListener implements ViewListener {

@@ -52,6 +52,7 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
 	protected void initialize() {
 		setLayout(new BorderLayout());
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+        setBackground(Color.WHITE);
 		add(tabbedPane, BorderLayout.CENTER);
         setColors();
 	}
@@ -70,7 +71,7 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
 
 	protected void createTabs() {
 
-		tabbedPane.addTab("Main", null, new MainTabPanel(this), "Click to view Main");
+		tabbedPane.addTab("Dashboard", null, new MainTabPanel(this), "Click to view main dashboard");
 		tabbedPane.addTab("Advertisers", null, new AdvertiserTabPanel(this),
 				"Click to view Advertisers");
 		tabbedPane.addTab("Publisher", null, new PublisherTabPanel(this),

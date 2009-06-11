@@ -2,6 +2,7 @@ package edu.umich.eecs.tac.viewer.role;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
 
 import java.awt.*;
@@ -12,6 +13,8 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.block.BlockBorder;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.plot.XYPlot;
@@ -40,6 +43,7 @@ public class OverviewPanel extends SimulationTabPanel {
 
 	public OverviewPanel(TACAASimulationPanel simulationPanel) {
 		super(simulationPanel);
+        setBorder(BorderFactory.createTitledBorder("Advertiser Profits"));
 
 		agents = new int[0];
 		roles = new int[0];
@@ -66,22 +70,27 @@ public class OverviewPanel extends SimulationTabPanel {
 
 	private JFreeChart createChart(XYDataset xydataset) {
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
-				"Advertiser Profits", "Day", "$", xydataset,
+				null, "Day", "$", xydataset,
 				PlotOrientation.VERTICAL, true, true, false);
-		jfreechart.setBackgroundPaint(Color.white);
+		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(Color.lightGray);
-		xyplot.setDomainGridlinePaint(Color.white);
-		xyplot.setRangeGridlinePaint(Color.white);
+		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+		xyplot.setDomainGridlinePaint(Color.GRAY);
+		xyplot.setRangeGridlinePaint(Color.GRAY);
 		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-		xyplot.setDomainCrosshairVisible(true);
-		xyplot.setRangeCrosshairVisible(true);
+		//xyplot.setDomainCrosshairVisible(true);
+		//xyplot.setRangeCrosshairVisible(true);
 
+        LegendTitle legendTitle = jfreechart.getLegend();
+        legendTitle.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+        legendTitle.setFrame(BlockBorder.NONE);
 		XYItemRenderer xyitemrenderer = xyplot.getRenderer();
 
 		xyitemrenderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_BEVEL));
 
+        xyplot.setOutlineVisible(false);
+        
 		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
 			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
 			xylineandshaperenderer.setBaseShapesVisible(false);

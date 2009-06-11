@@ -2,6 +2,7 @@ package edu.umich.eecs.tac.viewer.role;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.*;
 
@@ -74,20 +75,24 @@ public class AgentRevCostPanel extends JPanel {
     private JFreeChart createChart(XYDataset xydataset) {
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
 				advertiser, "Day", "$", xydataset,
-				PlotOrientation.VERTICAL, true, true, false);
-		jfreechart.setBackgroundPaint(Color.white);
+				PlotOrientation.VERTICAL, false, true, false);
+		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+        
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(Color.lightGray);
-		xyplot.setDomainGridlinePaint(Color.white);
-		xyplot.setRangeGridlinePaint(Color.white);
+		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+		xyplot.setDomainGridlinePaint(Color.GRAY);
+		xyplot.setRangeGridlinePaint(Color.GRAY);
 
         xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-		xyplot.setDomainCrosshairVisible(true);
-		xyplot.setRangeCrosshairVisible(true);
+		//xyplot.setDomainCrosshairVisible(true);
+		//xyplot.setRangeCrosshairVisible(true);
 
 	    XYDifferenceRenderer renderer = new XYDifferenceRenderer(
             Color.green, Color.red, false
         );
+
+        xyplot.setOutlineVisible(false);
+
         renderer.setSeriesPaint(0, ChartColor.DARK_GREEN);
         renderer.setSeriesPaint(1, ChartColor.DARK_RED);
         renderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT,
