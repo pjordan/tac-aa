@@ -118,11 +118,11 @@ public class UserPanel extends SimulationTabPanel {
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
 				null, "Day", "Users per state", xydataset,
 				PlotOrientation.VERTICAL, true, true, false);
-		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
 
-		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 
 		xyplot.setDomainGridlinePaint(Color.GRAY);
         
@@ -135,7 +135,7 @@ public class UserPanel extends SimulationTabPanel {
 		//xyplot.setRangeCrosshairVisible(true);
 
         LegendTitle legendTitle = jfreechart.getLegend();
-        legendTitle.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+        legendTitle.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
         legendTitle.setFrame(BlockBorder.NONE);
 
         xyplot.setOutlineVisible(false);

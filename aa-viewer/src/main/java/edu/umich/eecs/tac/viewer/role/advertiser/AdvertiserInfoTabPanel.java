@@ -69,16 +69,16 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
                     .getComponent());
 
             if (!advertiserQueryTabPanels.containsKey(f0)) {
-                advertiserQueryTabPanels.put(f0, new AdvertiserQueryTabPanel());
+                advertiserQueryTabPanels.put(f0, new AdvertiserQueryTabPanel(agent, advertiser, f0,simulationPanel));
             }
             if (!advertiserQueryTabPanels.containsKey(f1_manufacturer)) {
-                advertiserQueryTabPanels.put(f1_manufacturer, new AdvertiserQueryTabPanel());
+                advertiserQueryTabPanels.put(f1_manufacturer, new AdvertiserQueryTabPanel(agent, advertiser,f1_manufacturer,simulationPanel));
             }
             if (!advertiserQueryTabPanels.containsKey(f1_component)) {
-                advertiserQueryTabPanels.put(f1_component, new AdvertiserQueryTabPanel());
+                advertiserQueryTabPanels.put(f1_component, new AdvertiserQueryTabPanel(agent, advertiser,f1_component,simulationPanel));
             }
             if (!advertiserQueryTabPanels.containsKey(f2)) {
-                advertiserQueryTabPanels.put(f2, new AdvertiserQueryTabPanel());
+                advertiserQueryTabPanels.put(f2, new AdvertiserQueryTabPanel(agent, advertiser,f2,simulationPanel));
             }
         }
 

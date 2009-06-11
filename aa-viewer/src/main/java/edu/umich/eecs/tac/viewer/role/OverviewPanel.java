@@ -44,7 +44,8 @@ public class OverviewPanel extends SimulationTabPanel {
 	public OverviewPanel(TACAASimulationPanel simulationPanel) {
 		super(simulationPanel);
         setBorder(BorderFactory.createTitledBorder("Advertiser Profits"));
-
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
+        
 		agents = new int[0];
 		roles = new int[0];
 		participants = new int[0];
@@ -72,9 +73,9 @@ public class OverviewPanel extends SimulationTabPanel {
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
 				null, "Day", "$", xydataset,
 				PlotOrientation.VERTICAL, true, true, false);
-		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 		xyplot.setDomainGridlinePaint(Color.GRAY);
 		xyplot.setRangeGridlinePaint(Color.GRAY);
 		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
@@ -82,7 +83,7 @@ public class OverviewPanel extends SimulationTabPanel {
 		//xyplot.setRangeCrosshairVisible(true);
 
         LegendTitle legendTitle = jfreechart.getLegend();
-        legendTitle.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+        legendTitle.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
         legendTitle.setFrame(BlockBorder.NONE);
 		XYItemRenderer xyitemrenderer = xyplot.getRenderer();
 

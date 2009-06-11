@@ -15,8 +15,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartColor;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
@@ -48,6 +46,7 @@ public class AgentRevCostPanel extends JPanel {
     public AgentRevCostPanel(int agent, String advertiser,
 			TACAASimulationPanel simulationPanel){
 
+         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
          revSeries = new XYSeries("Revenue");
          costSeries = new XYSeries("Cost");
          seriescollection = new XYSeriesCollection();
@@ -76,10 +75,10 @@ public class AgentRevCostPanel extends JPanel {
 		JFreeChart jfreechart = ChartFactory.createXYLineChart(
 				advertiser, "Day", "$", xydataset,
 				PlotOrientation.VERTICAL, false, true, false);
-		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
         
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND_LEVEL_ONE);
+		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 		xyplot.setDomainGridlinePaint(Color.GRAY);
 		xyplot.setRangeGridlinePaint(Color.GRAY);
 

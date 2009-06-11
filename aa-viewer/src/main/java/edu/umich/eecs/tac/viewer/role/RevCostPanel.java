@@ -2,27 +2,14 @@ package edu.umich.eecs.tac.viewer.role;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.viewer.role.advertiser.AdvertiserRatioPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
 
 import java.awt.*;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.ui.RectangleInsets;
-import com.botbox.util.ArrayUtils;
 import se.sics.isl.transport.Transportable;
-import se.sics.tasim.viewer.TickListener;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -53,7 +40,7 @@ public class RevCostPanel extends SimulationTabPanel {
 
     private void initialize() {
         setLayout(new GridLayout(2, 4));
-        //Font font = new Font("font", Font.BOLD, 18);
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
         setBorder(BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(),
                 "Daily Revenue and Cost", TitledBorder.CENTER, TitledBorder.DEFAULT_JUSTIFICATION));        
     }
