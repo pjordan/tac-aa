@@ -1,6 +1,7 @@
 package edu.umich.eecs.tac.viewer.role;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 
 import java.awt.*;
 
@@ -16,6 +17,7 @@ public class MainTabPanel extends SimulationTabPanel {
      public MainTabPanel(TACAASimulationPanel simulationPanel){
          super(simulationPanel);
          setLayout(new GridBagLayout());
+         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
          GridBagConstraints c = new GridBagConstraints();
          c.gridx = 0;

@@ -40,7 +40,6 @@ public class OverviewPanel extends SimulationTabPanel {
 	private String[] names;
 	private int agentCount;
 	private int currentDay;
-    private Color[] legendColors;
 
 	public OverviewPanel(TACAASimulationPanel simulationPanel) {
 		super(simulationPanel);
@@ -53,7 +52,6 @@ public class OverviewPanel extends SimulationTabPanel {
 		series = new XYSeries[0];
 		names = new String[0];
 		currentDay = 0;
-        legendColors = simulationPanel.legendColors;
 		initialize();
 
 		getSimulationPanel().addTickListener(new DayListener());
@@ -88,8 +86,7 @@ public class OverviewPanel extends SimulationTabPanel {
         legendTitle.setFrame(BlockBorder.NONE);
 		XYItemRenderer xyitemrenderer = xyplot.getRenderer();
 
-		xyitemrenderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_BEVEL));
+		xyitemrenderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
 
         xyplot.setOutlineVisible(false);
         
@@ -98,7 +95,7 @@ public class OverviewPanel extends SimulationTabPanel {
 			xylineandshaperenderer.setBaseShapesVisible(false);
 
             for(int i = 0; i < 8; i++){
-                xylineandshaperenderer.setSeriesPaint(i, legendColors[i]);
+                xylineandshaperenderer.setSeriesPaint(i, TACAAViewerConstants.LEGEND_COLORS[i]);
             }
 
 		}

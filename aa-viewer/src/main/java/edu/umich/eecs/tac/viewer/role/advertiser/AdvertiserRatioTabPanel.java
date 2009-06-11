@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
 
 import javax.swing.*;
@@ -32,6 +33,7 @@ public class AdvertiserRatioTabPanel extends SimulationTabPanel {
 
 	private void initialize() {
 		setLayout(new GridLayout(2, 4));
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 	}
 
 	private class ParticipantListener implements ViewListener {

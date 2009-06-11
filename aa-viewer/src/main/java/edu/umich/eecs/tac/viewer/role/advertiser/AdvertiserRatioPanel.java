@@ -45,6 +45,7 @@ public class AdvertiserRatioPanel extends JPanel {
 
 	private void initialize() {
 		setLayout(new GridLayout(2, 1));
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
 		add(new ChartPanel(createCTRChart()));
 		add(new ChartPanel(createConvChart()));
@@ -60,8 +61,7 @@ public class AdvertiserRatioPanel extends JPanel {
 	}
 
 	private JFreeChart createConvChart() {
-		return createChart("Conv Rate",
-				convValue = new DefaultValueDataset(0.0));
+		return createChart("Conv Rate", convValue = new DefaultValueDataset(0.0));
 	}
 
 	private JFreeChart createChart(String s, ValueDataset dataset) {
@@ -83,10 +83,9 @@ public class AdvertiserRatioPanel extends JPanel {
 		meterplot.setValuePaint(Color.black);
 		meterplot.setValueFont(new Font("Dialog", 1, 14));
 		meterplot.setUnits("%");
-        JFreeChart chart = new JFreeChart(s, JFreeChart.DEFAULT_TITLE_FONT, meterplot,
-				           false);
+        JFreeChart chart = new JFreeChart(s, JFreeChart.DEFAULT_TITLE_FONT, meterplot, false);
         chart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-		return chart;
+        return chart;
 	}
 
 	public int getAgent() {

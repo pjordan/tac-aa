@@ -7,6 +7,7 @@ import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 
 import javax.swing.*;
 
+
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;

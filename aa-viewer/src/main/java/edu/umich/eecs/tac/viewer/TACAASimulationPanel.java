@@ -37,9 +37,6 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
     private List<ViewListener> viewListeners;
     private List<TickListener> tickListeners;
 
-    public Color[] legendColors;
-
-
     public TACAASimulationPanel(ViewerPanel viewerPanel) {
         super(null);
         this.viewerPanel = viewerPanel;
@@ -54,21 +51,10 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
         tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
         setBackground(Color.WHITE);
         add(tabbedPane, BorderLayout.CENTER);
-        tabbedPane.setBackground(Color.WHITE);
-        setColors();
+        tabbedPane.setBackground(Color.WHITE);        
     }
 
-    protected void setColors() {
-        legendColors = new Color[8];
-        legendColors[0] = Color.red;
-        legendColors[1] = Color.blue;
-        legendColors[2] = Color.green;
-        legendColors[3] = Color.yellow;
-        legendColors[4] = Color.magenta;
-        legendColors[5] = Color.black;
-        legendColors[6] = Color.pink;
-        legendColors[7] = Color.gray;
-    }
+
 
     protected void createTabs() {
         tabbedPane.addTab("Dashboard", null, new MainTabPanel(this), "Click to view main dashboard");
