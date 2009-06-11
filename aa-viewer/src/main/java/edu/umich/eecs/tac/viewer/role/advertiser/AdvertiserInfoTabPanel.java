@@ -32,14 +32,15 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
     private JTabbedPane tabbedPane;
     private RetailCatalog catalog;
     private Map<Query, AdvertiserQueryTabPanel> advertiserQueryTabPanels;
-
+    private Color legendColor;
 
     public AdvertiserInfoTabPanel(int agent, String advertiser,
-			TACAASimulationPanel simulationPanel){
+			TACAASimulationPanel simulationPanel, Color legendColor){
         super(simulationPanel);
         this.agent = agent;
         this.advertiser = advertiser;
         this.simulationPanel = simulationPanel;
+        this.legendColor = legendColor;
 
         simulationPanel.addViewListener(new CatalogListener());
         initialize();
@@ -49,8 +50,7 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
        setLayout(new BorderLayout());
        advertiserQueryTabPanels = new HashMap<Query, AdvertiserQueryTabPanel>();
        tabbedPane = new JTabbedPane(JTabbedPane.RIGHT);
-       tabbedPane.addTab("Main", new AdvertiserMainTabPanel(simulationPanel));
-       add(tabbedPane);
+       tabbedPane.add("Main", new AdvertiserMainTabPanel(simulationPanel, agent, advertiser, legendColor));
     }
 
     private void handleRetailCatalog(RetailCatalog retailCatalog) {
@@ -82,14 +82,13 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
             }
         }
 
+
         for (Query query : advertiserQueryTabPanels.keySet()) {
             tabbedPane.add("(" + query.getManufacturer() + "," + query.getComponent() + ")",
                          advertiserQueryTabPanels.get(query));
         }
+        add(tabbedPane);
     }
-
-
-
 
     private class CatalogListener implements ViewListener {
 
@@ -126,7 +125,7 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
             public void dataUpdated(int type, Transportable value) {
                 Class valueType = value.getClass();
                 if (valueType == RetailCatalog.class) {
-                    handleRetailCatalog((RetailCatalog) value);
+                     handleRetailCatalog((RetailCatalog) value);
                 }
 
             }
@@ -136,7 +135,10 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
                 // To change body of implemented methods use File | Settings | File
                 // Templates.
             }
-        }
+    }
+
+
+
 
 
 

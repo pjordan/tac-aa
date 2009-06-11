@@ -25,9 +25,12 @@ public class AdvertiserTabPanel extends SimulationTabPanel {
 	private AdvertiserRatioTabPanel advertiserRatioTabPanel;
 	private AdvertiserCountTabPanel advertiserCountTabPanel;
     private Map<String, AdvertiserInfoTabPanel> advertiserInfoPanels;
+    private int participantNum;
+
+
 	public AdvertiserTabPanel(TACAASimulationPanel simulationPanel) {
 		super(simulationPanel);
-
+        participantNum = 0;
         advertiserInfoPanels = new HashMap<String, AdvertiserInfoTabPanel>();
         simulationPanel.addViewListener(new ParticipantListener());
 		initialize();
@@ -76,11 +79,12 @@ public class AdvertiserTabPanel extends SimulationTabPanel {
 			if (!advertiserInfoPanels.containsKey(name)
 					&& role == TACAAConstants.ADVERTISER) {
 				AdvertiserInfoTabPanel infoPanel = new AdvertiserInfoTabPanel(
-						agent, name, getSimulationPanel());
+						agent, name, getSimulationPanel(),
+                        getSimulationPanel().legendColors[participantNum]);
 
 				advertiserInfoPanels.put(name, infoPanel);
                 tabbedPane.addTab(name, infoPanel);
-
+                participantNum++;
 			}
 		}
 	}

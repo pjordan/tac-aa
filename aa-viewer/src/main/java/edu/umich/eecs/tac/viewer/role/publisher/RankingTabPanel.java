@@ -183,7 +183,5 @@ public class RankingTabPanel extends SimulationTabPanel{
 		return agentSupport.name(index);
 	}
 
-
-
 }
 

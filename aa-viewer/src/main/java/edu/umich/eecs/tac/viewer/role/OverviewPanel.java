@@ -4,6 +4,7 @@ import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.RetailCatalog;
 
 import java.awt.*;
 

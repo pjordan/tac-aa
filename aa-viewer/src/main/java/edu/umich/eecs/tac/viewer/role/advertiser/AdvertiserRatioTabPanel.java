@@ -62,7 +62,7 @@ public class AdvertiserRatioTabPanel extends SimulationTabPanel {
 			if (!agentPanels.containsKey(name)
 					&& role == TACAAConstants.ADVERTISER) {
 				AdvertiserRatioPanel ratioPanel = new AdvertiserRatioPanel(
-						agent, name, getSimulationPanel());
+						agent, name, getSimulationPanel(), true);
 
 				agentPanels.put(name, ratioPanel);
 

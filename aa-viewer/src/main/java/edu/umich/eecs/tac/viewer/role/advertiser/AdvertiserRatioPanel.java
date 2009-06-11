@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,12 +31,13 @@ public class AdvertiserRatioPanel extends JPanel {
 	private int impressions;
 	private int clicks;
 	private int conversions;
+    private Boolean advertiserBorder;
 
 	public AdvertiserRatioPanel(int agent, String advertiser,
-			TACAASimulationPanel simulationPanel) {
+			TACAASimulationPanel simulationPanel, Boolean advertiserBorder) {
 		this.agent = agent;
 		this.advertiser = advertiser;
-
+        this.advertiserBorder = advertiserBorder;
 		initialize();
 
 		simulationPanel.addViewListener(new DataUpdateListener());
@@ -47,7 +49,10 @@ public class AdvertiserRatioPanel extends JPanel {
 		add(new ChartPanel(createCTRChart()));
 		add(new ChartPanel(createConvChart()));
 
-		setBorder(BorderFactory.createTitledBorder(advertiser));
+        if(advertiserBorder)
+		  setBorder(BorderFactory.createTitledBorder(advertiser));
+        else
+          setBorder(BorderFactory.createTitledBorder("Click-Through and Conversion Rates"));
 	}
 
 	private JFreeChart createCTRChart() {
@@ -67,7 +72,7 @@ public class AdvertiserRatioPanel extends JPanel {
 				Color.lightGray, new BasicStroke(2.0F),
 				new Color(0, 255, 0, 64)));
 		meterplot.setNeedlePaint(Color.darkGray);
-		meterplot.setDialBackgroundPaint(Color.white);
+		meterplot.setDialBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 		meterplot.setDialOutlinePaint(Color.gray);
 		meterplot.setMeterAngle(260);
 		meterplot.setTickLabelsVisible(true);
@@ -78,8 +83,10 @@ public class AdvertiserRatioPanel extends JPanel {
 		meterplot.setValuePaint(Color.black);
 		meterplot.setValueFont(new Font("Dialog", 1, 14));
 		meterplot.setUnits("%");
-		return new JFreeChart(s, JFreeChart.DEFAULT_TITLE_FONT, meterplot,
-				false);
+        JFreeChart chart = new JFreeChart(s, JFreeChart.DEFAULT_TITLE_FONT, meterplot,
+				           false);
+        chart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
+		return chart;
 	}
 
 	public int getAgent() {

@@ -2,12 +2,16 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.role.*;
 import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.TACAAConstants;
 
 import javax.swing.*;
 
 import se.sics.isl.transport.Transportable;
+import se.sics.tasim.viewer.SimulationPanel;
+
+import java.awt.*;
 
 import java.awt.*;
 
@@ -18,59 +22,71 @@ import java.awt.*;
  * Time: 10:30:20 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AdvertiserMainTabPanel extends JPanel {
+public class AdvertiserMainTabPanel extends SimulationTabPanel {
     private TACAASimulationPanel simulationPanel;
+    private JTable table;
+    private int agent;
+    private String name;
+    private Color legendColor;
+
     
     private JLabel label;
-
-    public AdvertiserMainTabPanel(TACAASimulationPanel simulationPanel) {
-        this.simulationPanel = simulationPanel;
-        simulationPanel.addViewListener(new AdvertiserInfoListener());
-
-
-        label = new JLabel("Test");
-        this.add(label);
+    public AdvertiserMainTabPanel(TACAASimulationPanel simulationPanel, int agent,
+                                  String advertiser, Color legendColor){
+         super(simulationPanel);
+         this.simulationPanel = simulationPanel;
+         this.agent = agent;
+         this.name = advertiser;
+         this.legendColor = legendColor;
+       
+         initialize();
     }
 
-    private class AdvertiserInfoListener implements ViewListener {
+    private void initialize(){
+        setLayout(new GridBagLayout());
 
-        public void dataUpdated(int agent, int type, int value) {
-            // To change body of implemented methods use File | Settings | File
-            // Templates.
-        }
 
-        public void dataUpdated(int agent, int type, long value) {
-            // To change body of implemented methods use File | Settings | File
-            // Templates.
-        }
+        ProfitPanel profitPanel = new ProfitPanel(simulationPanel, agent, name, legendColor);
+        AdvertiserRatioPanel ratioPanel = new AdvertiserRatioPanel(
+						                      agent, name, simulationPanel, false);
+        AdvertiserCountPanel countPanel = new AdvertiserCountPanel(
+						                      agent, name, simulationPanel, false);
+        AgentRevCostPanel agentRevCostPanel = new AgentRevCostPanel(agent, name, simulationPanel, true);
 
-        public void dataUpdated(int agent, int type, float value) {
-            // To change body of implemented methods use File | Settings | File
-            // Templates.
-        }
+        AdvertiserPropertiesPanel advertiserPropertiesPanel =
+                            new AdvertiserPropertiesPanel(agent, name, simulationPanel);
 
-        public void dataUpdated(int agent, int type, double value) {
-            // To change body of implemented methods use File | Settings | File
-            // Templates.
-        }
 
-        public void dataUpdated(int agent, int type, String value) {
-            // To change body of implemented methods use File | Settings | File
-            // Templates.
-        }
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridwidth = 3;
 
-        public void dataUpdated(int agent, int type, Transportable value) {
+        add(profitPanel, c);
 
-        }
 
-        public void dataUpdated(int type, Transportable value) {
+        c.gridx = 3;
+        c.gridwidth = 1;
+        //add(advertiserPropertiesPanel,c);
+        
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 2;
+        add(agentRevCostPanel, c);
 
-        }
 
-        public void participant(int agent, int role, String name,
-                                int participantID) {
-        }
+
+        c.gridwidth = 1;
+        c.gridx = 2;
+        c.gridy = 1;
+        add(ratioPanel, c);
+
+
+
+        c.gridx = 3;
+        add(countPanel,c);
     }
-
-
 }

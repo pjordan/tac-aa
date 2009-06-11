@@ -73,7 +73,7 @@ public class RevCostPanel extends SimulationTabPanel {
             if (!agentPanels.containsKey(name)
                 && role == TACAAConstants.ADVERTISER) {
                 AgentRevCostPanel agentRevCostPanel = new AgentRevCostPanel(
-                                                  agent, name, getSimulationPanel());
+                                                  agent, name, getSimulationPanel(), false);
 
                 agentPanels.put(name, agentRevCostPanel);
 

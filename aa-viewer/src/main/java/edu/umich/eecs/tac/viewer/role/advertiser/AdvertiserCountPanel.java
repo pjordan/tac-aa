@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 
 import javax.swing.*;
 
@@ -33,12 +34,13 @@ public class AdvertiserCountPanel extends JPanel {
 	private XYSeries impressions;
 	private XYSeries clicks;
 	private XYSeries conversions;
+    private Boolean advertiserBorder;
 
 	public AdvertiserCountPanel(int agent, String advertiser,
-			TACAASimulationPanel simulationPanel) {
+			TACAASimulationPanel simulationPanel, Boolean advertiserBorder) {
 		this.agent = agent;
 		this.advertiser = advertiser;
-
+        this.advertiserBorder = advertiserBorder;
 		initialize();
 
 		currentDay = 0;
@@ -53,7 +55,10 @@ public class AdvertiserCountPanel extends JPanel {
 		add(new ChartPanel(createClicksChart()));
 		add(new ChartPanel(createConversionsChart()));
 
-		setBorder(BorderFactory.createTitledBorder(advertiser));
+        if(advertiserBorder)
+		  setBorder(BorderFactory.createTitledBorder(advertiser));
+        else
+          setBorder(BorderFactory.createTitledBorder("Impressions, Clicks and Conversions"));
 	}
 
 	private JFreeChart createConversionsChart() {
@@ -76,7 +81,7 @@ public class AdvertiserCountPanel extends JPanel {
                                                xydataset, PlotOrientation.VERTICAL, false, true, false);
 		jfreechart.setBackgroundPaint(Color.white);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(Color.lightGray);
+		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 		xyplot.setDomainGridlinePaint(Color.white);
 		xyplot.setRangeGridlinePaint(Color.white);
 		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));

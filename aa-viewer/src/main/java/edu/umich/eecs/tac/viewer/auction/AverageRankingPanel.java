@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.List;
 import java.awt.*;
 
-import com.sun.tools.javac.util.Pair;
+//import com.sun.tools.javac.util.Pair;
 
 /**
  * @author Patrick Jordan

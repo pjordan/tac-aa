@@ -42,18 +42,19 @@ public class AgentRevCostPanel extends JPanel {
     private XYSeries costSeries;
     private int currentDay;
     private Map<Query, Query> queries;
+    private Boolean showLegend;
 
     public AgentRevCostPanel(int agent, String advertiser,
-			TACAASimulationPanel simulationPanel){
+			TACAASimulationPanel simulationPanel, Boolean showLegend){
 
          setBackground(TACAAViewerConstants.CHART_BACKGROUND);
          revSeries = new XYSeries("Revenue");
          costSeries = new XYSeries("Cost");
          seriescollection = new XYSeriesCollection();
 
+         this.showLegend = showLegend;
          this.agent = agent;
          this.advertiser = advertiser;
-
          simulationPanel.addTickListener(new DayListener());
 		 simulationPanel.addViewListener(new DataUpdateListener());
          initialize();
@@ -72,9 +73,18 @@ public class AgentRevCostPanel extends JPanel {
     }
 
     private JFreeChart createChart(XYDataset xydataset) {
-		JFreeChart jfreechart = ChartFactory.createXYLineChart(
-				advertiser, "Day", "$", xydataset,
-				PlotOrientation.VERTICAL, false, true, false);
+        JFreeChart jfreechart;
+        if(!showLegend){
+		  jfreechart = ChartFactory.createXYLineChart(
+				  advertiser, "Day", "$", xydataset,
+				  PlotOrientation.VERTICAL, false, true, false);
+        }
+        else{
+          jfreechart = ChartFactory.createXYLineChart(
+				  null, "Day", "$", xydataset,
+				  PlotOrientation.VERTICAL, true, true, false);
+          setBorder(BorderFactory.createTitledBorder("Revenue and Cost"));
+        }
 		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
         
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
@@ -83,8 +93,6 @@ public class AgentRevCostPanel extends JPanel {
 		xyplot.setRangeGridlinePaint(Color.GRAY);
 
         xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-		//xyplot.setDomainCrosshairVisible(true);
-		//xyplot.setRangeCrosshairVisible(true);
 
 	    XYDifferenceRenderer renderer = new XYDifferenceRenderer(
             Color.green, Color.red, false
