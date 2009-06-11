@@ -88,6 +88,9 @@ public class AdvertiserCountPanel extends JPanel {
 		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
 			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
 			xylineandshaperenderer.setBaseShapesVisible(false);
+            xylineandshaperenderer.setBaseStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_BEVEL));
+            xylineandshaperenderer.setSeriesPaint(0, Color.black);
 		}
 		return jfreechart;
 	}

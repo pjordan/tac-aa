@@ -12,10 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.viewer.role.OverviewTabPanel;
-import edu.umich.eecs.tac.viewer.role.AdvertiserTabPanel;
-import edu.umich.eecs.tac.viewer.role.PublisherTabPanel;
-import edu.umich.eecs.tac.viewer.role.UserTabPanel;
+import edu.umich.eecs.tac.viewer.role.*;
 
 /**
  * @author Patrick Jordan
@@ -40,6 +37,9 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
 	private List<ViewListener> viewListeners;
 	private List<TickListener> tickListeners;
 
+    public Color[] legendColors;
+
+
 	public TACAASimulationPanel(ViewerPanel viewerPanel) {
 		super(null);
 		this.viewerPanel = viewerPanel;
@@ -52,19 +52,30 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
 	protected void initialize() {
 		setLayout(new BorderLayout());
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
-
 		add(tabbedPane, BorderLayout.CENTER);
+        setColors();
 	}
 
+    protected void setColors(){
+        legendColors = new Color[8];
+        legendColors[0] = Color.red;
+        legendColors[1] = Color.blue;
+        legendColors[2] = Color.green;
+        legendColors[3] = Color.yellow;
+        legendColors[4] = Color.magenta;
+        legendColors[5] = Color.black;
+        legendColors[6] = Color.pink;
+        legendColors[7] = Color.gray;
+    }
+
 	protected void createTabs() {
-		tabbedPane.addTab("Overview", new OverviewTabPanel(this));
+
+		tabbedPane.addTab("Main", null, new MainTabPanel(this), "Click to view Main");
 		tabbedPane.addTab("Advertisers", null, new AdvertiserTabPanel(this),
 				"Click to view Advertisers");
 		tabbedPane.addTab("Publisher", null, new PublisherTabPanel(this),
 				"Click to view Publisher");
-		tabbedPane.addTab("Users", null, new UserTabPanel(this),
-				"Click to view Users");
-	}
+    }
 
 	public TACAAAgentView getAgentView(int agentID) {
 		return agentID < participants ? agentViews[agentID] : null;

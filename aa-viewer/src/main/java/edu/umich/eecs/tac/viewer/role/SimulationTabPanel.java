@@ -14,7 +14,7 @@ public class SimulationTabPanel extends JComponent {
 		this.simulationPanel = simulationPanel;
 	}
 
-	protected TACAASimulationPanel getSimulationPanel() {
+	public TACAASimulationPanel getSimulationPanel() {
 		return simulationPanel;
 	}
 }
