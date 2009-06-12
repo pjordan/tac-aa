@@ -61,7 +61,8 @@ public class AdvertiserCapacityPanel extends SimulationTabPanel {
     protected void initialize(){
         setLayout(new GridLayout(1, 1));
         setBorder(BorderFactory.createTitledBorder(" Capacity Used"));
-
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
+        
         amountsSold = new HashMap<Integer, Integer>();
         queries = new HashMap<Query, Query >();
         relativeCapacity = new XYSeries("Relative Capacity");

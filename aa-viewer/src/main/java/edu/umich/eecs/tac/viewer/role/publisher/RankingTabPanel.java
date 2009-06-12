@@ -6,6 +6,7 @@ import edu.umich.eecs.tac.viewer.role.AgentSupport;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.Product;
@@ -45,6 +46,7 @@ public class RankingTabPanel extends SimulationTabPanel{
 	}
 
 	private void initialize() {
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 		rankingPanels = new HashMap<Query, RankingPanel >();
 	}
 

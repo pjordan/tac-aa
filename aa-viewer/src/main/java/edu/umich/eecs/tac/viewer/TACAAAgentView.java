@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /**
  * @author Patrick Jordan
  */
-public abstract class TACAAAgentView extends JComponent implements ViewListener {
+public abstract class TACAAAgentView extends JPanel implements ViewListener {
 	private static final Logger log = Logger.getLogger(TACAAAgentView.class
 			.getName());
 

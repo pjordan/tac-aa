@@ -95,7 +95,7 @@ public class OverviewPanel extends SimulationTabPanel {
 			xylineandshaperenderer.setBaseShapesVisible(false);
 
             for(int i = 0; i < 8; i++){
-                xylineandshaperenderer.setSeriesPaint(i, getSimulationPanel().legendColors[i]);
+                xylineandshaperenderer.setSeriesPaint(i, TACAAViewerConstants.LEGEND_COLORS[i]);
             }
 
 		}

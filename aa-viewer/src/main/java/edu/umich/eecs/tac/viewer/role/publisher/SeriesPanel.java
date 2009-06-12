@@ -8,6 +8,7 @@ import edu.umich.eecs.tac.props.BidBundle;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.role.PublisherTabPanel;
 
@@ -40,14 +41,12 @@ public class SeriesPanel extends JComponent{
 	private Map<String, XYSeries> bidSeries;
     private SeriesTabPanel seriesTabPanel;
     private JFreeChart chart;
-    private Color[] legendColors;
 
 	public SeriesPanel(Query query, SeriesTabPanel seriesTabPanel, Color [] legendColors) {
 		this.query = query;
 		this.bidSeries = new HashMap<String, XYSeries>();
         this.seriesTabPanel = seriesTabPanel;
 		this.currentDay = 0;
-        this.legendColors = legendColors;
 
 		initialize();
 
@@ -86,20 +85,19 @@ public class SeriesPanel extends JComponent{
 				"Auction for (%s,%s)", getQuery().getManufacturer(), getQuery()
 						.getComponent()), "Day", "Bid [$]", xydataset,
 				PlotOrientation.VERTICAL, false, true, false);
-		jfreechart.setBackgroundPaint(Color.white);
+		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(Color.lightGray);
-		xyplot.setDomainGridlinePaint(Color.white);
-		xyplot.setRangeGridlinePaint(Color.white);
+		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
+		xyplot.setDomainGridlinePaint(Color.GRAY);
+		xyplot.setRangeGridlinePaint(Color.GRAY);
 		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-		xyplot.setDomainCrosshairVisible(true);
-		xyplot.setRangeCrosshairVisible(true);
+		xyplot.setOutlineVisible(false);
 
         XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)xyplot.getRenderer();
         renderer.setBaseStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_BEVEL));
-        for(int i = 0; i < legendColors.length; i++)
-          renderer.setSeriesPaint(i, legendColors[i]);
+        for(int i = 0; i < TACAAViewerConstants.LEGEND_COLORS.length; i++)
+          renderer.setSeriesPaint(i, TACAAViewerConstants.LEGEND_COLORS[i]);
 
 		return jfreechart;
 	}

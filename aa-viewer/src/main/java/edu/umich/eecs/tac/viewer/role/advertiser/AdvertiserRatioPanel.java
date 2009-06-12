@@ -53,7 +53,7 @@ public class AdvertiserRatioPanel extends JPanel {
         if(advertiserBorder)
 		  setBorder(BorderFactory.createTitledBorder(advertiser));
         else
-          setBorder(BorderFactory.createTitledBorder("Click-Through and Conversion Rates"));
+          setBorder(BorderFactory.createTitledBorder("CTRs and Conv Rates"));
 	}
 
 	private JFreeChart createCTRChart() {

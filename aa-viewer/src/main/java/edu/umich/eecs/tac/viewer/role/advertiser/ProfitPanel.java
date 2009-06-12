@@ -65,8 +65,10 @@ public class ProfitPanel extends SimulationTabPanel {
 
 	protected void initialize() {
 		setLayout(new GridLayout(1, 1));
+        setBorder(BorderFactory.createTitledBorder("Advertiser Profit"));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
-		seriescollection = new XYSeriesCollection();
+
+        seriescollection = new XYSeriesCollection();
         series = new XYSeries(advertiser);
         seriescollection.addSeries(series);
 
@@ -74,7 +76,6 @@ public class ProfitPanel extends SimulationTabPanel {
 		ChartPanel chartpanel = new ChartPanel(chart, false);
 		chartpanel.setMouseZoomable(true, false);
 
-        setBorder(BorderFactory.createTitledBorder("Advertiser Profit"));
 		add(chartpanel);
 	}
 

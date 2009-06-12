@@ -7,7 +7,7 @@ import javax.swing.*;
 /**
  * @author Patrick Jordan
  */
-public class SimulationTabPanel extends JComponent {
+public class SimulationTabPanel extends JPanel {
 	private TACAASimulationPanel simulationPanel;
 
 	public SimulationTabPanel(TACAASimulationPanel simulationPanel) {

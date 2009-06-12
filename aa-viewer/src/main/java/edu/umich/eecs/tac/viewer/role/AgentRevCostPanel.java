@@ -42,17 +42,17 @@ public class AgentRevCostPanel extends JPanel {
     private XYSeries costSeries;
     private int currentDay;
     private Map<Query, Query> queries;
-    private Boolean showLegend;
+    private boolean showBorder;
 
     public AgentRevCostPanel(int agent, String advertiser,
-			TACAASimulationPanel simulationPanel, Boolean showLegend){
+			TACAASimulationPanel simulationPanel, boolean showBorder){
 
          setBackground(TACAAViewerConstants.CHART_BACKGROUND);
          revSeries = new XYSeries("Revenue");
          costSeries = new XYSeries("Cost");
          seriescollection = new XYSeriesCollection();
 
-         this.showLegend = showLegend;
+         this.showBorder = showBorder;
          this.agent = agent;
          this.advertiser = advertiser;
          simulationPanel.addTickListener(new DayListener());
@@ -62,6 +62,9 @@ public class AgentRevCostPanel extends JPanel {
 
     private void initialize(){
         setLayout(new GridLayout(1,1));
+        if(showBorder) {
+            setBorder(BorderFactory.createTitledBorder("Revenue and Cost"));
+        }
         queries = new HashMap<Query, Query >();
         seriescollection.addSeries(revSeries);
         seriescollection.addSeries(costSeries);
@@ -74,16 +77,15 @@ public class AgentRevCostPanel extends JPanel {
 
     private JFreeChart createChart(XYDataset xydataset) {
         JFreeChart jfreechart;
-        if(!showLegend){
+        if(showBorder){
 		  jfreechart = ChartFactory.createXYLineChart(
-				  advertiser, "Day", "$", xydataset,
+				  null, "Day", "$", xydataset,
 				  PlotOrientation.VERTICAL, false, true, false);
         }
         else{
           jfreechart = ChartFactory.createXYLineChart(
-				  null, "Day", "$", xydataset,
-				  PlotOrientation.VERTICAL, true, true, false);
-          setBorder(BorderFactory.createTitledBorder("Revenue and Cost"));
+				  advertiser, "Day", "$", xydataset,
+				  PlotOrientation.VERTICAL, false, true, false);          
         }
 		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
         

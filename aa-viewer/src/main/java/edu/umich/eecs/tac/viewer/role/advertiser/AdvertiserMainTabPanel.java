@@ -53,6 +53,8 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
 						                      agent, name, simulationPanel, false, legendColor);
         AgentRevCostPanel agentRevCostPanel = new AgentRevCostPanel(agent, name, simulationPanel, true);
 
+        AdvertiserPropertiesPanel advertiserPropertiesPanel =
+                            new AdvertiserPropertiesPanel(agent, name, simulationPanel);
 
         AdvertiserCapacityPanel advertiserCapacityPanel =
                             new AdvertiserCapacityPanel(agent, name, simulationPanel, legendColor);
@@ -61,32 +63,30 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 1;
+        c.weightx = 2;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
-        c.gridwidth = 3;
+        add(agentRevCostPanel, c);
 
+        c.gridx = 2;
+        c.weightx = 1;
         add(profitPanel, c);
 
         c.gridx = 3;
-        c.gridwidth = 1;
-        //add(advertiserPropertiesPanel,c);
+        c.weightx = 2;
         add(advertiserCapacityPanel, c);
+
         c.gridx = 0;
         c.gridy = 1;
-        c.gridwidth = 2;
-        add(agentRevCostPanel, c);
-
-
-
-        c.gridwidth = 1;
-        c.gridx = 2;
-        c.gridy = 1;
+        c.weightx = 2;
         add(ratioPanel, c);
 
-
+        c.gridx = 2;
+        c.weightx = 1;
+        add(advertiserPropertiesPanel,c);
 
         c.gridx = 3;
+        c.weightx = 2;
         add(countPanel,c);
     }
 }

@@ -5,10 +5,12 @@ import edu.umich.eecs.tac.props.BidBundle;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.role.PublisherTabPanel;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -53,6 +55,8 @@ public class LegendPanel extends JPanel{
 
         table = new JTable(1, 2 * (seriesTabPanel.getAgentCount() - 2));
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setBorder(BorderFactory.createEmptyBorder());
+        
         for(int i = 0; i < table.getColumnCount(); i = i + 2){
             table.getColumnModel().getColumn(i).setCellRenderer(
                                                  new LegendColorRenderer(legendColors[i/2]));
@@ -68,7 +72,7 @@ public class LegendPanel extends JPanel{
 			}
         }
 
-        table.setGridColor(Color.white);
+        table.setGridColor(TACAAViewerConstants.CHART_BACKGROUND);
 
         add(table);
 

@@ -43,6 +43,7 @@ public class AdvertiserQueryPositionPanel extends JPanel {
 		this.advertiser = advertiser;
         this.query = query;
         this.legendColor = legendColor;
+
 		initialize();
 
 		currentDay = 0;

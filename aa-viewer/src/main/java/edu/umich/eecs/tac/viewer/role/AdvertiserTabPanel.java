@@ -74,7 +74,7 @@ public class AdvertiserTabPanel extends SimulationTabPanel {
                     && role == TACAAConstants.ADVERTISER) {
                 AdvertiserInfoTabPanel infoPanel = new AdvertiserInfoTabPanel(
                         agent, name, simulationPanel,
-                        simulationPanel.legendColors[participantNum]);
+                        TACAAViewerConstants.LEGEND_COLORS[participantNum]);
 
                 advertiserInfoPanels.put(name, infoPanel);
                 tabbedPane.addTab(name, infoPanel);

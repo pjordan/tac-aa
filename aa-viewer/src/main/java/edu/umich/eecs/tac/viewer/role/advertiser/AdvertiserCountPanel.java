@@ -35,16 +35,16 @@ public class AdvertiserCountPanel extends JPanel {
 	private XYSeries impressions;
 	private XYSeries clicks;
 	private XYSeries conversions;
-    private Boolean advertiserBorder;
+    private boolean advertiserBorder;
     private Color legendColor;
 
+
 	public AdvertiserCountPanel(int agent, String advertiser,
-			TACAASimulationPanel simulationPanel, Boolean advertiserBorder, Color legendColor) {
+			TACAASimulationPanel simulationPanel, boolean advertiserBorder, Color legendColor) {
 		this.agent = agent;
 		this.advertiser = advertiser;
         this.advertiserBorder = advertiserBorder;
         this.legendColor = legendColor;
-
 		initialize();
 
 		currentDay = 0;
@@ -54,6 +54,7 @@ public class AdvertiserCountPanel extends JPanel {
 
 	private void initialize() {
 		setLayout(new GridLayout(3, 1));
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
 		add(new ChartPanel(createImpressionsChart()));
 		add(new ChartPanel(createClicksChart()));

@@ -53,6 +53,7 @@ public class UserPanel extends SimulationTabPanel {
 	protected void initializeView() {
 		createDataset();
 		setLayout(new BorderLayout());
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 		JFreeChart jfreechart = createChart(seriescollection);
 		ChartPanel chartpanel = new ChartPanel(jfreechart, false);
 		chartpanel.setMouseZoomable(true, false);

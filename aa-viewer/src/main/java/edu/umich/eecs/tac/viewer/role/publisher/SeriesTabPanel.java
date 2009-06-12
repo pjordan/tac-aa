@@ -6,6 +6,7 @@ import edu.umich.eecs.tac.viewer.role.AgentSupport;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.Product;
@@ -41,7 +42,7 @@ public class SeriesTabPanel extends SimulationTabPanel{
 	private Map<Query, SeriesPanel> seriesPanels;
 	private AgentSupport agentSupport;
     private LegendPanel legendPanel;
-    private Color[] legendColors;
+
     
     public SeriesTabPanel(TACAASimulationPanel simulationPanel) {
 		super(simulationPanel);
@@ -55,21 +56,9 @@ public class SeriesTabPanel extends SimulationTabPanel{
 	}
 
 	private void initialize() {
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 		seriesPanels = new HashMap<Query, SeriesPanel >();
-        legendColors = new Color[8];
-        makeColors(legendColors);
 	}
-
-    private void makeColors(Color[] legendColors){
-        legendColors[0] = Color.red;
-        legendColors[1] = Color.blue;
-        legendColors[2] = Color.green;
-        legendColors[3] = Color.yellow;
-        legendColors[4] = Color.magenta;
-        legendColors[5] = Color.black;
-        legendColors[6] = Color.pink;
-        legendColors[7] = Color.gray;
-    }
 
 	private void handleRetailCatalog(RetailCatalog retailCatalog) {
 		this.catalog = retailCatalog;
@@ -90,18 +79,17 @@ public class SeriesTabPanel extends SimulationTabPanel{
 					.getComponent());
 
 			if (!seriesPanels.containsKey(f0)) {
-				seriesPanels.put(f0,  new SeriesPanel(f0, this, legendColors));
+				seriesPanels.put(f0,  new SeriesPanel(f0, this, TACAAViewerConstants.LEGEND_COLORS));
 			}
 			if (!seriesPanels.containsKey(f1_manufacturer)) {
-				seriesPanels.put(f1_manufacturer, new SeriesPanel(
-						f1_manufacturer, this, legendColors));
+				seriesPanels.put(f1_manufacturer,
+                                 new SeriesPanel(f1_manufacturer, this, TACAAViewerConstants.LEGEND_COLORS));
 			}
 			if (!seriesPanels.containsKey(f1_component)) {
-			    seriesPanels.put(f1_component, new SeriesPanel(f1_component,
-						this, legendColors));
+			    seriesPanels.put(f1_component, new SeriesPanel(f1_component,this, TACAAViewerConstants.LEGEND_COLORS));
 			}
 			if (!seriesPanels.containsKey(f2)) {
-				seriesPanels.put(f2, new SeriesPanel(f2, this, legendColors));
+				seriesPanels.put(f2, new SeriesPanel(f2, this, TACAAViewerConstants.LEGEND_COLORS));
 			}
 		}
 
@@ -126,7 +114,7 @@ public class SeriesTabPanel extends SimulationTabPanel{
             }
         }
 
-        legendPanel = new LegendPanel(this, legendColors);
+        legendPanel = new LegendPanel(this, TACAAViewerConstants.LEGEND_COLORS);
 
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
