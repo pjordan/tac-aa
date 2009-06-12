@@ -29,7 +29,7 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
     private String name;
     private Color legendColor;
 
-    
+
     private JLabel label;
     public AdvertiserMainTabPanel(TACAASimulationPanel simulationPanel, int agent,
                                   String advertiser, Color legendColor){
@@ -38,7 +38,7 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
          this.agent = agent;
          this.name = advertiser;
          this.legendColor = legendColor;
-       
+
          initialize();
     }
 
@@ -50,11 +50,12 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
         AdvertiserRatioPanel ratioPanel = new AdvertiserRatioPanel(
 						                      agent, name, simulationPanel, false);
         AdvertiserCountPanel countPanel = new AdvertiserCountPanel(
-						                      agent, name, simulationPanel, false);
+						                      agent, name, simulationPanel, false, legendColor);
         AgentRevCostPanel agentRevCostPanel = new AgentRevCostPanel(agent, name, simulationPanel, true);
 
-        AdvertiserPropertiesPanel advertiserPropertiesPanel =
-                            new AdvertiserPropertiesPanel(agent, name, simulationPanel);
+
+        AdvertiserCapacityPanel advertiserCapacityPanel =
+                            new AdvertiserCapacityPanel(agent, name, simulationPanel, legendColor);
 
 
         GridBagConstraints c = new GridBagConstraints();
@@ -67,11 +68,10 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
 
         add(profitPanel, c);
 
-
         c.gridx = 3;
         c.gridwidth = 1;
         //add(advertiserPropertiesPanel,c);
-        
+        add(advertiserCapacityPanel, c);
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 2;

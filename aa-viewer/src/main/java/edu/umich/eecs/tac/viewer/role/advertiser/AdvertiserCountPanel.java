@@ -36,12 +36,15 @@ public class AdvertiserCountPanel extends JPanel {
 	private XYSeries clicks;
 	private XYSeries conversions;
     private Boolean advertiserBorder;
+    private Color legendColor;
 
 	public AdvertiserCountPanel(int agent, String advertiser,
-			TACAASimulationPanel simulationPanel, Boolean advertiserBorder) {
+			TACAASimulationPanel simulationPanel, Boolean advertiserBorder, Color legendColor) {
 		this.agent = agent;
 		this.advertiser = advertiser;
         this.advertiserBorder = advertiserBorder;
+        this.legendColor = legendColor;
+
 		initialize();
 
 		currentDay = 0;
@@ -94,9 +97,9 @@ public class AdvertiserCountPanel extends JPanel {
 		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
 			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
 			xylineandshaperenderer.setBaseShapesVisible(false);
-            xylineandshaperenderer.setBaseStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT,
+            xylineandshaperenderer.setBaseStroke(new BasicStroke(4f, BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_BEVEL));
-            xylineandshaperenderer.setSeriesPaint(0, Color.black);
+            xylineandshaperenderer.setSeriesPaint(0, legendColor);
 		}
 		return jfreechart;
 	}

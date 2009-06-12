@@ -35,13 +35,14 @@ public class AdvertiserQueryPositionPanel extends JPanel {
 
 	private int currentDay;
 	private XYSeries position;
+    private Color legendColor;
 
 	public AdvertiserQueryPositionPanel(int agent, String advertiser, Query query,
-			TACAASimulationPanel simulationPanel) {
+			TACAASimulationPanel simulationPanel, Color legendColor) {
 		this.agent = agent;
 		this.advertiser = advertiser;
         this.query = query;
-
+        this.legendColor = legendColor;
 		initialize();
 
 		currentDay = 0;
@@ -83,9 +84,9 @@ public class AdvertiserQueryPositionPanel extends JPanel {
 		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
 			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
 			xylineandshaperenderer.setBaseShapesVisible(false);
-            xylineandshaperenderer.setBaseStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT,
+            xylineandshaperenderer.setBaseStroke(new BasicStroke(4f, BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_BEVEL));
-            xylineandshaperenderer.setSeriesPaint(0, Color.black);
+            xylineandshaperenderer.setSeriesPaint(0, legendColor);
 		}
 
 		return jfreechart;

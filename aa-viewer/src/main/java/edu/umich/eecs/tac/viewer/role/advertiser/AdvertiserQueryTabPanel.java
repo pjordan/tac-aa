@@ -23,12 +23,15 @@ public class AdvertiserQueryTabPanel extends JPanel {
     private AdvertiserQueryCountPanel queryCountPanel;
     private AdvertiserQueryValuePanel queryValuePanel;
     private AdvertiserQueryPositionPanel positionPanel;
+    private Color legendColor;
 
-    public AdvertiserQueryTabPanel(int agent, String advertiser, Query query, TACAASimulationPanel simulationPanel) {
+    public AdvertiserQueryTabPanel(int agent, String advertiser, Query query, TACAASimulationPanel simulationPanel,
+                                   Color legendColor) {
         this.agent = agent;
         this.advertiser = advertiser;
         this.query = query;
         this.simulationPanel = simulationPanel;
+        this.legendColor = legendColor;
 
         initialize();
 
@@ -58,11 +61,12 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
-        this.positionPanel = new AdvertiserQueryPositionPanel(agent, advertiser, query, simulationPanel);
+        this.positionPanel = new AdvertiserQueryPositionPanel(agent, advertiser, query, simulationPanel,
+                                                              legendColor);
         leftPanel.add(positionPanel,c);
 
         add(leftPanel);
-        
+
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new GridBagLayout());
 
@@ -82,7 +86,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weightx = 1;
         c.weighty = 3;
         c.fill = GridBagConstraints.BOTH;
-        queryCountPanel = new AdvertiserQueryCountPanel(agent, advertiser, query, simulationPanel);
+        queryCountPanel = new AdvertiserQueryCountPanel(agent, advertiser, query, simulationPanel, legendColor);
         rightPanel.add(queryCountPanel,c);
 
         c.gridx = 0;
@@ -93,5 +97,4 @@ public class AdvertiserQueryTabPanel extends JPanel {
         rightPanel.add(queryValuePanel,c);
         add(rightPanel);
     }
-
 }

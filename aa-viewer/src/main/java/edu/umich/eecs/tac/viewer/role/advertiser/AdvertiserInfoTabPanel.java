@@ -69,16 +69,16 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
                     .getComponent());
 
             if (!advertiserQueryTabPanels.containsKey(f0)) {
-                advertiserQueryTabPanels.put(f0, new AdvertiserQueryTabPanel(agent, advertiser, f0,simulationPanel));
+                advertiserQueryTabPanels.put(f0, new AdvertiserQueryTabPanel(agent, advertiser, f0,simulationPanel, legendColor));
             }
             if (!advertiserQueryTabPanels.containsKey(f1_manufacturer)) {
-                advertiserQueryTabPanels.put(f1_manufacturer, new AdvertiserQueryTabPanel(agent, advertiser,f1_manufacturer,simulationPanel));
+                advertiserQueryTabPanels.put(f1_manufacturer, new AdvertiserQueryTabPanel(agent, advertiser,f1_manufacturer,simulationPanel, legendColor));
             }
             if (!advertiserQueryTabPanels.containsKey(f1_component)) {
-                advertiserQueryTabPanels.put(f1_component, new AdvertiserQueryTabPanel(agent, advertiser,f1_component,simulationPanel));
+                advertiserQueryTabPanels.put(f1_component, new AdvertiserQueryTabPanel(agent, advertiser,f1_component,simulationPanel, legendColor));
             }
             if (!advertiserQueryTabPanels.containsKey(f2)) {
-                advertiserQueryTabPanels.put(f2, new AdvertiserQueryTabPanel(agent, advertiser,f2,simulationPanel));
+                advertiserQueryTabPanels.put(f2, new AdvertiserQueryTabPanel(agent, advertiser,f2,simulationPanel, legendColor));
             }
         }
 
@@ -136,10 +136,4 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
                 // Templates.
             }
     }
-
-
-
-
-
-
 }

@@ -38,12 +38,14 @@ public class AdvertiserQueryCountPanel extends JPanel {
 	private XYSeries impressions;
 	private XYSeries clicks;
 	private XYSeries conversions;
+    private Color legendColor;
 
 	public AdvertiserQueryCountPanel(int agent, String advertiser, Query query,
-			TACAASimulationPanel simulationPanel) {
+			TACAASimulationPanel simulationPanel, Color legendColor) {
 		this.agent = agent;
 		this.advertiser = advertiser;
         this.query = query;
+        this.legendColor = legendColor;
 
 		initialize();
 
@@ -55,7 +57,7 @@ public class AdvertiserQueryCountPanel extends JPanel {
 	private void initialize() {
 		setLayout(new GridLayout(3, 1));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
-        
+
 		add(createChartPanel(createImpressionsChart()));
 		add(createChartPanel(createClicksChart()));
 		add(createChartPanel(createConversionsChart()));
@@ -97,9 +99,9 @@ public class AdvertiserQueryCountPanel extends JPanel {
 		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
 			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
 			xylineandshaperenderer.setBaseShapesVisible(false);
-            xylineandshaperenderer.setBaseStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT,
+            xylineandshaperenderer.setBaseStroke(new BasicStroke(4f, BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_BEVEL));
-            xylineandshaperenderer.setSeriesPaint(0, Color.black);
+            xylineandshaperenderer.setSeriesPaint(0, legendColor);
 		}
 
 		return jfreechart;
