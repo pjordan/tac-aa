@@ -37,9 +37,9 @@ public class AverageRankingPanel extends JPanel {
         this.currentDay = 0;
         this.names = new HashMap<Integer, String>();
         this.items = new HashMap<Integer, ResultsItem>();
-        
-        simulationPanel.addViewListener(this.model);
+
         initialize();
+        simulationPanel.addViewListener(this.model);
     }
 
     private void initialize() {

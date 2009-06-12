@@ -2,206 +2,122 @@ package edu.umich.eecs.tac.viewer.role.publisher;
 
 import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.TACAAConstants;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import se.sics.isl.transport.Transportable;
-import se.sics.tasim.viewer.TickListener;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+
 
 public class RankingPanel extends JPanel {
 
-	private Query query;
-	private int currentDay;
-    private RankingTabPanel rankingTabPanel;
+    private Query query;
     private JTable table;
-    private XYSeriesCollection seriescollection;
-    private Map<String, XYSeries> bidSeries;
-    private SortedMap auctionResults;
-    private int reportsSeenToday;
+    private Map<Integer, String> names;
+    private MyTableModel model;
 
-	public RankingPanel(Query query, RankingTabPanel rankingTabPanel) {
-        super(new GridLayout(1,0));
+    public RankingPanel(Query query, RankingTabPanel rankingTabPanel) {
+        super(new GridLayout(1, 0));
 
-		this.query = query;
-        this.rankingTabPanel = rankingTabPanel;
-		currentDay = 0;
-        bidSeries = new HashMap<String, XYSeries>();
-        seriescollection = new XYSeriesCollection();
-        auctionResults = new TreeMap();
-        reportsSeenToday = 0;
-        
-		initialize();
+        this.query = query;
+        this.names = new HashMap<Integer, String>();
 
-		rankingTabPanel.getSimulationPanel().addViewListener(new AuctionListener());
-		rankingTabPanel.getSimulationPanel().addTickListener(new DayListener());
+        initialize();
+
+        rankingTabPanel.getSimulationPanel().addViewListener(new AuctionListener());
+
     }
 
-	protected void initialize() {
-         initializeTable();
-         int count = rankingTabPanel.getAgentCount();
-		 for (int index = 0; index < count; index++) {
-			if (rankingTabPanel.getRole(index) == TACAAConstants.ADVERTISER) {
-				XYSeries series = new XYSeries(rankingTabPanel
-						.getAgentName(index));
-				bidSeries.put(rankingTabPanel.getAgentName(index), series);
-				seriescollection.addSeries(series);
-			}
-		 }
-	}
-  
-    protected void initializeTable(){
-         table = new JTable(new MyTableModel());
-         ((MyTableModel)table.getModel()).refreshTable();
-         //table.setPreferredScrollableViewportSize(new Dimension(50, 70));
-         //table.setFillsViewportHeight(true);
-         table.setDefaultRenderer(String.class,
-                                  new RankingRenderer(Color.white, Color.black));
-         table.setDefaultRenderer(Double.class,
-                                  new RankingRenderer(Color.white, Color.black));
-        //table.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer());
-         table.setGridColor(Color.white);
-         //table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-         initColumnSizes(table);
-         JScrollPane scrollPane = new JScrollPane(table);
-         scrollPane.setBorder(BorderFactory.createTitledBorder(
-                                     "Auction For (" + query.getManufacturer() + " , "
-                                                     + query.getComponent() + ")"));
-         add(scrollPane);
+    protected void initialize() {
+        model = new MyTableModel();
+        table = new JTable(model);
+
+        table.setDefaultRenderer(String.class, new RankingRenderer(Color.white, Color.black));
+        table.setDefaultRenderer(Double.class, new RankingRenderer(Color.white, Color.black));
+        table.setGridColor(Color.white);
+
+        initColumnSizes(table);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createTitledBorder(
+                "Auction For (" + query.getManufacturer() + " , "
+                        + query.getComponent() + ")"));
+        add(scrollPane);
     }
 
-	public Query getQuery() {
-		return query;
-	}
+    public Query getQuery() {
+        return query;
+    }
 
-	private class AuctionListener implements ViewListener {
+    private void handleQueryReport(int agent, QueryReport queryReport) {
+        String name = names.get(agent);
 
-		public void dataUpdated(int agent, int type, int value) {
+        if (name != null) {
+            Ad ad = queryReport.getAd(query);
+            double position = queryReport.getPosition(query);
+            model.handleQueryReportItem(name, ad, position);
+        }
+    }
 
-		}
+    private void handleBidBundle(int agent, BidBundle bundle) {
+        String name = names.get(agent);
 
-		public void dataUpdated(int agent, int type, long value) {
-		}
+        if (name != null) {
 
-		public void dataUpdated(int agent, int type, float value) {
-		}
+            double bid = bundle.getBid(query);
 
-		public void dataUpdated(int agent, int type, double value) {
-		}
+            if (!(BidBundle.PERSISTENT_BID == bid || Double.isNaN(BidBundle.PERSISTENT_BID) && Double.isNaN(bid))) {
 
-		public void dataUpdated(int agent, int type, String value) {
-		}
+                model.handleBidBundleItem(name, bid);
+            }
+        }
+    }
 
-		public void dataUpdated(int agent, int type, Transportable value) {
-             if(type == TACAAConstants.DU_QUERY_REPORT &&
-                value.getClass().equals(QueryReport.class)){
-                reportsSeenToday++;
-                int index = rankingTabPanel.indexOfAgent(agent);
+    private class AuctionListener implements ViewListener {
 
-				String name = index < 0 ? null : rankingTabPanel.getAgentName(index);
+        public void dataUpdated(int agent, int type, int value) {
 
-                QueryReport queryReport = (QueryReport) value;
-
-                if(name!=null){
-                    Ad ad = queryReport.getAd(query,name);
-                    if(ad!=null){
-                        XYSeries timeSeries = bidSeries.get(name);
-
-                        if(timeSeries != null &&
-                           timeSeries.indexOf(currentDay-1) > 0){
-                            
-                            double bid = timeSeries.getY(timeSeries.
-                                                         indexOf(currentDay-1)).doubleValue();
-                            if(!Double.isNaN(bid)){
-                                double position = queryReport.getPosition(query,name);
-                                if(position >= 0 && !Double.isNaN(position)){
-                                   Boolean targeted = !ad.isGeneric();
-                                   auctionResults.put(position,
-                                                     new AgentAuctionResult(name, bid, targeted));
-                                }
-                            }
-                        }
-                    }
-
-                    if(reportsSeenToday == rankingTabPanel.getAgentCount() - 2){
-                           reportsSeenToday = 0;
-                           displayResults();
-                    }
-                } 
-             }
-
-             if (type == TACAAConstants.DU_BIDS
-					&& value.getClass().equals(BidBundle.class)) {
-                int index = rankingTabPanel.indexOfAgent(agent);
-				String name = index < 0 ? null : rankingTabPanel
-						.getAgentName(index);
-
-				if (name != null) {
-					XYSeries timeSeries = bidSeries.get(name);
-
-					if (timeSeries != null) {
-
-						BidBundle bundle = (BidBundle) value;
-
-						double bid = bundle.getBid(query);
-						if (!Double.isNaN(bid)) {
-
-							timeSeries.addOrUpdate(currentDay, bid);
-						}
-					}
-				}
-			}
         }
 
-		public void dataUpdated(int type, Transportable value) {
+        public void dataUpdated(int agent, int type, long value) {
+        }
 
-		}
+        public void dataUpdated(int agent, int type, float value) {
+        }
 
-		public void participant(int agent, int role, String name,
-				int participantID) {
-		}
-	}
+        public void dataUpdated(int agent, int type, double value) {
+        }
 
-	protected class DayListener implements TickListener {
+        public void dataUpdated(int agent, int type, String value) {
+        }
 
-		public void tick(long serverTime) {
-			RankingPanel.this.tick(serverTime);
-		}
+        public void dataUpdated(int agent, int type, Transportable value) {
+            if (type == TACAAConstants.DU_QUERY_REPORT && value.getClass().equals(QueryReport.class)) {
 
-		public void simulationTick(long serverTime, int simulationDate) {
-			RankingPanel.this.simulationTick(serverTime, simulationDate);
-		}
-	}
+                handleQueryReport(agent, (QueryReport) value);
 
-	protected void tick(long serverTime) {
-	}
+            } else if (type == TACAAConstants.DU_BIDS && value.getClass().equals(BidBundle.class)) {
 
-	protected void simulationTick(long serverTime, int simulationDate) {
-        currentDay = simulationDate;
-   	}
+                handleBidBundle(agent, (BidBundle) value);
 
-    private void displayResults(){
-       ((MyTableModel)table.getModel()).refreshTable();
-       Iterator iterator = auctionResults.keySet().iterator();
-       int position = 0;
-       while(iterator.hasNext()){
-        	Object key = iterator.next();
-            table.getModel().setValueAt(
-                    ((AgentAuctionResult)auctionResults.get(key)).getName(), position, 1);
-            table.getModel().setValueAt(
-                    ((AgentAuctionResult)auctionResults.get(key)).getBid(), position, 2);
-            table.getModel().setValueAt(
-                    ((AgentAuctionResult)auctionResults.get(key)).getAdType(), position, 3);
-            table.getModel().setValueAt(key, position, 0);
-            position++;
-       } 
+            }
+        }
 
+        public void dataUpdated(int type, Transportable value) {
+
+        }
+
+        public void participant(int agent, int role, String name, int participantID) {
+            if (role == TACAAConstants.ADVERTISER) {
+                RankingPanel.this.names.put(agent, name);
+            }
+        }
     }
+
+
     private void initColumnSizes(JTable table) {
         TableColumn column = null;
         Component comp = null;
@@ -211,72 +127,149 @@ public class RankingPanel extends JPanel {
         for (int i = 0; i < table.getColumnCount(); i++) {
             column = table.getColumnModel().getColumn(i);
             comp = headerRenderer.getTableCellRendererComponent(
-                                   null, column.getHeaderValue(),
-                                   false, false, 0, 0);
+                    null, column.getHeaderValue(),
+                    false, false, 0, 0);
             headerWidth = comp.getPreferredSize().width;
 
             column.setPreferredWidth(headerWidth);
         }
     }
 
-    private class AgentAuctionResult {
-        String name;
-        Double bid;
-        Boolean targeted;
-
-        public AgentAuctionResult(String name, Double bid, Boolean targeted){
-            this.name = name;
-            this.bid = bid;
-            this.targeted = targeted;
-        }
-        private String getName(){
-            return this.name;
-        }
-        private Double getBid(){
-            return this.bid;
-        }
-        private Boolean getAdType(){
-            return this.targeted;
-        }
-    }
 
     private class MyTableModel extends AbstractTableModel {
 
-        String[] columnNames = {"Avg. Position","    Advertiser    ","  Bid ($)  ","Targeted"};
-        Object[][] data;
+        String[] columnNames = {"Avg. Position", "    Advertiser    ", "  Bid ($)  ", "Targeted"};
+        List<ResultsItem> data;
+        Map<String, ResultsItem> map;
 
-        public void refreshTable(){
-          Object[][]initData = {{" ", " ", " ",new Boolean(false)},
-                                {" ", " ", " ",new Boolean(false)},
-                                {" ", " ", " ",new Boolean(false)},
-                                {" ", " ", " ",new Boolean(false)},
-                                {" ", " ", " ",new Boolean(false)},
-                                {" ", " ", " ",new Boolean(false)},
-                                {" ", " ", " ",new Boolean(false)},
-                                {" ", " ", " ",new Boolean(false)}};
-          data = initData;
-          fireTableDataChanged();
+        private MyTableModel() {
+            data = new ArrayList<ResultsItem>();
+            map = new HashMap<String, ResultsItem>();
         }
+
         public int getColumnCount() {
             return columnNames.length;
         }
+
         public int getRowCount() {
-            return data.length;
+            return data.size();
         }
+
         public String getColumnName(int col) {
             return columnNames[col];
         }
+
         public Object getValueAt(int row, int col) {
-            return data[row][col];
+            if (col == 0) {
+                return data.get(row).getPosition();
+            } else if (col == 1) {
+                return data.get(row).getAdvertiser();
+            } else if (col == 2) {
+                return data.get(row).getBid();
+            } else if (col == 3) {
+                return data.get(row).isTargeted();
+            } else {
+                return null;
+            }
         }
+
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
-        public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
+
+        public void handleQueryReportItem(String name, Ad ad, double position) {
+
+            ResultsItem item = map.get(name);
+
+            if (item != null) {
+                data.remove(item);
+            } else {
+                item = new ResultsItem(name);
+                map.put(name, item);
+            }
+
+
+            item.setAd(ad);
+            item.setPosition(position);
+
+            if (!Double.isNaN(position)) {
+                data.add(item);
+                Collections.sort(data);
+            }
+
             fireTableDataChanged();
         }
-   }
 
+        public void handleBidBundleItem(String name, double bid) {
+            ResultsItem item = map.get(name);
+
+            if (item != null) {
+                data.remove(item);
+            } else {
+                item = new ResultsItem(name);
+                map.put(name, item);
+            }
+
+
+            item.setBid(bid);
+
+            if (!Double.isNaN(item.getPosition())) {
+                data.add(item);
+                Collections.sort(data);
+            }
+
+
+            fireTableDataChanged();
+        }
+    }
+
+    private static class ResultsItem implements Comparable<ResultsItem> {
+        private String advertiser;
+        private Ad ad;
+        private double position;
+        private double bid;
+
+        public ResultsItem(String advertiser) {
+            this.advertiser = advertiser;
+            this.position = Double.NaN;
+            this.bid = Double.NaN;
+        }
+
+        public void setAd(Ad ad) {
+            this.ad = ad;
+        }
+
+        public void setPosition(double position) {
+            this.position = position;
+        }
+
+        public void setBid(double bid) {
+            this.bid = bid;
+        }
+
+        public double getBid() {
+            return bid;
+        }
+
+        public String getAdvertiser() {
+            return advertiser;
+        }
+
+        public Ad getAd() {
+            return ad;
+        }
+
+        public double getPosition() {
+            return position;
+        }
+
+        public boolean isTargeted() {
+            return getAd().getProduct() != null;
+        }
+
+        public int compareTo(ResultsItem o) {
+            return Double.compare(position, o.position);
+        }
+    }
 }
 
