@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 import edu.umich.eecs.tac.viewer.auction.AverageRankingPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.role.AgentSupport;
 import edu.umich.eecs.tac.props.Query;
 
 import javax.swing.*;
@@ -24,6 +25,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
     private AdvertiserQueryValuePanel queryValuePanel;
     private AdvertiserQueryPositionPanel positionPanel;
     private Color legendColor;
+    private AgentSupport agentSupport;
 
     public AdvertiserQueryTabPanel(int agent, String advertiser, Query query, TACAASimulationPanel simulationPanel,
                                    Color legendColor) {
@@ -32,6 +34,8 @@ public class AdvertiserQueryTabPanel extends JPanel {
         this.query = query;
         this.simulationPanel = simulationPanel;
         this.legendColor = legendColor;
+        agentSupport = new AgentSupport();
+        simulationPanel.addViewListener(agentSupport);
 
         initialize();
 
@@ -97,4 +101,32 @@ public class AdvertiserQueryTabPanel extends JPanel {
         rightPanel.add(queryValuePanel,c);
         add(rightPanel);
     }
+    public int getAgentCount() {
+            return agentSupport.size();
+        }
+
+        public int getAgent(int index) {
+            return agentSupport.agent(index);
+        }
+
+        public int getRole(int index) {
+            return agentSupport.role(index);
+        }
+
+        public int getParticipant(int index) {
+            return agentSupport.participant(index);
+        }
+
+        public int indexOfAgent(int agent) {
+            return agentSupport.indexOfAgent(agent);
+        }
+
+        public String getAgentName(int index) {
+            return agentSupport.name(index);
+        }
+    
+
+
+
+
 }

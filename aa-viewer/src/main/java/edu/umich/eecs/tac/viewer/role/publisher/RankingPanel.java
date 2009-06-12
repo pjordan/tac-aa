@@ -210,7 +210,6 @@ public class RankingPanel extends JPanel {
                 map.put(name, item);
             }
 
-
             item.setBid(bid);
 
             if (!Double.isNaN(item.getPosition())) {

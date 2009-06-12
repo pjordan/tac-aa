@@ -142,7 +142,7 @@ public class SeriesPanel extends JComponent{
 
 						double bid = bundle.getBid(query);
 						if (!Double.isNaN(bid)) {
-							timeSeries.addOrUpdate(currentDay, bid);
+							timeSeries.addOrUpdate(currentDay - 1, bid);
 						}
 					}
 				}

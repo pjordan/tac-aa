@@ -144,7 +144,7 @@ public class RankingTabPanel extends SimulationTabPanel{
 
 	protected void simulationTick(long serverTime, int simulationDate) {
         currentDay = simulationDate;
-        setBorder(BorderFactory.createTitledBorder("Auction Results for Day " + (currentDay - 2)));
+        setBorder(BorderFactory.createTitledBorder("Auction Results for Day " + (currentDay - 1)));
 	}
 
 	public int getAgentCount() {
