@@ -6,11 +6,7 @@ import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Guha Balakrishnan
- * Date: Jun 8, 2009
- * Time: 10:57:49 AM
- * To change this template use File | Settings | File Templates.
+ * @author Guha Balakrishnan
  */
 public class MainTabPanel extends SimulationTabPanel {
 

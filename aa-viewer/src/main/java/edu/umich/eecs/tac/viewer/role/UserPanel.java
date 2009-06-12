@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.viewer.role;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
@@ -65,7 +66,7 @@ public class UserPanel extends SimulationTabPanel {
 		currentDay = timeUnit;
 	}
 
-	private class UserSearchStateListener implements ViewListener {
+	private class UserSearchStateListener extends ViewAdaptor {
 
 		public void dataUpdated(int agent, int type, int value) {
 			switch (type) {
@@ -90,28 +91,6 @@ public class UserPanel extends SimulationTabPanel {
 			default:
 				break;
 			}
-		}
-
-		public void dataUpdated(int agent, int type, long value) {
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-		}
-
-		public void dataUpdated(int agent, int type, double value) {
-		}
-
-		public void dataUpdated(int agent, int type, String value) {
-		}
-
-		public void dataUpdated(int agent, int type, Transportable value) {
-		}
-
-		public void dataUpdated(int type, Transportable value) {
-		}
-
-		public void participant(int agent, int role, String name,
-				int participantID) {
 		}
 	}
 

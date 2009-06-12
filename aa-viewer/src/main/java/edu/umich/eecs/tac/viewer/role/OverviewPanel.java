@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.viewer.role;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.RetailCatalog;
 
@@ -171,38 +172,13 @@ public class OverviewPanel extends SimulationTabPanel {
 		}
 	}
 
-	protected class BankStatusListener implements ViewListener {
-
-		public void dataUpdated(int agent, int type, int value) {
-
-		}
-
-		public void dataUpdated(int agent, int type, long value) {
-
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-
-		}
+	protected class BankStatusListener extends ViewAdaptor {
 
 		public void dataUpdated(int agent, int type, double value) {
 			OverviewPanel.this.dataUpdated(agent, type, value);
 		}
 
-		public void dataUpdated(int agent, int type, String value) {
-
-		}
-
-		public void dataUpdated(int agent, int type, Transportable value) {
-
-		}
-
-		public void dataUpdated(int type, Transportable value) {
-
-		}
-
-		public void participant(int agent, int role, String name,
-				int participantID) {
+		public void participant(int agent, int role, String name, int participantID) {
 			OverviewPanel.this.participant(agent, role, name, participantID);
 		}
 	}

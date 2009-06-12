@@ -3,6 +3,7 @@ package edu.umich.eecs.tac.viewer.role;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.*;
 
@@ -28,11 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Guha Balakrishnan
- * Date: Jun 9, 2009
- * Time: 1:06:30 PM
- * To change this template use File | Settings | File Templates.
+ * @author Guha Balakrishnan
  */
 public class AgentRevCostPanel extends JPanel {
     private int agent;
@@ -119,8 +116,8 @@ public class AgentRevCostPanel extends JPanel {
 			Query f0 = new Query();
 
 			// Create f1's
-			Query f1_manufacturer = new Query(product.getManufacturer(), null);
-			Query f1_component = new Query(null, product.getComponent());
+			Query f1Manufacturer = new Query(product.getManufacturer(), null);
+			Query f1Component = new Query(null, product.getComponent());
 
 			// Create f2
 			Query f2 = new Query(product.getManufacturer(), product
@@ -129,11 +126,11 @@ public class AgentRevCostPanel extends JPanel {
 			if (!queries.containsKey(f0)) {
 				queries.put(f0, f0);
 			}
-			if (!queries.containsKey(f1_manufacturer)) {
-				queries.put(f1_manufacturer, f1_manufacturer);
+			if (!queries.containsKey(f1Manufacturer)) {
+				queries.put(f1Manufacturer, f1Manufacturer);
 			}
-			if (!queries.containsKey(f1_component)) {
-			    queries.put(f1_component, f1_component);
+			if (!queries.containsKey(f1Component)) {
+			    queries.put(f1Component, f1Component);
 			}
 			if (!queries.containsKey(f2)) {
 				queries.put(f2, f2);
@@ -179,22 +176,7 @@ public class AgentRevCostPanel extends JPanel {
         return result;
     }
 
-    private class DataUpdateListener implements ViewListener {
-
-		public void dataUpdated(int agent, int type, int value) {
-	    }
-
-		public void dataUpdated(int agent, int type, long value) {
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-		}
-
-		public void dataUpdated(int agent, int type, double value) {
-		}
-
-		public void dataUpdated(int agent, int type, String value) {
-		}
+    private class DataUpdateListener extends ViewAdaptor {
 
 		public void dataUpdated(int agent, int type, Transportable value) {
              if(type == TACAAConstants.DU_QUERY_REPORT &&
@@ -222,9 +204,5 @@ public class AgentRevCostPanel extends JPanel {
 				handleRetailCatalog((RetailCatalog) value);
 			}
    		}
-
-		public void participant(int agent, int role, String name, int participantID) {
-		}
 	}
-
 }
