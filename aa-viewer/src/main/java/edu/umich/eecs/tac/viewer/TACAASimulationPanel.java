@@ -291,8 +291,7 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
 
     protected void fireTick(long serverTime) {
         synchronized (lock) {
-            for (TickListener listener : (List<TickListener>) new CopyOnWriteArrayList(
-                    tickListeners)) {
+            for (TickListener listener : new CopyOnWriteArrayList<TickListener>(tickListeners)) {
                 listener.tick(serverTime);
             }
         }
@@ -300,8 +299,7 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
 
     protected void fireSimulationTick(long serverTime, int timeUnit) {
         synchronized (lock) {
-            for (TickListener listener : (List<TickListener>) new CopyOnWriteArrayList(
-                    tickListeners)) {
+            for (TickListener listener : new CopyOnWriteArrayList<TickListener>(tickListeners)) {
                 listener.simulationTick(serverTime, timeUnit);
             }
         }

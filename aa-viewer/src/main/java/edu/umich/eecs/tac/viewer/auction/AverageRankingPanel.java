@@ -28,11 +28,16 @@ public class AverageRankingPanel extends JPanel {
     private int currentDay;
     private JList resultsList;
     private ResultsPageModel model;
+    private Map<Integer,String> names;
+    private Map<Integer,ResultsItem> items;
 
     public AverageRankingPanel(Query query, TACAASimulationPanel simulationPanel) {
         this.query = query;
         this.model = new ResultsPageModel(query);
         this.currentDay = 0;
+        this.names = new HashMap<Integer, String>();
+        this.items = new HashMap<Integer, ResultsItem>();
+        
         simulationPanel.addViewListener(this.model);
         initialize();
     }
@@ -77,7 +82,7 @@ public class AverageRankingPanel extends JPanel {
         }
     }
 
-    private static class ResultsPageModel extends AbstractListModel implements ViewListener {
+    private class ResultsPageModel extends AbstractListModel implements ViewListener {
         private Query query;
         private List<ResultsItem> results;
 
@@ -95,26 +100,21 @@ public class AverageRankingPanel extends JPanel {
         }
 
         public void dataUpdated(int agent, int type, int value) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dataUpdated(int agent, int type, long value) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dataUpdated(int agent, int type, float value) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dataUpdated(int agent, int type, double value) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void dataUpdated(int agent, int type, String value) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public void dataUpdated(int agent, int type, Transportable value) {
+        public void dataUpdated(final int agent, int type, Transportable value) {
             if (type == TACAAConstants.DU_QUERY_REPORT &&
                     value.getClass().equals(QueryReport.class)) {
 
@@ -122,17 +122,34 @@ public class AverageRankingPanel extends JPanel {
 
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        results.clear();
+                        
+                        //results.clear();
 
-                        for (String advertiser : queryReport.advertisers(query)) {
-                            Ad ad = queryReport.getAd(query, advertiser);
-                            double position = queryReport.getPosition(query, advertiser);
+                        ResultsItem item = items.get(agent);
+                        if(item!=null) {
+                            results.remove(item);
+                        }
 
-                            if(ad!=null && !Double.isNaN(position)) {
-                                results.add(new ResultsItem(advertiser, ad, position));
+                        Ad ad = queryReport.getAd(query);
+
+                        double position = queryReport.getPosition(query);
+
+                        if(ad!=null && !Double.isNaN(position)) {
+
+                            String advertiser = names.get(agent);
+
+                            if(advertiser!=null) {
+
+                                item = new ResultsItem(advertiser, ad, position);
+
+                                results.add(item);
+
+                                items.put(agent, item);
+
                             }
 
                         }
+
 
                         Collections.sort(results);
                         fireContentsChanged(this, 0, getSize());
@@ -143,11 +160,12 @@ public class AverageRankingPanel extends JPanel {
         }
 
         public void dataUpdated(int type, Transportable value) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void participant(int agent, int role, String name, int participantID) {
-            //To change body of implemented methods use File | Settings | File Templates.
+            if(role == TACAAConstants.ADVERTISER) {
+                AverageRankingPanel.this.names.put(agent,name);
+            }
         }
     }
 
