@@ -5,6 +5,7 @@ import edu.umich.eecs.tac.props.QueryReport;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 
 import javax.swing.*;
@@ -30,136 +31,114 @@ import se.sics.tasim.viewer.TickListener;
  */
 public class AdvertiserQueryPositionPanel extends JPanel {
     private int agent;
-	private String advertiser;
+    private String advertiser;
     private Query query;
 
-	private int currentDay;
-	private XYSeries position;
+    private int currentDay;
+    private XYSeries position;
     private Color legendColor;
 
-	public AdvertiserQueryPositionPanel(int agent, String advertiser, Query query,
-			TACAASimulationPanel simulationPanel, Color legendColor) {
-		this.agent = agent;
-		this.advertiser = advertiser;
+    public AdvertiserQueryPositionPanel(int agent, String advertiser, Query query,
+                                        TACAASimulationPanel simulationPanel, Color legendColor) {
+        this.agent = agent;
+        this.advertiser = advertiser;
         this.query = query;
         this.legendColor = legendColor;
 
-		initialize();
+        initialize();
 
-		currentDay = 0;
-		simulationPanel.addViewListener(new DataUpdateListener());
-		simulationPanel.addTickListener(new DayListener());
-	}
+        currentDay = 0;
+        simulationPanel.addViewListener(new DataUpdateListener());
+        simulationPanel.addTickListener(new DayListener());
+    }
 
-	private void initialize() {
-		setLayout(new GridLayout(1, 1));
+    private void initialize() {
+        setLayout(new GridLayout(1, 1));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
-		add(createChartPanel(createPositionChart()));
+        add(createChartPanel(createPositionChart()));
 
 
-		setBorder(BorderFactory.createTitledBorder("Position"));
-	}
+        setBorder(BorderFactory.createTitledBorder("Position"));
+    }
 
     private ChartPanel createChartPanel(JFreeChart jFreeChart) {
         ChartPanel panel = new ChartPanel(jFreeChart);
         return panel;
     }
-	private JFreeChart createPositionChart() {
-		position = new XYSeries("Position");
-		return createChart(new XYSeriesCollection(position));
-	}
 
-	private JFreeChart createChart(XYDataset xydataset) {
-		JFreeChart jfreechart = ChartFactory.createXYLineChart(null, "Day", "", xydataset, PlotOrientation.VERTICAL,
-                                                               false, true, false);
-		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-		xyplot.setDomainGridlinePaint(Color.GRAY);
+    private JFreeChart createPositionChart() {
+        position = new XYSeries("Position");
+        return createChart(new XYSeriesCollection(position));
+    }
+
+    private JFreeChart createChart(XYDataset xydataset) {
+        JFreeChart jfreechart = ChartFactory.createXYLineChart(null, "Day", "", xydataset, PlotOrientation.VERTICAL,
+                false, true, false);
+        jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
+        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
+        xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
+        xyplot.setDomainGridlinePaint(Color.GRAY);
         xyplot.setRangeGridlinePaint(Color.GRAY);
-		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
+        xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
 
-		org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot
-				.getRenderer();
-		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-			xylineandshaperenderer.setBaseShapesVisible(false);
+        org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot
+                .getRenderer();
+        if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
+            XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
+            xylineandshaperenderer.setBaseShapesVisible(false);
             xylineandshaperenderer.setBaseStroke(new BasicStroke(4f, BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_BEVEL));
+                    BasicStroke.JOIN_BEVEL));
             xylineandshaperenderer.setSeriesPaint(0, legendColor);
-		}
-
-		return jfreechart;
-	}
-
-	public int getAgent() {
-		return agent;
-	}
-
-	public String getAdvertiser() {
-		return advertiser;
-	}
-
-	protected void setPosition(double position) {
-		this.position.addOrUpdate(currentDay, position);
-	}
-
-	private class DataUpdateListener implements ViewListener {
-
-		public void dataUpdated(int agent, int type, int value) {
-
-		}
-
-		public void dataUpdated(int agent, int type, long value) {
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-		}
-
-		public void dataUpdated(int agent, int type, double value) {
-		}
-
-		public void dataUpdated(int agent, int type, String value) {
-		}
-
-		public void dataUpdated(int agent, int type, Transportable value) {
-            if (agent == AdvertiserQueryPositionPanel.this.agent) {
-				switch (type) {
-				case TACAAConstants.DU_QUERY_REPORT:
-                    handleQueryReport((QueryReport)value);
-					break;
-				}
-			}
-		}
-
-        private void handleQueryReport(QueryReport queryReport) {
-            setPosition(queryReport.getPosition(query));            
         }
 
-        public void dataUpdated(int type, Transportable value) {
-		}
+        return jfreechart;
+    }
 
-		public void participant(int agent, int role, String name,
-				int participantID) {
-		}
-	}
+    public int getAgent() {
+        return agent;
+    }
 
-	protected class DayListener implements TickListener {
+    public String getAdvertiser() {
+        return advertiser;
+    }
 
-		public void tick(long serverTime) {
-			AdvertiserQueryPositionPanel.this.tick(serverTime);
-		}
+    protected void setPosition(double position) {
+        this.position.addOrUpdate(currentDay, position);
+    }
 
-		public void simulationTick(long serverTime, int simulationDate) {
-			AdvertiserQueryPositionPanel.this.simulationTick(serverTime, simulationDate);
-		}
-	}
+    private class DataUpdateListener extends ViewAdaptor {
 
-	protected void tick(long serverTime) {
-	}
+        public void dataUpdated(int agent, int type, Transportable value) {
+            if (agent == AdvertiserQueryPositionPanel.this.agent) {
+                switch (type) {
+                    case TACAAConstants.DU_QUERY_REPORT:
+                        handleQueryReport((QueryReport) value);
+                        break;
+                }
+            }
+        }
 
-	protected void simulationTick(long serverTime, int simulationDate) {
-		currentDay = simulationDate;
-	}
+        private void handleQueryReport(QueryReport queryReport) {
+            setPosition(queryReport.getPosition(query));
+        }
+    }
+
+    protected class DayListener implements TickListener {
+
+        public void tick(long serverTime) {
+            AdvertiserQueryPositionPanel.this.tick(serverTime);
+        }
+
+        public void simulationTick(long serverTime, int simulationDate) {
+            AdvertiserQueryPositionPanel.this.simulationTick(serverTime, simulationDate);
+        }
+    }
+
+    protected void tick(long serverTime) {
+    }
+
+    protected void simulationTick(long serverTime, int simulationDate) {
+        currentDay = simulationDate;
+    }
 }

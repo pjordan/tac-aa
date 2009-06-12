@@ -5,6 +5,7 @@ import edu.umich.eecs.tac.viewer.role.publisher.RankingPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.Product;
 import edu.umich.eecs.tac.props.Query;
@@ -17,11 +18,7 @@ import java.util.HashMap;
 import se.sics.isl.transport.Transportable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Guha Balakrishnan
- * Date: Jun 10, 2009
- * Time: 9:33:03 PM
- * To change this template use File | Settings | File Templates.
+ * @author Guha Balakrishnan
  */
 public class AdvertiserInfoTabPanel extends SimulationTabPanel {
 
@@ -91,34 +88,13 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
         add(tabbedPane);
     }
 
-    private class CatalogListener implements ViewListener {
-
-        public void dataUpdated(int agent, int type, int value) {
-        }
-
-        public void dataUpdated(int agent, int type, long value) {
-        }
-
-        public void dataUpdated(int agent, int type, float value) {
-        }
-
-        public void dataUpdated(int agent, int type, double value) {
-        }
-
-        public void dataUpdated(int agent, int type, String value) {
-        }
-
-        public void dataUpdated(int agent, int type, Transportable value) {
-        }
+    private class CatalogListener extends ViewAdaptor {
 
         public void dataUpdated(int type, Transportable value) {
             Class valueType = value.getClass();
             if (valueType == RetailCatalog.class) {
                 handleRetailCatalog((RetailCatalog) value);
             }
-        }
-
-        public void participant(int agent, int role, String name, int participantID) {
         }
     }
 }

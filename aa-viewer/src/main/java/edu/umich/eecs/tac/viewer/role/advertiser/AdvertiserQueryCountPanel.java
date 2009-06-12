@@ -16,6 +16,7 @@ import javax.swing.*;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.QueryReport;
@@ -127,23 +128,7 @@ public class AdvertiserQueryCountPanel extends JPanel {
 		this.conversions.addOrUpdate(currentDay, conversions);
 	}
 
-	private class DataUpdateListener implements ViewListener {
-
-		public void dataUpdated(int agent, int type, int value) {
-
-		}
-
-		public void dataUpdated(int agent, int type, long value) {
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-		}
-
-		public void dataUpdated(int agent, int type, double value) {
-		}
-
-		public void dataUpdated(int agent, int type, String value) {
-		}
+	private class DataUpdateListener extends ViewAdaptor {
 
 		public void dataUpdated(int agent, int type, Transportable value) {
             if (agent == AdvertiserQueryCountPanel.this.agent) {
@@ -166,13 +151,6 @@ public class AdvertiserQueryCountPanel extends JPanel {
         private void handleSalesReport(SalesReport salesReport) {
             addConversions(salesReport.getConversions(query));
         }
-
-        public void dataUpdated(int type, Transportable value) {
-		}
-
-		public void participant(int agent, int role, String name,
-				int participantID) {
-		}
 	}
 
 	protected class DayListener implements TickListener {

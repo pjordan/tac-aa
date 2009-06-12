@@ -4,6 +4,7 @@ import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 
 import javax.swing.*;
@@ -122,22 +123,7 @@ public class AdvertiserQueryValuePanel extends JPanel {
         return report.getRevenue(query);
     }
 
-    private class DataUpdateListener implements ViewListener {
-
-        public void dataUpdated(int agent, int type, int value) {
-        }
-
-        public void dataUpdated(int agent, int type, long value) {
-        }
-
-        public void dataUpdated(int agent, int type, float value) {
-        }
-
-        public void dataUpdated(int agent, int type, double value) {
-        }
-
-        public void dataUpdated(int agent, int type, String value) {
-        }
+    private class DataUpdateListener extends ViewAdaptor {
 
         public void dataUpdated(int agent, int type, Transportable value) {
             if (type == TACAAConstants.DU_QUERY_REPORT &&
@@ -157,13 +143,6 @@ public class AdvertiserQueryValuePanel extends JPanel {
 
                 revSeries.addOrUpdate(currentDay, getDayRevenue(salesReport));
             }
-        }
-
-        public void dataUpdated(int type, Transportable value) {
-
-        }
-
-        public void participant(int agent, int role, String name, int participantID) {
         }
     }
 

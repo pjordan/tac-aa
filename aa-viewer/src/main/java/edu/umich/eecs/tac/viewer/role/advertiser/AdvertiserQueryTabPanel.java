@@ -57,7 +57,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weighty = 4;
         c.fill = GridBagConstraints.BOTH;
         this.averageRankingPanel = new AverageRankingPanel(query, simulationPanel);
-        leftPanel.add(averageRankingPanel,c);
+        leftPanel.add(averageRankingPanel, c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -66,8 +66,8 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
         this.positionPanel = new AdvertiserQueryPositionPanel(agent, advertiser, query, simulationPanel,
-                                                              legendColor);
-        leftPanel.add(positionPanel,c);
+                legendColor);
+        leftPanel.add(positionPanel, c);
 
         add(leftPanel);
 
@@ -82,7 +82,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.fill = GridBagConstraints.BOTH;
 
         queryRatioPanel = new AdvertiserQueryRatioPanel(agent, advertiser, query, simulationPanel);
-        rightPanel.add(queryRatioPanel,c);
+        rightPanel.add(queryRatioPanel, c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -91,42 +91,38 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weighty = 3;
         c.fill = GridBagConstraints.BOTH;
         queryCountPanel = new AdvertiserQueryCountPanel(agent, advertiser, query, simulationPanel, legendColor);
-        rightPanel.add(queryCountPanel,c);
+        rightPanel.add(queryCountPanel, c);
 
         c.gridx = 0;
         c.gridy = 2;
         c.weightx = 1;
         c.weighty = 1;
         queryValuePanel = new AdvertiserQueryValuePanel(agent, advertiser, query, simulationPanel);
-        rightPanel.add(queryValuePanel,c);
+        rightPanel.add(queryValuePanel, c);
         add(rightPanel);
     }
+
     public int getAgentCount() {
-            return agentSupport.size();
-        }
+        return agentSupport.size();
+    }
 
-        public int getAgent(int index) {
-            return agentSupport.agent(index);
-        }
+    public int getAgent(int index) {
+        return agentSupport.agent(index);
+    }
 
-        public int getRole(int index) {
-            return agentSupport.role(index);
-        }
+    public int getRole(int index) {
+        return agentSupport.role(index);
+    }
 
-        public int getParticipant(int index) {
-            return agentSupport.participant(index);
-        }
+    public int getParticipant(int index) {
+        return agentSupport.participant(index);
+    }
 
-        public int indexOfAgent(int agent) {
-            return agentSupport.indexOfAgent(agent);
-        }
+    public int indexOfAgent(int agent) {
+        return agentSupport.indexOfAgent(agent);
+    }
 
-        public String getAgentName(int index) {
-            return agentSupport.name(index);
-        }
-    
-
-
-
-
+    public String getAgentName(int index) {
+        return agentSupport.name(index);
+    }
 }

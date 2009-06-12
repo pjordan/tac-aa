@@ -16,11 +16,7 @@ import java.awt.*;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Guha Balakrishnan
- * Date: Jun 10, 2009
- * Time: 10:30:20 PM
- * To change this template use File | Settings | File Templates.
+ * @author Guha Balakrishnan
  */
 public class AdvertiserMainTabPanel extends SimulationTabPanel {
     private TACAASimulationPanel simulationPanel;
