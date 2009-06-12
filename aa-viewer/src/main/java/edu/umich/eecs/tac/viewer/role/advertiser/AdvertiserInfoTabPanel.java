@@ -4,6 +4,7 @@ import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.role.publisher.RankingPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.Product;
 import edu.umich.eecs.tac.props.Query;
@@ -46,8 +47,10 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
 
     private void initialize() {
         setLayout(new BorderLayout());
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
         advertiserQueryTabPanels = new HashMap<Query, AdvertiserQueryTabPanel>();
         tabbedPane = new JTabbedPane(JTabbedPane.RIGHT);
+        tabbedPane.setBackground(TACAAViewerConstants.CHART_BACKGROUND);
         tabbedPane.add("Main", new AdvertiserMainTabPanel(simulationPanel, agent, advertiser, legendColor));
     }
 

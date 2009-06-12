@@ -37,8 +37,9 @@ public class AdvertiserTabPanel extends SimulationTabPanel {
 
     private void initialize() {
         setLayout(new BorderLayout());
+        setBackground(TACAAViewerConstants.CHART_BACKGROUND);
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-
+        tabbedPane.setBackground(TACAAViewerConstants.CHART_BACKGROUND);
         add(tabbedPane, BorderLayout.CENTER);
 
         overviewPanel = new AdvertiserOverviewPanel(getSimulationPanel());
