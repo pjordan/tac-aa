@@ -78,7 +78,7 @@ public class AverageRankingPanel extends JPanel {
         }
 
         public int compareTo(ResultsItem o) {
-            return -Double.compare(position,o.position);
+            return Double.compare(position,o.position);
         }
     }
 
@@ -126,6 +126,7 @@ public class AverageRankingPanel extends JPanel {
                         //results.clear();
 
                         ResultsItem item = items.get(agent);
+
                         if(item!=null) {
                             results.remove(item);
                         }

@@ -20,8 +20,7 @@ import edu.umich.eecs.tac.viewer.role.*;
 public class TACAASimulationPanel extends JPanel implements TickListener, ViewListener {
     private Object lock;
 
-    private TACAAAgentView[] agentViews = new TACAAAgentView[10];
-    private int participants;    
+    AgentSupport agentSupport;
 
     private JTabbedPane tabbedPane;
 
@@ -34,6 +33,7 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
 
     public TACAASimulationPanel(ViewerPanel viewerPanel) {
         super(null);
+        this.agentSupport = new AgentSupport();
         this.viewerPanel = viewerPanel;
         viewListeners = new CopyOnWriteArrayList<ViewListener>();
         tickListeners = new CopyOnWriteArrayList<TickListener>();
@@ -60,7 +60,7 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
     }
 
     public TACAAAgentView getAgentView(int agentID) {
-        return agentID < participants ? agentViews[agentID] : null;
+        return null;
     }
 
     public String getAgentName(int agentIndex) {
@@ -69,7 +69,7 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
     }
 
     public int getHighestAgentIndex() {
-        return participants;
+        return agentSupport.size();
     }
 
     public void addAgentView(TACAAAgentView view, int index, String name,
@@ -106,11 +106,7 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
     }
 
     public void clear() {
-        int participants = this.participants;
-        this.participants = 0;
-        for (int i = 0, n = participants; i < n; i++) {
-            agentViews[i] = null;
-        }
+        agentSupport = new AgentSupport();
 
         tabbedPane.removeAll();
 
@@ -159,6 +155,10 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
 
     public void addViewListener(ViewListener listener) {
         synchronized (lock) {
+            for(int i = 0; i < agentSupport.size(); i++) {
+                listener.participant(agentSupport.agent(i),agentSupport.role(i),
+                                     agentSupport.name(i),agentSupport.participant(i));
+            }
             viewListeners.add(listener);
         }
     }
@@ -222,6 +222,8 @@ public class TACAASimulationPanel extends JPanel implements TickListener, ViewLi
     }
 
     public void participant(int agent, int role, String name, int participantID) {
+        agentSupport.participant(agent, role, name, participantID);
+        
         fireParticipant(agent, role, name, participantID);
     }
 
