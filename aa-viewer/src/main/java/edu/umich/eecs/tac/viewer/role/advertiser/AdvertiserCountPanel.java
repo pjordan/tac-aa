@@ -2,27 +2,21 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 
 import javax.swing.*;
 
-
-import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.ui.RectangleInsets;
 
 import java.awt.*;
 
-import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
+
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
 
 /**
  * @author Patrick Jordan
@@ -68,41 +62,17 @@ public class AdvertiserCountPanel extends JPanel {
 
 	private JFreeChart createConversionsChart() {
 		conversions = new XYSeries("Convs");
-		return createChart("Convs", new XYSeriesCollection(conversions));
+		return createRawMetricsChart("Convs", new XYSeriesCollection(conversions), legendColor);
 	}
 
 	private JFreeChart createClicksChart() {
 		clicks = new XYSeries("Clicks");
-		return createChart("Clicks", new XYSeriesCollection(clicks));
+		return createRawMetricsChart("Clicks", new XYSeriesCollection(clicks), legendColor);
 	}
 
 	private JFreeChart createImpressionsChart() {
 		impressions = new XYSeries("Imprs");
-		return createChart("Imprs", new XYSeriesCollection(impressions));
-	}
-
-	private JFreeChart createChart(String s, XYDataset xydataset) {
-		JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", "",
-                                               xydataset, PlotOrientation.VERTICAL, false, true, false);
-		jfreechart.setBackgroundPaint(Color.white);
-		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-		xyplot.setDomainGridlinePaint(Color.white);
-		xyplot.setRangeGridlinePaint(Color.white);
-		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-		xyplot.setDomainCrosshairVisible(true);
-		xyplot.setRangeCrosshairVisible(true);
-
-		org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot
-				.getRenderer();
-		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-			xylineandshaperenderer.setBaseShapesVisible(false);
-            xylineandshaperenderer.setBaseStroke(new BasicStroke(4f, BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_BEVEL));
-            xylineandshaperenderer.setSeriesPaint(0, legendColor);
-		}
-		return jfreechart;
+		return createRawMetricsChart("Imprs", new XYSeriesCollection(impressions), legendColor);
 	}
 
 	public int getAgent() {
@@ -125,7 +95,7 @@ public class AdvertiserCountPanel extends JPanel {
 		this.conversions.addOrUpdate(currentDay, conversions);
 	}
 
-	private class DataUpdateListener implements ViewListener {
+	private class DataUpdateListener extends ViewAdaptor {
 
 		public void dataUpdated(int agent, int type, int value) {
 			if (agent == AdvertiserCountPanel.this.agent) {
@@ -142,28 +112,6 @@ public class AdvertiserCountPanel extends JPanel {
 				}
 			}
 		}
-
-		public void dataUpdated(int agent, int type, long value) {
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-		}
-
-		public void dataUpdated(int agent, int type, double value) {
-		}
-
-		public void dataUpdated(int agent, int type, String value) {
-		}
-
-		public void dataUpdated(int agent, int type, Transportable value) {
-		}
-
-		public void dataUpdated(int type, Transportable value) {
-		}
-
-		public void participant(int agent, int role, String name,
-				int participantID) {
-		}
 	}
 
 	protected class DayListener implements TickListener {
@@ -173,8 +121,7 @@ public class AdvertiserCountPanel extends JPanel {
 		}
 
 		public void simulationTick(long serverTime, int simulationDate) {
-			AdvertiserCountPanel.this
-					.simulationTick(serverTime, simulationDate);
+			AdvertiserCountPanel.this.simulationTick(serverTime, simulationDate);
 		}
 	}
 

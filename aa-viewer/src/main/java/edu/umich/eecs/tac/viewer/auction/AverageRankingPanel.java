@@ -25,7 +25,6 @@ import java.awt.*;
  */
 public class AverageRankingPanel extends JPanel {
     private Query query;
-    private int currentDay;
     private JList resultsList;
     private ResultsPageModel model;
     private Map<Integer,String> names;
@@ -34,7 +33,6 @@ public class AverageRankingPanel extends JPanel {
     public AverageRankingPanel(Query query, TACAASimulationPanel simulationPanel) {
         this.query = query;
         this.model = new ResultsPageModel(query);
-        this.currentDay = 0;
         this.names = new HashMap<Integer, String>();
         this.items = new HashMap<Integer, ResultsItem>();
 
