@@ -86,23 +86,15 @@ public class RankingPanel extends JPanel {
 		}
 
 		public void dataUpdated(int agent, int type, long value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, float value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, double value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, String value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, Transportable value) {

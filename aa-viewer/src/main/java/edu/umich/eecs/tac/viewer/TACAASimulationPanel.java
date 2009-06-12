@@ -20,13 +20,8 @@ import edu.umich.eecs.tac.viewer.role.*;
 public class TACAASimulationPanel extends JPanel implements TickListener, ViewListener {
     private Object lock;
 
-    private Icon[] backgroundIcons;
-    private int[] backgroundIconInfo;
-    private int iconCount;
-
     private TACAAAgentView[] agentViews = new TACAAAgentView[10];
-    private int participants;
-    private int lastTimeUnit = 0;
+    private int participants;    
 
     private JTabbedPane tabbedPane;
 

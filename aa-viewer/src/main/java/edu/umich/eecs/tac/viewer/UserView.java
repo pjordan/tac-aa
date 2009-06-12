@@ -76,43 +76,27 @@ public class UserView extends TACAAAgentView {
 	}
 
 	public void dataUpdated(int agent, int type, int value) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
 	}
 
 	public void dataUpdated(int agent, int type, long value) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
 	}
 
 	public void dataUpdated(int agent, int type, float value) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
 	}
 
 	public void dataUpdated(int agent, int type, double value) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
 	}
 
 	public void dataUpdated(int agent, int type, String value) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
 	}
 
 	public void dataUpdated(int agent, int type, Transportable value) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
 	}
 
 	public void participant(int agent, int role, String name, int participantID) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
 	}
 
-	public void dataUpdated(int type, Transportable value) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
+	public void dataUpdated(int type, Transportable value) {		
 	}
 
 	protected class ViewAction extends AbstractAction {
@@ -154,8 +138,7 @@ public class UserView extends TACAAAgentView {
 			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
 			xylineandshaperenderer.setBaseShapesVisible(false);
 		}
-		// DateAxis dateaxis = (DateAxis)xyplot.getDomainAxis();
-		// dateaxis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+		
 		return jfreechart;
 	}
 

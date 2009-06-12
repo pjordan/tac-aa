@@ -98,33 +98,21 @@ public class RankingTabPanel extends SimulationTabPanel{
 	private class CatalogListener implements ViewListener {
 
 		public void dataUpdated(int agent, int type, int value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, long value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, float value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, double value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, String value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int agent, int type, Transportable value) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 
 		public void dataUpdated(int type, Transportable value) {
@@ -137,8 +125,6 @@ public class RankingTabPanel extends SimulationTabPanel{
 
 		public void participant(int agent, int role, String name,
 				int participantID) {
-			// To change body of implemented methods use File | Settings | File
-			// Templates.
 		}
 	}
 
