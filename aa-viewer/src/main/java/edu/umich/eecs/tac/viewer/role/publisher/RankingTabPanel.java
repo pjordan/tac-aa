@@ -7,6 +7,7 @@ import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.Product;
@@ -21,11 +22,7 @@ import java.awt.*;
 
 
 /**
- * Created by IntelliJ IDEA.
- * User: Guha Balakrishnan
- * Date: May 30, 2009
- * Time: 12:40:46 PM
- * To change this template use File | Settings | File Templates.
+ * @author Guha Balakrishnan
  */
 public class RankingTabPanel extends SimulationTabPanel{
     private RetailCatalog catalog;
@@ -95,25 +92,7 @@ public class RankingTabPanel extends SimulationTabPanel{
 		}
 	}
 
-	private class CatalogListener implements ViewListener {
-
-		public void dataUpdated(int agent, int type, int value) {
-		}
-
-		public void dataUpdated(int agent, int type, long value) {
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-		}
-
-		public void dataUpdated(int agent, int type, double value) {
-		}
-
-		public void dataUpdated(int agent, int type, String value) {
-		}
-
-		public void dataUpdated(int agent, int type, Transportable value) {
-		}
+	private class CatalogListener extends ViewAdaptor {
 
 		public void dataUpdated(int type, Transportable value) {
 			Class valueType = value.getClass();
@@ -121,10 +100,6 @@ public class RankingTabPanel extends SimulationTabPanel{
 				handleRetailCatalog((RetailCatalog) value);
 			}
 
-		}
-
-		public void participant(int agent, int role, String name,
-				int participantID) {
 		}
 	}
 

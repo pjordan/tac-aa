@@ -9,6 +9,7 @@ import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.role.PublisherTabPanel;
 
@@ -42,7 +43,7 @@ public class SeriesPanel extends JComponent{
     private SeriesTabPanel seriesTabPanel;
     private JFreeChart chart;
 
-	public SeriesPanel(Query query, SeriesTabPanel seriesTabPanel, Color [] legendColors) {
+	public SeriesPanel(Query query, SeriesTabPanel seriesTabPanel) {
 		this.query = query;
 		this.bidSeries = new HashMap<String, XYSeries>();
         this.seriesTabPanel = seriesTabPanel;
@@ -109,22 +110,7 @@ public class SeriesPanel extends JComponent{
 		return query;
 	}
 
-	private class BidBundleListener implements ViewListener {
-
-		public void dataUpdated(int agent, int type, int value) {
-		}
-
-		public void dataUpdated(int agent, int type, long value) {
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-		}
-
-		public void dataUpdated(int agent, int type, double value) {
-		}
-
-		public void dataUpdated(int agent, int type, String value) {
-		}
+	private class BidBundleListener extends ViewAdaptor {
 
 		public void dataUpdated(int agent, int type, Transportable value) {
 			if (type == TACAAConstants.DU_BIDS
@@ -147,16 +133,7 @@ public class SeriesPanel extends JComponent{
 					}
 				}
 			}
-		}
-
-		public void dataUpdated(int type, Transportable value) {
-
-		}
-
-		public void participant(int agent, int role, String name,
-				int participantID) {
-
-		}
+		}		
 	}
 
 	protected class DayListener implements TickListener {
