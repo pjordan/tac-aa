@@ -2,6 +2,7 @@ package edu.umich.eecs.tac.viewer.role.publisher;
 
 import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
 
 import javax.swing.*;
@@ -18,6 +19,7 @@ public class RankingPanel extends JPanel {
     private Query query;
     private JTable table;
     private Map<Integer, String> names;
+    private Map<String, Color> colors;
     private MyTableModel model;
 
     public RankingPanel(Query query, RankingTabPanel rankingTabPanel) {
@@ -25,6 +27,7 @@ public class RankingPanel extends JPanel {
 
         this.query = query;
         this.names = new HashMap<Integer, String>();
+        this.colors = new HashMap<String, Color>();
 
         initialize();
 
@@ -93,6 +96,8 @@ public class RankingPanel extends JPanel {
         public void participant(int agent, int role, String name, int participantID) {
             if (role == TACAAConstants.ADVERTISER) {
                 RankingPanel.this.names.put(agent, name);
+                int size = RankingPanel.this.names.size();
+                RankingPanel.this.colors.put(name, TACAAViewerConstants.LEGEND_COLORS[size -1]);
             }
         }
     }
@@ -115,8 +120,7 @@ public class RankingPanel extends JPanel {
         }
     }
 
-
-    private class MyTableModel extends AbstractTableModel {
+    public class MyTableModel extends AbstractTableModel {
 
         String[] columnNames = {"Avg. Position", "    Advertiser    ", "  Bid ($)  ", "Targeted"};
         List<ResultsItem> data;
@@ -133,6 +137,10 @@ public class RankingPanel extends JPanel {
 
         public int getRowCount() {
             return data.size();
+        }
+
+        public Color getRowColor(int row){
+            return data.get(row).getColor();
         }
 
         public String getColumnName(int col) {
@@ -171,6 +179,7 @@ public class RankingPanel extends JPanel {
 
             item.setAd(ad);
             item.setPosition(position);
+            item.setColor(colors.get(name));
 
             if (!Double.isNaN(position)) {
                 data.add(item);
@@ -191,6 +200,7 @@ public class RankingPanel extends JPanel {
             }
 
             item.setBid(bid);
+            item.setColor(colors.get(name));
 
             if (!Double.isNaN(item.getPosition())) {
                 data.add(item);
@@ -207,6 +217,7 @@ public class RankingPanel extends JPanel {
         private Ad ad;
         private double position;
         private double bid;
+        private Color color;
 
         public ResultsItem(String advertiser) {
             this.advertiser = advertiser;
@@ -226,6 +237,10 @@ public class RankingPanel extends JPanel {
             this.bid = bid;
         }
 
+        public void setColor(Color color){
+            this.color = color;
+        }
+
         public double getBid() {
             return bid;
         }
@@ -240,6 +255,10 @@ public class RankingPanel extends JPanel {
 
         public double getPosition() {
             return position;
+        }
+
+        public Color getColor(){
+            return color;
         }
 
         public boolean isTargeted() {

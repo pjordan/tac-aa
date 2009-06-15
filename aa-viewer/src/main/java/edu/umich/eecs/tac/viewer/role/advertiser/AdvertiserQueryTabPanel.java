@@ -36,7 +36,6 @@ public class AdvertiserQueryTabPanel extends JPanel {
         simulationPanel.addViewListener(agentSupport);
 
         initialize();
-
     }
 
     private void initialize() {

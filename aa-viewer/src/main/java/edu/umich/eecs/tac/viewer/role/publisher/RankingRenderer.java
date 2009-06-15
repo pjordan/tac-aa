@@ -1,5 +1,6 @@
 package edu.umich.eecs.tac.viewer.role.publisher;
 
+import edu.umich.eecs.tac.viewer.role.publisher.RankingPanel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.*;
 import java.awt.*;
@@ -24,8 +25,12 @@ class RankingRenderer extends DefaultTableCellRenderer {
         }
         JLabel cell = (JLabel) super.getTableCellRendererComponent(
                 table, value, isSelected, hasFocus, row, column);
-        cell.setBackground(bkgndColor);
-        cell.setForeground(fgndColor);
+        Color rowColor  = ((RankingPanel.MyTableModel)table.getModel()).getRowColor(row);
+
+       // cell.setBackground(new Color(255 - rowColor.getRed(), 255 - rowColor.getGreen(), 255 - rowColor.getBlue()));
+        cell.setForeground(rowColor);
+
+
         cell.setFont(new Font("serif", Font.BOLD, 12));
         cell.setHorizontalAlignment((int) JLabel.CENTER_ALIGNMENT);
         return cell;

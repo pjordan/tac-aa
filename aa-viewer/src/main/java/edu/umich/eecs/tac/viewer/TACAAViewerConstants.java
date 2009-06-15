@@ -10,9 +10,9 @@ public class TACAAViewerConstants {
     public static final Color[] LEGEND_COLORS = new Color[] {Color.red,
                                                              Color.blue,
                                                              Color.green,
-                                                             Color.yellow,
-                                                             Color.magenta,
+                                                             new Color(100, 149, 237),
+                                                             new Color(148, 0, 211),
                                                              Color.black,
-                                                             Color.pink,
-                                                             Color.gray};
+                                                             new Color(139,69,19),
+                                                             new Color(255, 140, 0)};
 }
