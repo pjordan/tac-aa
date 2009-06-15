@@ -9,8 +9,6 @@ import edu.umich.eecs.tac.props.Query;
 import javax.swing.*;
 import java.awt.*;
 
-import se.sics.tasim.viewer.SimulationPanel;
-
 /**
  * @author Guha Balakrishnan and Patrick Jordan
  */
@@ -20,7 +18,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
     private String advertiser;
     private Query query;
     private TACAASimulationPanel simulationPanel;
-    private AdvertiserQueryRatioPanel queryRatioPanel;
+    private AdvertiserQueryInfoPanel queryInfoPanel;
     private AdvertiserQueryCountPanel queryCountPanel;
     private AdvertiserQueryValuePanel queryValuePanel;
     private AdvertiserQueryPositionPanel positionPanel;
@@ -65,9 +63,8 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
-        this.positionPanel = new AdvertiserQueryPositionPanel(agent, advertiser, query, simulationPanel,
-                legendColor);
-        leftPanel.add(positionPanel, c);
+        queryInfoPanel = new AdvertiserQueryInfoPanel(agent, advertiser, query, simulationPanel);
+        leftPanel.add(queryInfoPanel, c);
 
         add(leftPanel);
 
@@ -81,8 +78,10 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
 
-        queryRatioPanel = new AdvertiserQueryRatioPanel(agent, advertiser, query, simulationPanel);
-        rightPanel.add(queryRatioPanel, c);
+
+        this.positionPanel = new AdvertiserQueryPositionPanel(agent, advertiser, query, simulationPanel,
+                legendColor);
+        rightPanel.add(positionPanel, c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
