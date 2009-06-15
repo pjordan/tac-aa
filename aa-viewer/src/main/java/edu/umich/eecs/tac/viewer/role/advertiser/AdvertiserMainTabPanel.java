@@ -43,7 +43,7 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
 
 
         ProfitPanel profitPanel = new ProfitPanel(simulationPanel, agent, name, legendColor);
-        AdvertiserRatioPanel ratioPanel = new AdvertiserRatioPanel(
+        AdvertiserRateMetricsPanel ratesMetricsPanel = new AdvertiserRateMetricsPanel(
 						                      agent, name, simulationPanel, false);
         AdvertiserCountPanel countPanel = new AdvertiserCountPanel(
 						                      agent, name, simulationPanel, false, legendColor);
@@ -75,7 +75,7 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
         c.gridx = 0;
         c.gridy = 1;
         c.weightx = 2;
-        add(ratioPanel, c);
+        add(ratesMetricsPanel, c);
 
         c.gridx = 2;
         c.weightx = 1;

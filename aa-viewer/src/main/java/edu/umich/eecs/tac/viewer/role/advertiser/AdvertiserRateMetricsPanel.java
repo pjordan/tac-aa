@@ -1,5 +1,5 @@
 /*
- * AdvertiserQueryInfoPanel.java
+ * AdvertiserRateMetricsPanel.java
  * 
  * Copyright (C) 2006-2009 Patrick R. Jordan
  *
@@ -18,15 +18,16 @@
  */
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.SalesReport;
-import edu.umich.eecs.tac.props.QueryReport;
-import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
-import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.TACAAConstants;
 
 import javax.swing.*;
+
+import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.SalesReport;
+import edu.umich.eecs.tac.props.QueryReport;
+
 import java.awt.*;
 
 import se.sics.isl.transport.Transportable;
@@ -34,14 +35,13 @@ import se.sics.isl.transport.Transportable;
 /**
  * @author Patrick R. Jordan
  */
-public class AdvertiserQueryInfoPanel extends JPanel {
-	private int agent;
-	private String advertiser;
-    private Query query;
+public class AdvertiserRateMetricsPanel extends JPanel {
+    private int agent;
+    private String advertiser;
 
     private int impressions;
-	private int clicks;
-	private int conversions;
+    private int clicks;
+    private int conversions;
     private double revenue;
     private double cost;
 
@@ -52,104 +52,59 @@ public class AdvertiserQueryInfoPanel extends JPanel {
     private JLabel vpcLabel;
     private JLabel roiLabel;
 
-    public AdvertiserQueryInfoPanel(int agent, String advertiser, Query query, TACAASimulationPanel simulationPanel) {
-		this.agent = agent;
-		this.advertiser = advertiser;
-        this.query = query;
+    private boolean advertiserBorder;
 
+    public AdvertiserRateMetricsPanel(int agent, String advertiser,
+                                      TACAASimulationPanel simulationPanel, boolean advertiserBorder) {
+        this.agent = agent;
+        this.advertiser = advertiser;
+        this.advertiserBorder = advertiserBorder;
         initialize();
 
-		simulationPanel.addViewListener(new DataUpdateListener());
-	}
+        simulationPanel.addViewListener(new DataUpdateListener());
+    }
 
-	private void initialize() {
-		setLayout(new GridLayout(3,4));
+    private void initialize() {
+        setLayout(new GridLayout(6, 2));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
         ctrLabel = new JLabel("---");
         add(new JLabel("CTR:"));
         add(ctrLabel);
 
-        cpcLabel = new JLabel("---");
-        add(new JLabel("CPC:"));
-        add(cpcLabel);
-
         convRateLabel = new JLabel("---");
         add(new JLabel("Conv. Rate:"));
         add(convRateLabel);
-
-        vpcLabel = new JLabel("---");
-        add(new JLabel("VPC:"));
-        add(vpcLabel);
 
         cpmLabel = new JLabel("---");
         add(new JLabel("CPM:"));
         add(cpmLabel);
 
+        cpcLabel = new JLabel("---");
+        add(new JLabel("CPC:"));
+        add(cpcLabel);
+
+        vpcLabel = new JLabel("---");
+        add(new JLabel("VPC:"));
+        add(vpcLabel);
+
         roiLabel = new JLabel("---");
         add(new JLabel("ROI:"));
-        add(roiLabel);        
+        add(roiLabel);
 
-		setBorder(BorderFactory.createTitledBorder("Rate Metrics"));
-	}
+        if (advertiserBorder)
+            setBorder(BorderFactory.createTitledBorder(advertiser));
+        else
+            setBorder(BorderFactory.createTitledBorder("Rate Metrics"));
+    }
 
-	public int getAgent() {
-		return agent;
-	}
+    public int getAgent() {
+        return agent;
+    }
 
-	public String getAdvertiser() {
-		return advertiser;
-	}
-
-    private class DataUpdateListener implements ViewListener {
-
-		public void dataUpdated(int agent, int type, int value) {
-
-		}
-
-		public void dataUpdated(int agent, int type, long value) {
-		}
-
-		public void dataUpdated(int agent, int type, float value) {
-		}
-
-		public void dataUpdated(int agent, int type, double value) {
-		}
-
-		public void dataUpdated(int agent, int type, String value) {
-		}
-
-		public void dataUpdated(int agent, int type, Transportable value) {
-            if (agent == AdvertiserQueryInfoPanel.this.agent) {
-				switch (type) {
-				case TACAAConstants.DU_SALES_REPORT:
-					handleSalesReport((SalesReport)value);
-					break;
-				case TACAAConstants.DU_QUERY_REPORT:
-					handleQueryReport((QueryReport)value);
-					break;
-				}
-			}
-		}
-
-        private void handleQueryReport(QueryReport queryReport) {
-            addImpressions(queryReport.getImpressions(query));
-            addClicks(queryReport.getClicks(query));
-            addCost(queryReport.getCost(query));
-
-        }
-
-        private void handleSalesReport(SalesReport salesReport) {
-            addConversions(salesReport.getConversions(query));
-            addRevenue(salesReport.getRevenue(query));
-        }
-
-        public void dataUpdated(int type, Transportable value) {
-		}
-
-		public void participant(int agent, int role, String name, int participantID) {
-		}
-	}
+    public String getAdvertiser() {
+        return advertiser;
+    }
 
     protected void addRevenue(double revenue) {
 		this.revenue += revenue;
@@ -190,7 +145,7 @@ public class AdvertiserQueryInfoPanel extends JPanel {
 		updateConvRate();
 	}
 
-	protected void updateCTR() {
+    protected void updateCTR() {
 		if (impressions > 0) {
 			ctrLabel.setText(String.format("%.2f%%",(100.0 * ((double) clicks) / ((double) impressions))));
 		} else {
@@ -237,4 +192,56 @@ public class AdvertiserQueryInfoPanel extends JPanel {
 			vpcLabel.setText("---");
 		}
 	}
+
+    private class DataUpdateListener extends ViewAdaptor {
+
+        public void dataUpdated(int agent, int type, int value) {
+            if (agent == AdvertiserRateMetricsPanel.this.agent) {
+                switch (type) {
+                    case TACAAConstants.DU_IMPRESSIONS:
+                        addImpressions(value);
+                        break;
+                    case TACAAConstants.DU_CLICKS:
+                        addClicks(value);
+                        break;
+                    case TACAAConstants.DU_CONVERSIONS:
+                        addConversions(value);
+                        break;
+                }
+            }
+        }
+
+        public void dataUpdated(int agent, int type, Transportable value) {
+            if (agent == AdvertiserRateMetricsPanel.this.agent) {
+				switch (type) {
+				case TACAAConstants.DU_SALES_REPORT:
+					handleSalesReport((SalesReport)value);
+					break;
+				case TACAAConstants.DU_QUERY_REPORT:
+					handleQueryReport((QueryReport)value);
+					break;
+				}
+			}
+		}
+
+        private void handleQueryReport(QueryReport queryReport) {
+            double cost = 0.0;
+
+            for(int i = 0; i < queryReport.size(); i++) {
+                cost += queryReport.getCost(i);
+            }
+
+            addCost(cost);
+
+        }
+
+        private void handleSalesReport(SalesReport salesReport) {
+            double revenue = 0.0;
+
+            for(int i = 0; i < salesReport.size(); i++) {
+                revenue += salesReport.getRevenue(i);
+            }
+            addRevenue(revenue);
+        }
+    }
 }
