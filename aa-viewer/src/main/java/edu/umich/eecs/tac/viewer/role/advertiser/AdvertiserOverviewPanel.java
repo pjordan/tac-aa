@@ -10,7 +10,7 @@ import java.awt.*;
  * @author Patrick Jordan
  */
 public class AdvertiserOverviewPanel extends JPanel {
-    private AdvertiserRatioTabPanel advertiserRatioTabPanel;
+    private AdvertiserOverviewMetricsPanel advertiserOverviewMetricsPanel;
 	private AdvertiserCountTabPanel advertiserCountTabPanel;
     private TACAASimulationPanel simulationPanel;
 
@@ -40,7 +40,7 @@ public class AdvertiserOverviewPanel extends JPanel {
         c.weightx = 2;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
-        advertiserRatioTabPanel = new AdvertiserRatioTabPanel( simulationPanel);
-        add(advertiserRatioTabPanel,c);
+        advertiserOverviewMetricsPanel = new AdvertiserOverviewMetricsPanel( simulationPanel);
+        add(advertiserOverviewMetricsPanel,c);
     }
 }

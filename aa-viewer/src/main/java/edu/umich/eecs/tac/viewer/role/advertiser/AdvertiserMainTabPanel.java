@@ -20,7 +20,6 @@ import java.awt.*;
  */
 public class AdvertiserMainTabPanel extends SimulationTabPanel {
     private TACAASimulationPanel simulationPanel;
-    private JTable table;
     private int agent;
     private String name;
     private Color legendColor;
