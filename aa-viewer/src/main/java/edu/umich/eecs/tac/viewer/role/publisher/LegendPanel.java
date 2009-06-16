@@ -1,42 +1,17 @@
 package edu.umich.eecs.tac.viewer.role.publisher;
 
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.BidBundle;
-import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
-import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.viewer.role.PublisherTabPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.util.Map;
-import java.util.HashMap;
-
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.chart.*;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.ui.RectangleInsets;
-import se.sics.isl.transport.Transportable;
-import se.sics.tasim.viewer.TickListener;
 
 /**
  * @author Guha Balakrishnan
  */
 public class LegendPanel extends JPanel {
     private SeriesTabPanel seriesTabPanel;
-    private JTable table;
     private Color[] legendColors;
 
     public LegendPanel(SeriesTabPanel seriesTabPanel, Color[] legendColors) {
@@ -50,7 +25,7 @@ public class LegendPanel extends JPanel {
 
         int count = seriesTabPanel.getAgentCount();
 
-        table = new JTable(1, 2 * (seriesTabPanel.getAgentCount() - 2));
+        JTable table = new JTable(1, 2 * (seriesTabPanel.getAgentCount() - 2));
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setBorder(BorderFactory.createEmptyBorder());
 

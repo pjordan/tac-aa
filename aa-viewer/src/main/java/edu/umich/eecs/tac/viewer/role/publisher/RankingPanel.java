@@ -1,23 +1,26 @@
 package edu.umich.eecs.tac.viewer.role.publisher;
 
-import edu.umich.eecs.tac.props.*;
-import edu.umich.eecs.tac.viewer.ViewAdaptor;
-import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.Ad;
+import edu.umich.eecs.tac.props.BidBundle;
+import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.props.QueryReport;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import se.sics.isl.transport.Transportable;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-
-import se.sics.isl.transport.Transportable;
 
 
 public class RankingPanel extends JPanel {
 
     private Query query;
-    private JTable table;
     private Map<Integer, String> names;
     private Map<String, Color> colors;
     private MyTableModel model;
@@ -37,7 +40,7 @@ public class RankingPanel extends JPanel {
 
     protected void initialize() {
         model = new MyTableModel();
-        table = new JTable(model);
+        JTable table = new JTable(model);
 
         table.setDefaultRenderer(String.class, new RankingRenderer(Color.white, Color.black));
         table.setDefaultRenderer(Double.class, new RankingRenderer(Color.white, Color.black));
@@ -104,9 +107,9 @@ public class RankingPanel extends JPanel {
 
 
     private void initColumnSizes(JTable table) {
-        TableColumn column = null;
-        Component comp = null;
-        int headerWidth = 0;
+        TableColumn column;
+        Component comp;
+        int headerWidth;
         TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
 
         for (int i = 0; i < table.getColumnCount(); i++) {

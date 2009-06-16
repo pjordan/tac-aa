@@ -1,30 +1,25 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
-
-import java.awt.*;
-
+import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.createDaySeriesChartWithColor;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
-import edu.umich.eecs.tac.TACAAConstants;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import se.sics.tasim.viewer.TickListener;
 
 import javax.swing.*;
-
-import se.sics.tasim.viewer.TickListener;
-import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
+import java.awt.*;
 
 /**
  * @author Guha Balakrishnan
  */
 public class ProfitPanel extends SimulationTabPanel {
 
-    private XYSeriesCollection seriescollection;
-    private TACAASimulationPanel simulationPanel;
     private int currentDay;
     private String advertiser;
     private int agent;
@@ -35,7 +30,6 @@ public class ProfitPanel extends SimulationTabPanel {
                        String advertiser, Color legendColor) {
         super(simulationPanel);
 
-        this.simulationPanel = simulationPanel;
         this.agent = agent;
         this.advertiser = advertiser;
         currentDay = 0;
@@ -52,7 +46,7 @@ public class ProfitPanel extends SimulationTabPanel {
         setBorder(BorderFactory.createTitledBorder("Advertiser Profit"));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
-        seriescollection = new XYSeriesCollection();
+        XYSeriesCollection seriescollection = new XYSeriesCollection();
         series = new XYSeries(advertiser);
         seriescollection.addSeries(series);
 

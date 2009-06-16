@@ -1,29 +1,24 @@
-/**
- * Created by IntelliJ IDEA.
- * User: pjordan
- * Date: Jun 12, 2009
- * Time: 12:40:24 AM
- * To change this template use File | Settings | File Templates.
- */
 package edu.umich.eecs.tac.viewer;
 
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
+import edu.umich.eecs.tac.props.Query;
 import org.jfree.chart.ChartColor;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.RectangleInsets;
 
 import java.awt.*;
 
-import edu.umich.eecs.tac.props.Query;
-
+/**
+ * @author Patrick Jordan
+ */
 public class ViewerChartFactory {
 
     private ViewerChartFactory() {

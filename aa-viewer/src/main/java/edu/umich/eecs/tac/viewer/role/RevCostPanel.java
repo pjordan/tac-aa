@@ -1,19 +1,15 @@
 package edu.umich.eecs.tac.viewer.role;
 
+import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
-import edu.umich.eecs.tac.TACAAConstants;
-
-import java.awt.*;
-import java.util.Map;
-import java.util.HashMap;
-
-import se.sics.isl.transport.Transportable;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

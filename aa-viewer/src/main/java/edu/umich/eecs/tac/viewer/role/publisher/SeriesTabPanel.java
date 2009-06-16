@@ -1,42 +1,27 @@
 package edu.umich.eecs.tac.viewer.role.publisher;
 
-import edu.umich.eecs.tac.viewer.role.AgentSupport;
-import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
+import edu.umich.eecs.tac.props.Product;
+import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
-import edu.umich.eecs.tac.props.RetailCatalog;
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.Product;
-import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.viewer.role.AgentSupport;
+import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import se.sics.isl.transport.Transportable;
 
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.chart.block.BlockContainer;
-import org.jfree.chart.LegendItemSource;
-import org.jfree.chart.LegendItemCollection;
-import org.jfree.chart.LegendItem;
-import org.jfree.chart.renderer.xy.AbstractXYItemRenderer;
-import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.xy.XYSeries;
-
 import javax.swing.*;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * @author Guha Balakrishnan
  */
 public class SeriesTabPanel extends SimulationTabPanel {
-    private RetailCatalog catalog;
     private Map<Query, SeriesPanel> seriesPanels;
     private AgentSupport agentSupport;
-    private LegendPanel legendPanel;
 
 
     public SeriesTabPanel(TACAASimulationPanel simulationPanel) {
@@ -56,7 +41,6 @@ public class SeriesTabPanel extends SimulationTabPanel {
     }
 
     private void handleRetailCatalog(RetailCatalog retailCatalog) {
-        this.catalog = retailCatalog;
 
         this.removeAll();
         seriesPanels.clear();
@@ -79,7 +63,7 @@ public class SeriesTabPanel extends SimulationTabPanel {
         }
 
         int panelCount = seriesPanels.size();
-        int sideCount = (int) Math.ceil(Math.sqrt(panelCount));
+        Math.ceil(Math.sqrt(panelCount));
 
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -88,18 +72,17 @@ public class SeriesTabPanel extends SimulationTabPanel {
         c.weighty = 1;
         c.ipady = 200;
 
-        Iterator iterator = seriesPanels.keySet().iterator();
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                SeriesPanel temp = seriesPanels.get(iterator.next());
-                c.gridx = j;
-                c.gridy = i;
-                add(temp, c);
-            }
+        int index = 0;
+        for (Query query : seriesPanels.keySet()) {
+            SeriesPanel temp = seriesPanels.get(query);
+            c.gridx = index/4;
+            c.gridy = index%4;
+            add(temp, c);
+            index++;
         }
-
-        legendPanel = new LegendPanel(this, TACAAViewerConstants.LEGEND_COLORS);
+        
+        LegendPanel legendPanel = new LegendPanel(this, TACAAViewerConstants.LEGEND_COLORS);
 
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;

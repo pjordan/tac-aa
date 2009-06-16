@@ -1,22 +1,18 @@
 package edu.umich.eecs.tac.viewer.role;
 
+import static edu.umich.eecs.tac.TACAAConstants.*;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
-
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.createDaySeriesChartWithColors;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
-
-import java.awt.*;
-
 import se.sics.tasim.viewer.TickListener;
-import static edu.umich.eecs.tac.TACAAConstants.*;
 
 import javax.swing.*;
-
-import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
+import java.awt.*;
 
 /**
  * @author Patrick Jordan

@@ -1,24 +1,24 @@
 package edu.umich.eecs.tac.viewer;
 
+import edu.umich.eecs.tac.viewer.role.AdvertiserTabPanel;
+import edu.umich.eecs.tac.viewer.role.AgentSupport;
+import edu.umich.eecs.tac.viewer.role.MainTabPanel;
+import edu.umich.eecs.tac.viewer.role.PublisherTabPanel;
+import se.sics.isl.transport.Transportable;
+import se.sics.isl.util.ConfigManager;
 import se.sics.tasim.viewer.TickListener;
 import se.sics.tasim.viewer.ViewerPanel;
-import se.sics.isl.util.ConfigManager;
-import se.sics.isl.transport.Transportable;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.swing.*;
-
-import java.awt.*;
-
-import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.viewer.role.*;
 
 /**
  * @author Patrick Jordan
  */
 public class TACAASimulationPanel extends JPanel implements TickListener, ViewListener {
-    private Object lock;
+    private final Object lock;
 
     AgentSupport agentSupport;
 

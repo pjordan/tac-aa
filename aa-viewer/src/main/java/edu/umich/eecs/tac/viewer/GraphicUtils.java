@@ -6,8 +6,8 @@ package edu.umich.eecs.tac.viewer;
 import edu.umich.eecs.tac.props.Product;
 
 import javax.swing.*;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GraphicUtils {
     private GraphicUtils() {

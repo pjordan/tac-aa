@@ -1,33 +1,23 @@
 package edu.umich.eecs.tac.viewer.role.publisher;
 
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.BidBundle;
-import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
-import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
-import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.viewer.role.PublisherTabPanel;
+import edu.umich.eecs.tac.props.BidBundle;
+import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.createAuctionChart;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import se.sics.isl.transport.Transportable;
+import se.sics.tasim.viewer.TickListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 import java.util.HashMap;
-
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.chart.*;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.ui.RectangleInsets;
-import se.sics.isl.transport.Transportable;
-import se.sics.tasim.viewer.TickListener;
-import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
+import java.util.Map;
 
 /**
  * @author Patrick Jordan
@@ -35,7 +25,6 @@ import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
 public class SeriesPanel extends JComponent {
     private Query query;
 
-    private XYSeriesCollection seriescollection;
     private int currentDay;
     private Map<String, XYSeries> bidSeries;
     private SeriesTabPanel seriesTabPanel;
@@ -57,7 +46,7 @@ public class SeriesPanel extends JComponent {
         setLayout(new GridLayout(1, 1));
 
 
-        seriescollection = new XYSeriesCollection();
+        XYSeriesCollection seriescollection = new XYSeriesCollection();
 
         // Participants will be added to the publisher panel before getting
         // here.
@@ -73,7 +62,7 @@ public class SeriesPanel extends JComponent {
             }
         }
 
-        chart = createAuctionChart(getQuery(),seriescollection);
+        chart = createAuctionChart(getQuery(), seriescollection);
         ChartPanel chartpanel = new ChartPanel(chart, false);
         chartpanel.setMouseZoomable(true, false);
         add(chartpanel);

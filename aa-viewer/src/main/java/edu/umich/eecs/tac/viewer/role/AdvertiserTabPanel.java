@@ -1,29 +1,24 @@
 package edu.umich.eecs.tac.viewer.role;
 
+import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.viewer.auction.ResultsPageModel;
-import edu.umich.eecs.tac.viewer.role.advertiser.*;
-import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.viewer.role.advertiser.AdvertiserInfoTabPanel;
+import edu.umich.eecs.tac.viewer.role.advertiser.AdvertiserOverviewPanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.*;
-
-import se.sics.isl.transport.Transportable;
 
 /**
  * @author Patrick Jordan
  */
 public class AdvertiserTabPanel extends SimulationTabPanel {
     private JTabbedPane tabbedPane;
-
-    private AdvertiserOverviewPanel overviewPanel;
 
     private Map<String, AdvertiserInfoTabPanel> advertiserInfoPanels;
     private Map<Query, ResultsPageModel> resultsPageModels;
@@ -48,7 +43,7 @@ public class AdvertiserTabPanel extends SimulationTabPanel {
         tabbedPane.setBackground(TACAAViewerConstants.CHART_BACKGROUND);
         add(tabbedPane, BorderLayout.CENTER);
 
-        overviewPanel = new AdvertiserOverviewPanel(getSimulationPanel());
+        AdvertiserOverviewPanel overviewPanel = new AdvertiserOverviewPanel(getSimulationPanel());
         tabbedPane.addTab("Overview", overviewPanel);
     }
 

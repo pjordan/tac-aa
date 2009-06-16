@@ -1,31 +1,35 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
+import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.AdvertiserInfo;
+import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.props.RetailCatalog;
+import edu.umich.eecs.tac.props.SalesReport;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.createCapacityChart;
+import static edu.umich.eecs.tac.viewer.ViewerUtils.buildQuerySpace;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
-import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.props.*;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
-import se.sics.tasim.viewer.TickListener;
 import se.sics.isl.transport.Transportable;
+import se.sics.tasim.viewer.TickListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
-
-import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
-import static edu.umich.eecs.tac.viewer.ViewerUtils.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Guha Balakrishnan
  */
 public class AdvertiserCapacityPanel extends SimulationTabPanel {
     private int agent;
-    private String advertiser;
     private int currentDay;
     private XYSeries relativeCapacity;
     private int capacity;
@@ -38,7 +42,6 @@ public class AdvertiserCapacityPanel extends SimulationTabPanel {
                                    Color legendColor) {
         super(simulationPanel);
         this.agent = agent;
-        this.advertiser = advertiser;
         this.legendColor = legendColor;
         currentDay = 0;
 

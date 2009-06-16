@@ -1,9 +1,7 @@
 package edu.umich.eecs.tac.viewer.role;
 
-import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.viewer.ViewAdaptor;
-import se.sics.isl.transport.Transportable;
 import com.botbox.util.ArrayUtils;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 
 /**
  * @author Patrick Jordan

@@ -1,17 +1,8 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.viewer.role.*;
-import edu.umich.eecs.tac.props.*;
-import edu.umich.eecs.tac.TACAAConstants;
-
-import javax.swing.*;
-
-import se.sics.isl.transport.Transportable;
-import se.sics.tasim.viewer.SimulationPanel;
-
-import java.awt.*;
+import edu.umich.eecs.tac.viewer.role.AgentRevCostPanel;
+import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 
 import java.awt.*;
 

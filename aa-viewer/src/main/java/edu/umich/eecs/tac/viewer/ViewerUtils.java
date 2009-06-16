@@ -1,18 +1,14 @@
-/**
- * Created by IntelliJ IDEA.
- * User: pjordan
- * Date: Jun 12, 2009
- * Time: 12:48:02 AM
- * To change this template use File | Settings | File Templates.
- */
 package edu.umich.eecs.tac.viewer;
 
+import edu.umich.eecs.tac.props.Product;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.RetailCatalog;
-import edu.umich.eecs.tac.props.Product;
 
 import java.util.Set;
 
+/**
+ * @author Patrick Jordan
+ */
 public class ViewerUtils {
 
     private ViewerUtils() {

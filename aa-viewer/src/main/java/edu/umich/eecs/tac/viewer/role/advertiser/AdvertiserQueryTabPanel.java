@@ -1,11 +1,11 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
-import edu.umich.eecs.tac.viewer.auction.AverageRankingPanel;
-import edu.umich.eecs.tac.viewer.auction.ResultsPageModel;
+import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.auction.AverageRankingPanel;
+import edu.umich.eecs.tac.viewer.auction.ResultsPageModel;
 import edu.umich.eecs.tac.viewer.role.AgentSupport;
-import edu.umich.eecs.tac.props.Query;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,16 +14,11 @@ import java.awt.*;
  * @author Guha Balakrishnan and Patrick Jordan
  */
 public class AdvertiserQueryTabPanel extends JPanel {
-    private AverageRankingPanel averageRankingPanel;
     private int agent;
     private String advertiser;
     private Query query;
     private ResultsPageModel resultsPageModel;
     private TACAASimulationPanel simulationPanel;
-    private AdvertiserQueryInfoPanel queryInfoPanel;
-    private AdvertiserQueryCountPanel queryCountPanel;
-    private AdvertiserQueryValuePanel queryValuePanel;
-    private AdvertiserQueryPositionPanel positionPanel;
     private Color legendColor;
     private AgentSupport agentSupport;
 
@@ -56,7 +51,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weightx = 1;
         c.weighty = 4;
         c.fill = GridBagConstraints.BOTH;
-        this.averageRankingPanel = new AverageRankingPanel(resultsPageModel);
+        AverageRankingPanel averageRankingPanel = new AverageRankingPanel(resultsPageModel);
         leftPanel.add(averageRankingPanel, c);
 
         c = new GridBagConstraints();
@@ -65,7 +60,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
-        queryInfoPanel = new AdvertiserQueryInfoPanel(agent, advertiser, query, simulationPanel);
+        AdvertiserQueryInfoPanel queryInfoPanel = new AdvertiserQueryInfoPanel(agent, advertiser, query, simulationPanel);
         leftPanel.add(queryInfoPanel, c);
 
         add(leftPanel);
@@ -81,7 +76,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.fill = GridBagConstraints.BOTH;
 
 
-        this.positionPanel = new AdvertiserQueryPositionPanel(agent, advertiser, query, simulationPanel,
+        AdvertiserQueryPositionPanel positionPanel = new AdvertiserQueryPositionPanel(agent, advertiser, query, simulationPanel,
                 legendColor);
         rightPanel.add(positionPanel, c);
 
@@ -91,14 +86,14 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weightx = 1;
         c.weighty = 3;
         c.fill = GridBagConstraints.BOTH;
-        queryCountPanel = new AdvertiserQueryCountPanel(agent, advertiser, query, simulationPanel, legendColor);
+        AdvertiserQueryCountPanel queryCountPanel = new AdvertiserQueryCountPanel(agent, advertiser, query, simulationPanel, legendColor);
         rightPanel.add(queryCountPanel, c);
 
         c.gridx = 0;
         c.gridy = 2;
         c.weightx = 1;
         c.weighty = 1;
-        queryValuePanel = new AdvertiserQueryValuePanel(agent, advertiser, query, simulationPanel);
+        AdvertiserQueryValuePanel queryValuePanel = new AdvertiserQueryValuePanel(agent, advertiser, query, simulationPanel);
         rightPanel.add(queryValuePanel, c);
         add(rightPanel);
     }

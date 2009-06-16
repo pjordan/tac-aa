@@ -1,8 +1,7 @@
 package edu.umich.eecs.tac.viewer.role.publisher;
 
-import edu.umich.eecs.tac.viewer.role.publisher.RankingPanel;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
 /**
@@ -37,9 +36,9 @@ class RankingRenderer extends DefaultTableCellRenderer {
     }
 
     public static double round(double Rval, int Rpl) {
-        double p = (double) Math.pow(10, Rpl);
+        double p = Math.pow(10, Rpl);
         Rval = Rval * p;
         double tmp = Math.round(Rval);
-        return (double) tmp / p;
+        return tmp / p;
     }
 }

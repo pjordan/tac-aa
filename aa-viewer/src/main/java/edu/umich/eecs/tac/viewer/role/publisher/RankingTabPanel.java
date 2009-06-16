@@ -1,30 +1,28 @@
 package edu.umich.eecs.tac.viewer.role.publisher;
 
-import edu.umich.eecs.tac.viewer.role.AgentSupport;
-import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
+import edu.umich.eecs.tac.props.Product;
+import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
-import edu.umich.eecs.tac.props.RetailCatalog;
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.Product;
+import edu.umich.eecs.tac.viewer.role.AgentSupport;
+import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
 
 import javax.swing.*;
-import java.util.Map;
-import java.util.HashMap;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * @author Guha Balakrishnan
  */
 public class RankingTabPanel extends SimulationTabPanel {
-    private RetailCatalog catalog;
     private Map<Query, RankingPanel> rankingPanels;
     private AgentSupport agentSupport;
-    private int currentDay;
 
     public RankingTabPanel(TACAASimulationPanel simulationPanel) {
         super(simulationPanel);
@@ -44,7 +42,6 @@ public class RankingTabPanel extends SimulationTabPanel {
     }
 
     private void handleRetailCatalog(RetailCatalog retailCatalog) {
-        this.catalog = retailCatalog;
 
         this.removeAll();
         rankingPanels.clear();
@@ -112,8 +109,7 @@ public class RankingTabPanel extends SimulationTabPanel {
     }
 
     protected void simulationTick(long serverTime, int simulationDate) {
-        currentDay = simulationDate;
-        setBorder(BorderFactory.createTitledBorder("Auction Results for Day " + (currentDay - 1)));
+        setBorder(BorderFactory.createTitledBorder(String.format("Auction Results for Day %s", simulationDate - 1)));
     }
 
     public int getAgentCount() {

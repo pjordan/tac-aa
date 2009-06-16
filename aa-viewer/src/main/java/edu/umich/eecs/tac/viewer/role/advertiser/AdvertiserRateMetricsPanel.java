@@ -19,18 +19,16 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
 
-import javax.swing.*;
-
+import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.QueryReport;
+import edu.umich.eecs.tac.props.SalesReport;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
-import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.props.SalesReport;
-import edu.umich.eecs.tac.props.QueryReport;
-
-import java.awt.*;
-
 import se.sics.isl.transport.Transportable;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Patrick R. Jordan

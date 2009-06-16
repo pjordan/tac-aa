@@ -1,24 +1,26 @@
 package edu.umich.eecs.tac.viewer.role;
 
+import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.props.QueryReport;
+import edu.umich.eecs.tac.props.RetailCatalog;
+import edu.umich.eecs.tac.props.SalesReport;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
-import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.props.*;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.createDifferenceChart;
+import static edu.umich.eecs.tac.viewer.ViewerUtils.buildQuerySpace;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import se.sics.isl.transport.Transportable;
+import se.sics.tasim.viewer.TickListener;
 
 import javax.swing.*;
-
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
-import se.sics.tasim.viewer.TickListener;
-import se.sics.isl.transport.Transportable;
-
 import java.awt.*;
-import java.util.*;
-import static edu.umich.eecs.tac.viewer.ViewerUtils.*;
-import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
+import java.util.HashSet;
+import java.util.Set;
 /**
  * @author Guha Balakrishnan
  */

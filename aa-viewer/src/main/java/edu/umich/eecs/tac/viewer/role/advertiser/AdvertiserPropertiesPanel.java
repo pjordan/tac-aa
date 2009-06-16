@@ -1,33 +1,26 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
-import edu.umich.eecs.tac.viewer.*;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.AdvertiserInfo;
-
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-
+import edu.umich.eecs.tac.viewer.GraphicUtils;
+import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import se.sics.isl.transport.Transportable;
 
+import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * @author Guha Balakrishnan and Patrick Jordan
  */
 public class AdvertiserPropertiesPanel extends JPanel {
-    private JTable table;
     private int agent;
-    private String name;
-    private TACAASimulationPanel simulationPanel;
     private JLabel manufacturerLabel;
     private JLabel componentLabel;
 
     public AdvertiserPropertiesPanel(int agent, String name, TACAASimulationPanel simulationPanel) {
         this.agent = agent;
-        this.name = name;
-        this.simulationPanel = simulationPanel;
         simulationPanel.addViewListener(new AdvertiserInfoListener());
         initialize();
     }

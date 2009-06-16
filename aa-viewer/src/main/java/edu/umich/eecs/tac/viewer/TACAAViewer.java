@@ -1,14 +1,13 @@
 package edu.umich.eecs.tac.viewer;
 
+import static edu.umich.eecs.tac.TACAAConstants.ROLE_NAME;
+import edu.umich.eecs.tac.props.RetailCatalog;
+import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.SimulationViewer;
 import se.sics.tasim.viewer.ViewerPanel;
-import se.sics.isl.transport.Transportable;
-import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.props.RetailCatalog;
 
 import javax.swing.*;
 import java.util.logging.Logger;
-import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
  * @author Patrick Jordan
@@ -20,13 +19,10 @@ public class TACAAViewer extends SimulationViewer {
 
 	private TACAASimulationPanel simulationPanel;
 
-	private ViewerPanel mainPanel;
-
-	private RetailCatalog catalog;
+    private RetailCatalog catalog;
 
 	public void init(ViewerPanel panel) {
-		mainPanel = panel;
-		simulationPanel = new TACAASimulationPanel(mainPanel);
+        simulationPanel = new TACAASimulationPanel(panel);
 	}
 
 	public JComponent getComponent() {

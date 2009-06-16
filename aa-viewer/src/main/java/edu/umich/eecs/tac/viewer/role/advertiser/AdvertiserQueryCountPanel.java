@@ -1,26 +1,22 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-
-import javax.swing.*;
-
-import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
-import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.QueryReport;
 import edu.umich.eecs.tac.props.SalesReport;
-
-import java.awt.*;
-
+import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.createDaySeriesChartWithColor;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
 
-import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Patrick Jordan
@@ -62,8 +58,7 @@ public class AdvertiserQueryCountPanel extends JPanel {
     }
 
     private ChartPanel createChartPanel(JFreeChart jFreeChart) {
-        ChartPanel panel = new ChartPanel(jFreeChart);
-        return panel;
+        return new ChartPanel(jFreeChart);
     }
 
     private JFreeChart createConversionsChart() {

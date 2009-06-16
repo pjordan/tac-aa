@@ -18,33 +18,29 @@
  */
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
-import edu.umich.eecs.tac.props.AdvertiserInfo;
-import edu.umich.eecs.tac.props.SalesReport;
-import edu.umich.eecs.tac.props.QueryReport;
-import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewAdaptor;
-import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.AdvertiserInfo;
+import edu.umich.eecs.tac.props.QueryReport;
+import edu.umich.eecs.tac.props.SalesReport;
+import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
+import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import se.sics.isl.transport.Transportable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
-
-import se.sics.isl.transport.Transportable;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Patrick R. Jordan
  */
 public class AdvertiserOverviewMetricsPanel extends JPanel {
     private AdvertiserMetricsModel model;
-
-    private JTable table;
 
     public AdvertiserOverviewMetricsPanel(final TACAASimulationPanel simulationPanel) {
         model = new AdvertiserMetricsModel(simulationPanel);
@@ -58,7 +54,7 @@ public class AdvertiserOverviewMetricsPanel extends JPanel {
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
         MetricsNumberRenderer renderer = new MetricsNumberRenderer();
-        table = new JTable(model);
+        JTable table = new JTable(model);
         for (int i = 2; i < 6; i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
