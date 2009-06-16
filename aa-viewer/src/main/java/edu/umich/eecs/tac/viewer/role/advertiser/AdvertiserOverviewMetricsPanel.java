@@ -56,10 +56,10 @@ public class AdvertiserOverviewMetricsPanel extends JPanel {
         setLayout(new GridLayout(1, 1));
         setBorder(BorderFactory.createTitledBorder("Advertiser Information"));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
-        
+
         MetricsNumberRenderer renderer = new MetricsNumberRenderer();
         table = new JTable(model);
-        for(int i = 2; i < 6; i++) {
+        for (int i = 2; i < 6; i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
         JScrollPane scrollPane = new JScrollPane(table);
@@ -167,9 +167,9 @@ public class AdvertiserOverviewMetricsPanel extends JPanel {
         }
 
         public double getProfit() {
-            return revenue-cost;
+            return revenue - cost;
         }
-        
+
         public double getCapacity() {
             return advertiserInfo != null ? advertiserInfo.getDistributionCapacity() : Double.NaN;
         }
@@ -187,7 +187,7 @@ public class AdvertiserOverviewMetricsPanel extends JPanel {
         }
 
         public double getCPM() {
-            return 1000.0*cost / (impressions);
+            return 1000.0 * cost / (impressions);
         }
 
         public double getVPC() {
@@ -244,36 +244,45 @@ public class AdvertiserOverviewMetricsPanel extends JPanel {
             this.item = item;
         }
 
-        public void dataUpdated(int agent, int type, int value) {
-            if (agent == item.getAgent()) {
-                switch (type) {
-                    case TACAAConstants.DU_IMPRESSIONS:
-                        item.addImpressions(value);
-                        break;
-                    case TACAAConstants.DU_CLICKS:
-                        item.addClicks(value);
-                        break;
-                    case TACAAConstants.DU_CONVERSIONS:
-                        item.addConversions(value);
-                        break;
+        public void dataUpdated(final int agent, final int type, final int value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (agent == item.getAgent()) {
+                        switch (type) {
+                            case TACAAConstants.DU_IMPRESSIONS:
+                                item.addImpressions(value);
+                                break;
+                            case TACAAConstants.DU_CLICKS:
+                                item.addClicks(value);
+                                break;
+                            case TACAAConstants.DU_CONVERSIONS:
+                                item.addConversions(value);
+                                break;
+                        }
+                    }
                 }
-            }
+            });
+
         }
 
-        public void dataUpdated(int agent, int type, Transportable value) {
-            if (agent == item.getAgent()) {
-                switch (type) {
-                    case TACAAConstants.DU_SALES_REPORT:
-                        handleSalesReport((SalesReport) value);
-                        break;
-                    case TACAAConstants.DU_QUERY_REPORT:
-                        handleQueryReport((QueryReport) value);
-                        break;
-                    case TACAAConstants.DU_ADVERTISER_INFO:
-                        handleAdvertiserInfo((AdvertiserInfo) value);
-                        break;
+        public void dataUpdated(final int agent, final int type, final Transportable value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (agent == item.getAgent()) {
+                        switch (type) {
+                            case TACAAConstants.DU_SALES_REPORT:
+                                handleSalesReport((SalesReport) value);
+                                break;
+                            case TACAAConstants.DU_QUERY_REPORT:
+                                handleQueryReport((QueryReport) value);
+                                break;
+                            case TACAAConstants.DU_ADVERTISER_INFO:
+                                handleAdvertiserInfo((AdvertiserInfo) value);
+                                break;
+                        }
+                    }
                 }
-            }
+            });
         }
 
         private void handleAdvertiserInfo(AdvertiserInfo advertiserInfo) {
@@ -307,7 +316,7 @@ public class AdvertiserOverviewMetricsPanel extends JPanel {
             setOpaque(true);
         }
 
-        public Component getTableCellRendererComponent(JTable table, Object object,boolean isSelected, boolean hasFocus,
+        public Component getTableCellRendererComponent(JTable table, Object object, boolean isSelected, boolean hasFocus,
                                                        int row, int column) {
 
             if (isSelected) {
@@ -318,8 +327,8 @@ public class AdvertiserOverviewMetricsPanel extends JPanel {
                 setForeground(table.getForeground());
             }
 
-            setHorizontalAlignment( JLabel.RIGHT );
-            setText(String.format("%.2f",object));
+            setHorizontalAlignment(JLabel.RIGHT);
+            setText(String.format("%.2f", object));
 
             return this;
         }

@@ -2,19 +2,12 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.ui.RectangleInsets;
 
 import javax.swing.*;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
@@ -27,121 +20,106 @@ import java.awt.*;
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
 
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
+
 /**
  * @author Patrick Jordan
  */
 public class AdvertiserQueryCountPanel extends JPanel {
     private int agent;
-	private String advertiser;
+    private String advertiser;
     private Query query;
 
-	private int currentDay;
-	private XYSeries impressions;
-	private XYSeries clicks;
-	private XYSeries conversions;
+    private int currentDay;
+    private XYSeries impressions;
+    private XYSeries clicks;
+    private XYSeries conversions;
     private Color legendColor;
 
-	public AdvertiserQueryCountPanel(int agent, String advertiser, Query query,
-			TACAASimulationPanel simulationPanel, Color legendColor) {
-		this.agent = agent;
-		this.advertiser = advertiser;
+    public AdvertiserQueryCountPanel(int agent, String advertiser, Query query,
+                                     TACAASimulationPanel simulationPanel, Color legendColor) {
+        this.agent = agent;
+        this.advertiser = advertiser;
         this.query = query;
         this.legendColor = legendColor;
 
-		initialize();
+        initialize();
 
-		currentDay = 0;
-		simulationPanel.addViewListener(new DataUpdateListener());
-		simulationPanel.addTickListener(new DayListener());
-	}
+        currentDay = 0;
+        simulationPanel.addViewListener(new DataUpdateListener());
+        simulationPanel.addTickListener(new DayListener());
+    }
 
-	private void initialize() {
-		setLayout(new GridLayout(3, 1));
+    private void initialize() {
+        setLayout(new GridLayout(3, 1));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
-		add(createChartPanel(createImpressionsChart()));
-		add(createChartPanel(createClicksChart()));
-		add(createChartPanel(createConversionsChart()));
+        add(createChartPanel(createImpressionsChart()));
+        add(createChartPanel(createClicksChart()));
+        add(createChartPanel(createConversionsChart()));
 
-		setBorder(BorderFactory.createTitledBorder("Raw Metrics"));
-	}
+        setBorder(BorderFactory.createTitledBorder("Raw Metrics"));
+    }
 
     private ChartPanel createChartPanel(JFreeChart jFreeChart) {
         ChartPanel panel = new ChartPanel(jFreeChart);
         return panel;
     }
-	private JFreeChart createConversionsChart() {
-		conversions = new XYSeries("Convs");
-		return createChart("Convs", new XYSeriesCollection(conversions));
-	}
 
-	private JFreeChart createClicksChart() {
-		clicks = new XYSeries("Clicks");
-		return createChart("Clicks", new XYSeriesCollection(clicks));
-	}
+    private JFreeChart createConversionsChart() {
+        conversions = new XYSeries("Convs");
+        return createDaySeriesChartWithColor("Convs", new XYSeriesCollection(conversions), legendColor);
+    }
 
-	private JFreeChart createImpressionsChart() {
-		impressions = new XYSeries("Imprs");
-		return createChart("Imprs", new XYSeriesCollection(impressions));
-	}
+    private JFreeChart createClicksChart() {
+        clicks = new XYSeries("Clicks");
+        return createDaySeriesChartWithColor("Clicks", new XYSeriesCollection(clicks), legendColor);
+    }
 
-	private JFreeChart createChart(String s, XYDataset xydataset) {
-		JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", "", xydataset, PlotOrientation.VERTICAL,
-                                                               false, true, false);
-		jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-		xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-		xyplot.setDomainGridlinePaint(Color.GRAY);
-        xyplot.setRangeGridlinePaint(Color.GRAY);
-		xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
+    private JFreeChart createImpressionsChart() {
+        impressions = new XYSeries("Imprs");
+        return createDaySeriesChartWithColor("Imprs", new XYSeriesCollection(impressions), legendColor);
+    }
 
-		org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot
-				.getRenderer();
-		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-			xylineandshaperenderer.setBaseShapesVisible(false);
-            xylineandshaperenderer.setBaseStroke(new BasicStroke(4f, BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_BEVEL));
-            xylineandshaperenderer.setSeriesPaint(0, legendColor);
-		}
+    public int getAgent() {
+        return agent;
+    }
 
-		return jfreechart;
-	}
+    public String getAdvertiser() {
+        return advertiser;
+    }
 
-	public int getAgent() {
-		return agent;
-	}
+    protected void addImpressions(int impressions) {
+        this.impressions.addOrUpdate(currentDay, impressions);
+    }
 
-	public String getAdvertiser() {
-		return advertiser;
-	}
+    protected void addClicks(int clicks) {
+        this.clicks.addOrUpdate(currentDay, clicks);
+    }
 
-	protected void addImpressions(int impressions) {
-		this.impressions.addOrUpdate(currentDay, impressions);
-	}
+    protected void addConversions(int conversions) {
+        this.conversions.addOrUpdate(currentDay, conversions);
+    }
 
-	protected void addClicks(int clicks) {
-		this.clicks.addOrUpdate(currentDay, clicks);
-	}
+    private class DataUpdateListener extends ViewAdaptor {
 
-	protected void addConversions(int conversions) {
-		this.conversions.addOrUpdate(currentDay, conversions);
-	}
+        public void dataUpdated(final int agent, final int type, final Transportable value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (agent == AdvertiserQueryCountPanel.this.agent) {
+                        switch (type) {
+                            case TACAAConstants.DU_QUERY_REPORT:
+                                handleQueryReport((QueryReport) value);
+                                break;
+                            case TACAAConstants.DU_SALES_REPORT:
+                                handleSalesReport((SalesReport) value);
+                                break;
+                        }
+                    }
+                }
+            });
 
-	private class DataUpdateListener extends ViewAdaptor {
-
-		public void dataUpdated(int agent, int type, Transportable value) {
-            if (agent == AdvertiserQueryCountPanel.this.agent) {
-				switch (type) {
-				case TACAAConstants.DU_QUERY_REPORT:
-                    handleQueryReport((QueryReport)value);
-					break;
-				case TACAAConstants.DU_SALES_REPORT:
-					handleSalesReport((SalesReport)value);
-					break;
-				}
-			}
-		}
+        }
 
         private void handleQueryReport(QueryReport queryReport) {
             addImpressions(queryReport.getImpressions(query));
@@ -151,23 +129,23 @@ public class AdvertiserQueryCountPanel extends JPanel {
         private void handleSalesReport(SalesReport salesReport) {
             addConversions(salesReport.getConversions(query));
         }
-	}
+    }
 
-	protected class DayListener implements TickListener {
+    protected class DayListener implements TickListener {
 
-		public void tick(long serverTime) {
-			AdvertiserQueryCountPanel.this.tick(serverTime);
-		}
+        public void tick(long serverTime) {
+            AdvertiserQueryCountPanel.this.tick(serverTime);
+        }
 
-		public void simulationTick(long serverTime, int simulationDate) {
-			AdvertiserQueryCountPanel.this.simulationTick(serverTime, simulationDate);
-		}
-	}
+        public void simulationTick(long serverTime, int simulationDate) {
+            AdvertiserQueryCountPanel.this.simulationTick(serverTime, simulationDate);
+        }
+    }
 
-	protected void tick(long serverTime) {
-	}
+    protected void tick(long serverTime) {
+    }
 
-	protected void simulationTick(long serverTime, int simulationDate) {
-		currentDay = simulationDate;
-	}
+    protected void simulationTick(long serverTime, int simulationDate) {
+        currentDay = simulationDate;
+    }
 }

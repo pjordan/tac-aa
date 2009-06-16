@@ -85,7 +85,6 @@ public class AdvertiserCapacityPanel extends SimulationTabPanel {
     }
 
 
-
     private int getAmountSold(SalesReport report) {
 
         int result = 0;
@@ -99,19 +98,24 @@ public class AdvertiserCapacityPanel extends SimulationTabPanel {
 
     private void updateChart() {
 
-        double soldInWindow = 0;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                double soldInWindow = 0;
 
-        for (int i = Math.max(0, currentDay - window); i < currentDay; i++) {
+                for (int i = Math.max(0, currentDay - window); i < currentDay; i++) {
 
-            if (!(amountsSold.get(i) == null || Double.isNaN(amountsSold.get(i)))) {
+                    if (!(amountsSold.get(i) == null || Double.isNaN(amountsSold.get(i)))) {
 
-                soldInWindow = soldInWindow + amountsSold.get(i);
+                        soldInWindow = soldInWindow + amountsSold.get(i);
 
+                    }
+
+                }
+
+                relativeCapacity.addOrUpdate(currentDay, (soldInWindow / capacity) * 100);
             }
+        });
 
-        }
-
-        relativeCapacity.addOrUpdate(currentDay, (soldInWindow / capacity) * 100);
     }
 
     private void handleRetailCatalog(RetailCatalog retailCatalog) {
@@ -125,7 +129,9 @@ public class AdvertiserCapacityPanel extends SimulationTabPanel {
 
     private void handleSalesReport(SalesReport salesReport) {
         int sold = getAmountSold(salesReport);
+
         amountsSold.put(currentDay - 1, sold);
+
         updateChart();
     }
 
@@ -141,7 +147,7 @@ public class AdvertiserCapacityPanel extends SimulationTabPanel {
             if (AdvertiserCapacityPanel.this.agent == agent &&
                     type == TACAAConstants.DU_SALES_REPORT &&
                     value.getClass() == SalesReport.class) {
-                handleSalesReport((SalesReport)value);
+                handleSalesReport((SalesReport) value);
             }
         }
 

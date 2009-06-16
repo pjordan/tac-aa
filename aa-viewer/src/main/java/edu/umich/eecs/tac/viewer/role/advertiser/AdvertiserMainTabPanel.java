@@ -24,8 +24,6 @@ public class AdvertiserMainTabPanel extends SimulationTabPanel {
     private String name;
     private Color legendColor;
 
-
-    private JLabel label;
     public AdvertiserMainTabPanel(TACAASimulationPanel simulationPanel, int agent,
                                   String advertiser, Color legendColor){
          super(simulationPanel);

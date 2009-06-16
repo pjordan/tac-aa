@@ -2,34 +2,21 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.block.BlockBorder;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.ui.RectangleInsets;
 
 import java.awt.*;
 
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
-import edu.umich.eecs.tac.viewer.role.AgentSupport;
 import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.props.RetailCatalog;
 
 import javax.swing.*;
 
-import com.botbox.util.ArrayUtils;
 import se.sics.tasim.viewer.TickListener;
-import se.sics.isl.transport.Transportable;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
 
 /**
  * @author Guha Balakrishnan
@@ -38,30 +25,30 @@ public class ProfitPanel extends SimulationTabPanel {
 
     private XYSeriesCollection seriescollection;
     private TACAASimulationPanel simulationPanel;
-	private int currentDay;
+    private int currentDay;
     private String advertiser;
     private int agent;
     private XYSeries series;
     private Color legendColor;
 
-	public ProfitPanel(TACAASimulationPanel simulationPanel, int agent,
+    public ProfitPanel(TACAASimulationPanel simulationPanel, int agent,
                        String advertiser, Color legendColor) {
-		super(simulationPanel);
+        super(simulationPanel);
 
         this.simulationPanel = simulationPanel;
         this.agent = agent;
         this.advertiser = advertiser;
-		currentDay = 0;
+        currentDay = 0;
         this.legendColor = legendColor;
 
 
-		simulationPanel.addTickListener(new DayListener());
-		simulationPanel.addViewListener(new BankStatusListener());
+        simulationPanel.addTickListener(new DayListener());
+        simulationPanel.addViewListener(new BankStatusListener());
         initialize();
-	}
+    }
 
-	protected void initialize() {
-		setLayout(new GridLayout(1, 1));
+    protected void initialize() {
+        setLayout(new GridLayout(1, 1));
         setBorder(BorderFactory.createTitledBorder("Advertiser Profit"));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
@@ -69,68 +56,42 @@ public class ProfitPanel extends SimulationTabPanel {
         series = new XYSeries(advertiser);
         seriescollection.addSeries(series);
 
-		JFreeChart chart = createChart(seriescollection);
-		ChartPanel chartpanel = new ChartPanel(chart, false);
-		chartpanel.setMouseZoomable(true, false);
+        JFreeChart chart = createDaySeriesChartWithColor(null, seriescollection, legendColor);
+        ChartPanel chartpanel = new ChartPanel(chart, false);
+        chartpanel.setMouseZoomable(true, false);
 
-		add(chartpanel);
-	}
+        add(chartpanel);
+    }
 
-	private JFreeChart createChart(XYDataset xydataset) {
-		JFreeChart jfreechart = ChartFactory.createXYLineChart(
-			    null, "Day", "$", xydataset,
-				PlotOrientation.VERTICAL, false, true, false);
+    protected void tick(long serverTime) {
+    }
 
+    protected void simulationTick(long serverTime, int simulationDate) {
+        currentDay = simulationDate;
+    }
 
-        jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-        xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        xyplot.setDomainGridlinePaint(Color.gray);
-        xyplot.setRangeGridlinePaint(Color.gray);
-        xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-        xyplot.setDomainCrosshairVisible(true);
-        xyplot.setRangeCrosshairVisible(true);
+    protected class DayListener implements TickListener {
 
+        public void tick(long serverTime) {
+            ProfitPanel.this.tick(serverTime);
+        }
 
-		XYItemRenderer xyitemrenderer = xyplot.getRenderer();
-		xyitemrenderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_BEVEL));
-        xyplot.setOutlineVisible(false);
+        public void simulationTick(long serverTime, int simulationDate) {
+            ProfitPanel.this.simulationTick(serverTime, simulationDate);
+        }
+    }
 
-		if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-			XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-			xylineandshaperenderer.setBaseShapesVisible(false);
+    protected class BankStatusListener extends ViewAdaptor {
 
-            xylineandshaperenderer.setSeriesPaint(0,legendColor);
+        public void dataUpdated(final int agent, final int type, final double value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (type == TACAAConstants.DU_BANK_ACCOUNT && agent == ProfitPanel.this.agent) {
+                        series.addOrUpdate(currentDay, value);
+                    }
+                }
+            });
 
-		}
-		return jfreechart;
-	}
-
-	protected void tick(long serverTime) {
-	}
-
-	protected void simulationTick(long serverTime, int simulationDate) {
-		currentDay = simulationDate;
-	}
-
-	protected class DayListener implements TickListener {
-
-		public void tick(long serverTime) {
-			ProfitPanel.this.tick(serverTime);
-		}
-
-		public void simulationTick(long serverTime, int simulationDate) {
-			ProfitPanel.this.simulationTick(serverTime, simulationDate);
-		}
-	}
-
-	protected class BankStatusListener extends ViewAdaptor {
-
-		public void dataUpdated(int agent, int type, double value) {
-            if (type == TACAAConstants.DU_BANK_ACCOUNT && agent == ProfitPanel.this.agent){
-                series.addOrUpdate(currentDay, value);
-            }
-		}
-	}
+        }
+    }
 }

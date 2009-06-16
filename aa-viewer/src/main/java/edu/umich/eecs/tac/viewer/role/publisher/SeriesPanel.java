@@ -27,6 +27,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.ui.RectangleInsets;
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
 
 /**
  * @author Patrick Jordan
@@ -72,33 +73,11 @@ public class SeriesPanel extends JComponent {
             }
         }
 
-        chart = createChart(seriescollection);
+        chart = createAuctionChart(getQuery(),seriescollection);
         ChartPanel chartpanel = new ChartPanel(chart, false);
         chartpanel.setMouseZoomable(true, false);
         add(chartpanel);
-    }
-
-    private JFreeChart createChart(XYDataset xydataset) {
-        JFreeChart jfreechart = ChartFactory.createXYLineChart(String.format(
-                "Auction for (%s,%s)", getQuery().getManufacturer(), getQuery()
-                        .getComponent()), "Day", "Bid [$]", xydataset,
-                PlotOrientation.VERTICAL, false, true, false);
-        jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-        xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        xyplot.setDomainGridlinePaint(Color.GRAY);
-        xyplot.setRangeGridlinePaint(Color.GRAY);
-        xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-        xyplot.setOutlineVisible(false);
-
-        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) xyplot.getRenderer();
-        renderer.setBaseStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT,
-                BasicStroke.JOIN_BEVEL));
-        for (int i = 0; i < TACAAViewerConstants.LEGEND_COLORS.length; i++)
-            renderer.setSeriesPaint(i, TACAAViewerConstants.LEGEND_COLORS[i]);
-
-        return jfreechart;
-    }
+    }    
 
     public XYLineAndShapeRenderer getRenderer() {
         return (XYLineAndShapeRenderer) ((XYPlot) chart.getPlot()).getRenderer();

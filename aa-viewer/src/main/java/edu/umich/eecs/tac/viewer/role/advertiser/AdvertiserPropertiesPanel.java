@@ -1,9 +1,6 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
-import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
-import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import edu.umich.eecs.tac.viewer.*;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.AdvertiserInfo;
 
@@ -20,15 +17,6 @@ import java.util.HashMap;
  * @author Guha Balakrishnan and Patrick Jordan
  */
 public class AdvertiserPropertiesPanel extends JPanel {
-    private static final Map<String, ImageIcon> icons;
-
-    static {
-        icons = new HashMap<String, ImageIcon>();
-        for (String name : new String[]{"tv", "dvd", "audio", "lioneer", "pg", "flat"}) {
-            icons.put(name, new ImageIcon(AdvertiserPropertiesPanel.class.getResource(String.format("/%s_thumb.gif", name))));
-        }
-    }
-
     private JTable table;
     private int agent;
     private String name;
@@ -66,14 +54,13 @@ public class AdvertiserPropertiesPanel extends JPanel {
                 String component = info.getComponentSpecialty();
                 String manufacturer = info.getManufacturerSpecialty();
 
-                ImageIcon icon = icons.get(component);
-                //componentLabel.setText(component);
+                ImageIcon icon = GraphicUtils.iconForComponent(component);
+
                 if (icon != null) {
                     componentLabel.setIcon(icon);
                 }
 
-                //manufacturerLabel.setText(manufacturer);
-                icon = icons.get(manufacturer);
+                icon = GraphicUtils.iconForManufacturer(manufacturer);
                 if (icon != null) {
                     manufacturerLabel.setIcon(icon);
                 }

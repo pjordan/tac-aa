@@ -70,22 +70,12 @@ public class SeriesTabPanel extends SimulationTabPanel {
             Query f1Component = new Query(null, product.getComponent());
 
             // Create f2
-            Query f2 = new Query(product.getManufacturer(), product
-                    .getComponent());
+            Query f2 = new Query(product.getManufacturer(), product.getComponent());
 
-            if (!seriesPanels.containsKey(f0)) {
-                seriesPanels.put(f0, new SeriesPanel(f0, this));
-            }
-            if (!seriesPanels.containsKey(f1Manufacturer)) {
-                seriesPanels.put(f1Manufacturer,
-                        new SeriesPanel(f1Manufacturer, this));
-            }
-            if (!seriesPanels.containsKey(f1Component)) {
-                seriesPanels.put(f1Component, new SeriesPanel(f1Component, this));
-            }
-            if (!seriesPanels.containsKey(f2)) {
-                seriesPanels.put(f2, new SeriesPanel(f2, this));
-            }
+            addSeriesPanel(f0);
+            addSeriesPanel(f1Manufacturer);
+            addSeriesPanel(f1Component);
+            addSeriesPanel(f2);
         }
 
         int panelCount = seriesPanels.size();
@@ -126,12 +116,22 @@ public class SeriesTabPanel extends SimulationTabPanel {
         add(legendPanel, c);
     }
 
+    private void addSeriesPanel(Query query) {
+        if (!seriesPanels.containsKey(query)) {
+            seriesPanels.put(query, new SeriesPanel(query, this));
+        }
+    }
+
     private class BidBundleListener extends ViewAdaptor {
-        public void dataUpdated(int type, Transportable value) {
-            Class valueType = value.getClass();
-            if (valueType == RetailCatalog.class) {
-                handleRetailCatalog((RetailCatalog) value);
-            }
+        public void dataUpdated(final int type, final Transportable value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    Class valueType = value.getClass();
+                    if (valueType == RetailCatalog.class) {
+                        handleRetailCatalog((RetailCatalog) value);
+                    }
+                }
+            });
         }
     }
 

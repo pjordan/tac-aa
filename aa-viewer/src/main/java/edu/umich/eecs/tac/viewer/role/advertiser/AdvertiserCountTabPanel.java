@@ -2,7 +2,6 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 
 import edu.umich.eecs.tac.viewer.role.SimulationTabPanel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
@@ -12,21 +11,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.awt.*;
 
-import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.block.BlockBorder;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.ui.RectangleInsets;
+
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
 
 /**
  * @author Patrick Jordan
@@ -69,52 +60,17 @@ public class AdvertiserCountTabPanel extends SimulationTabPanel {
 
     private JFreeChart createConversionsChart() {
         conversions = new XYSeriesCollection();
-        return createChart("Convs", conversions, true);
+        return createDaySeriesChartWithColors("Convs", conversions, true);
     }
 
     private JFreeChart createClicksChart() {
         clicks = new XYSeriesCollection();
-        return createChart("Clicks", clicks, false);
+        return createDaySeriesChartWithColors("Clicks", clicks, false);
     }
 
     private JFreeChart createImpressionsChart() {
         impressions = new XYSeriesCollection();
-        return createChart("Imprs", impressions, false);
-    }
-
-    private JFreeChart createChart(String s, XYDataset xydataset, boolean legend) {
-        JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", "",
-                xydataset, PlotOrientation.VERTICAL, legend, true, false);
-        jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-        xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        xyplot.setDomainGridlinePaint(Color.GRAY);
-        xyplot.setRangeGridlinePaint(Color.GRAY);
-        xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-
-        if (legend) {
-            LegendTitle legendTitle = jfreechart.getLegend();
-            legendTitle.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-            legendTitle.setFrame(BlockBorder.NONE);
-        }
-
-        XYItemRenderer xyitemrenderer = xyplot.getRenderer();
-
-        xyitemrenderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
-
-        xyplot.setOutlineVisible(false);
-
-        if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-            XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-            xylineandshaperenderer.setBaseShapesVisible(false);
-
-            for (int i = 0; i < 8; i++) {
-                xylineandshaperenderer.setSeriesPaint(i, TACAAViewerConstants.LEGEND_COLORS[i]);
-            }
-
-        }
-
-        return jfreechart;
+        return createDaySeriesChartWithColors("Imprs", impressions, false);
     }
 
     protected void addImpressions(String advertiser, int impressions) {
@@ -132,26 +88,34 @@ public class AdvertiserCountTabPanel extends SimulationTabPanel {
 
     private class DataUpdateListener extends ViewAdaptor {
 
-        public void dataUpdated(int agent, int type, int value) {
-            String agentAddress = agents.get(agent);
+        public void dataUpdated(final int agent, final int type, final int value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    String agentAddress = agents.get(agent);
 
-            if (agentAddress != null) {
-                switch (type) {
-                    case TACAAConstants.DU_IMPRESSIONS:
-                        addImpressions(agentAddress, value);
-                        break;
-                    case TACAAConstants.DU_CLICKS:
-                        addClicks(agentAddress, value);
-                        break;
-                    case TACAAConstants.DU_CONVERSIONS:
-                        addConversions(agentAddress, value);
-                        break;
+                    if (agentAddress != null) {
+                        switch (type) {
+                            case TACAAConstants.DU_IMPRESSIONS:
+                                addImpressions(agentAddress, value);
+                                break;
+                            case TACAAConstants.DU_CLICKS:
+                                addClicks(agentAddress, value);
+                                break;
+                            case TACAAConstants.DU_CONVERSIONS:
+                                addConversions(agentAddress, value);
+                                break;
+                        }
+                    }
                 }
-            }
+            });
         }
 
-        public void participant(int agent, int role, String name, int participantID) {
-            handleParticipant(agent, role, name, participantID);
+        public void participant(final int agent, final int role, final String name, final int participantID) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    handleParticipant(agent, role, name, participantID);
+                }
+            });
         }
     }
 

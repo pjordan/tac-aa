@@ -107,127 +107,136 @@ public class AdvertiserRateMetricsPanel extends JPanel {
     }
 
     protected void addRevenue(double revenue) {
-		this.revenue += revenue;
+        this.revenue += revenue;
 
-		updateCTR();
+        updateCTR();
         updateVPC();
         updateROI();
-	}
+    }
 
     protected void addCost(double cost) {
-		this.cost += cost;
+        this.cost += cost;
 
-		updateCPC();
+        updateCPC();
         updateVPC();
         updateCPM();
         updateROI();
-	}
+    }
 
     protected void addImpressions(int impressions) {
-		this.impressions += impressions;
+        this.impressions += impressions;
 
-		updateCTR();
+        updateCTR();
         updateCPM();
-	}
+    }
 
-	protected void addClicks(int clicks) {
-		this.clicks += clicks;
+    protected void addClicks(int clicks) {
+        this.clicks += clicks;
 
-		updateCTR();
-		updateConvRate();
+        updateCTR();
+        updateConvRate();
         updateCPC();
         updateVPC();
-	}
+    }
 
-	protected void addConversions(int conversions) {
-		this.conversions += conversions;
+    protected void addConversions(int conversions) {
+        this.conversions += conversions;
 
-		updateConvRate();
-	}
+        updateConvRate();
+    }
 
     protected void updateCTR() {
-		if (impressions > 0) {
-			ctrLabel.setText(String.format("%.2f%%",(100.0 * ((double) clicks) / ((double) impressions))));
-		} else {
-			ctrLabel.setText("---");
-		}
-	}
+        if (impressions > 0) {
+            ctrLabel.setText(String.format("%.2f%%", (100.0 * ((double) clicks) / ((double) impressions))));
+        } else {
+            ctrLabel.setText("---");
+        }
+    }
 
-	protected void updateConvRate() {
-		if (clicks > 0) {
-			convRateLabel.setText(String.format("%.2f%%",(100.0 * ((double) conversions)/ ((double) clicks))));
-		} else {
-			convRateLabel.setText("---");
-		}
-	}
+    protected void updateConvRate() {
+        if (clicks > 0) {
+            convRateLabel.setText(String.format("%.2f%%", (100.0 * ((double) conversions) / ((double) clicks))));
+        } else {
+            convRateLabel.setText("---");
+        }
+    }
 
     protected void updateCPC() {
-		if (clicks > 0) {
-			cpcLabel.setText(String.format("%.2f",cost/((double) clicks)));
-		} else {
-			cpcLabel.setText("---");
-		}
-	}
+        if (clicks > 0) {
+            cpcLabel.setText(String.format("%.2f", cost / ((double) clicks)));
+        } else {
+            cpcLabel.setText("---");
+        }
+    }
 
-	protected void updateCPM() {
-		if (impressions > 0) {
-			cpmLabel.setText(String.format("%.2f",cost/ (impressions/1000.0)));
-		} else {
-			cpmLabel.setText("---");
-		}
-	}
+    protected void updateCPM() {
+        if (impressions > 0) {
+            cpmLabel.setText(String.format("%.2f", cost / (impressions / 1000.0)));
+        } else {
+            cpmLabel.setText("---");
+        }
+    }
 
     protected void updateROI() {
-		if (cost > 0.0) {
-			roiLabel.setText(String.format("%.2f%%",(100.0 * (revenue-cost)/cost)));
-		} else {
-			roiLabel.setText("---");
-		}
-	}
+        if (cost > 0.0) {
+            roiLabel.setText(String.format("%.2f%%", (100.0 * (revenue - cost) / cost)));
+        } else {
+            roiLabel.setText("---");
+        }
+    }
 
-	protected void updateVPC() {
-		if (clicks > 0) {
-			vpcLabel.setText(String.format("%.2f",(revenue - cost)/ ((double) clicks)));
-		} else {
-			vpcLabel.setText("---");
-		}
-	}
+    protected void updateVPC() {
+        if (clicks > 0) {
+            vpcLabel.setText(String.format("%.2f", (revenue - cost) / ((double) clicks)));
+        } else {
+            vpcLabel.setText("---");
+        }
+    }
 
     private class DataUpdateListener extends ViewAdaptor {
 
-        public void dataUpdated(int agent, int type, int value) {
-            if (agent == AdvertiserRateMetricsPanel.this.agent) {
-                switch (type) {
-                    case TACAAConstants.DU_IMPRESSIONS:
-                        addImpressions(value);
-                        break;
-                    case TACAAConstants.DU_CLICKS:
-                        addClicks(value);
-                        break;
-                    case TACAAConstants.DU_CONVERSIONS:
-                        addConversions(value);
-                        break;
+        public void dataUpdated(final int agent, final int type, final int value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (agent == AdvertiserRateMetricsPanel.this.agent) {
+                        switch (type) {
+                            case TACAAConstants.DU_IMPRESSIONS:
+                                addImpressions(value);
+                                break;
+                            case TACAAConstants.DU_CLICKS:
+                                addClicks(value);
+                                break;
+                            case TACAAConstants.DU_CONVERSIONS:
+                                addConversions(value);
+                                break;
+                        }
+                    }
                 }
-            }
+            });
+
         }
 
-        public void dataUpdated(int agent, int type, Transportable value) {
-            if (agent == AdvertiserRateMetricsPanel.this.agent) {
-				switch (type) {
-				case TACAAConstants.DU_SALES_REPORT:
-					handleSalesReport((SalesReport)value);
-					break;
-				case TACAAConstants.DU_QUERY_REPORT:
-					handleQueryReport((QueryReport)value);
-					break;
-				}
-			}
-		}
+        public void dataUpdated(final int agent, final int type, final Transportable value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (agent == AdvertiserRateMetricsPanel.this.agent) {
+                        switch (type) {
+                            case TACAAConstants.DU_SALES_REPORT:
+                                handleSalesReport((SalesReport) value);
+                                break;
+                            case TACAAConstants.DU_QUERY_REPORT:
+                                handleQueryReport((QueryReport) value);
+                                break;
+                        }
+                    }
+                }
+            });
+        }
 
         private void handleQueryReport(QueryReport queryReport) {
             double cost = 0.0;
 
-            for(int i = 0; i < queryReport.size(); i++) {
+            for (int i = 0; i < queryReport.size(); i++) {
                 cost += queryReport.getCost(i);
             }
 
@@ -238,7 +247,7 @@ public class AdvertiserRateMetricsPanel extends JPanel {
         private void handleSalesReport(SalesReport salesReport) {
             double revenue = 0.0;
 
-            for(int i = 0; i < salesReport.size(); i++) {
+            for (int i = 0; i < salesReport.size(); i++) {
                 revenue += salesReport.getRevenue(i);
             }
             addRevenue(revenue);

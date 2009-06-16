@@ -4,7 +4,6 @@ import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.QueryReport;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 
@@ -12,19 +11,14 @@ import javax.swing.*;
 
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.ui.RectangleInsets;
 
 import java.awt.*;
 
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
 
 /**
  * @author Patrick Jordan
@@ -63,37 +57,14 @@ public class AdvertiserQueryPositionPanel extends JPanel {
     }
 
     private ChartPanel createChartPanel(JFreeChart jFreeChart) {
-        ChartPanel panel = new ChartPanel(jFreeChart);
-        return panel;
+        return new ChartPanel(jFreeChart);
     }
 
     private JFreeChart createPositionChart() {
         position = new XYSeries("Position");
-        return createChart(new XYSeriesCollection(position));
+        return createDaySeriesChartWithColor(null, new XYSeriesCollection(position), legendColor);
     }
 
-    private JFreeChart createChart(XYDataset xydataset) {
-        JFreeChart jfreechart = ChartFactory.createXYLineChart(null, "Day", "", xydataset, PlotOrientation.VERTICAL,
-                false, true, false);
-        jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-        xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        xyplot.setDomainGridlinePaint(Color.GRAY);
-        xyplot.setRangeGridlinePaint(Color.GRAY);
-        xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-
-        org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot
-                .getRenderer();
-        if (xyitemrenderer instanceof XYLineAndShapeRenderer) {
-            XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer) xyitemrenderer;
-            xylineandshaperenderer.setBaseShapesVisible(false);
-            xylineandshaperenderer.setBaseStroke(new BasicStroke(4f, BasicStroke.CAP_BUTT,
-                    BasicStroke.JOIN_BEVEL));
-            xylineandshaperenderer.setSeriesPaint(0, legendColor);
-        }
-
-        return jfreechart;
-    }
 
     public int getAgent() {
         return agent;
@@ -109,14 +80,18 @@ public class AdvertiserQueryPositionPanel extends JPanel {
 
     private class DataUpdateListener extends ViewAdaptor {
 
-        public void dataUpdated(int agent, int type, Transportable value) {
-            if (agent == AdvertiserQueryPositionPanel.this.agent) {
-                switch (type) {
-                    case TACAAConstants.DU_QUERY_REPORT:
-                        handleQueryReport((QueryReport) value);
-                        break;
+        public void dataUpdated(final int agent, final int type, final Transportable value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (agent == AdvertiserQueryPositionPanel.this.agent) {
+                        switch (type) {
+                            case TACAAConstants.DU_QUERY_REPORT:
+                                handleQueryReport((QueryReport) value);
+                                break;
+                        }
+                    }
                 }
-            }
+            });
         }
 
         private void handleQueryReport(QueryReport queryReport) {

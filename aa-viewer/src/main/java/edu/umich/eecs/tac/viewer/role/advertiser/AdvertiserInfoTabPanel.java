@@ -62,22 +62,22 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
             Query f0 = new Query();
 
             // Create f1's
-            Query f1_manufacturer = new Query(product.getManufacturer(), null);
-            Query f1_component = new Query(null, product.getComponent());
+            Query f1Manufacturer = new Query(product.getManufacturer(), null);
+            Query f1Component = new Query(null, product.getComponent());
 
             // Create f2
             Query f2 = new Query(product.getManufacturer(), product
                     .getComponent());
 
             createAdvertiserQueryTabPanels(f0);
-            createAdvertiserQueryTabPanels(f1_manufacturer);
-            createAdvertiserQueryTabPanels(f1_component);
-            createAdvertiserQueryTabPanels(f2);                       
+            createAdvertiserQueryTabPanels(f1Manufacturer);
+            createAdvertiserQueryTabPanels(f1Component);
+            createAdvertiserQueryTabPanels(f2);
         }
 
 
         for (Query query : advertiserQueryTabPanels.keySet()) {
-            tabbedPane.add("(" + query.getManufacturer() + "," + query.getComponent() + ")",
+            tabbedPane.add(String.format("(%s,%s)", query.getManufacturer(), query.getComponent()),
                     advertiserQueryTabPanels.get(query));
         }
         add(tabbedPane);
@@ -86,14 +86,16 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
     private void createAdvertiserQueryTabPanels(Query query) {
         ResultsPageModel model = models.get(query);
 
-        if(model==null) {
+        if (model == null) {
             model = new ResultsPageModel(query, simulationPanel);
-            models.put(query,model);
+            models.put(query, model);
         }
 
         if (!advertiserQueryTabPanels.containsKey(query)) {
-                advertiserQueryTabPanels.put(query, new AdvertiserQueryTabPanel(agent, advertiser, query, model, simulationPanel, legendColor));
-         }
+            advertiserQueryTabPanels.put(query,
+                                         new AdvertiserQueryTabPanel(agent, advertiser, query,
+                                                                     model, simulationPanel, legendColor));
+        }
     }
 
     private class CatalogListener extends ViewAdaptor {

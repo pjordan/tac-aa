@@ -22,113 +22,118 @@ import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
  * @author Patrick Jordan
  */
 public class AdvertiserCountPanel extends JPanel {
-	private int agent;
-	private String advertiser;
+    private int agent;
+    private String advertiser;
 
-	private int currentDay;
-	private XYSeries impressions;
-	private XYSeries clicks;
-	private XYSeries conversions;
+    private int currentDay;
+    private XYSeries impressions;
+    private XYSeries clicks;
+    private XYSeries conversions;
     private boolean advertiserBorder;
     private Color legendColor;
 
 
-	public AdvertiserCountPanel(int agent, String advertiser,
-			TACAASimulationPanel simulationPanel, boolean advertiserBorder, Color legendColor) {
-		this.agent = agent;
-		this.advertiser = advertiser;
+    public AdvertiserCountPanel(int agent, String advertiser,
+                                TACAASimulationPanel simulationPanel, boolean advertiserBorder, Color legendColor) {
+        this.agent = agent;
+        this.advertiser = advertiser;
         this.advertiserBorder = advertiserBorder;
         this.legendColor = legendColor;
-		initialize();
+        initialize();
 
-		currentDay = 0;
-		simulationPanel.addViewListener(new DataUpdateListener());
-		simulationPanel.addTickListener(new DayListener());
-	}
+        currentDay = 0;
+        simulationPanel.addViewListener(new DataUpdateListener());
+        simulationPanel.addTickListener(new DayListener());
+    }
 
-	private void initialize() {
-		setLayout(new GridLayout(3, 1));
+    private void initialize() {
+        setLayout(new GridLayout(3, 1));
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
-		add(new ChartPanel(createImpressionsChart()));
-		add(new ChartPanel(createClicksChart()));
-		add(new ChartPanel(createConversionsChart()));
+        add(new ChartPanel(createImpressionsChart()));
+        add(new ChartPanel(createClicksChart()));
+        add(new ChartPanel(createConversionsChart()));
 
-        if(advertiserBorder)
-		  setBorder(BorderFactory.createTitledBorder(advertiser));
+        if (advertiserBorder)
+            setBorder(BorderFactory.createTitledBorder(advertiser));
         else
-          setBorder(BorderFactory.createTitledBorder("Impressions, Clicks and Conversions"));
-	}
+            setBorder(BorderFactory.createTitledBorder("Impressions, Clicks and Conversions"));
+    }
 
-	private JFreeChart createConversionsChart() {
-		conversions = new XYSeries("Convs");
-		return createRawMetricsChart("Convs", new XYSeriesCollection(conversions), legendColor);
-	}
+    private JFreeChart createConversionsChart() {
+        conversions = new XYSeries("Convs");
+        return createDaySeriesChartWithColor("Convs", new XYSeriesCollection(conversions), legendColor);
+    }
 
-	private JFreeChart createClicksChart() {
-		clicks = new XYSeries("Clicks");
-		return createRawMetricsChart("Clicks", new XYSeriesCollection(clicks), legendColor);
-	}
+    private JFreeChart createClicksChart() {
+        clicks = new XYSeries("Clicks");
+        return createDaySeriesChartWithColor("Clicks", new XYSeriesCollection(clicks), legendColor);
+    }
 
-	private JFreeChart createImpressionsChart() {
-		impressions = new XYSeries("Imprs");
-		return createRawMetricsChart("Imprs", new XYSeriesCollection(impressions), legendColor);
-	}
+    private JFreeChart createImpressionsChart() {
+        impressions = new XYSeries("Imprs");
+        return createDaySeriesChartWithColor("Imprs", new XYSeriesCollection(impressions), legendColor);
+    }
 
-	public int getAgent() {
-		return agent;
-	}
+    public int getAgent() {
+        return agent;
+    }
 
-	public String getAdvertiser() {
-		return advertiser;
-	}
+    public String getAdvertiser() {
+        return advertiser;
+    }
 
-	protected void addImpressions(int impressions) {
-		this.impressions.addOrUpdate(currentDay, impressions);
-	}
+    protected void addImpressions(int impressions) {
+        this.impressions.addOrUpdate(currentDay, impressions);
+    }
 
-	protected void addClicks(int clicks) {
-		this.clicks.addOrUpdate(currentDay, clicks);
-	}
+    protected void addClicks(int clicks) {
+        this.clicks.addOrUpdate(currentDay, clicks);
+    }
 
-	protected void addConversions(int conversions) {
-		this.conversions.addOrUpdate(currentDay, conversions);
-	}
+    protected void addConversions(int conversions) {
+        this.conversions.addOrUpdate(currentDay, conversions);
+    }
 
-	private class DataUpdateListener extends ViewAdaptor {
+    private class DataUpdateListener extends ViewAdaptor {
 
-		public void dataUpdated(int agent, int type, int value) {
-			if (agent == AdvertiserCountPanel.this.agent) {
-				switch (type) {
-				case TACAAConstants.DU_IMPRESSIONS:
-					addImpressions(value);
-					break;
-				case TACAAConstants.DU_CLICKS:
-					addClicks(value);
-					break;
-				case TACAAConstants.DU_CONVERSIONS:
-					addConversions(value);
-					break;
-				}
-			}
-		}
-	}
+        public void dataUpdated(final int agent, final int type, final int value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (agent == AdvertiserCountPanel.this.agent) {
+                        switch (type) {
+                            case TACAAConstants.DU_IMPRESSIONS:
+                                addImpressions(value);
+                                break;
+                            case TACAAConstants.DU_CLICKS:
+                                addClicks(value);
+                                break;
+                            case TACAAConstants.DU_CONVERSIONS:
+                                addConversions(value);
+                                break;
+                        }
+                    }
+                }
+            });
 
-	protected class DayListener implements TickListener {
+        }
+    }
 
-		public void tick(long serverTime) {
-			AdvertiserCountPanel.this.tick(serverTime);
-		}
+    protected class DayListener implements TickListener {
 
-		public void simulationTick(long serverTime, int simulationDate) {
-			AdvertiserCountPanel.this.simulationTick(serverTime, simulationDate);
-		}
-	}
+        public void tick(long serverTime) {
+            AdvertiserCountPanel.this.tick(serverTime);
+        }
 
-	protected void tick(long serverTime) {
-	}
+        public void simulationTick(long serverTime, int simulationDate) {
+            AdvertiserCountPanel.this.simulationTick(serverTime, simulationDate);
+        }
+    }
 
-	protected void simulationTick(long serverTime, int simulationDate) {
-		currentDay = simulationDate;
-	}
+    protected void tick(long serverTime) {
+    }
+
+    protected void simulationTick(long serverTime, int simulationDate) {
+        currentDay = simulationDate;
+    }
 }

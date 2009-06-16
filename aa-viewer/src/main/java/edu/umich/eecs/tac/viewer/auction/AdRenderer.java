@@ -20,6 +20,7 @@ package edu.umich.eecs.tac.viewer.auction;
 
 import edu.umich.eecs.tac.props.Product;
 import edu.umich.eecs.tac.props.Query;
+import edu.umich.eecs.tac.viewer.GraphicUtils;
 
 import javax.swing.*;
 import java.util.Map;
@@ -30,18 +31,6 @@ import java.awt.*;
  * @author Patrick R. Jordan
  */
 public class AdRenderer extends DefaultListCellRenderer {
-    private static final ImageIcon GENERIC = new ImageIcon(AdRenderer.class.getResource("/generic_regular.gif"));
-    private static final Map<Product, ImageIcon> icons;
-
-    static {
-        icons = new HashMap<Product, ImageIcon>();
-        for (String manufacturer : new String[]{"lioneer", "pg", "flat"}) {
-            for (String component : new String[]{"tv", "dvd", "audio"}) {
-                icons.put(new Product(manufacturer, component), new ImageIcon(AdRenderer.class.getResource(String.format("/%s_%s_regular.gif", manufacturer, component))));
-            }
-        }
-    }
-
     private Query query;
     private String adCopy;
     private Map<String, String> textCache;
@@ -57,8 +46,8 @@ public class AdRenderer extends DefaultListCellRenderer {
                 adCopy = "products";
                 break;
             case FOCUS_LEVEL_ONE:
-                adCopy = String.format("<b>%s</b> products", query.getManufacturer(),
-                        query.getComponent(),
+                adCopy = String.format("<b>%s</b> products", query.getManufacturer() != null ?
+                        query.getComponent() :
                         query.getManufacturer());
                 break;
             case FOCUS_LEVEL_TWO:
@@ -73,10 +62,10 @@ public class AdRenderer extends DefaultListCellRenderer {
 
         ResultsItem item = (ResultsItem) value;
 
-        ImageIcon icon = icons.get(item.getAd().getProduct());
+        ImageIcon icon = GraphicUtils.iconForProduct(item.getAd().getProduct());
 
         if (icon == null) {
-            icon = GENERIC;
+            icon = GraphicUtils.genericIcon();
         }
 
         label.setIcon(icon);

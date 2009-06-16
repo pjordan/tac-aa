@@ -3,7 +3,6 @@ package edu.umich.eecs.tac.viewer.role.advertiser;
 import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
-import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import edu.umich.eecs.tac.TACAAConstants;
 
@@ -11,20 +10,14 @@ import javax.swing.*;
 
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartColor;
-import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.ui.RectangleInsets;
 
 import java.awt.*;
 
 import se.sics.isl.transport.Transportable;
 import se.sics.tasim.viewer.TickListener;
+import static edu.umich.eecs.tac.viewer.ViewerChartFactory.*;
 
 /**
  * @author Patrick Jordan
@@ -61,41 +54,13 @@ public class AdvertiserQueryValuePanel extends JPanel {
         seriescollection.addSeries(revSeries);
         seriescollection.addSeries(costSeries);
 
-        JFreeChart chart = createChart(seriescollection);
+        JFreeChart chart = createDifferenceChart(seriescollection);
         ChartPanel chartpanel = new ChartPanel(chart, false);
         chartpanel.setMouseZoomable(true, false);
         add(chartpanel);
 
         setBorder(BorderFactory.createTitledBorder("Revenue and Cost"));
     }
-
-    private JFreeChart createChart(XYDataset xydataset) {
-        JFreeChart jfreechart = ChartFactory.createXYLineChart(null, "Day", "$", xydataset,
-                PlotOrientation.VERTICAL, false, true, false);
-        jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-
-        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
-        xyplot.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
-        xyplot.setDomainGridlinePaint(Color.GRAY);
-        xyplot.setRangeGridlinePaint(Color.GRAY);
-
-        xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-
-        XYDifferenceRenderer renderer = new XYDifferenceRenderer(
-                Color.green, Color.red, false
-        );
-
-        xyplot.setOutlineVisible(false);
-
-        renderer.setSeriesPaint(0, ChartColor.DARK_GREEN);
-        renderer.setSeriesPaint(1, ChartColor.DARK_RED);
-        renderer.setBaseStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT,
-                BasicStroke.JOIN_BEVEL));
-        xyplot.setRenderer(renderer);
-
-        return jfreechart;
-    }
-
 
     protected class DayListener implements TickListener {
 
