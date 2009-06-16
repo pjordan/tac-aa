@@ -18,17 +18,16 @@
  */
 package edu.umich.eecs.tac.viewer.auction;
 
-import edu.umich.eecs.tac.viewer.ViewListener;
-import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.props.Ad;
 import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.QueryReport;
-import edu.umich.eecs.tac.props.Ad;
-import edu.umich.eecs.tac.TACAAConstants;
+import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
+import edu.umich.eecs.tac.viewer.ViewListener;
+import se.sics.isl.transport.Transportable;
 
 import javax.swing.*;
 import java.util.*;
-
-import se.sics.isl.transport.Transportable;
 
 /**
  * @author Patrick R. Jordan
@@ -83,8 +82,6 @@ public class ResultsPageModel extends AbstractListModel implements ViewListener 
 
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-
-                    //results.clear();
 
                     ResultsItem item = items.get(agent);
 

@@ -24,9 +24,9 @@ import edu.umich.eecs.tac.props.Ad;
  * @author Patrick R. Jordan
  */
 public class ResultsItem implements Comparable<ResultsItem> {
-    private String advertiser;
-    private Ad ad;
-    private double position;
+    private final String advertiser;
+    private final Ad ad;
+    private final double position;
 
     public ResultsItem(String advertiser, Ad ad, double position) {
         this.advertiser = advertiser;
@@ -47,6 +47,6 @@ public class ResultsItem implements Comparable<ResultsItem> {
     }
 
     public int compareTo(ResultsItem o) {
-        return Double.compare(position, o.position);
+        return Double.compare(getPosition(), o.getPosition());
     }
 }
