@@ -1,6 +1,7 @@
 package edu.umich.eecs.tac.viewer.role.advertiser;
 
 import edu.umich.eecs.tac.viewer.auction.AverageRankingPanel;
+import edu.umich.eecs.tac.viewer.auction.ResultsPageModel;
 import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.role.AgentSupport;
@@ -17,6 +18,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
     private int agent;
     private String advertiser;
     private Query query;
+    private ResultsPageModel resultsPageModel;
     private TACAASimulationPanel simulationPanel;
     private AdvertiserQueryInfoPanel queryInfoPanel;
     private AdvertiserQueryCountPanel queryCountPanel;
@@ -25,13 +27,14 @@ public class AdvertiserQueryTabPanel extends JPanel {
     private Color legendColor;
     private AgentSupport agentSupport;
 
-    public AdvertiserQueryTabPanel(int agent, String advertiser, Query query, TACAASimulationPanel simulationPanel,
+    public AdvertiserQueryTabPanel(int agent, String advertiser, Query query, ResultsPageModel resultsPageModel,TACAASimulationPanel simulationPanel,
                                    Color legendColor) {
         this.agent = agent;
         this.advertiser = advertiser;
         this.query = query;
         this.simulationPanel = simulationPanel;
         this.legendColor = legendColor;
+        this.resultsPageModel = resultsPageModel;
         agentSupport = new AgentSupport();
         simulationPanel.addViewListener(agentSupport);
 
@@ -53,7 +56,7 @@ public class AdvertiserQueryTabPanel extends JPanel {
         c.weightx = 1;
         c.weighty = 4;
         c.fill = GridBagConstraints.BOTH;
-        this.averageRankingPanel = new AverageRankingPanel(query, simulationPanel);
+        this.averageRankingPanel = new AverageRankingPanel(resultsPageModel);
         leftPanel.add(averageRankingPanel, c);
 
         c = new GridBagConstraints();

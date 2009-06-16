@@ -125,24 +125,30 @@ public class AdvertiserQueryValuePanel extends JPanel {
 
     private class DataUpdateListener extends ViewAdaptor {
 
-        public void dataUpdated(int agent, int type, Transportable value) {
-            if (type == TACAAConstants.DU_QUERY_REPORT &&
-                    value.getClass().equals(QueryReport.class) &&
-                    agent == AdvertiserQueryValuePanel.this.agent) {
+        public void dataUpdated(final int agent, final int type, final Transportable value) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (type == TACAAConstants.DU_QUERY_REPORT &&
+                            value.getClass().equals(QueryReport.class) &&
+                            agent == AdvertiserQueryValuePanel.this.agent) {
 
-                QueryReport queryReport = (QueryReport) value;
+                        QueryReport queryReport = (QueryReport) value;
 
-                costSeries.addOrUpdate(currentDay, getDayCost(queryReport));
-            }
+                        costSeries.addOrUpdate(currentDay, getDayCost(queryReport));
+                    }
 
-            if (type == TACAAConstants.DU_SALES_REPORT &&
-                    value.getClass().equals(SalesReport.class) &&
-                    agent == AdvertiserQueryValuePanel.this.agent) {
+                    if (type == TACAAConstants.DU_SALES_REPORT &&
+                            value.getClass().equals(SalesReport.class) &&
+                            agent == AdvertiserQueryValuePanel.this.agent) {
 
-                SalesReport salesReport = (SalesReport) value;
+                        SalesReport salesReport = (SalesReport) value;
 
-                revSeries.addOrUpdate(currentDay, getDayRevenue(salesReport));
-            }
+                        revSeries.addOrUpdate(currentDay, getDayRevenue(salesReport));
+                    }
+                }
+            });
+
+
         }
     }
 

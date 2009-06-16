@@ -97,7 +97,7 @@ public class RankingPanel extends JPanel {
             if (role == TACAAConstants.ADVERTISER) {
                 RankingPanel.this.names.put(agent, name);
                 int size = RankingPanel.this.names.size();
-                RankingPanel.this.colors.put(name, TACAAViewerConstants.LEGEND_COLORS[size -1]);
+                RankingPanel.this.colors.put(name, TACAAViewerConstants.LEGEND_COLORS[size - 1]);
             }
         }
     }
@@ -139,7 +139,7 @@ public class RankingPanel extends JPanel {
             return data.size();
         }
 
-        public Color getRowColor(int row){
+        public Color getRowColor(int row) {
             return data.get(row).getColor();
         }
 
@@ -165,50 +165,59 @@ public class RankingPanel extends JPanel {
             return getValueAt(0, c).getClass();
         }
 
-        public void handleQueryReportItem(String name, Ad ad, double position) {
+        public void handleQueryReportItem(final String name, final Ad ad, final double position) {
 
-            ResultsItem item = map.get(name);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    ResultsItem item = map.get(name);
 
-            if (item != null) {
-                data.remove(item);
-            } else {
-                item = new ResultsItem(name);
-                map.put(name, item);
-            }
+                    if (item != null) {
+                        data.remove(item);
+                    } else {
+                        item = new ResultsItem(name);
+                        map.put(name, item);
+                    }
 
 
-            item.setAd(ad);
-            item.setPosition(position);
-            item.setColor(colors.get(name));
+                    item.setAd(ad);
+                    item.setPosition(position);
+                    item.setColor(colors.get(name));
 
-            if (!Double.isNaN(position)) {
-                data.add(item);
-                Collections.sort(data);
-            }
+                    if (!Double.isNaN(position)) {
+                        data.add(item);
+                        Collections.sort(data);
+                    }
 
-            fireTableDataChanged();
+                    fireTableDataChanged();
+                }
+            });
         }
 
-        public void handleBidBundleItem(String name, double bid) {
-            ResultsItem item = map.get(name);
+        public void handleBidBundleItem(final String name, final double bid) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    ResultsItem item = map.get(name);
 
-            if (item != null) {
-                data.remove(item);
-            } else {
-                item = new ResultsItem(name);
-                map.put(name, item);
-            }
+                    if (item != null) {
+                        data.remove(item);
+                    } else {
+                        item = new ResultsItem(name);
+                        map.put(name, item);
+                    }
 
-            item.setBid(bid);
-            item.setColor(colors.get(name));
+                    item.setBid(bid);
+                    item.setColor(colors.get(name));
 
-            if (!Double.isNaN(item.getPosition())) {
-                data.add(item);
-                Collections.sort(data);
-            }
+                    if (!Double.isNaN(item.getPosition())) {
+                        data.add(item);
+                        Collections.sort(data);
+                    }
 
 
-            fireTableDataChanged();
+                    fireTableDataChanged();
+                }
+            });
+
         }
     }
 
@@ -237,7 +246,7 @@ public class RankingPanel extends JPanel {
             this.bid = bid;
         }
 
-        public void setColor(Color color){
+        public void setColor(Color color) {
             this.color = color;
         }
 
@@ -257,7 +266,7 @@ public class RankingPanel extends JPanel {
             return position;
         }
 
-        public Color getColor(){
+        public Color getColor() {
             return color;
         }
 

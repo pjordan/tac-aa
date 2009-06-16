@@ -6,6 +6,7 @@ import edu.umich.eecs.tac.viewer.TACAASimulationPanel;
 import edu.umich.eecs.tac.viewer.ViewListener;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
+import edu.umich.eecs.tac.viewer.auction.ResultsPageModel;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.Product;
 import edu.umich.eecs.tac.props.Query;
@@ -28,14 +29,16 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
     private JTabbedPane tabbedPane;
     private RetailCatalog catalog;
     private Map<Query, AdvertiserQueryTabPanel> advertiserQueryTabPanels;
+    private Map<Query, ResultsPageModel> models;
     private Color legendColor;
 
-    public AdvertiserInfoTabPanel(int agent, String advertiser,
+    public AdvertiserInfoTabPanel(int agent, String advertiser, Map<Query, ResultsPageModel> models,
                                   TACAASimulationPanel simulationPanel, Color legendColor) {
         super(simulationPanel);
         this.agent = agent;
         this.advertiser = advertiser;
         this.simulationPanel = simulationPanel;
+        this.models = models;
         this.legendColor = legendColor;
 
         simulationPanel.addViewListener(new CatalogListener());
@@ -66,18 +69,10 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
             Query f2 = new Query(product.getManufacturer(), product
                     .getComponent());
 
-            if (!advertiserQueryTabPanels.containsKey(f0)) {
-                advertiserQueryTabPanels.put(f0, new AdvertiserQueryTabPanel(agent, advertiser, f0, simulationPanel, legendColor));
-            }
-            if (!advertiserQueryTabPanels.containsKey(f1_manufacturer)) {
-                advertiserQueryTabPanels.put(f1_manufacturer, new AdvertiserQueryTabPanel(agent, advertiser, f1_manufacturer, simulationPanel, legendColor));
-            }
-            if (!advertiserQueryTabPanels.containsKey(f1_component)) {
-                advertiserQueryTabPanels.put(f1_component, new AdvertiserQueryTabPanel(agent, advertiser, f1_component, simulationPanel, legendColor));
-            }
-            if (!advertiserQueryTabPanels.containsKey(f2)) {
-                advertiserQueryTabPanels.put(f2, new AdvertiserQueryTabPanel(agent, advertiser, f2, simulationPanel, legendColor));
-            }
+            createAdvertiserQueryTabPanels(f0);
+            createAdvertiserQueryTabPanels(f1_manufacturer);
+            createAdvertiserQueryTabPanels(f1_component);
+            createAdvertiserQueryTabPanels(f2);                       
         }
 
 
@@ -86,6 +81,19 @@ public class AdvertiserInfoTabPanel extends SimulationTabPanel {
                     advertiserQueryTabPanels.get(query));
         }
         add(tabbedPane);
+    }
+
+    private void createAdvertiserQueryTabPanels(Query query) {
+        ResultsPageModel model = models.get(query);
+
+        if(model==null) {
+            model = new ResultsPageModel(query, simulationPanel);
+            models.put(query,model);
+        }
+
+        if (!advertiserQueryTabPanels.containsKey(query)) {
+                advertiserQueryTabPanels.put(query, new AdvertiserQueryTabPanel(agent, advertiser, query, model, simulationPanel, legendColor));
+         }
     }
 
     private class CatalogListener extends ViewAdaptor {
