@@ -32,7 +32,7 @@ public class ViewerChartFactory {
     public static JFreeChart createChart(XYDataset xydataset, String title,
                                          String xLabel, String yLabel, Color legendColor) {
         JFreeChart jfreechart = ChartFactory.createXYLineChart(title, xLabel, yLabel, xydataset,
-                PlotOrientation.VERTICAL, false, true, false);
+                PlotOrientation.VERTICAL, false, false, false);
 
         jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 
@@ -51,7 +51,7 @@ public class ViewerChartFactory {
 
     public static JFreeChart createDaySeriesChartWithColor(String s, XYDataset xydataset, Color legendColor) {
         JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", "", xydataset,
-                PlotOrientation.VERTICAL, false, true, false);
+                PlotOrientation.VERTICAL, false, false, false);
 
         jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 
@@ -70,7 +70,7 @@ public class ViewerChartFactory {
 
     public static JFreeChart createDifferenceChart(String title, XYDataset xydataset) {
         JFreeChart jfreechart = ChartFactory.createXYLineChart(title, "Day", "$", xydataset,
-                PlotOrientation.VERTICAL, false, true, false);
+                PlotOrientation.VERTICAL, false, false, false);
         jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
@@ -105,7 +105,7 @@ public class ViewerChartFactory {
     public static JFreeChart createDaySeriesChartWithColors(String s, String yAxisLabel, XYDataset xydataset,
                                                          boolean legend) {
         JFreeChart jfreechart = ChartFactory.createXYLineChart(s, "Day", yAxisLabel, xydataset,
-                PlotOrientation.VERTICAL, true, true, false);
+                PlotOrientation.VERTICAL, true, false, false);
         jfreechart.setBackgroundPaint(TACAAViewerConstants.CHART_BACKGROUND);
 
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
