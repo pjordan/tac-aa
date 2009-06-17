@@ -19,19 +19,36 @@ class RankingRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent
             (JTable table, Object value, boolean isSelected,
              boolean hasFocus, int row, int column) {
+
+        fgndColor  = ((RankingPanel.MyTableModel)table.getModel()).getRowFgndColor(row);
+        bkgndColor = ((RankingPanel.MyTableModel)table.getModel()).getRowBkgndColor(row);
+
+
         if (value.getClass().equals(Double.class)) {
             value = round((Double) value, 3);
         }
+
+        if(value.getClass() == Boolean.class){
+            boolean targeted = (Boolean) value;
+            JCheckBox checkBox = new JCheckBox();
+            if (targeted) {
+               checkBox.setSelected(true);
+            }
+            checkBox.setForeground(fgndColor);
+            checkBox.setBackground(bkgndColor);
+            checkBox.setHorizontalAlignment((int) JCheckBox.CENTER_ALIGNMENT);
+            return checkBox;
+        }
+
+  
         JLabel cell = (JLabel) super.getTableCellRendererComponent(
-                table, value, isSelected, hasFocus, row, column);
-        Color rowColor  = ((RankingPanel.MyTableModel)table.getModel()).getRowColor(row);
+                       table, value, isSelected, hasFocus, row, column);
 
-       // cell.setBackground(new Color(255 - rowColor.getRed(), 255 - rowColor.getGreen(), 255 - rowColor.getBlue()));
-        cell.setForeground(rowColor);
-
-
+        cell.setForeground(fgndColor);
+        cell.setBackground(bkgndColor);
         cell.setFont(new Font("serif", Font.BOLD, 12));
         cell.setHorizontalAlignment((int) JLabel.CENTER_ALIGNMENT);
+
         return cell;
     }
 

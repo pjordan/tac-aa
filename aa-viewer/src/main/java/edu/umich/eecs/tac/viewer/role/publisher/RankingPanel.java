@@ -1,10 +1,7 @@
 package edu.umich.eecs.tac.viewer.role.publisher;
 
 import edu.umich.eecs.tac.TACAAConstants;
-import edu.umich.eecs.tac.props.Ad;
-import edu.umich.eecs.tac.props.BidBundle;
-import edu.umich.eecs.tac.props.Query;
-import edu.umich.eecs.tac.props.QueryReport;
+import edu.umich.eecs.tac.props.*;
 import edu.umich.eecs.tac.viewer.TACAAViewerConstants;
 import edu.umich.eecs.tac.viewer.ViewAdaptor;
 import se.sics.isl.transport.Transportable;
@@ -44,6 +41,7 @@ public class RankingPanel extends JPanel {
 
         table.setDefaultRenderer(String.class, new RankingRenderer(Color.white, Color.black));
         table.setDefaultRenderer(Double.class, new RankingRenderer(Color.white, Color.black));
+        table.setDefaultRenderer(Boolean.class, new RankingRenderer(Color.white, Color.black));
         table.setGridColor(Color.white);
 
         initColumnSizes(table);
@@ -64,7 +62,22 @@ public class RankingPanel extends JPanel {
         if (name != null) {
             Ad ad = queryReport.getAd(query);
             double position = queryReport.getPosition(query);
-            model.handleQueryReportItem(name, ad, position);
+            double promotedRatio = 0;
+            
+            if(queryReport.getImpressions(query)!= 0){
+                promotedRatio = (double)queryReport.getPromotedImpressions(query)/(double)queryReport.getImpressions(query);
+            }
+
+            //Color bkgndColor= new Color(255, 255, (int)(255 - 255 * promotedRatio));
+            Color bkgndColor;
+            if(promotedRatio > .5){
+                bkgndColor = Color.lightGray;
+            }
+            else
+                bkgndColor = Color.white;
+            
+            model.handleQueryReportItem(name, ad, position, bkgndColor);
+            
         }
     }
 
@@ -76,7 +89,7 @@ public class RankingPanel extends JPanel {
             double bid = bundle.getBid(query);
 
             if (!(BidBundle.PERSISTENT_BID == bid || Double.isNaN(BidBundle.PERSISTENT_BID) && Double.isNaN(bid))) {
-
+                 
                 model.handleBidBundleItem(name, bid);
             }
         }
@@ -92,7 +105,6 @@ public class RankingPanel extends JPanel {
             } else if (type == TACAAConstants.DU_BIDS && value.getClass().equals(BidBundle.class)) {
 
                 handleBidBundle(agent, (BidBundle) value);
-
             }
         }
 
@@ -142,8 +154,12 @@ public class RankingPanel extends JPanel {
             return data.size();
         }
 
-        public Color getRowColor(int row) {
-            return data.get(row).getColor();
+        public Color getRowFgndColor(int row) {
+            return data.get(row).getFgndColor();
+        }
+
+        public Color getRowBkgndColor(int row){
+            return data.get(row).getBkgndColor();
         }
 
         public String getColumnName(int col) {
@@ -168,7 +184,7 @@ public class RankingPanel extends JPanel {
             return getValueAt(0, c).getClass();
         }
 
-        public void handleQueryReportItem(final String name, final Ad ad, final double position) {
+        public void handleQueryReportItem(final String name, final Ad ad, final double position, final Color bkgndColor) {
 
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -184,7 +200,8 @@ public class RankingPanel extends JPanel {
 
                     item.setAd(ad);
                     item.setPosition(position);
-                    item.setColor(colors.get(name));
+                    item.setFgndColor(colors.get(name));
+                    item.setBkgndColor(bkgndColor);
 
                     if (!Double.isNaN(position)) {
                         data.add(item);
@@ -209,13 +226,11 @@ public class RankingPanel extends JPanel {
                     }
 
                     item.setBid(bid);
-                    item.setColor(colors.get(name));
 
                     if (!Double.isNaN(item.getPosition())) {
                         data.add(item);
                         Collections.sort(data);
                     }
-
 
                     fireTableDataChanged();
                 }
@@ -229,7 +244,8 @@ public class RankingPanel extends JPanel {
         private Ad ad;
         private double position;
         private double bid;
-        private Color color;
+        private Color fgndColor;
+        private Color bkgndColor;
 
         public ResultsItem(String advertiser) {
             this.advertiser = advertiser;
@@ -249,8 +265,12 @@ public class RankingPanel extends JPanel {
             this.bid = bid;
         }
 
-        public void setColor(Color color) {
-            this.color = color;
+        public void setBkgndColor(Color color){
+            this.bkgndColor = color;
+        }
+
+        public void setFgndColor(Color color) {
+            this.fgndColor = color;
         }
 
         public double getBid() {
@@ -269,8 +289,12 @@ public class RankingPanel extends JPanel {
             return position;
         }
 
-        public Color getColor() {
-            return color;
+        public Color getFgndColor() {
+            return fgndColor;
+        }
+
+        public Color getBkgndColor(){
+            return bkgndColor;
         }
 
         public boolean isTargeted() {

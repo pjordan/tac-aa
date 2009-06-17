@@ -67,10 +67,12 @@ public class AdvertiserRateMetricsPanel extends JPanel {
         setBackground(TACAAViewerConstants.CHART_BACKGROUND);
 
         ctrLabel = new JLabel("---");
+        ctrLabel.setToolTipText("Click-through Rate");
         add(new JLabel("CTR:"));
         add(ctrLabel);
 
         convRateLabel = new JLabel("---");
+        convRateLabel.setToolTipText("Conversion Rate");
         add(new JLabel("Conv. Rate:"));
         add(convRateLabel);
 
@@ -79,14 +81,17 @@ public class AdvertiserRateMetricsPanel extends JPanel {
         add(cpmLabel);
 
         cpcLabel = new JLabel("---");
+        cpcLabel.setToolTipText("Cost Per Click");
         add(new JLabel("CPC:"));
         add(cpcLabel);
 
         vpcLabel = new JLabel("---");
+        vpcLabel.setToolTipText("Value Per Click");
         add(new JLabel("VPC:"));
         add(vpcLabel);
 
         roiLabel = new JLabel("---");
+        roiLabel.setToolTipText("Return on Investment");
         add(new JLabel("ROI:"));
         add(roiLabel);
 
