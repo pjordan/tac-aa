@@ -4,10 +4,7 @@ package edu.umich.eecs.tac.sim;
  * @author Lee Callender, Patrick Jordan
  */
 
-import edu.umich.eecs.tac.props.Auction;
-import edu.umich.eecs.tac.props.Query;
 import edu.umich.eecs.tac.props.QueryReport;
-import edu.umich.eecs.tac.props.PublisherInfo;
 import se.sics.isl.transport.Transportable;
 
 import java.util.logging.Logger;
@@ -41,11 +38,7 @@ public abstract class Publisher extends Builtin implements QueryReportSender,
 	}
 
 	public void sendQueryReport(String advertiser, QueryReport report) {
-		sendMessage(advertiser, report);
-
-        int agentIndex = getSimulation().agentIndex(advertiser);
-
-        getEventWriter().dataUpdated(agentIndex, TACAAConstants.DU_QUERY_REPORT, report);
+		getSimulation().sendQueryReport(advertiser, report);        
 	}
 
 	public void sendPublisherInfo(String advertiser) {
