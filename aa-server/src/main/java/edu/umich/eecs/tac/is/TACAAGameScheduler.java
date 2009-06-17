@@ -294,8 +294,8 @@ public class TACAAGameScheduler extends HttpPage {
 					.append(formatServerTimeDate(time))
 					.append(
 							"</td></tr\r\n>"
-									+ "<tr><td>Approx End Time (10 min games):</td><td>");
-			long endTime = time + (rounds * minGames) * (10 + timeBetween)
+									+ "<tr><td>Approx End Time:</td><td>");
+			long endTime = time + (rounds * minGames) * 4 * (10 + timeBetween)
 					* 60000L;
 			if (reserveTime > 0 && reserveBetween > 0) {
 				endTime += reserveTime * ((rounds * minGames) / reserveBetween)
