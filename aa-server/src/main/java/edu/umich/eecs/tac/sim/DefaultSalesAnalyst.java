@@ -9,6 +9,7 @@ import edu.umich.eecs.tac.TACAAConstants;
 import com.botbox.util.ArrayUtils;
 
 import java.util.Map;
+import java.util.Arrays;
 
 import se.sics.tasim.is.EventWriter;
 
@@ -89,8 +90,14 @@ public class DefaultSalesAnalyst implements SalesAnalyst {
 		}
 
 		if (accountConversions[index] == null) {
-			accountConversions[index] = new int[getAdvertiserInfo().get(name)
-					.getDistributionWindow()];
+
+            AdvertiserInfo advertiserInfo = getAdvertiserInfo().get(name);
+
+            accountConversions[index] = new int[advertiserInfo.getDistributionWindow()];
+
+            int defaultConversions = advertiserInfo.getDistributionCapacity() / advertiserInfo.getDistributionWindow();
+
+            Arrays.fill(accountConversions[index], defaultConversions);            
 		}
 
 		accountConversions[index][0] += conversions;
