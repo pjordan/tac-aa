@@ -179,6 +179,9 @@ public class TACAAGameScheduler extends HttpPage {
 						"total number of games not specified");
 			}
 			int totalGames = Integer.parseInt(totalGamesStr);
+			if(totalGames/4 == 0){
+				throw new IllegalArgumentException("Fewer than 4 games requested");
+			}
 			long time = parseServerTimeDate(req.getParameter("time"));
 			// int gameLength =
 			// Integer.parseInt(req.getParameter("gameLength"));
@@ -222,8 +225,8 @@ public class TACAAGameScheduler extends HttpPage {
 			// maxGameLength + " minutes");
 			// }
 			int[][] games = scheduleGames(nrUsers, agentsPerGame);
-			int minGames = games.length;
-			int perAgent = gamesPerAgent(nrUsers);
+			int minGames = 4*games.length;
+			int perAgent = 4*gamesPerAgent(nrUsers);
 
 			int rounds;
 			if (totalAgent) {
@@ -271,7 +274,7 @@ public class TACAAGameScheduler extends HttpPage {
 									+ "<tr><td>Number of games scheduled:</td><td>")
 					.append(rounds * minGames);
 					if(rounds == 0)
-						page.append("</td><td> WARNING: If number of players is > 8 and not divisible by 2, request at least 8 games per player");
+						page.append("</td><td> WARNING: If number of players is > 8 and not divisible by 2, request at least 8 games per agent");
 					page.append(
 							"</td></tr\r\n>"
 									+ "<tr><td>Number of games per round:</td><td>")
@@ -295,7 +298,7 @@ public class TACAAGameScheduler extends HttpPage {
 					.append(
 							"</td></tr\r\n>"
 									+ "<tr><td>Approx End Time:</td><td>");
-			long endTime = time + (rounds * minGames) * 4 * (10 + timeBetween)
+			long endTime = time + (rounds * minGames) * (10 + timeBetween)
 					* 60000L;
 			if (reserveTime > 0 && reserveBetween > 0) {
 				endTime += reserveTime * ((rounds * minGames) / reserveBetween)
@@ -337,7 +340,7 @@ public class TACAAGameScheduler extends HttpPage {
 									+ "</table>\r\n<p>\r\n"
 									+ "<font face='arial' size='+1'>Example round</font><p>\r\n"
 									+ "<table border=1><tr><th>Game</th><th>Agents</th></tr>");
-			for (int i = 0; i < minGames; i++) {
+			for (int i = 0; i < minGames/4; i++) {
 				for(int b = 0; b < 4; b++){
 				page.append("<tr><td>").append(i + 1).append("</td><td>");
 				for (int a = 0; a < agentsPerGame; a++) {
@@ -601,7 +604,7 @@ public class TACAAGameScheduler extends HttpPage {
 								+ "<option value=agent>Number of games per agent (int)"
 								+ "</select>"
 								// + "Number of games (total or per agent)"
-								+ "</td><td><input type=text name=games size=32></td></tr>"
+								+ "</td><td><input type=text name=games size=32></td><td>Must be a multiple of 4</td></tr>"
 								+ "<tr><td>Start Time (YYYY-MM-DD HH:mm)</td>"
 								+ "<td><input type=text name=time size=32 value='")
 				.append(formatServerTimeDate(infoServer.getServerTimeMillis()))
