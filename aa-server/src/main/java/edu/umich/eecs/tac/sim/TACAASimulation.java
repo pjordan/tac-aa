@@ -166,6 +166,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
         userClickModel = createUserClickModel();
 
+        getLogWriter().write(userClickModel);
     }
 
     private double sample(double min, double max) {
@@ -579,16 +580,15 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
             Query f0 = new Query();
 
             // Create f1's
-            Query f1_manufacturer = new Query(product.getManufacturer(), null);
-            Query f1_component = new Query(null, product.getComponent());
+            Query f1Manufacturer = new Query(product.getManufacturer(), null);
+            Query f1Component = new Query(null, product.getComponent());
 
             // Create f2
-            Query f2 = new Query(product.getManufacturer(), product
-                    .getComponent());
+            Query f2 = new Query(product.getManufacturer(), product.getComponent());
 
             queryList.add(f0);
-            queryList.add(f1_manufacturer);
-            queryList.add(f1_component);
+            queryList.add(f1Manufacturer);
+            queryList.add(f1Component);
             queryList.add(f2);
         }
 
