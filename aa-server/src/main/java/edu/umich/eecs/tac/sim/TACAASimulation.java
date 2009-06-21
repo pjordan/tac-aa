@@ -167,6 +167,8 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
         userClickModel = createUserClickModel();
 
         getLogWriter().write(userClickModel);
+        getLogWriter().write(reserveInfo);
+
     }
 
     private double sample(double min, double max) {
