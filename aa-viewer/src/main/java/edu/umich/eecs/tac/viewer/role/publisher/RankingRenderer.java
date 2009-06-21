@@ -8,12 +8,15 @@ import java.awt.*;
  * @author Guha Balakrishnan
  */
 class RankingRenderer extends DefaultTableCellRenderer {
-    Color bkgndColor, fgndColor;
+    private Color bkgndColor;
+    private Color fgndColor;
+    private Font cellFont;
 
     public RankingRenderer(Color bkgnd, Color foregnd) {
         super();
         bkgndColor = bkgnd;
         fgndColor = foregnd;
+        cellFont = new Font("serif", Font.BOLD, 12);
     }
 
     public Component getTableCellRendererComponent
@@ -46,7 +49,7 @@ class RankingRenderer extends DefaultTableCellRenderer {
 
         cell.setForeground(fgndColor);
         cell.setBackground(bkgndColor);
-        cell.setFont(new Font("serif", Font.BOLD, 12));
+        cell.setFont(cellFont);
         cell.setHorizontalAlignment((int) JLabel.CENTER_ALIGNMENT);
 
         return cell;
