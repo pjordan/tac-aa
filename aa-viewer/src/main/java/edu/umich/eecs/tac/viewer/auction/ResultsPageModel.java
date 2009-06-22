@@ -125,6 +125,6 @@ public class ResultsPageModel extends AbstractListModel implements ViewListener 
         if (role == TACAAConstants.ADVERTISER) {
             names.put(agent, name);
         }
-    }    
+    }
 }
 
