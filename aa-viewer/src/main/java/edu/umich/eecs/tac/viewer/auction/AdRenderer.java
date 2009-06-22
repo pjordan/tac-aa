@@ -41,12 +41,12 @@ public class AdRenderer extends DefaultListCellRenderer {
                 adCopy = "products";
                 break;
             case FOCUS_LEVEL_ONE:
-                adCopy = String.format("<b>%s</b> products", query.getManufacturer() != null ?
+                adCopy = String.format("%s products", query.getManufacturer() == null ?
                         query.getComponent() :
                         query.getManufacturer());
                 break;
             case FOCUS_LEVEL_TWO:
-                adCopy = String.format("<b>%s %s</b> units", query.getManufacturer(), query.getComponent());
+                adCopy = String.format("%s %s units", query.getManufacturer(), query.getComponent());
                 break;
         }
     }
@@ -68,7 +68,7 @@ public class AdRenderer extends DefaultListCellRenderer {
 
         String text = textCache.get(item.getAdvertiser());
         if (text == null) {
-            text = String.format("<html><font color='green'>Sale on %s</font><br><font color='blue'>From <b>%s</b>'s website</font></html>", adCopy, item.getAdvertiser());
+            text = String.format("%s's %s", item.getAdvertiser(), adCopy);
             textCache.put(item.getAdvertiser(), text);
         }
 
