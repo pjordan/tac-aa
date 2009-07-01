@@ -104,7 +104,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
         }
 
         this.numberOfAdvertisers = config.getPropertyAsInt("game.numberOfAdvertisers",
-                                                           TACAAManager.NUMBER_OF_ADVERTISERS);
+                TACAAManager.NUMBER_OF_ADVERTISERS);
 
         log.info("TACAA Simulation " + info.getSimulationID() + " is setting up...");
 
@@ -137,7 +137,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
             createExternalAgent("adv" + (i + 1), ADVERTISER, info.getParticipantID(i));
         }
         if (info.getParticipantCount() < numberOfAdvertisers) {
-            createDummies("dummy.advertiser", ADVERTISER, numberOfAdvertisers- info.getParticipantCount());
+            createDummies("dummy.advertiser", ADVERTISER, numberOfAdvertisers - info.getParticipantCount());
         }
 
         initializeAdvertisers();
@@ -207,8 +207,8 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
         double regularReserveMin = config.getPropertyAsDouble("publisher.regular.reserve.min", 0.0);
         double regularReserveMax = config.getPropertyAsDouble("publisher.regular.reserve.max", 0.0);
 
-        reserveInfo.setRegularReserve(sample(regularReserveMin,regularReserveMax));
-        reserveInfo.setPromotedReserve(sample(reserveInfo.getRegularReserve(),promotedReserveMax));
+        reserveInfo.setRegularReserve(sample(regularReserveMin, regularReserveMax));
+        reserveInfo.setPromotedReserve(sample(reserveInfo.getRegularReserve(), promotedReserveMax));
 
         return reserveInfo;
     }
@@ -229,7 +229,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
         int lowValue = config.getPropertyAsInt("advertiser.capacity.low", 0);
 
         int highCount = config.getPropertyAsInt("advertiser.capacity.highCount", 0);
-        int lowCount = config.getPropertyAsInt("advertiser.capacity.lowCount",0);
+        int lowCount = config.getPropertyAsInt("advertiser.capacity.lowCount", 0);
 
         double manufacturerBonus = config.getPropertyAsDouble("advertiser.specialization.manufacturerBonus", 0.0);
         double componentBonus = config.getPropertyAsDouble("advertiser.specialization.componentBonus", 0.0);
@@ -295,6 +295,8 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
                     capacities[Integer.parseInt(perm.substring(i + start + 6, i + start + 7)) - 1] = medValue;
                 }
             }
+
+            
             for (int i = 0, n = advertisers.length; i < n; i++) {
                 SimulationAgent agent = advertisers[i];
 
@@ -312,9 +314,9 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
                 advertiserInfo.setManufacturerBonus(manufacturerBonus);
                 advertiserInfo.setDistributionWindow(window);
                 advertiserInfo.setTargetEffect(targetEffect);
-                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO,focusEffectF0);
-                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ONE,focusEffectF1);
-                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_TWO,focusEffectF2);
+                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ZERO, focusEffectF0);
+                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_ONE, focusEffectF1);
+                advertiserInfo.setFocusEffects(QueryType.FOCUS_LEVEL_TWO, focusEffectF2);
                 advertiserInfo.lock();
 
                 advertiserInfoMap.put(agentAddress, advertiserInfo);
@@ -412,7 +414,14 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
         for (SimulationAgent agent : getAgents(PUBLISHER)) {
             if (agent.getAgent() instanceof Publisher) {
                 Publisher publisher = (Publisher) agent.getAgent();
-                publisher.sendQueryReportsToAll();                
+                publisher.sendQueryReportsToAll();
+            }
+        }
+
+        for (SimulationAgent agent : getAgents(USERS)) {
+            if (agent.getAgent() instanceof Users) {
+                Users users = (Users) agent.getAgent();
+                users.broadcastUserDistribution();
             }
         }
 
@@ -450,7 +459,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
         if (timeUnit >= numberOfDays) {
             // Time to stop the simulation
             requestStopSimulation();
-        } else {            
+        } else {
             // Let the bank send their first messages
             bank.sendBankStatusToAll();
             salesAnalyst.sendSalesReportToAll();
@@ -901,11 +910,11 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
         LogWriter writer = getLogWriter();
         synchronized (writer) {
             writer.node("transaction").attr("source", sourceIndex)
-                                      .attr("recipient", receipientIndex)
-                                      .attr("amount", amount)
+                    .attr("recipient", receipientIndex)
+                    .attr("amount", amount)
                     .endNode("transaction");
         }
-    }    
+    }
 
     public SalesAnalyst getSalesAnalyst() {
         return salesAnalyst;
@@ -919,7 +928,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
         sendMessage(agentName, status);
 
         EventWriter eventWriter = getEventWriter();
-        eventWriter.dataUpdated(getAgent(agentName).getIndex(),DU_BANK_ACCOUNT, status.getAccountBalance());
+        eventWriter.dataUpdated(getAgent(agentName).getIndex(), DU_BANK_ACCOUNT, status.getAccountBalance());
     }
 
     public final void sendSalesReport(String agentName, SalesReport report) {
@@ -942,13 +951,13 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
     public void broadcastClicks(String advertiser, int clicks) {
         getEventWriter().dataUpdated(agentIndex(advertiser), TACAAConstants.DU_CLICKS, clicks);
-	}
+    }
 
-	public SlotInfo getAuctionInfo() {
-		return slotInfo;
-	}
+    public SlotInfo getAuctionInfo() {
+        return slotInfo;
+    }
 
-	public void setAuctionInfo(SlotInfo slotInfo) {
-		this.slotInfo = slotInfo;
-	}
+    public void setAuctionInfo(SlotInfo slotInfo) {
+        this.slotInfo = slotInfo;
+    }
 }
