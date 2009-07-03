@@ -1,5 +1,5 @@
 /**
- * @author Patrick R. Jordan
+ * @author Patrick R. Jordan, Lee Callender
  */
 package edu.umich.eecs.tac.viewer;
 
@@ -14,6 +14,7 @@ public class GraphicUtils {
     }
 
     private static final ImageIcon GENERIC = new ImageIcon(GraphicUtils.class.getResource("/generic_regular.gif"));
+    private static final ImageIcon INVALID = new ImageIcon(GraphicUtils.class.getResource("/invalid_regular.gif"));
 
     private static final Map<Product, ImageIcon> PRODUCT_ICONS;
 
@@ -46,6 +47,10 @@ public class GraphicUtils {
 
     public static ImageIcon genericIcon() {
         return GENERIC;
+    }
+
+    public static ImageIcon invalidIcon() {
+        return INVALID;
     }
 
     public static ImageIcon iconForProduct(Product product) {

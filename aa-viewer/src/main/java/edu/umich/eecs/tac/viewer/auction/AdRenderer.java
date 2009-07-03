@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Patrick R. Jordan
+ * @author Patrick R. Jordan, Lee Callender
  */
 public class AdRenderer extends DefaultListCellRenderer {
     private String adCopy;
@@ -60,7 +60,10 @@ public class AdRenderer extends DefaultListCellRenderer {
         ImageIcon icon = GraphicUtils.iconForProduct(item.getAd().getProduct());
 
         if (icon == null) {
+          if(item.getAd().isGeneric())
             icon = GraphicUtils.genericIcon();
+          else
+            icon = GraphicUtils.invalidIcon();
         }
 
         label.setIcon(icon);
