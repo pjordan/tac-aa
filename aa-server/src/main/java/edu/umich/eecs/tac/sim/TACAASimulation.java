@@ -13,6 +13,7 @@ import se.sics.tasim.props.ServerConfig;
 import se.sics.tasim.props.StartInfo;
 import se.sics.tasim.props.SimulationStatus;
 import se.sics.tasim.is.SimulationInfo;
+import se.sics.tasim.is.common.Competition;
 import se.sics.tasim.sim.LogWriter;
 import se.sics.tasim.sim.Simulation;
 import se.sics.tasim.sim.SimulationAgent;
@@ -20,6 +21,7 @@ import se.sics.tasim.aw.Message;
 import edu.umich.eecs.tac.TACAAConstants;
 import edu.umich.eecs.tac.props.*;
 import static edu.umich.eecs.tac.TACAAConstants.*;
+import static edu.umich.eecs.tac.util.permutation.CapacityAssignmentPermutation.*;
 
 /**
  * @author Lee Callender, Patrick Jordan, Ben Cassell
@@ -49,6 +51,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
     private Map<String, AdvertiserInfo> advertiserInfoMap;
 
     private Random random;
+    private Competition competition;
 
     private Runnable afterTickTarget = new Runnable() {
         public void run() {
@@ -58,8 +61,13 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
     private boolean recoverAgents = false;
 
-    private static final Logger log = Logger.getLogger(TACAASimulation.class
-            .getName());
+    private static final Logger log = Logger.getLogger(TACAASimulation.class.getName());
+
+    public TACAASimulation(ConfigManager config, Competition competition) {
+        super(config);
+        this.competition = competition;        
+        random = new Random();
+    }
 
     public TACAASimulation(ConfigManager config) {
         super(config);
@@ -252,14 +260,8 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
             //check simulationInfo
             SimulationInfo info = getSimulationInfo();
-            String key = "perm" + Integer.toString((info.getSimulationID() % 4) + 1);
-            String perm = info.getParams();
-            int start;
-            if (perm == null)
-                start = -1;
-            else
-                start = perm.indexOf(key);
-            if (start == -1) {
+
+            if (competition==null) {
 
                 log.log(Level.INFO, "Using random capacity assigments");
                 for (int i = 0; i < highCount && i < capacities.length; i++) {
@@ -284,15 +286,32 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
                 }
 
             } else {
+
+                int secret = config.getPropertyAsInt("game.secret", 0);
+
+                CapacityType[] types = secretPermutation(secret,
+                                                         info.getSimulationID(),
+                                                         competition.getStartSimulationID());
+                
                 log.log(Level.INFO, "Using permuted capacity assigments");
-                for (int i = 0; i < highCount && i < capacities.length; i++) {
-                    capacities[Integer.parseInt(perm.substring(i + start + 6, i + start + 7)) - 1] = highValue;
-                }
-                for (int i = highCount; i < highCount + lowCount && i < capacities.length; i++) {
-                    capacities[Integer.parseInt(perm.substring(i + start + 6, i + start + 7)) - 1] = lowValue;
-                }
-                for (int i = highCount + lowCount; i < capacities.length; i++) {
-                    capacities[Integer.parseInt(perm.substring(i + start + 6, i + start + 7)) - 1] = medValue;
+
+
+                for(int i = 0; i < capacities.length; i++) {
+                    int cap = 0;
+
+                    switch(types[i]) {
+                        case LOW:
+                            cap = lowValue;
+                            break;
+                        case MED:
+                            cap = medValue;
+                            break;
+                        case HIGH:
+                            cap = highValue;
+                            break;
+                    }
+
+                    capacities[i] = cap;
                 }
             }
 

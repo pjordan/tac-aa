@@ -94,10 +94,8 @@ public abstract class SimulationManager {
 		admin.addSimulationManager(type, this);
 	}
 
-	protected SimulationInfo createSimulationInfo(String type, String params,
-			int length) {
-		return new SimulationInfo(admin.getNextUniqueSimulationID(), type,
-				params, length);
+	protected SimulationInfo createSimulationInfo(String type, String params, int length) {
+		return new SimulationInfo(admin.getNextUniqueSimulationID(), type,params, length);
 	}
 
 	// -------------------------------------------------------------------
@@ -110,8 +108,11 @@ public abstract class SimulationManager {
 	 */
 	protected abstract void init();
 
-	public abstract SimulationInfo createSimulationInfo(String type,
-			String params);
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public abstract SimulationInfo createSimulationInfo(String type,String params);
 
 	public abstract boolean join(int agent, int role, SimulationInfo info);
 

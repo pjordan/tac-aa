@@ -58,7 +58,11 @@ public class InfoConnectionImpl extends InfoConnection {
 		this.simServer = simServer;
 	}
 
-	// -------------------------------------------------------------------
+    public SimServer getSimServer() {
+        return simServer;
+    }
+
+    // -------------------------------------------------------------------
 	// Information
 	// -------------------------------------------------------------------
 

@@ -42,8 +42,7 @@ import se.sics.tasim.is.SimulationInfo;
  */
 public class SimConnectionImpl extends SimConnection {
 
-	private static final Logger log = Logger.getLogger(SimConnectionImpl.class
-			.getName());
+	private static final Logger log = Logger.getLogger(SimConnectionImpl.class.getName());
 
 	private final Admin admin;
 	private final AgentLookup lookup;

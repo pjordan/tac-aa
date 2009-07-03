@@ -57,7 +57,7 @@ import se.sics.tasim.props.AdminContent;
 import se.sics.tasim.viewer.ViewerConnection;
 import se.sics.tasim.props.Alert;
 
-final class Admin {
+public final class Admin {
 
 	private static final Logger log = Logger.getLogger(Admin.class.getName());
 
@@ -856,8 +856,7 @@ final class Admin {
 				for (int i = 0; i < count; i++) {
 					int[] participants = schedule.getParticipants(i);
 					int[] roles = schedule.getRoles(i);
-					SimulationInfo info = createSimulationInfo(manager,
-							simType, simParams);
+					SimulationInfo info = createSimulationInfo(manager,simType, simParams);
 					simulations[i] = info;
 					if (participants != null) {
 						int roleLen = roles == null ? 0 : roles.length;
@@ -1735,7 +1734,11 @@ final class Admin {
 		simulationManagerTable.put(type, manager);
 	}
 
-	// -------------------------------------------------------------------
+    public InfoConnection getInfoConnection() {
+        return infoConnection;
+    }
+
+    // -------------------------------------------------------------------
 	// Logging handling
 	// -------------------------------------------------------------------
 

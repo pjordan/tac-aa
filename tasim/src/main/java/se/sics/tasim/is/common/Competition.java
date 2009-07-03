@@ -139,6 +139,11 @@ public class Competition {
 		return startPublicID + simulationCount - 1;
 	}
 
+    public boolean containsSimulation(int simulationID) {
+        return getStartSimulationID() <= simulationID &&
+               getEndSimulationID()   >= simulationID;
+    }
+    
 	public long getStartTime() {
 		return startTime;
 	}

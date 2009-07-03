@@ -523,7 +523,7 @@ public class TACAAGameScheduler extends HttpPage {
 						schedule.addSimulation(scheduledGames[i], roles);
 					}
 				}
-				schedule.setSimulationParams("perm1=12345678,perm2=78123456,perm3=56781234,perm4=34567812");
+                schedule.setSimulationParams("perm1=12345678,perm2=78123456,perm3=56781234,perm4=34567812");
 				simServer.scheduleCompetition(schedule);
 				page.append("Requested ").append(scheduledGames.length).append(
 						" scheduled games in competition ").append(name)
