@@ -207,13 +207,13 @@ public class TACAAManager extends SimulationManager {
     private Competition[] findCompetitions() {
         SimServer simServer = findSimServer();
 
-        Competition[] competitions = new Competition[0];
+        Competition[] competitions = null;
 
         if (simServer != null) {
             competitions = simServer.getCompetitions();
         }
 
-        return competitions;
+        return competitions==null ? new Competition[0] : competitions;
     }
 
     private static class Config {
