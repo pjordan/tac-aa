@@ -3,19 +3,19 @@
 	<parent>
 		<groupId>edu.umich.eecs.tac</groupId>
 		<artifactId>tac-aa</artifactId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9.6.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.umich.eecs.tac</groupId>
 	<artifactId>aa-logviewer</artifactId>
 	<packaging>jar</packaging>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9.6.1</version>
 	<name>Trading Agent Ad Auctions logviewer</name>
 	<dependencies>
         <dependency>
 			<groupId>se.sics</groupId>
 			<artifactId>tasim</artifactId>
-			<version>0.8.0-SNAPSHOT</version>
+			<version>0.8.0.4.1</version>
 		</dependency>
        <dependency>
 			<groupId>jfree</groupId>
@@ -25,12 +25,12 @@
         <dependency>
             <groupId>edu.umich.eecs.tac</groupId>
             <artifactId>aa-common</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9.6.1</version>
         </dependency>
         <dependency>
             <groupId>edu.umich.eecs.tac</groupId>
             <artifactId>aa-logging</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9.6.1</version>
         </dependency>
     </dependencies>
 	<build>
