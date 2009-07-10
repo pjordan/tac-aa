@@ -58,19 +58,19 @@ public class DefaultSalesAnalystTest {
 	public void testConversions() {
 		salesAnalyst.addAccount(alice);
 
-		assertEquals(salesAnalyst.getRecentConversions(alice), 0.0, 0.0);
+		assertEquals(salesAnalyst.getRecentConversions(alice), 10.0, 0.0);
 
-		salesAnalyst.addConversions(alice, new Query(), 7, 2.0);
+		salesAnalyst.addConversions(alice, new Query(), 17, 2.0);
 
-		assertEquals(salesAnalyst.getRecentConversions(alice), 7.0, 0.0);
+		assertEquals(salesAnalyst.getRecentConversions(alice), 27.0, 0.0);
 
 		salesAnalyst.sendSalesReportToAll();
 
-		assertEquals(salesAnalyst.getRecentConversions(alice), 7.0, 0.0);
+		assertEquals(salesAnalyst.getRecentConversions(alice), 22.0, 0.0);
 
 		salesAnalyst.addConversions(alice, new Query(), 5, 2.0);
 
-		assertEquals(salesAnalyst.getRecentConversions(alice), 12.0, 0.0);
+		assertEquals(salesAnalyst.getRecentConversions(alice), 27.0, 0.0);
 
 		salesAnalyst.sendSalesReportToAll();
 
