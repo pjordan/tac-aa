@@ -1,6 +1,7 @@
 package edu.umich.eecs.tac.logviewer.gui;
 
 import edu.umich.eecs.tac.logviewer.info.GameInfo;
+import edu.umich.eecs.tac.logviewer.gui.advertiser.AdvertiserWindow;
 import edu.umich.eecs.tac.props.Product;
 import edu.umich.eecs.tac.props.UserPopulationState;
 

@@ -3,11 +3,10 @@ package edu.umich.eecs.tac.logviewer.gui;
 import edu.umich.eecs.tac.logviewer.info.Advertiser;
 import edu.umich.eecs.tac.logviewer.info.GameInfo;
 import edu.umich.eecs.tac.logviewer.monitor.ParserMonitor;
+import edu.umich.eecs.tac.logviewer.gui.advertiser.AdvertiserWindow;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.border.BevelBorder;
 import java.awt.event.MouseEvent;
 import java.awt.*;

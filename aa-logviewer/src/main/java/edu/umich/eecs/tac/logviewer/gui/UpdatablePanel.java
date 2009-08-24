@@ -13,8 +13,8 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class UpdatablePanel {
-  JPanel mainPane;
-  PositiveBoundedRangeModel dayModel;
+  protected JPanel mainPane;
+  protected PositiveBoundedRangeModel dayModel;
 
   public UpdatablePanel(PositiveBoundedRangeModel dm){
     this.dayModel = dm;
