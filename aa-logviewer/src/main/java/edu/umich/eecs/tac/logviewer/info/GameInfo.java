@@ -1,3 +1,27 @@
+/*
+ * GameInfo.java
+ *
+ * COPYRIGHT  2008
+ * THE REGENTS OF THE UNIVERSITY OF MICHIGAN
+ * ALL RIGHTS RESERVED
+ *
+ * PERMISSION IS GRANTED TO USE, COPY, CREATE DERIVATIVE WORKS AND REDISTRIBUTE THIS
+ * SOFTWARE AND SUCH DERIVATIVE WORKS FOR NONCOMMERCIAL EDUCATION AND RESEARCH
+ * PURPOSES, SO LONG AS NO FEE IS CHARGED, AND SO LONG AS THE COPYRIGHT NOTICE
+ * ABOVE, THIS GRANT OF PERMISSION, AND THE DISCLAIMER BELOW APPEAR IN ALL COPIES
+ * MADE; AND SO LONG AS THE NAME OF THE UNIVERSITY OF MICHIGAN IS NOT USED IN ANY
+ * ADVERTISING OR PUBLICITY PERTAINING TO THE USE OR DISTRIBUTION OF THIS SOFTWARE
+ * WITHOUT SPECIFIC, WRITTEN PRIOR AUTHORIZATION.
+ *
+ * THIS SOFTWARE IS PROVIDED AS IS, WITHOUT REPRESENTATION FROM THE UNIVERSITY OF
+ * MICHIGAN AS TO ITS FITNESS FOR ANY PURPOSE, AND WITHOUT WARRANTY BY THE
+ * UNIVERSITY OF MICHIGAN OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT
+ * LIMITATION THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE. THE REGENTS OF THE UNIVERSITY OF MICHIGAN SHALL NOT BE LIABLE FOR ANY
+ * DAMAGES, INCLUDING SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WITH
+ * RESPECT TO ANY CLAIM ARISING OUT OF OR IN CONNECTION WITH THE USE OF THE SOFTWARE,
+ * EVEN IF IT HAS BEEN OR IS HEREAFTER ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ */
 package edu.umich.eecs.tac.logviewer.info;
 
 import edu.umich.eecs.tac.logviewer.util.SimulationParser;
@@ -9,13 +33,6 @@ import edu.umich.eecs.tac.props.SlotInfo;
 import java.util.ArrayList;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: leecallender
- * Date: Feb 1, 2009
- * Time: 1:39:53 PM
- * To change this template use File | Settings | File Templates.
- */
 
 /**
  * To not be confused with SimulationInfo.java
@@ -28,27 +45,12 @@ public class GameInfo {
   private String simulationType;
   private int secondsPerDay;
   private double squashingParameter;
-  //private int bankInterest;
-  //private int bankInterestMax;
-  //private int bankInterestMin;
-  //private int storageCost;
 
   private Advertiser[] advertisers;
   private Set<Query> querySpace;
   private RetailCatalog catalog;
   private SlotInfo slotInfo;
-  /*private PCType[] bom;
-  private Component[] componentCatalog;
 
-  private Manufacturer[] manufacturers;
-  private Factory[] factories;
-  private Supplier[] suppliers;
-  private Customer[] customers;
-
-  private ComponentNegotiation[][] compNegotiation;
-  private PCNegotiation[][] pcNegotiation;
-
-  private MarketDevelopment marketDevelopment;*/
   private UserPopulationState[] ups;
 
   public GameInfo(SimulationParser sp) {
@@ -64,16 +66,6 @@ public class GameInfo {
     catalog = sp.getRetailCatalog();
     slotInfo = sp.getSlotInfo();
     ups = sp.getUserPopulationState();
-    //factories = sp.getFactories();
-    //suppliers = sp.getSuppliers();
-    //customers = sp.getCustomers();
-
-    //marketDevelopment = sp.getMarketDevelopment();
-    //bom = sp.getPCTypes();
-    //componentCatalog = sp.getComponents();
-
-    //compNegotiation = sp.getComponentNegotiation();
-    //pcNegotiation = sp.getPCNegotiation();
   }
 
   public String getServer() {

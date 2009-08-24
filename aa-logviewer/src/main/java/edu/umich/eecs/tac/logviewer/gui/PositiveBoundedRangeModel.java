@@ -38,7 +38,7 @@ import javax.swing.event.ChangeListener;
 * BoundedRangeModel, but it is implicitly limited by 0 at the lower end.
 * It holds a last and a current value, where 0 <= current <= last.
 *
-* @author - SICS
+* @author - SICS, Lee Callender
 */
 public class PositiveBoundedRangeModel {
     protected ChangeEvent changeEvent = null;
