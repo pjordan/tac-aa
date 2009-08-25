@@ -1,5 +1,5 @@
 /*
- * SalesReportSender.java
+ * TACAAManager.java
  *
  * COPYRIGHT  2008
  * THE REGENTS OF THE UNIVERSITY OF MICHIGAN
@@ -40,10 +40,6 @@ import se.sics.tasim.sim.SimulationManager;
 import se.sics.tasim.sim.Admin;
 import edu.umich.eecs.tac.TACAAConstants;
 
-/**
- * @author Lee Callender
- *
- */
 public class TACAAManager extends SimulationManager {
 
     private final static Logger log = Logger.getLogger(TACAAManager.class.getName());

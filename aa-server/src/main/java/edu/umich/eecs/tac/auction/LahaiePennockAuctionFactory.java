@@ -33,6 +33,7 @@ import edu.umich.eecs.tac.util.config.ConfigProxy;
 /**
  * @author Patrick Jordan, Lee Callender
  */
+
 public class LahaiePennockAuctionFactory implements AuctionFactory {
 
 	private BidManager bidManager;

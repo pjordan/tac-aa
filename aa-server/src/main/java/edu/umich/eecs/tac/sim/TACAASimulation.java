@@ -689,7 +689,7 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
     }
 
     private void validateConfiguration() throws IllegalConfigurationException {
-        // TODO: do validation
+        //do validation
     }
 
     /**

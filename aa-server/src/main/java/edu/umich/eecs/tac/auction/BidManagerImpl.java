@@ -37,9 +37,6 @@ import se.sics.tasim.aw.Message;
  */
 public class BidManagerImpl implements BidManager {
 
-	// TODO: Discuss 'security' issues, test, add quality score update
-	// TODO: getBid, getQualityScore, etc. should remain constant throughout the
-	// day.
 	private Logger log = Logger.getLogger(BidManagerImpl.class.getName());
 
 	private Set<String> advertisers;
