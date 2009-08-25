@@ -22,7 +22,6 @@
  * RESPECT TO ANY CLAIM ARISING OUT OF OR IN CONNECTION WITH THE USE OF THE SOFTWARE,
  * EVEN IF IT HAS BEEN OR IS HEREAFTER ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
 package edu.umich.eecs.tac.logviewer;
 
 import se.sics.tasim.logtool.LogHandler;
