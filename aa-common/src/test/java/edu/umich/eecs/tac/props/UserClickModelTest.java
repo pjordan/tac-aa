@@ -21,7 +21,8 @@
  * DAMAGES, INCLUDING SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WITH
  * RESPECT TO ANY CLAIM ARISING OUT OF OR IN CONNECTION WITH THE USE OF THE SOFTWARE,
  * EVEN IF IT HAS BEEN OR IS HEREAFTER ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- */package edu.umich.eecs.tac.props;
+ */
+package edu.umich.eecs.tac.props;
 
 import java.text.ParseException;
 import org.junit.Test;
