@@ -1,11 +1,32 @@
+/*
+ * SimulationParser.java
+ *
+ * COPYRIGHT  2008
+ * THE REGENTS OF THE UNIVERSITY OF MICHIGAN
+ * ALL RIGHTS RESERVED
+ *
+ * PERMISSION IS GRANTED TO USE, COPY, CREATE DERIVATIVE WORKS AND REDISTRIBUTE THIS
+ * SOFTWARE AND SUCH DERIVATIVE WORKS FOR NONCOMMERCIAL EDUCATION AND RESEARCH
+ * PURPOSES, SO LONG AS NO FEE IS CHARGED, AND SO LONG AS THE COPYRIGHT NOTICE
+ * ABOVE, THIS GRANT OF PERMISSION, AND THE DISCLAIMER BELOW APPEAR IN ALL COPIES
+ * MADE; AND SO LONG AS THE NAME OF THE UNIVERSITY OF MICHIGAN IS NOT USED IN ANY
+ * ADVERTISING OR PUBLICITY PERTAINING TO THE USE OR DISTRIBUTION OF THIS SOFTWARE
+ * WITHOUT SPECIFIC, WRITTEN PRIOR AUTHORIZATION.
+ *
+ * THIS SOFTWARE IS PROVIDED AS IS, WITHOUT REPRESENTATION FROM THE UNIVERSITY OF
+ * MICHIGAN AS TO ITS FITNESS FOR ANY PURPOSE, AND WITHOUT WARRANTY BY THE
+ * UNIVERSITY OF MICHIGAN OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT
+ * LIMITATION THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE. THE REGENTS OF THE UNIVERSITY OF MICHIGAN SHALL NOT BE LIABLE FOR ANY
+ * DAMAGES, INCLUDING SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WITH
+ * RESPECT TO ANY CLAIM ARISING OUT OF OR IN CONNECTION WITH THE USE OF THE SOFTWARE,
+ * EVEN IF IT HAS BEEN OR IS HEREAFTER ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ */
+
 package edu.umich.eecs.tac.logviewer.util;
 
 /**
- * Created by IntelliJ IDEA.
- * User: leecallender
- * Date: Jan 29, 2009
- * Time: 4:40:15 PM
- * To change this template use File | Settings | File Templates.
+ * @author Lee Callender
  */
 
 import edu.umich.eecs.tac.Parser;
@@ -36,10 +57,6 @@ public class SimulationParser extends Parser{
   private long startTime;
   private int secondsPerDay;
   private double squashingParameter;
-  private int gameLengthInDays;
-  private int bankInterestMax;
-  private int bankInterestMin;
-  private int storageCost;
   private String serverName;
   private String serverVersion;
 
@@ -52,41 +69,13 @@ public class SimulationParser extends Parser{
 
   private Advertiser[] advertisers;
   private Set<Query> querySpace;
-  /*
-  private Manufacturer[] manufacturers;
-  private Factory[] factories;
-  private Supplier[] suppliers;
-  private Customer[] customers;
-
-  private PCType[] pcTypes;
-  private Component[] components;
-
-  private MarketDevelopment marketDevelopment;
-  private int marketReportCount;
-
-  private ArrayList[] compNegotiation;
-  private TreeMap compRFQs;
-  private TreeMap compOffersFull;
-  private TreeMap compOffersPartial;
-  private TreeMap compOffersEarliest;
-  private TreeMap compOrders;
-
-  private PCNegotiation[][] pcNegotiation;
-  private TreeMap pcRFQs;
-  private TreeMap pcOffers;
-  private TreeMap pcOrders;*/
 
   private int currentDay;
 
-  /*private BOMBundle bomBundle;
-  private ComponentCatalog componentCatalog;*/
   private RetailCatalog retailCatalog;
   private ServerConfig serverConfig;
   private SlotInfo slotInfo; 
   private UserPopulationState[] ups;
-
-  private boolean[] gotLastDayAccount;
-  private boolean[] gotLastDayInterest;
 
   private boolean errorParsing = false;
   private boolean isParserWarningsEnabled = true;
@@ -163,8 +152,6 @@ public class SimulationParser extends Parser{
       handleData((StartInfo) content);
     else if(content instanceof RetailCatalog)
       handleData((RetailCatalog) content);
-    /*else if(content instanceof UserPopulationState)
-      handleData((UserPopulationState) content);*/
 
     if(monitors != null)
 	    for (int i = 0, n = monitors.length; i < n; i++)
@@ -270,36 +257,16 @@ public class SimulationParser extends Parser{
 
       secondsPerDay = content.getAttributeAsInt("game.secondsPerDay", -1);
 
-      /*
-      Customer.setParams
-        (content.getAttributeAsInt("customer.quantityMin", -1),
-         content.getAttributeAsInt("customer.quantityMax", -1),
-         content.getAttributeAsInt("customer.dueDateMin", -1),
-         content.getAttributeAsInt("customer.dueDateMax", -1),
-         content.getAttributeAsInt("customer.rfqAvgMin", -1),
-         content.getAttributeAsInt("customer.rfqAvgMax", -1),
-         content.getAttributeAsInt("customer.daysBeforeVoid", -1),
-         Float.parseFloat(content.getAttribute("customer.trendMin", "0")));
-
-      Supplier.setParams
-      (content.getAttributeAsInt("supplier.nominalCapacity", -1),
-       content.getAttributeAsInt("supplier.maxRFQs", -1),
-       content.getAttributeAsFloat("supplier.discountFactor", -1f));
-
-      connectSuppliersWithComponents();*/
   }
 
   private void handleData(StartInfo startInfo) {
     numberOfDays = startInfo.getNumberOfDays();
     initActors();
-    //initCommunication();
-    //marketDevelopment = new MarketDevelopment(suppliers, components,
-					      //pcTypes, numberOfDays);
   }
 
   private void handleData(UserPopulationState userPopulationState){
     if(this.ups == null){
-      this.ups = new UserPopulationState[numberOfDays+1];
+      this.ups = new UserPopulationState[numberOfDays];
     }
 
     ups[currentDay] = userPopulationState;
@@ -338,39 +305,6 @@ public class SimulationParser extends Parser{
 	      monitors[i].unhandledNode(nodeName);
   }
 
-  /**********************************************************************
-   *
-   * Message handling routines - Communication
-   *  - a number of methods called to handle transaction messages
-   *
-   **********************************************************************/
-
-  /*
-  protected void transaction(int supplier, int customer,
-			       int orderID, long amount) {
-      if (participants[customer].getRole() == CUSTOMER) {
-	PCNegotiation pcNeg = (PCNegotiation) pcOrders.get
-	  (new CommMessageKey(orderID, newParticipantIndex[supplier], 0));
-	if (pcNeg != null) {
-	  if (pcNeg.isDelivered()) {
-	    warn("PC order " + orderID + " to "
-		 + participants[supplier].getName() + " delivered again "
-		 + " (first delivered " + pcNeg.getDeliveryDate()
-		 + ')');
-	  } else {
-	    pcNeg.setDeliveryDate(currentDay);
-	  }
-	} else {
-	  warn("no PC order " + orderID + " to "
-	       + participants[supplier].getName()
-	       + " found for delivery");
-	}
-      }
-
-      if(monitors != null)
-	for (int i = 0, n = monitors.length; i < n; i++)
-	  monitors[i].transaction(supplier, customer, orderID, amount);
-    }*/
 
   /**********************************************************************
    *

@@ -1,3 +1,28 @@
+/*
+ * MainWindow.java
+ *
+ * COPYRIGHT  2008
+ * THE REGENTS OF THE UNIVERSITY OF MICHIGAN
+ * ALL RIGHTS RESERVED
+ *
+ * PERMISSION IS GRANTED TO USE, COPY, CREATE DERIVATIVE WORKS AND REDISTRIBUTE THIS
+ * SOFTWARE AND SUCH DERIVATIVE WORKS FOR NONCOMMERCIAL EDUCATION AND RESEARCH
+ * PURPOSES, SO LONG AS NO FEE IS CHARGED, AND SO LONG AS THE COPYRIGHT NOTICE
+ * ABOVE, THIS GRANT OF PERMISSION, AND THE DISCLAIMER BELOW APPEAR IN ALL COPIES
+ * MADE; AND SO LONG AS THE NAME OF THE UNIVERSITY OF MICHIGAN IS NOT USED IN ANY
+ * ADVERTISING OR PUBLICITY PERTAINING TO THE USE OR DISTRIBUTION OF THIS SOFTWARE
+ * WITHOUT SPECIFIC, WRITTEN PRIOR AUTHORIZATION.
+ *
+ * THIS SOFTWARE IS PROVIDED AS IS, WITHOUT REPRESENTATION FROM THE UNIVERSITY OF
+ * MICHIGAN AS TO ITS FITNESS FOR ANY PURPOSE, AND WITHOUT WARRANTY BY THE
+ * UNIVERSITY OF MICHIGAN OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT
+ * LIMITATION THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE. THE REGENTS OF THE UNIVERSITY OF MICHIGAN SHALL NOT BE LIABLE FOR ANY
+ * DAMAGES, INCLUDING SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WITH
+ * RESPECT TO ANY CLAIM ARISING OUT OF OR IN CONNECTION WITH THE USE OF THE SOFTWARE,
+ * EVEN IF IT HAS BEEN OR IS HEREAFTER ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ */
+
 package edu.umich.eecs.tac.logviewer.gui;
 
 import edu.umich.eecs.tac.logviewer.info.GameInfo;
@@ -7,12 +32,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: leecallender
- * Date: Feb 1, 2009
- * Time: 11:50:06 AM
- * To change this template use File | Settings | File Templates.
- */
+ * @author Lee Callender
+ **/
 public class MainWindow extends JFrame {
 
     ParamsPanel paramsPane;
@@ -30,13 +51,6 @@ public class MainWindow extends JFrame {
     super("TAC AA Visualizer - main window");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    //ComponentCommunication compComModel = new ComponentCommunication(simInfo);
-    //compComModel.openAllChannels(CommunicationModel.COM_ALL);
-
-    //PCCommunication pcComModel = new PCCommunication(simInfo);
-    //pcComModel.openAllChannels(CommunicationModel.COM_ALL);
-
-
     GridBagLayout gbl = new GridBagLayout();
     GridBagConstraints gblConstraints = new GridBagConstraints();
     Container pane = getContentPane();
@@ -48,20 +62,7 @@ public class MainWindow extends JFrame {
     advertiserDisplay = new AdvertiserDisplay(gameInfo, dayModel, monitors);
     populationPanel = new PopulationPanel(gameInfo);
     auctionResultsDisplay = new AuctionResultsDisplay(gameInfo, dayModel);
-    /*
-    //paramsPane = new ParamsPanel(simInfo);
-    //dayChanger = new DayChanger(dayModel);
-    //accountPane =
-	//new GlobalAccountPanel(simInfo, dayModel);
-    //actorDisplay = new AdvertiserDisplay(simInfo, dayModel,
-		//		    pcComModel, compComModel,
-		//		    monitors);
 
-    //ColorLegendPanel colorPane = new ColorLegendPanel();
-
-    //MonitorSelectorPanel monitorPane =
-	//new MonitorSelectorPanel(monitors);
-    */
     gblConstraints.fill = GridBagConstraints.HORIZONTAL;
     gblConstraints.anchor = GridBagConstraints.NORTHWEST;
     gblConstraints.weighty = 0;

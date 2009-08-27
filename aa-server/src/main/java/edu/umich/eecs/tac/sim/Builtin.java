@@ -1,28 +1,26 @@
-/**
- * TAC Supply Chain Management Simulator
- * http://www.sics.se/tac/    tac-dev@sics.se
+/*
+ * Builtin.java
  *
- * Copyright (c) 2001-2005 SICS AB. All rights reserved.
+ * COPYRIGHT  2008
+ * THE REGENTS OF THE UNIVERSITY OF MICHIGAN
+ * ALL RIGHTS RESERVED
  *
- * SICS grants you the right to use, modify, and redistribute this
- * software for noncommercial purposes, on the conditions that you:
- * (1) retain the original headers, including the copyright notice and
- * this text, (2) clearly document the difference between any derived
- * software and the original, and (3) acknowledge your use of this
- * software in pertaining publications and reports.  SICS provides
- * this software "as is", without any warranty of any kind.  IN NO
- * EVENT SHALL SICS BE LIABLE FOR ANY DIRECT, SPECIAL OR INDIRECT,
- * PUNITIVE, INCIDENTAL OR CONSEQUENTIAL LOSSES OR DAMAGES ARISING OUT
- * OF THE USE OF THE SOFTWARE.
+ * PERMISSION IS GRANTED TO USE, COPY, CREATE DERIVATIVE WORKS AND REDISTRIBUTE THIS
+ * SOFTWARE AND SUCH DERIVATIVE WORKS FOR NONCOMMERCIAL EDUCATION AND RESEARCH
+ * PURPOSES, SO LONG AS NO FEE IS CHARGED, AND SO LONG AS THE COPYRIGHT NOTICE
+ * ABOVE, THIS GRANT OF PERMISSION, AND THE DISCLAIMER BELOW APPEAR IN ALL COPIES
+ * MADE; AND SO LONG AS THE NAME OF THE UNIVERSITY OF MICHIGAN IS NOT USED IN ANY
+ * ADVERTISING OR PUBLICITY PERTAINING TO THE USE OR DISTRIBUTION OF THIS SOFTWARE
+ * WITHOUT SPECIFIC, WRITTEN PRIOR AUTHORIZATION.
  *
- * -----------------------------------------------------------------
- *
- * Builtin
- *
- * Author  : Joakim Eriksson, Niclas Finne, Sverker Janson
- * Created : Thu May 22 22:33:18 2003
- * Updated : $Date: 2005/12/19 17:30:26 $
- *           $Revision: 1.1 $
+ * THIS SOFTWARE IS PROVIDED AS IS, WITHOUT REPRESENTATION FROM THE UNIVERSITY OF
+ * MICHIGAN AS TO ITS FITNESS FOR ANY PURPOSE, AND WITHOUT WARRANTY BY THE
+ * UNIVERSITY OF MICHIGAN OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT
+ * LIMITATION THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE. THE REGENTS OF THE UNIVERSITY OF MICHIGAN SHALL NOT BE LIABLE FOR ANY
+ * DAMAGES, INCLUDING SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WITH
+ * RESPECT TO ANY CLAIM ARISING OUT OF OR IN CONNECTION WITH THE USE OF THE SOFTWARE,
+ * EVEN IF IT HAS BEEN OR IS HEREAFTER ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 package edu.umich.eecs.tac.sim;
 
@@ -36,6 +34,8 @@ import se.sics.tasim.is.EventWriter;
 import static edu.umich.eecs.tac.TACAAConstants.*;
 
 /**
+ * Based on TAC/SCM version of SICS class.
+ *
  * @author Lee Callender, Patrick Jordan
  */
 public abstract class Builtin extends Agent implements TimeListener {
