@@ -45,7 +45,7 @@ public class TACAAResultManager extends ResultManager {
 			simInfo = new TACAASimulationInfo(reader);
 		} catch (Exception e) {
 			throw (IOException) new IOException(
-					"could not parse simulation log " + simulationID)
+                    "could not parse simulation log "+simulationID)
 					.initCause(e);
 		}
 
