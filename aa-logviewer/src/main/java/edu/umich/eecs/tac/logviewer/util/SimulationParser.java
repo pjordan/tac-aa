@@ -266,7 +266,7 @@ public class SimulationParser extends Parser{
 
   private void handleData(UserPopulationState userPopulationState){
     if(this.ups == null){
-      this.ups = new UserPopulationState[numberOfDays];
+      this.ups = new UserPopulationState[numberOfDays+1];
     }
 
     ups[currentDay] = userPopulationState;
