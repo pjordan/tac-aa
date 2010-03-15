@@ -52,7 +52,7 @@ public class DefaultUserTransitionManagerTest {
 		random = new Random(100);
 		userTransitionManager = new DefaultUserTransitionManager(retailCatalog, random);
 
-		userTransitionManager.setBurstProbability(0.3);
+		userTransitionManager.setBurstProbability(0.3,0.6,3);
 
 		userTransitionManager.addStandardTransitionProbability(
 				QueryState.NON_SEARCHING, QueryState.INFORMATIONAL_SEARCH, 0.2);
