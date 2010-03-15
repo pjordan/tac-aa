@@ -29,19 +29,26 @@ import edu.umich.eecs.tac.util.sampling.WheelSampler;
 import edu.umich.eecs.tac.props.RetailCatalog;
 import edu.umich.eecs.tac.props.Product;
 
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * @author Patrick Jordan
  */
 public class DefaultUserTransitionManager implements UserTransitionManager {
+    	protected Logger log = Logger.getLogger(DefaultUserTransitionManager.class.getName());
+
 	private Map<QueryState, MutableSampler<QueryState>> standardSamplers;
 	private Map<QueryState, MutableSampler<QueryState>> burstSamplers;
 
     private double burstProbability;
+    private double successiveBurstProbability;
+    private int burstEffectLength;
     private boolean[] bursts;
+    private int[] burstEffectCounter;
 	private Random random;
     private RetailCatalog retailCatalog;
 
@@ -63,7 +70,11 @@ public class DefaultUserTransitionManager implements UserTransitionManager {
 
         this.retailCatalog = retailCatalog;
         bursts = new boolean[retailCatalog.size()];
-
+        burstEffectCounter=new int[retailCatalog.size()];
+        for(int i=0;i<burstEffectCounter.length;i++)
+        {
+            burstEffectCounter[i]=0;
+        }
 		updateBurst();
 	}
 
@@ -95,9 +106,11 @@ public class DefaultUserTransitionManager implements UserTransitionManager {
 		return burstProbability;
 	}
 
-	public void setBurstProbability(double burstProbability) {
+	public void setBurstProbability(double burstProbability, double successiveBurstProbability, int burstEffectLength) {
 		this.burstProbability = burstProbability;
-	}
+                this.successiveBurstProbability = successiveBurstProbability;
+                this.burstEffectLength = burstEffectLength;
+        }
 
 	public QueryState transition(User user, boolean transacted) {
 		if (transacted)
@@ -109,9 +122,21 @@ public class DefaultUserTransitionManager implements UserTransitionManager {
 	}
 
 	private void updateBurst() {
-        for(int i = 0 ; i < bursts.length; i++) {
-            bursts[i] = random.nextDouble() < burstProbability;
-        }
+
+            for(int i = 0 ; i < bursts.length; i++) {
+                if(burstEffectCounter[i]>0)
+                    bursts[i] = random.nextDouble() < successiveBurstProbability;
+
+                else
+                    bursts[i] = random.nextDouble() < burstProbability;
+
+                if(bursts[i]){
+                    burstEffectCounter[i]=burstEffectLength;
+                }
+                else{
+                    burstEffectCounter[i]=burstEffectCounter[i]>0?burstEffectCounter[i]-1:burstEffectCounter[i];
+                }
+            }
 	}
 
 	public boolean isBurst(Product product) {
