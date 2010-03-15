@@ -72,8 +72,8 @@ public class LahaiePennockAuctionFactory implements AuctionFactory {
 		hardSort(scores, indices);
 
 		generalizedSecondPrice(indices, weight, bids, cpc, promoted, slotInfo
-				.getPromotedSlots(), reserveInfo.getPromotedReserve(), slotInfo
-				.getRegularSlots(), reserveInfo.getRegularReserve());
+				.getPromotedSlots(), reserveInfo.getPromotedReserve(query.getType()), slotInfo
+				.getRegularSlots(), reserveInfo.getRegularReserve(query.getType()));
 
 		Ranking ranking = new Ranking();
 		Pricing pricing = new Pricing();
