@@ -30,10 +30,17 @@ import edu.umich.eecs.tac.props.Ad;
 import edu.umich.eecs.tac.sim.QueryReportSender;
 import com.botbox.util.ArrayUtils;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.logging.Logger;
+
 /**
- * @author Patrick Jordan, Lee Callender
+ * @author Patrick Jordan, Lee Callender, Akshat Kaul
  */
 public class QueryReportManagerImpl implements QueryReportManager {
+      	protected Logger log = Logger.getLogger(QueryReportManagerImpl.class.getName());
 
 	/**
 	 * The advertisers
@@ -49,7 +56,92 @@ public class QueryReportManagerImpl implements QueryReportManager {
 	 * The query reports
 	 */
 	private QueryReport[] queryReports;
+        /**
+	 * The query counter - used for calculating sample averages
+	 */
 
+//---------------------------Sampling Averages for different Query Classes----------------------------------
+
+        private class QueryClass
+        {
+            private int queryClassCount;//how many queries does this QueryClass have?
+             
+            private class MapQueryClassCounterToPositions
+            {
+                private Map<Integer,Integer> positions;
+                public MapQueryClassCounterToPositions()
+                {
+                    positions=new HashMap<Integer,Integer>();
+                }
+                public MapQueryClassCounterToPositions(Integer queryClassCount, Integer slot)
+                {
+                    positions=new HashMap<Integer,Integer>();
+                    positions.put(queryClassCount, slot);
+                }
+                public void adPosition(Integer queryClassCount, Integer slot)
+                {
+                    positions.put(queryClassCount, slot);
+//                    if(positions.size()>1){log.info("Position size is too big!!!!!! "+queryClassCount);}
+
+                }
+                public Map<Integer,Integer> getPositions()
+                {
+                    return positions;
+                }
+                public double average()
+                {
+                    
+                    double sum=0;
+                    Iterator<Integer> it = positions.values().iterator();
+                    while (it.hasNext())
+                    {
+                        sum+=it.next();
+                    }
+//                    log.info("size:"+positions.size());
+                    return sum/positions.size();
+                }
+            }
+
+            private Map<String,MapQueryClassCounterToPositions> adMap;//position average and impression count for each advertiser
+            public QueryClass()
+            {                
+                this.queryClassCount=0;
+                adMap=new HashMap<String,MapQueryClassCounterToPositions>();
+            }
+            public int getQueryClassCount()
+            {
+                return queryClassCount;
+            }
+            public Map<String,MapQueryClassCounterToPositions> getadMap()
+            {
+                return adMap;
+            }
+            public void setQueryClassCount(int count)
+            {
+                this.queryClassCount=count;
+            }
+            public void addtoadMap(String advertiserName, Integer count, Integer slot)
+            {
+                if(!adMap.containsKey(advertiserName))
+                    adMap.put(advertiserName, new MapQueryClassCounterToPositions(count,slot));
+                else
+                {
+                    adMap.get(advertiserName).adPosition(count, slot);
+                }
+            }
+        }
+        /**
+	 * Map of Sample Averages
+	 */
+	private Map<Query, QueryClass> querySampler;
+
+        /**
+	 * Properties used by method sampleQuery
+	 */
+        private Query lastQuery;
+        private boolean substitute=false;
+        int randomNumber=-1;
+//--------------------------------------------------------------------------------
 	/**
 	 * Query report sender
 	 */
@@ -69,6 +161,9 @@ public class QueryReportManagerImpl implements QueryReportManager {
 		advertisers = new String[advertisersCount];
 		queryReports = new QueryReport[advertisersCount];
 		this.advertisersCount = advertisersCount;
+                querySampler = new HashMap<Query,QueryClass>();
+                lastQuery = new Query();                
+                log.info("QueryReportManager reset");
 	}
 
 	/**
@@ -146,12 +241,32 @@ public class QueryReportManagerImpl implements QueryReportManager {
 				Query query = baseReport.getQuery(index);
 
 				double position = baseReport.getPosition(index);
-
+                                double sampleAvgPosition=-1;
 				Ad ad = baseReport.getAd(index);
-
+//                                log.info(""+query+" "+baseAdvertiser+" "+position);
+                                if(querySampler.get(query)==null)
+                                {
+                                    sampleAvgPosition=Double.NaN;
+                                }
+                                else
+                                {
+                                    if(querySampler.get(query).getadMap().get(baseAdvertiser)==null)
+                                    {
+                                        sampleAvgPosition=Double.NaN;
+                                    }
+                                    else
+                                    {
+                                        sampleAvgPosition=querySampler.get(query).getadMap().get(baseAdvertiser).average();
+                                    }
+                                }
+//                                if(!(position==sampleAvgPosition||(new Double(position).isNaN()&& new Double(sampleAvgPosition).isNaN())))
+//                                {
+//                                    log.info(""+query+" "+baseAdvertiser+" "+position);
+//                                    log.info("Sample:"+sampleAvgPosition);
+//                                }
 				for (int otherIndex = 0; otherIndex < advertisersCount; otherIndex++) {
 					queryReports[otherIndex].setAdAndPosition(query,
-							baseAdvertiser, ad, position);
+							baseAdvertiser, ad, sampleAvgPosition);
 				}
 			}
 		}
@@ -164,19 +279,94 @@ public class QueryReportManagerImpl implements QueryReportManager {
 
 			queryReportSender.sendQueryReport(advertisers[i], report);
 
-            int impressions = 0;
-            int clicks = 0;
+                        int impressions = 0;
+                        int clicks = 0;
 
-            for(int index = 0; index < report.size(); index++) {
-                impressions += report.getImpressions(index);
-                clicks += report.getClicks(index);
+                        for(int index = 0; index < report.size(); index++) {
+                            impressions += report.getImpressions(index);
+                            clicks += report.getClicks(index);
+                        }
+
+                        queryReportSender.broadcastImpressions(advertisers[i], impressions);
+                        queryReportSender.broadcastClicks(advertisers[i], clicks);
+                }
+                querySampler = new HashMap<Query,QueryClass>();
+
+        }
+
+//--------------------------------Calculate Sample Averages for each advertiser in each Query Class--------------
+        //Reservoir Sampling
+        protected void sampleQuery(Query newQuery, int slot, String advertiser)
+        {
+//            if(check>0){check--;
+            int samplecount=10;
+            if(querySampler.containsKey(newQuery))
+            {
+                QueryClass i=querySampler.get(newQuery);
+                int count=i.getQueryClassCount();//last time's count
+                
+                    if((!lastQuery.equals(newQuery))||(lastQuery.equals(newQuery)&&slot==1))
+                    {
+                        //this is a new query. increase counter for this query class.
+                        count++;
+                        i.setQueryClassCount(count);
+                        if(count>samplecount)
+                        {
+                            randomNumber=new Random().nextInt(count)+1;
+                            
+                            if(randomNumber<=samplecount)
+                            {
+                                substitute=true;
+                                //for this query class, remove all advertiser positions
+                                //corresponding to count r
+                                Iterator<String> iter=i.getadMap().keySet().iterator();
+                                while(iter.hasNext())
+                                {
+                                    i.getadMap().get(iter.next()).getPositions().remove(randomNumber);
+
+                                }
+                            }
+                            else
+                            {
+                                substitute=false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //dont increase counter for this query class.
+                    }
+                    if(count<=samplecount)
+                    {
+                        i.addtoadMap(advertiser, count, new Integer(slot));
+                        querySampler.put(newQuery, i);
+                    }
+                    else
+                    {
+                        if(substitute)
+                        {
+                            i.addtoadMap(advertiser, randomNumber, new Integer(slot));
+                            querySampler.put(newQuery, i);
+                        }
+                        else
+                        {
+                            //do nothing
+                        }
+                    }                
             }
-
-            queryReportSender.broadcastImpressions(advertisers[i], impressions);
-            queryReportSender.broadcastClicks(advertisers[i], clicks);
-		}
-	}
-
+            else
+            {
+                QueryClass i=new QueryClass();
+                i.setQueryClassCount(1);
+                i.addtoadMap(advertiser,1,new Integer(slot));
+                querySampler.put(newQuery, i);
+            }
+            lastQuery=newQuery;
+//         if(querySampler.get(newQuery).getadMap().get(advertiser)==null)   log.info("not substituted "+newQuery+slot+advertiser+" "+re);
+//         else log.info("SAMPLER:"+newQuery+slot+advertiser+" "+querySampler.get(newQuery).getadMap().get(advertiser).average()+" "+re);
+//        }
+        }
+//------------------------------------------------------------------------------------------------------
 	public int size() {
 		return advertisersCount;
 	}
@@ -185,6 +375,8 @@ public class QueryReportManagerImpl implements QueryReportManager {
 	}
 
 	public void viewed(Query query, Ad ad, int slot, String advertiser, boolean isPromoted) {
+                sampleQuery(query,slot,advertiser);
+
 		if (isPromoted) {
 			addImpressions(advertiser, query, 0, 1, ad, slot);
 		} else {
