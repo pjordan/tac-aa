@@ -234,13 +234,28 @@ public class TACAASimulation extends Simulation implements AgentRepository, Sale
 
         ConfigManager config = getConfig();
 
-        double promotedReserveMax = config.getPropertyAsDouble("publisher.promoted.reserve.max", 0.0);
+        double promotedReserveBoost = config.getPropertyAsDouble("publisher.promoted.reserve.boost", 0.0);
 
-        double regularReserveMin = config.getPropertyAsDouble("publisher.regular.reserve.min", 0.0);
-        double regularReserveMax = config.getPropertyAsDouble("publisher.regular.reserve.max", 0.0);
+        double regularReserveMinF0 = config.getPropertyAsDouble("publisher.regular.reserve.FOCUS_LEVEL_ZERO.min", 0.0);
+        double regularReserveMaxF0 = config.getPropertyAsDouble("publisher.regular.reserve.FOCUS_LEVEL_ZERO.max", 0.0);
+        double regularReserveMinF1 = config.getPropertyAsDouble("publisher.regular.reserve.FOCUS_LEVEL_ONE.min", 0.0);
+        double regularReserveMaxF1 = config.getPropertyAsDouble("publisher.regular.reserve.FOCUS_LEVEL_ONE.max", 0.0);
+        double regularReserveMinF2 = config.getPropertyAsDouble("publisher.regular.reserve.FOCUS_LEVEL_TWO.min", 0.0);
+        double regularReserveMaxF2 = config.getPropertyAsDouble("publisher.regular.reserve.FOCUS_LEVEL_TWO.max", 0.0);
 
-        reserveInfo.setRegularReserve(sample(regularReserveMin, regularReserveMax));
-        reserveInfo.setPromotedReserve(sample(reserveInfo.getRegularReserve(), promotedReserveMax));
+        reserveInfo.setRegularReserve(QueryType.FOCUS_LEVEL_ZERO, sample(regularReserveMinF0, regularReserveMaxF0));
+        reserveInfo.setRegularReserve(QueryType.FOCUS_LEVEL_ONE, sample(regularReserveMinF1, regularReserveMaxF1));
+        reserveInfo.setRegularReserve(QueryType.FOCUS_LEVEL_TWO, sample(regularReserveMinF2, regularReserveMaxF2));
+//        reserveInfo.setRegularReserve(sample(regularReserveMin, regularReserveMax));
+        reserveInfo.setPromotedReserve(QueryType.FOCUS_LEVEL_ZERO,sample(
+                reserveInfo.getRegularReserve(QueryType.FOCUS_LEVEL_ZERO),
+                reserveInfo.getRegularReserve(QueryType.FOCUS_LEVEL_ZERO)+promotedReserveBoost));
+        reserveInfo.setPromotedReserve(QueryType.FOCUS_LEVEL_ONE,sample(
+                reserveInfo.getRegularReserve(QueryType.FOCUS_LEVEL_ONE),
+                reserveInfo.getRegularReserve(QueryType.FOCUS_LEVEL_ONE)+promotedReserveBoost));
+        reserveInfo.setPromotedReserve(QueryType.FOCUS_LEVEL_TWO,sample(
+                reserveInfo.getRegularReserve(QueryType.FOCUS_LEVEL_TWO),
+                reserveInfo.getRegularReserve(QueryType.FOCUS_LEVEL_TWO)+promotedReserveBoost));
 
         return reserveInfo;
     }
