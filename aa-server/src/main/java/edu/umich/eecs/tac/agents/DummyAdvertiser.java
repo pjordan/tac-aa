@@ -66,6 +66,7 @@ public class DummyAdvertiser extends Agent {
 		try {
 			Transportable content = message.getContent();
 			if (content instanceof QueryReport) {
+//                                log.info("Dummy got Query");
 				handleQueryReport((QueryReport) content);
 			} else if (content instanceof SalesReport) {
 				handleSalesReport((SalesReport) content);
@@ -139,11 +140,13 @@ public class DummyAdvertiser extends Agent {
 	}
 
 	protected void sendBidAndAds() {
+//            log.info("dummy bidding");
 		bidBundle = new BidBundle();
 		Ad ad = new Ad(null);
 
 		for (int i = 0; i < queries.length; i++) {
 			bidBundle.addQuery(queries[i], values[i] / clicks[i], ad);
+//                        bidBundle.addQuery(queries[i], 100, ad);
 		}
 
 		if (bidBundle != null && publisherAddress != null) {
@@ -182,7 +185,7 @@ public class DummyAdvertiser extends Agent {
 
 			for (int i = 0; i < queries.length; i++) {
 				impressions[i] = 100;
-				clicks[i] = 30;
+				clicks[i] = 9;
 				conversions[i] = 1;
 				values[i] = retailCatalog.getSalesProfit(0);
 			}
