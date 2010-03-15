@@ -36,6 +36,8 @@ public class DefaultUserTransitionManagerBuilder implements UserBehaviorBuilder<
 	private static final String STANDARD_KEY = "usermanager.usertransitionmanager.probability.standard";
 	private static final String BURST_KEY = "usermanager.usertransitionmanager.probability.burst";
 	private static final String BURST_PROBABILITY_KEY = "usermanager.usertransitionmanager.burstprobability";
+        private static final String SUCCESSIVE_BURST_PROBABILITY_KEY = "usermanager.usertransitionmanager.successiveburstprobability";
+        private static final String BURST_EFFECT_LENGTH = "usermanager.usertransitionmanager.bursteffectlength";
 	private static final double BURST_PROBABILITY_DEFAULT = 0.05;
 
 	public UserTransitionManager build(ConfigProxy userConfigProxy, AgentRepository repository, Random random) {
@@ -69,9 +71,10 @@ public class DefaultUserTransitionManagerBuilder implements UserBehaviorBuilder<
 				}
 			}
 		}
-
-		transitionManager.setBurstProbability(userConfigProxy.getPropertyAsDouble(BURST_PROBABILITY_KEY,
-						                                                          BURST_PROBABILITY_DEFAULT));
+                double burstProbability=userConfigProxy.getPropertyAsDouble(BURST_PROBABILITY_KEY,BURST_PROBABILITY_DEFAULT);
+                double successiveBurstProbability=userConfigProxy.getPropertyAsDouble(SUCCESSIVE_BURST_PROBABILITY_KEY,BURST_PROBABILITY_DEFAULT);
+                int burstEffectLength=userConfigProxy.getPropertyAsInt(BURST_EFFECT_LENGTH,1);
+		transitionManager.setBurstProbability(burstProbability,successiveBurstProbability,burstEffectLength);
 
 		return transitionManager;
 	}
