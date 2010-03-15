@@ -55,16 +55,21 @@ public class SlotInfoTest {
 
 	@Test
 	public void testPromotedReserve() {
-		assertEquals(reserveInfo.getPromotedReserve(), 0.0);
-		reserveInfo.setPromotedReserve(1.0);
-		assertEquals(reserveInfo.getPromotedReserve(), 1.0);
+            for (QueryType type : QueryType.values()) {
+//                System.out.println(type+" "+reserveInfo.getPromotedReserve(type));
+		assertEquals(reserveInfo.getPromotedReserve(type), 0.0);
+		reserveInfo.setPromotedReserve(type, 1.0);
+		assertEquals(reserveInfo.getPromotedReserve(type), 1.0);
+            }
 	}
 
 	@Test
 	public void testRegularReserve() {
-		assertEquals(reserveInfo.getRegularReserve(), 0.0);
-		reserveInfo.setRegularReserve(1.0);
-		assertEquals(reserveInfo.getRegularReserve(), 1.0);
+            for (QueryType type : QueryType.values()) {
+		assertEquals(reserveInfo.getRegularReserve(type), 0.0);
+		reserveInfo.setRegularReserve(type, 1.0);
+		assertEquals(reserveInfo.getRegularReserve(type), 1.0);
+            }
 	}
 
 	@Test
@@ -83,27 +88,27 @@ public class SlotInfoTest {
 	@Test
 	public void testEquals() {
 		ReserveInfo other = new ReserveInfo();
+                for (QueryType type : QueryType.values()) {
+                    other.setPromotedReserve(type,1.0);
+                    assertFalse(reserveInfo.equals(other));
 
-		other.setPromotedReserve(1.0);
-		assertFalse(reserveInfo.equals(other));
+                    other = new ReserveInfo();
+                    other.setRegularReserve(type,1.0);
+                    assertFalse(reserveInfo.equals(other));
 
-		other = new ReserveInfo();
-		other.setRegularReserve(1.0);
-		assertFalse(reserveInfo.equals(other));
+                    assertEquals(reserveInfo, reserveInfo);
+                    assertFalse(reserveInfo.equals(null));
+                    assertFalse(reserveInfo.equals(""));
 
-		assertEquals(reserveInfo, reserveInfo);
-		assertFalse(reserveInfo.equals(null));
-		assertFalse(reserveInfo.equals(""));
+                    other = new ReserveInfo();
+                    assertEquals(reserveInfo.hashCode(), other.hashCode());
 
-		other = new ReserveInfo();
-		assertEquals(reserveInfo.hashCode(), other.hashCode());
+                    reserveInfo.setPromotedReserve(type,1.0);
+                    reserveInfo.setRegularReserve(type,1.0);
 
-		reserveInfo.setPromotedReserve(1.0);
-		reserveInfo.setRegularReserve(1.0);
-
-		other.setPromotedReserve(1.0);
-		other.setRegularReserve(1.0);
-
-		assertEquals(reserveInfo.hashCode(), other.hashCode());
+                    other.setPromotedReserve(type,1.0);
+                    other.setRegularReserve(type,1.0);
+                    assertEquals(reserveInfo.hashCode(), other.hashCode());
+                }
 	}
 }
