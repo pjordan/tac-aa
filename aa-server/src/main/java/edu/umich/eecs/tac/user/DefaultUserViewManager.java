@@ -147,18 +147,19 @@ public class DefaultUserViewManager implements UserViewManager {
 
                     double conversionProbability = calculateConversionProbability( user, query, info,
                             recentConversionsTracker.getRecentConversions(ad.getAdvertiser()));
+                    if(user.isTransacting()){
+                        if (random.nextDouble() <= conversionProbability) {
+                            // User has converted and will no longer click
 
-                    if (random.nextDouble() <= conversionProbability) {
-                        // User has converted and will no longer click
+                            double salesProfit = catalog.getSalesProfit(user
+                                    .getProduct());
 
-                        double salesProfit = catalog.getSalesProfit(user
-                                .getProduct());
+                            fireAdConverted(query, ad, i + 1, modifySalesProfitForManufacturerSpecialty(user,
+                                            info.getManufacturerSpecialty(), info.getManufacturerBonus(), salesProfit));
 
-                        fireAdConverted(query, ad, i + 1, modifySalesProfitForManufacturerSpecialty(user,
-                                        info.getManufacturerSpecialty(), info.getManufacturerBonus(), salesProfit));
-
-                        converted = true;
-                        clicking = false;
+                            converted = true;
+                            clicking = false;
+                        }
                     }
                 }
             }
