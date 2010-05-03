@@ -147,7 +147,7 @@ public class DefaultUserViewManager implements UserViewManager {
 
                     double conversionProbability = calculateConversionProbability( user, query, info,
                             recentConversionsTracker.getRecentConversions(ad.getAdvertiser()));
-//                    if(user.isTransacting()){
+                    if(user.isTransacting()){
                         if (random.nextDouble() <= conversionProbability) {
                             // User has converted and will no longer click
 
@@ -160,7 +160,7 @@ public class DefaultUserViewManager implements UserViewManager {
                             converted = true;
                             clicking = false;
                         }
-//                    }
+                    }
                 }
             }
 
