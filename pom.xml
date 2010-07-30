@@ -1,0 +1,85 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 		
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>edu.umich.eecs.tac</groupId>
+  <artifactId>tac-aa</artifactId>
+  <packaging>pom</packaging>
+  <version>10.1.0.1</version>
+  <name>TAC Ad Auctions</name>
+  <url>http://www.eecs.umich.edu/~prjordan/tac-aa</url>
+  <description>Ad Auctions game for the Trading Agent Competition</description>
+  <inceptionYear>2007</inceptionYear>
+  <organization>
+    <name>Association for Trading Agent Research</name>
+    <url>http://tradingagents.org/</url>
+  </organization>
+  <developers>
+    <developer>
+      <id>prjordan</id>
+      <name>Patrick Jordan</name>
+      <email>prjordan [at] umich.edu</email>
+      <roles>
+        <role>Research Scientist</role>
+      </roles>
+      <url>http://www.eecs.umich.edu/~prjordan</url>
+      <organization>University of Michigan AI Laboratory</organization>
+      <timezone>-5</timezone>
+    </developer>    
+    <developer>
+      <id>wellman</id>
+      <name>Michael Wellman</name>
+      <email>wellman [at] umich.edu</email>
+      <roles>
+        <role>Professor</role>
+      </roles>
+      <url>http://ai.eecs.umich.edu/people/wellman</url>
+      <organization>University of Michigan AI Laboratory</organization>
+      <timezone>-5</timezone>
+	</developer>
+     <developer>
+      <id>asleep</id>
+      <name>Lee Callender</name>
+      <email>asleep [at] umich.edu</email>
+      <roles>
+        <role>Pseudo Research Scientist</role>
+      </roles>
+      <url>http://www.eecs.umich.edu/~asleep</url>
+      <organization>University of Michigan AI Laboratory</organization>
+      <timezone>-5</timezone>
+    </developer>
+     <developer>
+      <id>bcassell</id>
+      <name>Ben Cassell</name>
+      <email>bcassell [at] umich.edu</email>
+      <roles>
+        <role>Pseudo Research Scientist</role>
+      </roles>
+      <organization>University of Michigan AI Laboratory</organization>
+      <timezone>-5</timezone>
+    </developer>             
+  </developers>	
+  <modules>
+	<module>tasim</module>
+	<module>aa-common</module>
+	<module>aa-server</module>
+	<module>aa-agent</module>
+    <module>aa-viewer</module>
+    <module>aa-logviewer</module>
+    <module>aa-logging</module>
+  </modules>
+  <distributionManagement>
+    <site>
+      <id>web-eecs-umich-edu</id>
+      <url>scp://web.eecs.umich.edu/u/p/prjordan/public_html/tac-aa/10.1.0.1</url>
+    </site>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>web-eecs-umich-edu</id>
+      <name>TAC/AA Releases</name>
+      <url>scp://web.eecs.umich.edu/u/p/prjordan/public_html/tac-aa/repository</url>
+      <layout>default</layout>
+    </repository>
+    <downloadUrl>http://www.eecs.umich.edu/~prjordan/tac-aa/repository</downloadUrl>
+  </distributionManagement>
+</project>
