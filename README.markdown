@@ -8,5 +8,5 @@ Our hope is that by tackling this challenging problem competitively, researchers
 
 Building the source
 ---------------------
-mvn install
+`mvn install`
 
