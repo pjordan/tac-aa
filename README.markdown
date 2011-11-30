@@ -39,4 +39,56 @@ The binaries are now assembled in target
 
     ls target/*.{zip,gz}
 
+Running the server
+---------------------
+
+To following software is required to run the server
+* java (1.6+) 
+
+Optionally:
+* mysql (recommended)
+
+After downloading the server archive, extract the server in a convenient location. You will need to configure the server before starting up.
+
+### Configuring the server
+
+After unpacking the server archive, three sub-directories and one file should exist in the new directory. To configure the server, modify the
+
+    config/server.conf
+
+file to conform to your desired setup.
+
+If you are running the server publicly, modify the password line in the configuration file.
+
+    admin.password=YOURPASSWORD
+
+Also, edit the server name property.
+
+    server.name=YOUR.SERVER.NAME
+
+If you plan on stopping and starting the server often (sometimes this is useful when testing an agent), set the start delay to zero.
+
+    sim.startDelay=0
+
+Unless you wish to examine the server logs (simulation logs provide game specific information), set to a high value (3 generates small logs).
+
+    log.consoleLevel=3
+    log.fileLevel=3
+
+By default, the server uses ports:
+* 6502 [agent connections]
+* 8080 [http access]
+* 4042 [viewer port]
+
+These need to be distinct.
+
+Optionally, set up mysql as the data store.
+
+### Starting the server
+
+Inside the aa-server directory, we provide a simple run script, named runServer.sh.
+
+To start the server execute
+
+    sh runServer.sh
 
