@@ -43,9 +43,11 @@ Running the server
 ---------------------
 
 To following software is required to run the server
+
 * java (1.6+) 
 
 Optionally:
+
 * mysql (recommended)
 
 After downloading the server archive, extract the server in a convenient location. You will need to configure the server before starting up.
@@ -76,6 +78,7 @@ Unless you wish to examine the server logs (simulation logs provide game specifi
     log.fileLevel=3
 
 By default, the server uses ports:
+
 * 6502 [agent connections]
 * 8080 [http access]
 * 4042 [viewer port]
