@@ -6,7 +6,34 @@ The TAC Ad Auction (TAC/AA) game presents a realistic sponsored search environme
 
 Our hope is that by tackling this challenging problem competitively, researchers and practitioners participating in TAC/AA will produce new ideas about bidding strategy for advertising (and in general), as well as insights about sponsored-search mechanisms and ways to improve the model.
 
-Building the source
+Building TAC/AA
 ---------------------
+
+The TAC/AA game server sources and how to create the executable.
+
+### Prerequisites:
+* Install java sdk (1.6+)
+* Install maven (3.0.1+) [http://maven.apache.org]
+
+### Build the binaries
+
+Checkout or download the latest repository branch (this will need to change to a public server):
+
+    git clone http://github.com/pjordan/tac-aa
+
+Install the modules:
+
     mvn install
+
+Change directories into aa-server
+
+    cd aa-server
+
+Assemble the binaries
+
+    mvn assembly:assembly
+
+The binaries are now assembled in target
+
+    ls target/*.{zip,gz}
 
