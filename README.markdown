@@ -15,7 +15,7 @@ The TAC/AA game server sources and how to create the executable.
 * Install java sdk (1.6+)
 * Install maven (3.0.1+) [http://maven.apache.org]
 
-### Build the binaries
+### Install the jars 
 
 Checkout or download the latest repository branch (this will need to change to a public server):
 
@@ -24,6 +24,8 @@ Checkout or download the latest repository branch (this will need to change to a
 Install the modules:
 
     mvn install
+
+### Create the server binary
 
 Change directories into aa-server
 
@@ -36,4 +38,5 @@ Assemble the binaries
 The binaries are now assembled in target
 
     ls target/*.{zip,gz}
+
 
