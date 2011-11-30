@@ -95,3 +95,9 @@ To start the server execute
 
     sh runServer.sh
 
+### Post-installation
+
+You can connect to the server at `http://{server.name}:8080` from your browser.
+
+To start and view games, register a new user. Use the _Coming Games_ link to start and view the upcoming games.
+
